@@ -48,7 +48,7 @@ public class SummonController : MonoBehaviour {
                 if ((hitInfo = Physics.RaycastAll(ray)).Count() > 0) {
                     hintBatteries = hitInfo.Select((info) => info.collider.GetComponent<Battery>())
                                            .Where((item) => item != null);
-                    hitInfo = hitInfo.Where((info) => info.normal == Vector3.up);
+                    hitInfo = hitInfo.Where((info) => info.collider is MeshCollider);
                     switch (selectedType) {
                         case SelectionType.Battery:
                             if (hintBattery) {
