@@ -8,10 +8,10 @@ public class Oscillator : MonoBehaviour {
     private Vector3 anchor;
 
     void Awake() {
-        anchor = transform.position;
+        anchor = transform.localPosition;
     }
 
     void Update() {
-        transform.position = anchor + Mathf.Sin(Time.time * speed) * amplitude * Vector3.up;
+        transform.localPosition = anchor + Mathf.Sin(Time.time * speed) * amplitude * Vector3.up;
     }
 }

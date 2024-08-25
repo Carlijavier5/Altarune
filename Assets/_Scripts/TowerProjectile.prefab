@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 3525777844057465787}
+  coll: {fileID: 3461325632994416178}
+  moveForce: 300
 --- !u!54 &3525777844057465787
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -60,7 +62,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -69,7 +71,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0

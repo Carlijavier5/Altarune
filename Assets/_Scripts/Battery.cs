@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Battery : MonoBehaviour {
+public class Battery : Fadeable {
 
     [SerializeField] private GameObject areaIndicator;
     private List<Tower> linkedTowers;
@@ -13,6 +13,6 @@ public class Battery : MonoBehaviour {
     }
 
     public void HalfFade() {
-
+        SwapFade(true);
     }
 }
