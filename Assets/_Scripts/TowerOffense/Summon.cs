@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fadeable : MonoBehaviour {
-    [SerializeField] private Material fadeMat;
+public class Summon : MonoBehaviour {
+
+    [SerializeField]
+    private DefaultSummonProperties defaultProperties;
+
+    [SerializeField] private Material fadeMaterial;
     [SerializeField] private AnimationCurve growthCurveXZ, growthCurveY;
     [SerializeField] private float growSpeed;
+
     private Dictionary<Renderer, Material[]> matDict = new();
 
     protected virtual void Awake() {
@@ -35,7 +40,7 @@ public class Fadeable : MonoBehaviour {
 
     protected void SwapFade(bool on) {
         foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-            kvp.Key.sharedMaterials = on ? new Material[] { fadeMat } : kvp.Value;
+            kvp.Key.sharedMaterials = on ? new Material[] { fadeMaterial } : kvp.Value;
         }
     }
 
@@ -45,5 +50,11 @@ public class Fadeable : MonoBehaviour {
             if (doRed) mpb.SetColor("_BaseColor", Color.red);
             kvp.Key.SetPropertyBlock(mpb);
         }
+    }
+
+    void Reset() {
+        fadeMaterial = defaultProperties.fadeMaterial;
+        growthCurveXZ = defaultProperties.growthCurveXZ;
+        growthCurveY = defaultProperties.growthCurveY ;
     }
 }

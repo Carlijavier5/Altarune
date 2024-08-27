@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Tower : Fadeable {
+public class Tower : Summon {
 
     [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;

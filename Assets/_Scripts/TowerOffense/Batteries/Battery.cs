@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Battery : Fadeable {
+public class Battery : Summon {
 
     [SerializeField] private GameObject areaIndicator;
     private List<Tower> linkedTowers;
