@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Tower : Summon {
+public interface Tower {
+    public void Init();
+}
+
+public class ProjectileTower : Summon, Tower {
 
     [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;

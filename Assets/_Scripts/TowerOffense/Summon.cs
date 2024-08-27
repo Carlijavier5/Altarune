@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Summon : MonoBehaviour {
+public class Summon : BaseObject {
 
     [System.Serializable]
     protected class SummonProperties {
