@@ -467,6 +467,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7801274054568144272}
   - component: {fileID: 6561479735888861104}
+  - component: {fileID: -2378527282562354977}
   m_Layer: 0
   m_Name: SummoningManager
   m_TagString: Untagged
@@ -507,6 +508,22 @@ MonoBehaviour:
   towerBlueprints:
   - {fileID: 11400000, guid: c04e930eeff5c894090dbdab87dcc17d, type: 2}
   batteryData: {fileID: 11400000, guid: ca2040fcfc35a7f41b65dfe756859b8a, type: 2}
+--- !u!114 &-2378527282562354977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8519653353103366518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dbfe29870a7754c9f442133bb7ce89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  phSelector: {fileID: 0}
+  towerBlueprints: []
+  batteryData: {fileID: 0}
 --- !u!1 &9209107716837739798
 GameObject:
   m_ObjectHideFlags: 0
