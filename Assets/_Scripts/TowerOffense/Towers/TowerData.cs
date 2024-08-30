@@ -3,7 +3,7 @@
 [CreateAssetMenu()]
 public class TowerData : ScriptableObject {
 
-    public ProjectileTower prefab;
+    public Summon prefab;
     public Sprite icon;
     public float energyCost;
 }
