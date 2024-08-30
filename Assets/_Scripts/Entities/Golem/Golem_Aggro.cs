@@ -18,7 +18,7 @@ public partial class Golem {
         public override void Update(Golem_Input input) {
             Transform t = input.golem.transform;
             Quaternion targetRotation = Quaternion.LookRotation(aggroTarget.transform.position - t.position, Vector3.up);
-            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, Time.deltaTime * input.golem.navMeshAgent.angularSpeed);
+            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.golem.DeltaTime * input.golem.navMeshAgent.angularSpeed);
         }
     }
     
@@ -36,7 +36,7 @@ public partial class Golem {
 
         public override void Update(Golem_Input input) {
             base.Update(input);
-            waitTimer += Time.deltaTime;
+            waitTimer += input.golem.DeltaTime;
             if (waitTimer >= waitDuration) {
                 input.stateMachine.SetState(new State_Charging());
             }
@@ -57,7 +57,7 @@ public partial class Golem {
 
         public override void Update(Golem_Input input) {
             base.Update(input);
-            chargeTimer = Mathf.MoveTowards(chargeTimer, input.golem.chargeTime, Time.deltaTime);
+            chargeTimer = Mathf.MoveTowards(chargeTimer, input.golem.chargeTime, input.golem.DeltaTime);
             float chargePercent = chargeTimer / input.golem.chargeTime;
             Transform t = input.golem.transform;
             t.position = new Vector3(positionAnchor.x + Random.Range(-input.golem.chargeAmplitude, 
@@ -81,9 +81,9 @@ public partial class Golem {
         }
 
         public override void Update(Golem_Input input) {
-            chargeTimer += Time.deltaTime;
             Golem golem = input.golem;
-            golem.controller.Move(golem.chargeSpeed * Time.deltaTime * golem.transform.forward);
+            chargeTimer += golem.DeltaTime;
+            golem.controller.Move(golem.chargeSpeed * golem.DeltaTime * golem.transform.forward);
             if (chargeTimer >= golem.chargeDuration) {
                 input.stateMachine.SetState(input.aggroTarget == null ? new State_Idle() : new State_AggroWait());
             }

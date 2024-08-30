@@ -22,9 +22,7 @@ public class TowerProjectile : MonoBehaviour {
         if ((coll.collider is MeshCollider
             || coll.collider is BoxCollider
             || coll.collider is TerrainCollider)) {
-            Destroy(rb);
-            Destroy(this.coll);
-            StartCoroutine(IEnd());
+            End();
         }
     }
 
@@ -41,5 +39,18 @@ public class TowerProjectile : MonoBehaviour {
             yield return null;
         }
         Destroy(gameObject);
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other is BoxCollider && other.TryGetComponent(out Golem golem)) {
+            golem.TakeDamage();
+            End();
+        }
+    }
+
+    private void End() {
+        Destroy(rb);
+        Destroy(coll);
+        StartCoroutine(IEnd());
     }
 }

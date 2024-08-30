@@ -11,11 +11,19 @@ public class TowerTempo : Summon {
                                    gyroAccel;
     [SerializeField] private Transform gyroOuter, gyroInner;
 
+    private Oscillator oscillator;
     private float gyroSpeed;
     private bool init;
 
+    protected override void Awake() {
+        base.Awake();
+        oscillator = GetComponentInChildren<Oscillator>(true);
+        oscillator.enabled = false;
+    }
+
     public override void Init() {
         init = true;
+        oscillator.enabled = true;
         StartCoroutine(ISpawnTempoArea());
     }
 
@@ -30,20 +38,5 @@ public class TowerTempo : Summon {
     private IEnumerator ISpawnTempoArea() {
         yield return new WaitForSeconds(tempoSpawnDelay);
         Instantiate(tempoArea, launchPoint.transform.position, Quaternion.identity);
-    }
-}
-
-public class TempoArea : MonoBehaviour {
-
-    [SerializeField] private float growSpeed;
-    private Vector3 targetScale;
-
-    void Awake() {
-        targetScale = transform.localScale;
-        transform.localScale = Vector3.zero;
-    }
-
-    void Update() {
-        transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, growSpeed * Time.deltaTime);
     }
 }

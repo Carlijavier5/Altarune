@@ -20,7 +20,7 @@ public partial class Golem {
         }
 
         public override void Update(Golem_Input input) {
-            waitTimer += Time.deltaTime;
+            waitTimer += input.golem.DeltaTime;
             if (waitTimer >= waitDuration) {
                 input.stateMachine.SetState(new State_Roam());
             }

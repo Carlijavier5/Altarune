@@ -38,9 +38,9 @@ public class SummonController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Q)) {
             SetSelectionType(selectedType == SelectionType.Battery ? SelectionType.None : SelectionType.Battery);
         } else if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower);
+            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 0);
         } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower);
+            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 1);
         }
 
         if (selectedType != 0) {

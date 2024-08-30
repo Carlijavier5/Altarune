@@ -1,20 +1,40 @@
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public partial class Golem : Entity {
 
-    private StateMachine<Golem_Input> stateMachine = new();
+    public override float TimeScale {
+        get => base.TimeScale;
+        set {
+            timeScale = value;
+            foreach (Oscillator oscillator in oscillators) {
+                oscillator.SetTimeScale(timeScale);
+                navMeshAgent.speed = baseLinearSpeed * timeScale;
+                navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
+
+            }
+        }
+    }
+
+    private readonly StateMachine<Golem_Input> stateMachine = new();
 
     [Header("General")]
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private Collider contactCollider;
+    [SerializeField] private Material flashMat;
+    [SerializeField] private float flashTime;
 
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
+    private float baseLinearSpeed, baseAngularSpeed;
 
     void Awake() {
+        baseLinearSpeed = navMeshAgent.speed;
+        baseAngularSpeed = navMeshAgent.angularSpeed;
         rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
         oscillators = GetComponentsInChildren<Oscillator>(true);
 
@@ -50,6 +70,27 @@ public partial class Golem : Entity {
         if (other.TryGetComponent(out Player _)) {
             stateMachine.StateInput.SetTarget(null);
             stateMachine.SetState(new State_Idle());
+        }
+    }
+
+    private int health = 3;
+
+    public void TakeDamage() => StartCoroutine(ITakeDamage());
+    private IEnumerator ITakeDamage() {
+        contactCollider.enabled = false;
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        Dictionary<Renderer, Material[]> matDict = new();
+        foreach (Renderer renderer in renderers) {
+            matDict[renderer] = renderer.sharedMaterials;
+            renderer.sharedMaterial = flashMat;
+        }
+        yield return new WaitForSeconds(flashTime);
+        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
+            kvp.Key.sharedMaterials = kvp.Value;
+        }
+        contactCollider.enabled = true;
+        if (--health <= 0) {
+            Ragdoll();
         }
     }
 }
