@@ -20,7 +20,8 @@ public class TowerProjectile : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll) {
         if ((coll.collider is MeshCollider
-            || coll.collider is BoxCollider)) {
+            || coll.collider is BoxCollider
+            || coll.collider is TerrainCollider)) {
             Destroy(rb);
             Destroy(this.coll);
             StartCoroutine(IEnd());
