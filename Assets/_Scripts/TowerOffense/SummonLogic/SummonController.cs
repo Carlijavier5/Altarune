@@ -24,7 +24,7 @@ public class SummonController : MonoBehaviour {
     private Vector3 lastHitPoint;
 
     private Battery hintBattery;
-    private Tower hintTower;
+    private ProjectileTower hintTower;
 
     private int selectedSlot = 0;
 
@@ -113,7 +113,7 @@ public class SummonController : MonoBehaviour {
                     break;
                 case SelectionType.Tower:
                     if (hintBatteries.Count() > 0) {
-                        Tower tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
+                        ProjectileTower tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
                         tower.DoSpawnAnim();
                         SetSelectionType(SelectionType.None);
                         tower.Init();
