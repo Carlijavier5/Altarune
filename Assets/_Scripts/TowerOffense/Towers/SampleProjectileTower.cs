@@ -1,11 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public interface Tower {
-    public void Init();
-}
-
-public class ProjectileTower : Summon, Tower {
+public class SampleProjectileTower : Summon {
 
     [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;
@@ -21,7 +17,7 @@ public class ProjectileTower : Summon, Tower {
         angle = Random.Range(0, 360);
     }
 
-    public void Init() => init = true;
+    public override void Init() => init = true;
 
     void Update() {
         if (!init) return;
@@ -34,9 +30,5 @@ public class ProjectileTower : Summon, Tower {
             projectile.Launch(result);
             attackTick = 0;
         }
-    }
-
-    public void HalfFade() {
-        SwapFade(true);
     }
 }
