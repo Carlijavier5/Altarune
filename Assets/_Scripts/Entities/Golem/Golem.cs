@@ -14,7 +14,6 @@ public partial class Golem : Entity {
                 oscillator.SetTimeScale(timeScale);
                 navMeshAgent.speed = baseLinearSpeed * timeScale;
                 navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
-
             }
         }
     }
