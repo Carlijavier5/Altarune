@@ -2,9 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Layer for status effect and attributes
+/// </summary>
 public class Entity : BaseObject {
 
     protected HashSet<StatusEffect> statusEffects = new();
+
+    /// <summary>
+    /// If you want your enemy to be buffed by things then they MUST use attributes (WIP)
+    /// </summary>
+    protected class EntityAttributes {
+
+    }
 
     protected virtual void Update() {
         foreach (StatusEffect statusEffect in statusEffects) {
