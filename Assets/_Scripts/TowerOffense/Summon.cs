@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Summon : BaseObject {
+public abstract class Summon : BaseObject {
 
     [System.Serializable]
     protected class SummonProperties {
@@ -20,9 +20,9 @@ public class Summon : BaseObject {
         }
     }
 
-    public void DoSpawnAnim() {
-        StartCoroutine(AnimateObjectSpawn());
-    }
+    public abstract void Init();
+
+    public void DoSpawnAnim() => StartCoroutine(AnimateObjectSpawn());
 
     private IEnumerator AnimateObjectSpawn() {
         Transform t = transform;
@@ -38,13 +38,13 @@ public class Summon : BaseObject {
         }
     }
 
-    protected void SwapFade(bool on) {
+    public void ToggleHologram(bool on) {
         foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
             kvp.Key.sharedMaterials = on ? new Material[] { summonProperties.fadeMaterial } : kvp.Value;
         }
     }
 
-    public void PaintRed(bool doRed) {
+    public void ToggleHologramRed(bool doRed) {
         foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
             MaterialPropertyBlock mpb = new();
             if (doRed) mpb.SetColor("_BaseColor", Color.red);

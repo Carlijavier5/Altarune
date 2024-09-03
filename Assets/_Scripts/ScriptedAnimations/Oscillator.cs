@@ -5,6 +5,7 @@ using UnityEngine;
 public class Oscillator : MonoBehaviour {
 
     [SerializeField] private float amplitude, speed;
+    private float timeScale = 1;
     private Vector3 anchor;
 
     void Awake() {
@@ -12,6 +13,8 @@ public class Oscillator : MonoBehaviour {
     }
 
     void Update() {
-        transform.localPosition = anchor + Mathf.Sin(Time.time * speed) * amplitude * Vector3.up;
+        transform.localPosition = anchor + Mathf.Sin(Time.time * timeScale * speed) * amplitude * Vector3.up;
     }
+
+    public void SetTimeScale(float timeScale) => this.timeScale = timeScale;
 }

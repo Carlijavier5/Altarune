@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : Entity {
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;

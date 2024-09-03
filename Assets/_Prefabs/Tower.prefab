@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2550746929009170975}
-  - component: {fileID: 500811477366762478}
+  - component: {fileID: 7590590824037063561}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   - {fileID: 4613688277624857598}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &500811477366762478
+--- !u!114 &7590590824037063561
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 92340364433473164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb76378f53149cf43b76b6fddcdd6341, type: 3}
+  m_Script: {fileID: 11500000, guid: a4f09c5cf4850fb459929b50756001ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   summonProperties:
@@ -210,8 +210,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 3782081999992796225, guid: 32be2cb499d9b7e4b933102b06800742,
     type: 3}
   launchPoint: {fileID: 9067446884199606921}
-  attackInterval: 0.6
-  angleShift: 45
+  attackInterval: 0.15
+  angleShift: 15
 --- !u!1 &901021575514432436
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,7 +313,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -396,7 +396,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -479,7 +479,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 452e138ebf756a749b144b0bd5bb4ddb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -562,7 +562,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -645,7 +645,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -728,7 +728,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -811,7 +811,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -845,7 +845,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2726ae42a965468428cb5d14d3c898fe, type: 2}
+      objectReference: {fileID: 2100000, guid: 17ce603ff948e6241b769425d22baadf, type: 2}
     - target: {fileID: 8242553912159957799, guid: 32acca1c7746bc14fbac4cb5081f448a,
         type: 3}
       propertyPath: m_LocalScale.x
