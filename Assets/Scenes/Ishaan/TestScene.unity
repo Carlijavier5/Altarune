@@ -1261,6 +1261,7 @@ GameObject:
   - component: {fileID: 648176491}
   - component: {fileID: 648176490}
   - component: {fileID: 648176489}
+  - component: {fileID: 648176496}
   m_Layer: 0
   m_Name: Mimic
   m_TagString: Untagged
@@ -1302,8 +1303,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad4f6ca970c74c57964e9aa811b83ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1471564722}
+  Player: {fileID: 1068848720}
+  playerTransform: {fileID: 1471564722}
   detectRadius: 5
+  atkRadius: 1.5
   moveSpeed: 3.5
 --- !u!143 &648176491
 CharacterController:
@@ -1322,7 +1325,7 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Height: 1
   m_Radius: 0.5
@@ -1347,7 +1350,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.9999998, y: 1, z: 1.7047329}
@@ -1417,6 +1420,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &648176496
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648176488}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &687345554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,6 +1826,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938337596}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1068848720 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3774512824984236609, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+    type: 3}
+  m_PrefabInstance: {fileID: 1942190075272092864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1234602331
 GameObject:
   m_ObjectHideFlags: 0

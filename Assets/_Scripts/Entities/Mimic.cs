@@ -5,33 +5,38 @@ using UnityEngine.AI;
 
 public class Mimic : MonoBehaviour
 {
-    public Transform player;
+    public GameObject Player;
+    public Transform playerTransform;
     public float detectRadius = 5f;
-    public float moveSpeed = 3.5f;
+    public float atkRadius = 1.5f;
+    public float moveSpeed = 5f;
 
     private NavMeshAgent agent;
-    private CharacterController char;
+    private CharacterController controller;
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        char = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float distToPlayer = Vector3.Distance(transform.position, player.position);
+        float distToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         if (distToPlayer <= detectRadius) {
-            agent.SetDestination(player.position);
+            agent.SetDestination(playerTransform.position);
         }
         else {
             agent.ResetPath();
         }
     }
-
-    void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player")) {
+    void Attack() {
+        agent.enabled = false;
+        controller.enabled = true;
+    }
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject == Player) {
             Debug.Log("damage will be dealt");
         }
     }
