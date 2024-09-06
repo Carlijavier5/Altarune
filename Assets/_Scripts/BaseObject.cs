@@ -14,4 +14,10 @@ public class BaseObject : MonoBehaviour {
     public virtual float TimeScale { get => timeScale; set => timeScale = value; }
 
     protected float DeltaTime => Time.deltaTime * timeScale;
+
+    public event System.Func<int, ElementType, bool> OnTryDamage;
+
+    public bool TryDamage(int damage, ElementType element = ElementType.Physical) {
+        return (bool) OnTryDamage?.Invoke(damage, element);
+    }
 }
