@@ -2,7 +2,7 @@ public class Shinobi_Input : StateInput
 {
     public StateMachine<Shinobi_Input> stateMachine;
     public Shinobi shinobi;
-    public Entity aggroTarget;
+    public Entity player;
 
     public Shinobi_Input(StateMachine<Shinobi_Input> stateMachine, Shinobi shinobi)
     {
@@ -10,8 +10,8 @@ public class Shinobi_Input : StateInput
         this.shinobi = shinobi;
     }
 
-    public void SetTarget(Entity aggroTarget)
+    public void SetPlayer(Entity player)
     {
-        this.aggroTarget = aggroTarget;
+        this.player = player;
     }
 }

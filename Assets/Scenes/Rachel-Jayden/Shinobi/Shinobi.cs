@@ -11,6 +11,10 @@ public partial class Shinobi : MonoBehaviour
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private Shinobi_SweepRadius sweepRadius;
+    [SerializeField] private Material flashMat;
+    [SerializeField] private Entity player;
+    [SerializeField] private float chaseDistance = 7.75f;
     [SerializeField] private int health = 3;
 
     private void Awake()
@@ -18,7 +22,9 @@ public partial class Shinobi : MonoBehaviour
         controller.enabled = false;
 
         Shinobi_Input input = new(stateMachine, this);
-        stateMachine.Init(input, new State_Roam());
+        stateMachine.Init(input, new State_Follow());
+        stateMachine.StateInput.SetPlayer(player);
+        gameObject.GetComponent<SphereCollider>().radius = chaseDistance;
     }
 
     private void Update()
@@ -28,10 +34,9 @@ public partial class Shinobi : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player player))
+        if (other.TryGetComponent(out Player _))
         {
-            stateMachine.StateInput.SetTarget(player);
-            stateMachine.SetState(new State_Aggro());
+            stateMachine.SetState(new State_Chase());
         }
     }
 
@@ -39,8 +44,7 @@ public partial class Shinobi : MonoBehaviour
     {
         if (other.TryGetComponent(out Player _))
         {
-            stateMachine.StateInput.SetTarget(null);
-            stateMachine.SetState(new State_Roam());
+            stateMachine.SetState(new State_Follow());
         }
     }
 
@@ -56,5 +60,31 @@ public partial class Shinobi : MonoBehaviour
 
         Debug.Log("died");
         Destroy(gameObject);
+    }
+
+    private void Sweep()
+    {
+        StartCoroutine(ISweep());
+    }
+
+    private bool _sweeping = false;
+
+    private IEnumerator ISweep()
+    {
+        _sweeping = true;
+        Debug.Log("sweep");
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        Dictionary<Renderer, Material[]> matDict = new();
+        foreach (Renderer renderer in renderers)
+        {
+            matDict[renderer] = renderer.sharedMaterials;
+            renderer.sharedMaterial = flashMat;
+        }
+        yield return new WaitForSeconds(2);
+        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict)
+        {
+            kvp.Key.sharedMaterials = kvp.Value;
+        }
+        _sweeping = false;
     }
 }
