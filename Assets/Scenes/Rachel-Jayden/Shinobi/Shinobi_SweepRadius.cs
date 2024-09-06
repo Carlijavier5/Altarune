@@ -9,11 +9,17 @@ public class Shinobi_SweepRadius : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        ShouldSweep = true;
+        if (other.TryGetComponent(out Player _))
+        {
+            ShouldSweep = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        ShouldSweep = false;
+        if (other.TryGetComponent(out Player _))
+        {
+            ShouldSweep = false;
+        }
     }
 }
