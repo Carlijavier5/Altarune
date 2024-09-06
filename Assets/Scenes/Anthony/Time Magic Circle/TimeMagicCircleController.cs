@@ -29,7 +29,7 @@ public class TimeMagicCircleController : MonoBehaviour
 
     [Space] [Header("Debug")]
     [ReadOnly] Color currentColor;
-    [ReadOnly] float currentDirectionalMultiplier = 1f;
+    [ReadOnly] float currentDirectionalMultiplier = -1f;
     
     TimeTowerState state;
     MaterialPropertyBlock mpb;
