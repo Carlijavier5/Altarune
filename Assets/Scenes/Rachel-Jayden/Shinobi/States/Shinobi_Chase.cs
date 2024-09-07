@@ -12,14 +12,14 @@ public partial class Shinobi
         public override void Enter(Shinobi_Input input)
         {
             _agent = input.shinobi.navMeshAgent;
-            _agent.speed = 2.5f;
+            _agent.speed = input.shinobi.chaseSpeed;
         }
 
         public override void Update(Shinobi_Input input)
         {
             _agent.SetDestination(input.player.transform.position);
 
-            if (input.shinobi.sweepRadius.ShouldSweep)
+            if (input.shinobi.sweepRadius.shouldSweep)
             {
                 input.stateMachine.SetState(new State_Sweep());
             }

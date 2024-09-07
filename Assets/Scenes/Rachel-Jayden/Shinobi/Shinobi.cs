@@ -9,13 +9,18 @@ public partial class Shinobi : MonoBehaviour
 {
     private readonly StateMachine<Shinobi_Input> stateMachine = new();
 
+    [Header("Setup")]
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
     [SerializeField] private Material flashMat;
     [SerializeField] private Entity player;
+
+    [Header("Attributes")]
     [SerializeField] private float chaseDistance = 7.75f;
     [SerializeField] private int health = 3;
+    [SerializeField] private float followSpeed = 0.75f;
+    [SerializeField] private float chaseSpeed = 3f;
 
     private void Awake()
     {

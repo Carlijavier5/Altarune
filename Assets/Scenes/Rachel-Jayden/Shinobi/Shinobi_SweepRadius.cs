@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Shinobi_SweepRadius : MonoBehaviour
 {
-    [NonSerialized] public bool ShouldSweep = false;
+    [NonSerialized] public bool shouldSweep = false;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Player _))
         {
-            ShouldSweep = true;
+            shouldSweep = true;
         }
     }
 
@@ -19,7 +19,7 @@ public class Shinobi_SweepRadius : MonoBehaviour
     {
         if (other.TryGetComponent(out Player _))
         {
-            ShouldSweep = false;
+            shouldSweep = false;
         }
     }
 }
