@@ -26,6 +26,9 @@ public class TimeMagicCircleController : MonoBehaviour
     [SerializeField] AnimationCurve modeChangeCurve;
     [SerializeField] AnimationCurve transitionScaleCurve;
     [SerializeField] float transitionDuration = 0.75f;
+    
+    [SerializeField] ParticleSystem psPositive;
+    [SerializeField] ParticleSystem psNegative;
 
     [Space] [Header("Debug")]
     [ReadOnly] Color currentColor;
@@ -137,6 +140,19 @@ public class TimeMagicCircleController : MonoBehaviour
         Color endColor = state == TimeTowerState.Forward ? positiveColor : negativeColor;
 
         float radiusBeforeAnim = radius;
+        
+        // Particle systems
+        switch (state)
+        {
+            case TimeTowerState.Forward:
+                psPositive.Play();
+                psNegative.Stop();
+                break;
+            case TimeTowerState.Backward:
+                psPositive.Stop();
+                psNegative.Play();
+                break;
+        }
         
         while (timeElapsed < transitionDuration)
         {
