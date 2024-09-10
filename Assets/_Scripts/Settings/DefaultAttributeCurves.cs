@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class DefaultAttributeCurves : ScriptableObject {
-    [SerializeField] private AttributeCurves data;
-    public AttributeCurves Data => data.Clone();
+    [SerializeField] private AttributeCurves defaultCurves;
+    public AttributeCurves DefaultCurves => defaultCurves.Clone();
 }
 #endif

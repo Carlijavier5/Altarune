@@ -9,7 +9,7 @@ public class HealthAttributes {
 
     public int health;
     [Range(0, 1)] public float defense;
-    public float healModifier;
+    [Range(0, 1)] public float healModifier;
 
     public HealthAttributes(AttributeCurves curves) {
         this.curves = curves;
@@ -24,6 +24,7 @@ public class HealthAttributes {
     }
 }
 
+[System.Serializable]
 public class AttributeCurves {
     public AnimationCurve defenseCurve, healModCurve;
     public AttributeCurves Clone() => (AttributeCurves) MemberwiseClone();

@@ -1,5 +1,72 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &23957012290714205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5877120909157070265}
+  - component: {fileID: 3618322109459798283}
+  - component: {fileID: 3767377471688116319}
+  m_Layer: 0
+  m_Name: AggroRange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5877120909157070265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23957012290714205}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6539724813760751204}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3618322109459798283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23957012290714205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba56c4e9ebeb17d47801b956ef6fe911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensitiveFactions: 0000000001000000
+--- !u!135 &3767377471688116319
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23957012290714205}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 6
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &113297275092988112
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,9 +952,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6539724813760751204}
   - component: {fileID: 5593935329474835780}
+  - component: {fileID: 5096571036659176866}
   - component: {fileID: 425408896015153853}
   - component: {fileID: 6022249076964588611}
-  - component: {fileID: 7702452302406604732}
   - component: {fileID: 8505787705523193643}
   m_Layer: 0
   m_Name: Golem
@@ -910,6 +977,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3862158570344152569}
+  - {fileID: 5877120909157070265}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5593935329474835780
@@ -924,11 +992,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c417d275fa80fd4e93de5449c0b7d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 0
   controller: {fileID: 6022249076964588611}
   navMeshAgent: {fileID: 425408896015153853}
-  contactCollider: {fileID: 8505787705523193643}
-  flashMat: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
-  flashTime: 0.1
+  aggroRange: {fileID: 3618322109459798283}
   aggroWaitTimeRange: {x: 0.75, y: 1}
   chargeAmplitude: 0.2
   chargeTime: 0.75
@@ -938,6 +1005,40 @@ MonoBehaviour:
   roamDistanceRange: {x: 3, y: 5}
   roamWallBuffer: 2
   roamSpeed: 10
+--- !u!114 &5096571036659176866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278850283009805638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f600c5941852404797ee6ec4a0a93aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 5593935329474835780}
+  hpAttributes:
+    curves:
+      defenseCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      healModCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    health: 3
+    defense: 0
+    healModifier: 0
+  iFrameProperties:
+    flashMaterial: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
+    duration: 0.1
+  healthMeter: {fileID: 0}
 --- !u!195 &425408896015153853
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -986,27 +1087,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!135 &7702452302406604732
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7278850283009805638}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 6
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &8505787705523193643
 BoxCollider:
   m_ObjectHideFlags: 0
