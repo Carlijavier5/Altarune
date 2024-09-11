@@ -32,12 +32,40 @@ public class GrappleTower : Summon
         if (!init) return;
         grappleTick += Time.deltaTime;
         if (grappleTick >= cooldownInterval) {
+            //Find all nearby gameobjects
+            Collider[] collidersInRange = Physics.OverlapSphere(transform.position, range);
+            GameObject[] objectsInRange = new GameObject[collidersInRange.Length];
+            for (int i = 0; i < collidersInRange.Length; i++) {
+                objectsInRange[i] = collidersInRange[i].gameObject;
+            }
+
+            //find the nearest gameobject with a golem component (note: this should be broadened to include all monsters/enemies that are movable)
+            float greatestDist = 0;
+            Golem furthestGolem = null;
+            foreach (GameObject go in objectsInRange) {
+                if (go.TryGetComponent<Golem>(out furthestGolem)) {
+                    if (furthestGolem == null || getDistance(transform.position, go.transform.position) > greatestDist) {
+                        greatestDist = getDistance(transform.position, go.transform.position);
+                    }
+                }
+            }
+            if (furthestGolem != null) {
+
+                grappleTick = 0;
+            }
             // TowerProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);
             // Quaternion myRotation = Quaternion.AngleAxis(angle = (angle + angleShift) % 360, Vector3.up);
             // Vector3 startingDirection = transform.right;
             // Vector3 result = myRotation * startingDirection;
             // projectile.Launch(result);
-            grappleTick = 0;
+            
         }
+    }
+
+    private float getDistance(Vector3 pos1, Vector3 pos2) {
+        float dx = pos1.x - pos2.x;
+        float dy = pos1.y - pos2.y;
+        float dz = pos1.z - pos2.z;
+        return (float) Math.Sqrt(dx * dx + dy * dy + dz * dz);
     }
 }
