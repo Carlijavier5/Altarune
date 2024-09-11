@@ -41,7 +41,18 @@ public partial class Shinobi : MonoBehaviour
     {
         if (other.TryGetComponent(out Player _))
         {
-            stateMachine.SetState(new State_Chase());
+            int rand = Random.Range(0, 2);
+            if (rand == 1)
+            {
+                Debug.Log("sweep");
+                stateMachine.SetState(new State_Chase());
+            }
+            else
+            {
+                Debug.Log("zigzag");
+                stateMachine.SetState(new State_ZigZag());
+            }
+
         }
     }
 
@@ -71,13 +82,16 @@ public partial class Shinobi : MonoBehaviour
     {
         StartCoroutine(ISweep());
     }
+    private void Wait()
+    {
+        StartCoroutine(IWait());
+    }
 
     private bool _sweeping = false;
 
     private IEnumerator ISweep()
     {
         _sweeping = true;
-        Debug.Log("sweep");
         Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
         Dictionary<Renderer, Material[]> matDict = new();
         foreach (Renderer renderer in renderers)
@@ -91,5 +105,10 @@ public partial class Shinobi : MonoBehaviour
             kvp.Key.sharedMaterials = kvp.Value;
         }
         _sweeping = false;
+    }
+
+    private IEnumerator IWait()
+    {
+        yield return new WaitForSeconds(1);
     }
 }
