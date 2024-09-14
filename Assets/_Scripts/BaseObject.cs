@@ -7,12 +7,18 @@ using UnityEngine;
 /// The object that all interactable objects inherit from; <br/>
 /// When object A interacts with object B you interact through this base object class; <br/>
 /// </summary>
-public abstract class BaseObject : MonoBehaviour {
+public abstract partial class BaseObject : MonoBehaviour {
+
+    #region || Local Timescale ||
 
     protected float timeScale = 1;
     public virtual float TimeScale { get => timeScale; set => timeScale = value; }
 
     protected float DeltaTime => Time.deltaTime * timeScale;
+
+    #endregion
+
+    #region || Damageable Module ||
 
     public event System.Func<int, ElementType, bool> OnTryDamage;
     public event System.Action<BaseObject> OnPerish;
@@ -30,8 +36,14 @@ public abstract class BaseObject : MonoBehaviour {
     /// </summary>
     public virtual void Perish() => OnPerish.Invoke(this);
 
+    #endregion
 
-    #region Material Swap Utilities
+    public void DetachModules() {
+        ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
+        for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
+    }
+
+    #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
     private Dictionary<Renderer, Material[]> materialDict = new();

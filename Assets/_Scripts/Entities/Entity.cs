@@ -4,28 +4,25 @@ using UnityEngine;
 
 public enum EntityFaction { Friendly, Neutral, Hostile }
 
-/// <summary>
-/// Layer for status effect and attributes
-/// </summary>
 public class Entity : BaseObject {
 
     [SerializeField] private EntityFaction faction;
     public EntityFaction Faction => faction;
 
-    protected HashSet<StatusEffect> statusEffects = new();
+    public HashSet<StatusEffect> StatusEffects { get; private set; } = new();
 
     protected virtual void Update() {
-        foreach (StatusEffect statusEffect in statusEffects) {
+        foreach (StatusEffect statusEffect in StatusEffects) {
             if (statusEffect.Update(this)) {
                 statusEffect.Terminate(this);
-                statusEffects.Remove(statusEffect);
+                StatusEffects.Remove(statusEffect);
             }
         }
     }
 
     private void ApplyEffects(StatusEffect[] incomingEffects) {
         foreach (StatusEffect statusEffect in incomingEffects) {
-            statusEffects.Add(statusEffect);
+            StatusEffects.Add(statusEffect);
             statusEffect.Apply(this);
         }
     }

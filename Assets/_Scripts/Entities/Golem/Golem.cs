@@ -66,7 +66,8 @@ public partial class Golem : Entity {
             rb.AddForce(force);
             Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
             rb.AddTorque(torque);
-        } Destroy(this);
+        } DetachModules();
+        Destroy(this);
     }
 
     public override void Perish() {
