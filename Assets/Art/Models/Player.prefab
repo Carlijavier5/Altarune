@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2208400701102557967}
   - component: {fileID: 771621385791667774}
   - component: {fileID: 4339699122144314708}
+  - component: {fileID: 321847321855962569}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d195186499cc095499936c11ab2cf7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 0
   controller: {fileID: 4339699122144314708}
   animator: {fileID: 771621385791667774}
   linearAcceleration: 12
@@ -67,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee0d278b3a37824d99011bb334afa59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 0
 --- !u!95 &771621385791667774
 Animator:
   serializedVersion: 5
@@ -114,6 +117,151 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &321847321855962569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774512824984236609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23b029a60a3cf254fb9df8a149d51625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 8726108569643392650}
+  defaultHPAttributes:
+    curves:
+      defenseCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -0.93688995
+          outSlope: -0.93688995
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.3625
+        - serializedVersion: 3
+          time: 1
+          value: 0.4
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 136
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      fireResCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: -0.004166667
+          value: 1.0023584
+          inSlope: -1.6071426
+          outSlope: -1.6071426
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.23045267
+        - serializedVersion: 3
+          time: 1.0083333
+          value: -0
+          inSlope: -0.03537736
+          outSlope: -0.03537736
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.19753084
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      iceResCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: -0.004166667
+          value: 1.0023584
+          inSlope: -1.6071426
+          outSlope: -1.6071426
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.23045267
+        - serializedVersion: 3
+          time: 1.0083333
+          value: 0
+          inSlope: -0.03537736
+          outSlope: -0.03537736
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.19753084
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      poisonResCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: -0.004166667
+          value: 1.0023584
+          inSlope: -1.6071426
+          outSlope: -1.6071426
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.23045267
+        - serializedVersion: 3
+          time: 1.0083333
+          value: 0
+          inSlope: -0.03537736
+          outSlope: -0.03537736
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.19753084
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      healModCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -0.93688995
+          outSlope: -0.93688995
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.3625
+        - serializedVersion: 3
+          time: 1
+          value: 0.4
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 136
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    health: 3
+    defense: 0
+    fireRes: 0
+    iceRes: 0
+    poisonRes: 0
+    healModifier: 0
+  iFrameProperties:
+    flashMaterial: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
+    duration: 1
+  doubleDamageThreshold: 20
 --- !u!1001 &7228530925472516182
 PrefabInstance:
   m_ObjectHideFlags: 0
