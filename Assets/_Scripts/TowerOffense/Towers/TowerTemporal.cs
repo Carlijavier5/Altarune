@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerTempo : Summon {
+public class TowerTemporal : Summon {
 
     [SerializeField] private TempoArea tempoArea;
     [SerializeField] private Transform launchPoint;
