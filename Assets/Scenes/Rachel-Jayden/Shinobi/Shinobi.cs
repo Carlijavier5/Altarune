@@ -1,11 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Windows;
 
 public partial class Shinobi : MonoBehaviour
 {
@@ -87,7 +82,6 @@ public partial class Shinobi : MonoBehaviour
             return;
         }
 
-        /*
         int rand = UnityEngine.Random.Range(0, 2);
         if (rand == 1)
         {
@@ -97,9 +91,6 @@ public partial class Shinobi : MonoBehaviour
         {
             stateMachine.SetState(new State_ChargingZigZag());
         }
-        */
-
-        stateMachine.SetState(new State_ChargingZigZag());
     }
 
     private void DecideAggro()
