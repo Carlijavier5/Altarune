@@ -20,14 +20,8 @@ public partial class Shinobi
             if (!input.shinobi._sweeping)
             {
                 input.shinobi.Sweep();
-                if (_agent.remainingDistance > input.shinobi.chaseDistance)
-                {
-                    input.stateMachine.SetState(new State_Follow());
-                } 
-                else
-                {
-                    input.stateMachine.SetState(new State_Chase());
-                }
+
+                input.stateMachine.SetState(new State_Idle());
             }
         }
 

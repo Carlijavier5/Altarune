@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,12 @@ public partial class Shinobi : MonoBehaviour
     private readonly StateMachine<Shinobi_Input> stateMachine = new();
 
     [Header("Setup")]
-    [SerializeField] private CharacterController controller;
-    [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
     [SerializeField] private Material flashMat;
     [SerializeField] private Entity player;
+
+    private CharacterController controller;
+    private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
     [SerializeField] private float chaseDistance = 7.75f;
@@ -22,9 +24,15 @@ public partial class Shinobi : MonoBehaviour
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
+    private bool _shouldAggro;
+
     private void Awake()
     {
+        controller = GetComponent<CharacterController>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+
         controller.enabled = false;
+        _shouldAggro = true;
 
         Shinobi_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Follow());
@@ -39,9 +47,9 @@ public partial class Shinobi : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player _))
+        if (other.TryGetComponent(out Player _) && _shouldAggro)
         {
-            int rand = Random.Range(0, 2);
+            int rand = UnityEngine.Random.Range(0, 2);
             if (rand == 1)
             {
                 Debug.Log("sweep");
@@ -50,9 +58,8 @@ public partial class Shinobi : MonoBehaviour
             else
             {
                 Debug.Log("zigzag");
-                stateMachine.SetState(new State_ZigZag());
+                stateMachine.SetState(new State_ChargingZigZag());
             }
-
         }
     }
 
@@ -82,6 +89,11 @@ public partial class Shinobi : MonoBehaviour
     {
         StartCoroutine(ISweep());
     }
+    private void Zig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
+    {
+        StartCoroutine(IZig(newPosition1, newPosition2, newPosition3));
+    }
+
     private void Wait()
     {
         StartCoroutine(IWait());
@@ -107,8 +119,21 @@ public partial class Shinobi : MonoBehaviour
         _sweeping = false;
     }
 
+    private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
+    {
+        controller.transform.position = newPosition1;
+        yield return new WaitForSeconds(0.1f);
+        controller.transform.position = newPosition2;
+        yield return new WaitForSeconds(0.1f);
+        controller.transform.position = newPosition3;
+    }
+
     private IEnumerator IWait()
     {
-        yield return new WaitForSeconds(1);
+        _shouldAggro = false;
+
+        yield return new WaitForSeconds(2f);
+
+        _shouldAggro = true;
     }
 }
