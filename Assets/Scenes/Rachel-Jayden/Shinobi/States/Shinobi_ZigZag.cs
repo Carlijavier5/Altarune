@@ -33,17 +33,25 @@ public partial class Shinobi
         {
             if (input.shinobi.controller)
             {
+                Vector3 shinobiPosition = input.shinobi.controller.transform.position;
                 Vector3 playerPosition = input.player.transform.position;
-                Vector3 directionToPlayer = (input.shinobi.controller.transform.position - playerPosition).normalized;
 
-                Vector3 position1 = (playerPosition + directionToPlayer * -3f) / 3;
-                Vector3 position2 = 2 * (playerPosition + directionToPlayer * -3f) / 3;
-                Vector3 position3 = (playerPosition + directionToPlayer * -3f);
+                Vector3 distanceToPlayerExtended = (playerPosition - shinobiPosition) * 1.3f;
+
+                Vector3 distance1 = shinobiPosition + distanceToPlayerExtended / 3.0f;
+                Vector3 distance2 = shinobiPosition + (2.0f * distanceToPlayerExtended / 3.0f);
+                Vector3 distance3 = shinobiPosition + (3.0f * distanceToPlayerExtended / 3.0f);
+
+                Vector3 offset1 = new(distanceToPlayerExtended.z / 3.0f, 0, -distanceToPlayerExtended.x / 3.0f);
+                Vector3 offset2 = new(-distanceToPlayerExtended.z / 3.0f, 0, distanceToPlayerExtended.x / 3.0f);
+                Vector3 offset3 = new(distanceToPlayerExtended.z / 3.0f, 0, -distanceToPlayerExtended.x / 3.0f);
+
+                Vector3 position1 = distance1 + offset1;
+                Vector3 position2 = distance2 + offset2;
+                Vector3 position3 = distance3 + offset3;
 
                 input.shinobi.Zig(position1, position2, position3);
             }
-
-            input.shinobi.stateMachine.SetState(new State_Idle());
         }
     }
 
@@ -52,8 +60,8 @@ public partial class Shinobi
 
         private NavMeshAgent _agent;
         private float chargeTimer;
-        private float chargeTime = 0.75f;
-        private float chargeAmplitude = 0.2f;
+        private readonly float chargeTime = 0.75f;
+        private readonly float chargeAmplitude = 0.2f;
         private Vector3 positionAnchor;
 
         public override void Enter(Shinobi_Input input)
@@ -62,6 +70,7 @@ public partial class Shinobi
             _agent = input.shinobi.navMeshAgent;
             positionAnchor = input.shinobi.transform.position;
 
+            input.shinobi._shouldChange = false;
             _agent.ResetPath();
         }
 
@@ -75,9 +84,15 @@ public partial class Shinobi
                                      positionAnchor.y,
                                      positionAnchor.z + Random.Range(-chargeAmplitude,
                                                         chargeAmplitude) * chargePercent);
-            if (chargePercent >= 1) input.stateMachine.SetState(new State_ZigZag());
+            if (chargePercent >= 1)
+            {
+                input.stateMachine.SetState(new State_ZigZag());
+            }
         }
 
-        public override void Exit(Shinobi_Input input) { }
+        public override void Exit(Shinobi_Input input)
+        {
+            input.shinobi._shouldChange = true;
+        }
     }
 }

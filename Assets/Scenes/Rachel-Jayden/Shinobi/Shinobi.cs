@@ -25,12 +25,15 @@ public partial class Shinobi : MonoBehaviour
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
+    private bool _shouldChange;
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         controller.enabled = false;
+        _shouldChange = true;
 
         Shinobi_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Follow());
@@ -43,9 +46,11 @@ public partial class Shinobi : MonoBehaviour
         stateMachine.Update();
     }
 
+    #region General Methods
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player _))
+        if (other.TryGetComponent(out Player _) && _shouldChange)
         {
             Aggro();
         }
@@ -53,7 +58,7 @@ public partial class Shinobi : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Player _))
+        if (other.TryGetComponent(out Player _) && stateMachine.State != new State_Follow() && _shouldChange)
         {
             stateMachine.SetState(new State_Follow());
         }
@@ -71,8 +76,18 @@ public partial class Shinobi : MonoBehaviour
         Destroy(gameObject);
     }
 
+    #endregion
+
+    #region Behavior
+
     private void Aggro()
     {
+        if (stateMachine.State == new State_ChargingZigZag())
+        {
+            return;
+        }
+
+        /*
         int rand = UnityEngine.Random.Range(0, 2);
         if (rand == 1)
         {
@@ -81,6 +96,21 @@ public partial class Shinobi : MonoBehaviour
         else
         {
             stateMachine.SetState(new State_ChargingZigZag());
+        }
+        */
+
+        stateMachine.SetState(new State_ChargingZigZag());
+    }
+
+    private void DecideAggro()
+    {
+        if (Vector3.Distance(player.transform.position, gameObject.transform.position) <= chaseDistance)
+        {
+            Aggro();
+        }
+        else
+        {
+            stateMachine.SetState(new State_Follow());
         }
     }
 
@@ -99,46 +129,40 @@ public partial class Shinobi : MonoBehaviour
         StartCoroutine(IWait());
     }
 
-    private bool _sweeping = false;
+    #endregion
+
+    #region Coroutines
 
     private IEnumerator ISweep()
     {
-        _sweeping = true;
-        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-        Dictionary<Renderer, Material[]> matDict = new();
-        foreach (Renderer renderer in renderers)
-        {
-            matDict[renderer] = renderer.sharedMaterials;
-            renderer.sharedMaterial = flashMat;
-        }
+        Debug.Log("SWEEPING");
+
+        _shouldChange = false;
+
         yield return new WaitForSeconds(2);
-        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict)
-        {
-            kvp.Key.sharedMaterials = kvp.Value;
-        }
-        _sweeping = false;
+
+        stateMachine.SetState(new State_Idle());
+
+        _shouldChange = true;
     }
 
     private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
     {
         controller.transform.position = newPosition1;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
         controller.transform.position = newPosition2;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
         controller.transform.position = newPosition3;
+
+        stateMachine.SetState(new State_Idle());
     }
 
     private IEnumerator IWait()
     {
         yield return new WaitForSeconds(1.5f);
 
-        if (Vector3.Distance(player.transform.position, gameObject.transform.position) <= chaseDistance)
-        {
-            Aggro();
-        }
-        else
-        {
-            stateMachine.SetState(new State_Follow());
-        }
+        DecideAggro();
     }
+
+    #endregion
 }
