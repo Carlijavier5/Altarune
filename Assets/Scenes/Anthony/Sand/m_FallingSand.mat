@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9152531205128486445
+--- !u!114 &-7478712121621921080
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Clock Circle
-  m_Shader: {fileID: -6465566751694194690, guid: a2d6ecc856181e74a9b781d7924fd2cc,
+  m_Name: m_FallingSand
+  m_Shader: {fileID: -6465566751694194690, guid: 7a2ad7823d1c7fc4f94401e06a15b029,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,12 +37,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 2353cc20e48acfa44896ce91a7acb8da, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2DAsset_c6c2cd9e17534a70b47be71af7e234d8_Out_0_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 2353cc20e48acfa44896ce91a7acb8da, type: 3}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 81a272a7b4cf0cb4a9173c80ebd5cf83, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -59,18 +55,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChromaticBoost: 1.23
-    - _ChromaticSpeed: 1.5
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
-    - _DrawOrder: 0
+    - _Density1: 5.07
+    - _Density2: 4.2
+    - _NoiseXScale: 0.54
+    - _NoiseYScale: 1.58
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RGBSplit: 0.0154
-    - _RGBSplitMin: 0.004
-    - _SecondaryScale: 0.806
-    - _SecondarySpinRate: 0.8
+    - _Speed: 0.51
+    - _Speed2: 0.26
     m_Colors:
-    - _Color: {r: 0.83951104, g: 1.2398427, b: 1.39772, a: 1}
+    - _ColorA: {r: 1.0701902, g: 1.702128, b: 2.087856, a: 1}
+    - _ColorB: {r: 0.69355375, g: 0.010904863, b: 0.105063215, a: 1}
   m_BuildTextureStacks: []
