@@ -7,8 +7,10 @@ public class PlayerDamageable : Damageable {
     public event System.Action<int> OnPlayerDamage;
     [SerializeField] private int doubleDamageThreshold;
 
-    protected override bool BaseObject_OnTryDamage(int amount, ElementType element) {
+    protected override void BaseObject_OnTryDamage(int amount, ElementType element, EventResponse response) {
         if (!iFrameOn) {
+            response.received = true;
+
             int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
             runtimeHP.DoDamage(processedAmount);
             OnPlayerDamage?.Invoke(processedAmount);
@@ -17,10 +19,8 @@ public class PlayerDamageable : Damageable {
             if (runtimeHP.Health <= 0) {
                 Debug.Log("Player ded");
                 ToggleIFrame(true);
-                return true;
             }
         }
-        return !iFrameOn;
     }
 
     protected override IEnumerator ISimulateIFrame() {
