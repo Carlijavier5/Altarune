@@ -11,6 +11,7 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("sweep");
             _agent = input.shinobi.navMeshAgent;
             _agent.ResetPath();
         }

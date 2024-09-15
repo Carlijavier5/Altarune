@@ -12,16 +12,16 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("zigzag");
             _agent = input.shinobi.navMeshAgent;
 
             _agent.enabled = false;
             input.shinobi.controller.enabled = true;
-        }
 
-        public override void Update(Shinobi_Input input)
-        {
             ZigZag(input);
         }
+
+        public override void Update(Shinobi_Input input) {   }
 
         public override void Exit(Shinobi_Input input) 
         {
@@ -36,11 +36,11 @@ public partial class Shinobi
                 Vector3 playerPosition = input.player.transform.position;
                 Vector3 directionToPlayer = (input.shinobi.controller.transform.position - playerPosition).normalized;
 
-                Vector3 offsetPosition1 = (playerPosition + directionToPlayer * -3f) / 3;
-                Vector3 offsetPosition2 = 2 * (playerPosition + directionToPlayer * -3f) / 3;
-                Vector3 offsetPosition3 = (playerPosition + directionToPlayer * -3f);
+                Vector3 position1 = (playerPosition + directionToPlayer * -3f) / 3;
+                Vector3 position2 = 2 * (playerPosition + directionToPlayer * -3f) / 3;
+                Vector3 position3 = (playerPosition + directionToPlayer * -3f);
 
-                input.shinobi.Zig(offsetPosition1, offsetPosition2, offsetPosition3);
+                input.shinobi.Zig(position1, position2, position3);
             }
 
             input.shinobi.stateMachine.SetState(new State_Idle());
@@ -58,6 +58,7 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("charging");
             _agent = input.shinobi.navMeshAgent;
             positionAnchor = input.shinobi.transform.position;
 

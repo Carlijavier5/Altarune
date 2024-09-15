@@ -11,15 +11,13 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("idle");
             input.shinobi.navMeshAgent.ResetPath();
-        }
 
-        public override void Update(Shinobi_Input input)
-        {
             input.shinobi.Wait();
-
-            input.shinobi.stateMachine.SetState(new State_Follow());
         }
+
+        public override void Update(Shinobi_Input input) {   }
 
         public override void Exit(Shinobi_Input input) {   }
     }

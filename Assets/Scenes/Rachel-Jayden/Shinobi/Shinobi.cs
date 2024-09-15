@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Windows;
 
 public partial class Shinobi : MonoBehaviour
 {
@@ -24,15 +25,12 @@ public partial class Shinobi : MonoBehaviour
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
-    private bool _shouldAggro;
-
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         controller.enabled = false;
-        _shouldAggro = true;
 
         Shinobi_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Follow());
@@ -47,19 +45,9 @@ public partial class Shinobi : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player _) && _shouldAggro)
+        if (other.TryGetComponent(out Player _))
         {
-            int rand = UnityEngine.Random.Range(0, 2);
-            if (rand == 1)
-            {
-                Debug.Log("sweep");
-                stateMachine.SetState(new State_Chase());
-            }
-            else
-            {
-                Debug.Log("zigzag");
-                stateMachine.SetState(new State_ChargingZigZag());
-            }
+            Aggro();
         }
     }
 
@@ -77,18 +65,30 @@ public partial class Shinobi : MonoBehaviour
 
         if (health > 0)
         {
-            Debug.Log("ouch");
             return;
         }
 
-        Debug.Log("died");
         Destroy(gameObject);
+    }
+
+    private void Aggro()
+    {
+        int rand = UnityEngine.Random.Range(0, 2);
+        if (rand == 1)
+        {
+            stateMachine.SetState(new State_Chase());
+        }
+        else
+        {
+            stateMachine.SetState(new State_ChargingZigZag());
+        }
     }
 
     private void Sweep()
     {
         StartCoroutine(ISweep());
     }
+
     private void Zig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
     {
         StartCoroutine(IZig(newPosition1, newPosition2, newPosition3));
@@ -130,10 +130,15 @@ public partial class Shinobi : MonoBehaviour
 
     private IEnumerator IWait()
     {
-        _shouldAggro = false;
+        yield return new WaitForSeconds(1.5f);
 
-        yield return new WaitForSeconds(2f);
-
-        _shouldAggro = true;
+        if (Vector3.Distance(player.transform.position, gameObject.transform.position) <= chaseDistance)
+        {
+            Aggro();
+        }
+        else
+        {
+            stateMachine.SetState(new State_Follow());
+        }
     }
 }

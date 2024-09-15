@@ -12,6 +12,7 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("follow");
             _agent = input.shinobi.navMeshAgent;
             _agent.speed = input.shinobi.followSpeed;
         }
