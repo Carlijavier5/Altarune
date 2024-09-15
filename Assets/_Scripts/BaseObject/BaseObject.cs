@@ -21,7 +21,7 @@ public abstract partial class BaseObject : MonoBehaviour {
     /// <summary>
     /// Override to implement a death behavior for the object; <br/>
     /// </summary>
-    public virtual void Perish() => OnPerish.Invoke(this);
+    public virtual void Perish() => OnPerish?.Invoke(this);
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
