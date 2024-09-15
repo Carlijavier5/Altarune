@@ -1,20 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Windows;
 
 public partial class Shinobi : MonoBehaviour
 {
     private readonly StateMachine<Shinobi_Input> stateMachine = new();
 
     [Header("Setup")]
-    [SerializeField] private CharacterController controller;
-    [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
     [SerializeField] private Material flashMat;
     [SerializeField] private Entity player;
+
+    private CharacterController controller;
+    private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
     [SerializeField] private float chaseDistance = 7.75f;
@@ -24,6 +27,9 @@ public partial class Shinobi : MonoBehaviour
 
     private void Awake()
     {
+        controller = GetComponent<CharacterController>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+
         controller.enabled = false;
 
         Shinobi_Input input = new(stateMachine, this);
@@ -41,7 +47,7 @@ public partial class Shinobi : MonoBehaviour
     {
         if (other.TryGetComponent(out Player _))
         {
-            stateMachine.SetState(new State_Chase());
+            Aggro();
         }
     }
 
@@ -59,12 +65,23 @@ public partial class Shinobi : MonoBehaviour
 
         if (health > 0)
         {
-            Debug.Log("ouch");
             return;
         }
 
-        Debug.Log("died");
         Destroy(gameObject);
+    }
+
+    private void Aggro()
+    {
+        int rand = UnityEngine.Random.Range(0, 2);
+        if (rand == 1)
+        {
+            stateMachine.SetState(new State_Chase());
+        }
+        else
+        {
+            stateMachine.SetState(new State_ChargingZigZag());
+        }
     }
 
     private void Sweep()
@@ -72,12 +89,21 @@ public partial class Shinobi : MonoBehaviour
         StartCoroutine(ISweep());
     }
 
+    private void Zig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
+    {
+        StartCoroutine(IZig(newPosition1, newPosition2, newPosition3));
+    }
+
+    private void Wait()
+    {
+        StartCoroutine(IWait());
+    }
+
     private bool _sweeping = false;
 
     private IEnumerator ISweep()
     {
         _sweeping = true;
-        Debug.Log("sweep");
         Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
         Dictionary<Renderer, Material[]> matDict = new();
         foreach (Renderer renderer in renderers)
@@ -91,5 +117,28 @@ public partial class Shinobi : MonoBehaviour
             kvp.Key.sharedMaterials = kvp.Value;
         }
         _sweeping = false;
+    }
+
+    private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
+    {
+        controller.transform.position = newPosition1;
+        yield return new WaitForSeconds(0.1f);
+        controller.transform.position = newPosition2;
+        yield return new WaitForSeconds(0.1f);
+        controller.transform.position = newPosition3;
+    }
+
+    private IEnumerator IWait()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        if (Vector3.Distance(player.transform.position, gameObject.transform.position) <= chaseDistance)
+        {
+            Aggro();
+        }
+        else
+        {
+            stateMachine.SetState(new State_Follow());
+        }
     }
 }
