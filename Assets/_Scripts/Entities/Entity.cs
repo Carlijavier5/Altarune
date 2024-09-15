@@ -10,20 +10,32 @@ public class Entity : BaseObject {
     public EntityFaction Faction => faction;
 
     public HashSet<StatusEffect> StatusEffects { get; private set; } = new();
+    private readonly Stack<StatusEffect> terminateStack = new();
 
     protected virtual void Update() {
         foreach (StatusEffect statusEffect in StatusEffects) {
             if (statusEffect.Update(this)) {
                 statusEffect.Terminate(this);
-                StatusEffects.Remove(statusEffect);
+                terminateStack.Push(statusEffect);
             }
+        }
+
+        while (terminateStack.TryPop(out StatusEffect deprecatedEffect)) {
+            StatusEffects.Remove(deprecatedEffect);
         }
     }
 
-    private void ApplyEffects(StatusEffect[] incomingEffects) {
+    public void ApplyEffects(StatusEffect[] incomingEffects) {
         foreach (StatusEffect statusEffect in incomingEffects) {
-            StatusEffects.Add(statusEffect);
-            statusEffect.Apply(this);
+            bool isNew = StatusEffects.Add(statusEffect);
+            statusEffect.Apply(this, isNew);
         }
+    }
+
+    public override void Perish() {
+        base.Perish();
+        foreach (StatusEffect statusEffect in StatusEffects) {
+            statusEffect.Terminate(this);
+        } StatusEffects.Clear();
     }
 }

@@ -1,34 +1,20 @@
-﻿using UnityEngine;
+﻿public abstract class StatusEffect {
 
-public abstract class StatusEffect {
-
-    public HealthAttributeModifiers AttributeMods { get; private set; }
+    public HealthAttributeModifiers AttributeMods { get; protected set; }
 
     /// <summary>
     /// Called when the effect gets applied;
     /// </summary>
-    public abstract void Apply(Entity entity);
+    public abstract void Apply(Entity entity, bool isNew);
     /// <summary>
     /// Called from the holding entity's update thread;
     /// </summary>
-    /// <returns> True if the effect should be returned, false otherwise; </returns>
+    /// <returns> True if the effect should be removed, false otherwise; </returns>
     public abstract bool Update(Entity entity);
     /// <summary>
     /// Called when the effect is removed;
     /// </summary>
     public abstract void Terminate(Entity entity);
-}
 
-[System.Serializable]
-public class AttributeModifier {
-    public float addMod = 0;
-    public float multMod = 1;
-
-    public static float operator *(float value, AttributeModifier modifier) 
-        => Mathf.Clamp01(value * modifier.multMod + modifier.addMod);
-
-    public void Compose(AttributeModifier modifier) {
-        addMod += modifier.addMod;
-        multMod *= modifier.multMod;
-    }
+    public StatusEffect Clone() => MemberwiseClone() as StatusEffect;
 }

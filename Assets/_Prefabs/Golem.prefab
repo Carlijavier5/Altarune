@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5877120909157070265}
   - component: {fileID: 3618322109459798283}
   - component: {fileID: 3767377471688116319}
+  - component: {fileID: 357395315593041659}
   m_Layer: 0
   m_Name: AggroRange
   m_TagString: Untagged
@@ -67,6 +68,33 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &357395315593041659
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23957012290714205}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &113297275092988112
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,7 +1021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c417d275fa80fd4e93de5449c0b7d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 0
+  faction: 2
   controller: {fileID: 6022249076964588611}
   navMeshAgent: {fileID: 425408896015153853}
   aggroRange: {fileID: 3618322109459798283}

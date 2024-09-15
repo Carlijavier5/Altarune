@@ -6,11 +6,11 @@ public class Damageable : ObjectModule {
 
     public event System.Action<int> OnDamageTaken;
 
-    [SerializeField] private HealthAttributes defaultHPAttributes;
-    [SerializeField] private IFrameProperties iFrameProperties;
+    [SerializeField] protected HealthAttributes defaultHPAttributes;
+    [SerializeField] protected IFrameProperties iFrameProperties;
 
-    private RuntimeHealthAttributes runtimeHP;
-    private bool iFrameOn;
+    protected RuntimeHealthAttributes runtimeHP;
+    protected bool iFrameOn;
 
     void Awake() {
         baseObject.UpdateRendererRefs();
@@ -31,7 +31,7 @@ public class Damageable : ObjectModule {
         iFrameOn = on;
     }
 
-    private bool BaseObject_OnTryDamage(int amount, ElementType element) {
+    protected virtual bool BaseObject_OnTryDamage(int amount, ElementType element) {
         if (!iFrameOn) {
             int processedAmount = runtimeHP.DoDamage(amount);
             OnDamageTaken?.Invoke(processedAmount);
@@ -45,7 +45,7 @@ public class Damageable : ObjectModule {
         } return !iFrameOn;
     }
 
-    private IEnumerator ISimulateIFrame() {
+    protected virtual IEnumerator ISimulateIFrame() {
         iFrameOn = true;
         baseObject.SetMaterial(iFrameProperties.flashMaterial);
         yield return new WaitForSeconds(iFrameProperties.duration);

@@ -58,6 +58,13 @@ public partial class Golem : Entity {
         stateMachine.Update();
     }
 
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Entity entity)
+            && entity.Faction != EntityFaction.Hostile) {
+            entity.TryDamage(4);
+        }
+    }
+
     public void Ragdoll() {
         foreach (Oscillator osc in oscillators) osc.enabled = false;
         foreach (Rigidbody rb in rigidbodies) {
