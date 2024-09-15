@@ -31,8 +31,11 @@ public class Damageable : ObjectModule {
         iFrameOn = on;
     }
 
-    protected virtual bool BaseObject_OnTryDamage(int amount, ElementType element) {
+    protected virtual void BaseObject_OnTryDamage(int amount, ElementType element,
+                                                  EventResponse response) {
         if (!iFrameOn) {
+            response.received = true;
+
             int processedAmount = runtimeHP.DoDamage(amount);
             OnDamageTaken?.Invoke(processedAmount);
             StartCoroutine(ISimulateIFrame());
@@ -40,9 +43,8 @@ public class Damageable : ObjectModule {
             if (runtimeHP.Health <= 0) {
                 baseObject.Perish();
                 ToggleIFrame(true);
-                return true;
             }
-        } return !iFrameOn;
+        }
     }
 
     protected virtual IEnumerator ISimulateIFrame() {
