@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 public enum MotionMode { Transform, Rigidbody, Controller, NavMesh }
 
+[System.Serializable]
 public class MotionDriver {
 
     public MotionMode MotionMode { get; private set; }
