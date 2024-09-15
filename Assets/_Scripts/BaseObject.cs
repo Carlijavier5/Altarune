@@ -18,10 +18,25 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     #endregion
 
+    #region || Damageable Module ||
+
+    public event System.Func<int, ElementType, bool> OnTryDamage;
+    public event System.Action<BaseObject> OnPerish;
+
+    /// <summary>
+    /// Damage method, attempts to damage the object;
+    /// </summary>
+    /// <returns> True if the object is damageable; </returns>
+    public bool TryDamage(int amount, ElementType element = ElementType.Physical) {
+        return (bool) OnTryDamage?.Invoke(amount, element);
+    }
+
     /// <summary>
     /// Override to implement a death behavior for the object; <br/>
     /// </summary>
     public virtual void Perish() => OnPerish?.Invoke(this);
+
+    #endregion
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
@@ -40,7 +55,7 @@ public abstract partial class BaseObject : MonoBehaviour {
                 materialDict[renderer] = renderer.sharedMaterials;
             }
         }
-    }
+    } 
 
     public void ResetMaterials() {
         try {
