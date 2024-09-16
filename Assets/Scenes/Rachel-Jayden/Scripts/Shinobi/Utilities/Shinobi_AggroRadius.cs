@@ -6,11 +6,6 @@ public class Shinobi_AggroRadius : MonoBehaviour
 {
     [SerializeField] private Shinobi shinobi;
 
-    private void Awake()
-    {
-        gameObject.GetComponent<SphereCollider>().radius = shinobi.chaseDistance;
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Player _) && shinobi.shouldChange)

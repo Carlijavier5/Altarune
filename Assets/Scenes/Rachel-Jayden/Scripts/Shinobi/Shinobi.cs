@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,14 +11,18 @@ public partial class Shinobi : Entity
 
     [Header("Setup")]
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
-    [SerializeField] private Material flashMat;
-    
+    [SerializeField] private Shinobi_AggroRadius aggroRadius;
+
+    private IEnumerable<Rigidbody> rigidbodies;
+    private IEnumerable<Oscillator> oscillators;
+
     private Entity player;
     private CharacterController controller;
     private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
-    public float chaseDistance = 7.75f;
+    [SerializeField] private float chaseDistance = 7.75f;
+    [SerializeField] private float sweepDistance = 2.5f;
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
@@ -24,9 +30,15 @@ public partial class Shinobi : Entity
 
     private void Awake()
     {
+        sweepRadius.GetComponent<SphereCollider>().radius = sweepDistance;
+        aggroRadius.GetComponent<SphereCollider>().radius = chaseDistance;
+
         controller = GetComponent<CharacterController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         player = FindAnyObjectByType<Player>();
+
+        rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
+        oscillators = GetComponentsInChildren<Oscillator>(true);
 
         controller.enabled = false;
         shouldChange = true;
@@ -71,6 +83,26 @@ public partial class Shinobi : Entity
         {
             stateMachine.SetState(new State_Follow());
         }
+    }
+    public void Ragdoll()
+    {
+        foreach (Oscillator osc in oscillators) osc.enabled = false;
+        foreach (Rigidbody rb in rigidbodies)
+        {
+            rb.isKinematic = false;
+            Vector3 force = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), 0.85f, UnityEngine.Random.Range(-0.15f, 0.15f)) * UnityEngine.Random.Range(250, 300);
+            rb.AddForce(force);
+            Vector3 torque = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f)) * UnityEngine.Random.Range(250, 300);
+            rb.AddTorque(torque);
+        }
+        DetachModules();
+        Destroy(this);
+    }
+
+    public override void Perish()
+    {
+        base.Perish();
+        Ragdoll();
     }
 
     private void Sweep()
