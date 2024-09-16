@@ -67,7 +67,7 @@ public partial class Shinobi
             _agent = input.shinobi.navMeshAgent;
             positionAnchor = input.shinobi.transform.position;
 
-            input.shinobi._shouldChange = false;
+            input.shinobi.shouldChange = false;
             _agent.ResetPath();
         }
 
@@ -89,7 +89,7 @@ public partial class Shinobi
 
         public override void Exit(Shinobi_Input input)
         {
-            input.shinobi._shouldChange = true;
+            input.shinobi.shouldChange = true;
         }
     }
 }

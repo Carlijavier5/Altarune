@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public partial class Shinobi : Entity
 {
-    private readonly StateMachine<Shinobi_Input> stateMachine = new();
+    [NonSerialized] public readonly StateMachine<Shinobi_Input> stateMachine = new();
 
     [Header("Setup")]
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
@@ -15,11 +16,11 @@ public partial class Shinobi : Entity
     private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
-    [SerializeField] private float chaseDistance = 7.75f;
+    public float chaseDistance = 7.75f;
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
-    private bool _shouldChange;
+    [NonSerialized] public bool shouldChange;
 
     private void Awake()
     {
@@ -28,12 +29,11 @@ public partial class Shinobi : Entity
         player = FindAnyObjectByType<Player>();
 
         controller.enabled = false;
-        _shouldChange = true;
+        shouldChange = true;
 
         Shinobi_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Follow());
         stateMachine.StateInput.SetPlayer(player);
-        gameObject.GetComponent<SphereCollider>().radius = chaseDistance;
     }
 
     override protected void Update()
@@ -42,36 +42,15 @@ public partial class Shinobi : Entity
         stateMachine.Update();
     }
 
-    #region General Methods
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out Player _) && _shouldChange)
-        {
-            Aggro();
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out Player _) && stateMachine.State != new State_Follow() && _shouldChange)
-        {
-            stateMachine.SetState(new State_Follow());
-        }
-    }
-
-    #endregion
-
     #region Behavior
-
-    private void Aggro()
+    public void Aggro()
     {
         if (stateMachine.State == new State_ChargingZigZag())
         {
             return;
         }
 
-        int rand = Random.Range(0, 2);
+        int rand = UnityEngine.Random.Range(0, 2);
         if (rand == 1)
         {
             stateMachine.SetState(new State_Chase());
@@ -108,16 +87,14 @@ public partial class Shinobi : Entity
     {
         StartCoroutine(IWait());
     }
-
     #endregion
 
     #region Coroutines
-
     private IEnumerator ISweep()
     {
         Debug.Log("SWEEPING");
 
-        _shouldChange = false;
+        shouldChange = false;
 
         yield return new WaitForSeconds(2);
 
@@ -139,10 +116,9 @@ public partial class Shinobi : Entity
     {
         yield return new WaitForSeconds(1.5f);
 
-        _shouldChange = true;
+        shouldChange = true;
 
         DecideAggro();
     }
-
     #endregion
 }
