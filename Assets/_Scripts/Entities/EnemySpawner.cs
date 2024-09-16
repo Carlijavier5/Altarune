@@ -21,6 +21,7 @@ public class EnemySpawner : Entity {
     [SerializeField] private AggroRange aggroRange;
     
     private List<Entity> enemies;
+    private IEnumerable<Rigidbody> rigidbodies;
     private int enemiesLeft;
     private float _nextSpawnTime;
     private bool isActive;
@@ -28,27 +29,20 @@ public class EnemySpawner : Entity {
         enemies = new List<Entity>(maxEnemiesAtOnce);
         enemiesLeft = totalEnemyCount;
         isActive = false;
+        rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
 
         aggroRange.OnAggroEnter += e => {Activate();};
         aggroRange.OnAggroExit += e => {Deactivate();};
-
-        OnPerish += e=>{enabled = false;Debug.LogError("Disabled!!");};
-
     }
 
     protected override void Update() {
         base.Update();
-        
         if (isActive && Time.time > _nextSpawnTime) {
-            Debug.Log(enabled);
-
             _nextSpawnTime = Time.time + spawnDelay;
-
             // spawn an enemy
             if (enemies.Count < maxEnemiesAtOnce) {
-                // TODO: reuse old enemies
                 Entity newEnemy = Instantiate(enemyPrefab, spawnPos);
-                newEnemy.OnPerish += e=>{enemies.Remove(newEnemy);};
+                newEnemy.OnPerish += e=>{enemies?.Remove(newEnemy);};
 
                 enemies.Add(newEnemy);
                 enemiesLeft--;
@@ -57,6 +51,24 @@ public class EnemySpawner : Entity {
                 }
             } 
         }
+    }
+
+    public override void Perish() {
+        base.Perish();
+        foreach (Rigidbody rb in rigidbodies) {
+            rb.isKinematic = false;
+            Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
+            rb.AddForce(force);
+            Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
+            rb.AddTorque(torque);
+        }
+        foreach (Entity e in enemies) {
+            e.transform.SetParent(null, true);
+        }
+        enemies = null;
+        DetachModules();
+        Destroy(this);
+        enabled = false;
     }
 
     public void Activate() {
