@@ -98,7 +98,6 @@ public class PlagueStatusEffect : StatusEffect {
     }
 
     public override bool Update(Entity entity) {
-        Debug.Log(spreadTimer);
         durationTimer += Time.deltaTime;
         damageTimer += Time.deltaTime;
         spreadTimer += Time.deltaTime;
