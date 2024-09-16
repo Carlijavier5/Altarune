@@ -18,25 +18,15 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     #endregion
 
-    #region || Damageable Module ||
-
-    public event System.Func<int, ElementType, bool> OnTryDamage;
-    public event System.Action<BaseObject> OnPerish;
-
-    /// <summary>
-    /// Damage method, attempts to damage the object;
-    /// </summary>
-    /// <returns> True if the object is damageable; </returns>
-    public bool TryDamage(int amount, ElementType element = ElementType.Physical) {
-        return (bool) OnTryDamage?.Invoke(amount, element);
-    }
+    public bool Perished { get; private set; }
 
     /// <summary>
     /// Override to implement a death behavior for the object; <br/>
     /// </summary>
-    public virtual void Perish() => OnPerish?.Invoke(this);
-
-    #endregion
+    public virtual void Perish() {
+        Perished = true;
+        OnPerish?.Invoke(this);
+    }
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
