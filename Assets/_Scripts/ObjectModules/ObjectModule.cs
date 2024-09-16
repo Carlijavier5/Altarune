@@ -9,3 +9,5 @@ public abstract class ObjectModule : MonoBehaviour {
         TryGetComponent(out baseObject);
     }
 }
+
+public class EventResponse { public bool received = false; }
