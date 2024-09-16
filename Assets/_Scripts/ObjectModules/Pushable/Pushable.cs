@@ -26,11 +26,11 @@ public class Pushable : ObjectModule {
         }
     }
 
-    private void BaseObject_OnTryLongPush(Vector3 arg1, float arg2, EventResponse arg3) {
+    private void BaseObject_OnTryFramePush(Vector3 direction, EventResponse response) {
         throw new System.NotImplementedException();
     }
 
-    private void BaseObject_OnTryFramePush(Vector3 arg1, EventResponse arg2) {
+    private void BaseObject_OnTryLongPush(Vector3 direction, float duration, LongPushResponse response) {
         throw new System.NotImplementedException();
     }
 }
