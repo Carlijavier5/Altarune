@@ -2,21 +2,20 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public partial class Shinobi : MonoBehaviour
+public partial class Shinobi : Entity
 {
     private readonly StateMachine<Shinobi_Input> stateMachine = new();
 
     [Header("Setup")]
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
     [SerializeField] private Material flashMat;
-    [SerializeField] private Entity player;
-
+    
+    private Entity player;
     private CharacterController controller;
     private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
     [SerializeField] private float chaseDistance = 7.75f;
-    [SerializeField] private int health = 3;
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
 
@@ -26,6 +25,7 @@ public partial class Shinobi : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        player = FindAnyObjectByType<Player>();
 
         controller.enabled = false;
         _shouldChange = true;
@@ -36,8 +36,9 @@ public partial class Shinobi : MonoBehaviour
         gameObject.GetComponent<SphereCollider>().radius = chaseDistance;
     }
 
-    private void Update()
+    override protected void Update()
     {
+        base.Update();
         stateMachine.Update();
     }
 
@@ -59,18 +60,6 @@ public partial class Shinobi : MonoBehaviour
         }
     }
 
-    public void TakeDamage()
-    {
-        health--;
-
-        if (health > 0)
-        {
-            return;
-        }
-
-        Destroy(gameObject);
-    }
-
     #endregion
 
     #region Behavior
@@ -82,7 +71,7 @@ public partial class Shinobi : MonoBehaviour
             return;
         }
 
-        int rand = UnityEngine.Random.Range(0, 2);
+        int rand = Random.Range(0, 2);
         if (rand == 1)
         {
             stateMachine.SetState(new State_Chase());
@@ -133,8 +122,6 @@ public partial class Shinobi : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         stateMachine.SetState(new State_Idle());
-
-        _shouldChange = true;
     }
 
     private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
@@ -151,6 +138,8 @@ public partial class Shinobi : MonoBehaviour
     private IEnumerator IWait()
     {
         yield return new WaitForSeconds(1.5f);
+
+        _shouldChange = true;
 
         DecideAggro();
     }
