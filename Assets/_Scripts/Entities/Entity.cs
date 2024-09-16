@@ -18,6 +18,7 @@ public class Entity : BaseObject {
                 statusEffect.Terminate(this);
                 terminateStack.Push(statusEffect);
             }
+            if (Perished) break;
         }
 
         while (terminateStack.TryPop(out StatusEffect deprecatedEffect)) {
