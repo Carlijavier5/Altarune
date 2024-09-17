@@ -198,9 +198,9 @@ public partial class Shinobi : Entity
 
         yield return new WaitForSeconds(0.7f / TimeScale);
 
-        zig1.Detonate();
-        zig2.Detonate();
-        zig3.Detonate();
+        if (zig1 != null) zig1.Detonate();
+        if (zig2 != null) zig2.Detonate();
+        if (zig3 != null) zig3.Detonate();
 
         shouldChange = true;
         didSweep = false;
