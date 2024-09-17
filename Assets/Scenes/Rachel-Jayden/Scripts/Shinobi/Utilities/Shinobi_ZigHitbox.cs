@@ -17,7 +17,7 @@ public class Shinobi_ZigHitbox : MonoBehaviour
     {
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= 2f)
+        if (elapsedTime >= 4f)
         {
             Destroy(gameObject);
         }
