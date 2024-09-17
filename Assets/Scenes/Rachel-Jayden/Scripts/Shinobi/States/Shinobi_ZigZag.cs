@@ -17,7 +17,7 @@ public partial class Shinobi
             ZigZag(input);
         }
 
-        public override void Update(Shinobi_Input input) {   }
+        public override void Update(Shinobi_Input input) { }
 
         public override void Exit(Shinobi_Input input) 
         {

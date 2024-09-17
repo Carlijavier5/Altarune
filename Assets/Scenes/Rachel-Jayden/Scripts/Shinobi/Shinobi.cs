@@ -31,7 +31,10 @@ public partial class Shinobi : Entity
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform sweepPoint;
+
+    [Header("Attacks")]
     [SerializeField] private Shinobi_SweepHitbox sweepHitbox;
+    [SerializeField] private Shinobi_ZigHitbox zigHitbox;
 
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
@@ -150,7 +153,8 @@ public partial class Shinobi : Entity
 
         yield return new WaitForSeconds(0.4f / TimeScale);
 
-        Instantiate(sweepHitbox, sweepPoint.position, sweepPoint.rotation);
+        Shinobi_SweepHitbox sweep = Instantiate(sweepHitbox, sweepPoint.position, sweepPoint.rotation);
+        sweep.timeScale = TimeScale;
 
         yield return new WaitForSeconds(sweepDuration / TimeScale);
 
@@ -159,11 +163,33 @@ public partial class Shinobi : Entity
 
     private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
     {
+        Vector3 yOffset = new(0, sweepPoint.transform.position.y, 0);
+
+        Vector3 originalPosition = controller.transform.position;
         controller.transform.position = newPosition1;
+
+        Shinobi_ZigHitbox zig1 = Instantiate(zigHitbox, (originalPosition + newPosition1) / 2.0f + yOffset, Quaternion.LookRotation(newPosition1 - originalPosition));
+        zig1.transform.localScale = new Vector3(zig1.transform.localScale.x, zig1.transform.localScale.y, (newPosition1 - originalPosition).magnitude);
+
         yield return new WaitForSeconds(0.15f / TimeScale);
+
         controller.transform.position = newPosition2;
+
+        Shinobi_ZigHitbox zig2 = Instantiate(zigHitbox, (newPosition1 + newPosition2) / 2.0f + yOffset, Quaternion.LookRotation(newPosition2 - newPosition1));
+        zig2.transform.localScale = new Vector3(zig2.transform.localScale.x, zig2.transform.localScale.y, (newPosition2 - newPosition1).magnitude);
+
         yield return new WaitForSeconds(0.15f / TimeScale);
+
         controller.transform.position = newPosition3;
+
+        Shinobi_ZigHitbox zig3 = Instantiate(zigHitbox, (newPosition2 + newPosition3) / 2.0f + yOffset, Quaternion.LookRotation(newPosition3 - newPosition2));
+        zig3.transform.localScale = new Vector3(zig3.transform.localScale.x, zig3.transform.localScale.y, (newPosition3 - newPosition2).magnitude);
+
+        yield return new WaitForSeconds(0.7f / TimeScale);
+
+        zig1.Detonate();
+        zig2.Detonate();
+        zig3.Detonate();
 
         stateMachine.SetState(new State_Idle());
     }
