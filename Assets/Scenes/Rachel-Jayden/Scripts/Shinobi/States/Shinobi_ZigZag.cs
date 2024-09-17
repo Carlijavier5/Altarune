@@ -9,7 +9,6 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
-            Debug.Log("zigzag");
             _agent = input.shinobi.navMeshAgent;
 
             _agent.enabled = false;
@@ -63,7 +62,6 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
-            Debug.Log("charging");
             _agent = input.shinobi.navMeshAgent;
             positionAnchor = input.shinobi.transform.position;
 
@@ -73,7 +71,7 @@ public partial class Shinobi
 
         public override void Update(Shinobi_Input input)
         {
-            chargeTimer = Mathf.MoveTowards(chargeTimer, chargeTime, Time.deltaTime);
+            chargeTimer = Mathf.MoveTowards(chargeTimer, chargeTime, Time.deltaTime * input.shinobi.TimeScale);
             float chargePercent = chargeTimer / chargeTime;
             Transform t = input.shinobi.transform;
             t.position = new Vector3(positionAnchor.x + Random.Range(-chargeAmplitude,

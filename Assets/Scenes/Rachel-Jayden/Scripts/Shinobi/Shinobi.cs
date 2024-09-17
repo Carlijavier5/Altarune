@@ -7,24 +7,42 @@ using UnityEngine.AI;
 
 public partial class Shinobi : Entity
 {
+   public override float TimeScale
+    {
+        get => base.TimeScale;
+        set
+        {
+            timeScale = value;
+            foreach (Oscillator oscillator in oscillators)
+            {
+                oscillator.SetTimeScale(timeScale);
+                navMeshAgent.speed = baseLinearSpeed * timeScale;
+                navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
+            }
+        }
+    }
+
     [NonSerialized] public readonly StateMachine<Shinobi_Input> stateMachine = new();
 
     [Header("Setup")]
     [SerializeField] private Shinobi_SweepRadius sweepRadius;
     [SerializeField] private Shinobi_AggroRadius aggroRadius;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private NavMeshAgent navMeshAgent;
 
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
+    private float baseLinearSpeed, baseAngularSpeed;
 
     private Entity player;
-    private CharacterController controller;
-    private NavMeshAgent navMeshAgent;
 
     [Header("Attributes")]
     [SerializeField] private float chaseDistance = 7.75f;
     [SerializeField] private float sweepDistance = 2.5f;
+    [SerializeField] private float sweepDuration = 1.5f;
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
+    [SerializeField] private float cooldownTime = 1f;
 
     [NonSerialized] public bool shouldChange;
 
@@ -33,12 +51,13 @@ public partial class Shinobi : Entity
         sweepRadius.GetComponent<SphereCollider>().radius = sweepDistance;
         aggroRadius.GetComponent<SphereCollider>().radius = chaseDistance;
 
-        controller = GetComponent<CharacterController>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
         player = FindAnyObjectByType<Player>();
 
         rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
         oscillators = GetComponentsInChildren<Oscillator>(true);
+
+        baseLinearSpeed = navMeshAgent.speed;
+        baseAngularSpeed = navMeshAgent.angularSpeed;
 
         controller.enabled = false;
         shouldChange = true;
@@ -124,11 +143,9 @@ public partial class Shinobi : Entity
     #region Coroutines
     private IEnumerator ISweep()
     {
-        Debug.Log("SWEEPING");
-
         shouldChange = false;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(sweepDuration);
 
         stateMachine.SetState(new State_Idle());
     }
@@ -136,9 +153,9 @@ public partial class Shinobi : Entity
     private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
     {
         controller.transform.position = newPosition1;
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.15f / TimeScale);
         controller.transform.position = newPosition2;
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.15f / TimeScale);
         controller.transform.position = newPosition3;
 
         stateMachine.SetState(new State_Idle());
@@ -146,7 +163,7 @@ public partial class Shinobi : Entity
 
     private IEnumerator IWait()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(cooldownTime);
 
         shouldChange = true;
 

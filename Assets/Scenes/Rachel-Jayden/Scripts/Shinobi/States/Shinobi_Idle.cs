@@ -7,7 +7,6 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
-            Debug.Log("idle");
             input.shinobi.navMeshAgent.ResetPath();
 
             input.shinobi.Wait();

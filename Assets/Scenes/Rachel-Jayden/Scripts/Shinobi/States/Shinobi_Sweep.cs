@@ -28,13 +28,12 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
-            Debug.Log("chase");
             _agent = input.shinobi.navMeshAgent;
-            _agent.speed = input.shinobi.chaseSpeed;
         }
 
         public override void Update(Shinobi_Input input)
         {
+            _agent.speed = input.shinobi.chaseSpeed * input.shinobi.TimeScale;
             _agent.SetDestination(input.player.transform.position);
 
             if (input.shinobi.sweepRadius.shouldSweep)
