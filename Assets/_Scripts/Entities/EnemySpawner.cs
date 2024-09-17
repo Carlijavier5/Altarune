@@ -17,7 +17,8 @@ public class EnemySpawner : Entity {
     [SerializeField] public int totalEnemyCount = 10; // Total enemies this tower can spawn
     [SerializeField] public int maxEnemiesAtOnce = 5; // Max enemies from this tower at a time
     [SerializeField] public float spawnDelay = 2.0f; // Delay between enemy spawns
-    [SerializeField] public Transform spawnPos;
+    // [SerializeField] public Transform spawnPos;
+    [SerializeField] public float spawnDistance;
     [SerializeField] private AggroRange aggroRange;
     
     private List<Entity> enemies;
@@ -41,7 +42,11 @@ public class EnemySpawner : Entity {
             _nextSpawnTime = Time.time + spawnDelay;
             // spawn an enemy
             if (enemies.Count < maxEnemiesAtOnce) {
-                Entity newEnemy = Instantiate(enemyPrefab, spawnPos);
+                // probably redo this?
+                Vector2 vec = Random.insideUnitCircle.normalized * spawnDistance;
+                Vector3 newPos = transform.position + new Vector3(vec[0], vec[1], 0);
+
+                Entity newEnemy = Instantiate(enemyPrefab, newPos, Quaternion.identity);
                 newEnemy.OnPerish += e=>{enemies?.Remove(newEnemy);};
 
                 enemies.Add(newEnemy);

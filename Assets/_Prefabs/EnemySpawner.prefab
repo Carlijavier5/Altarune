@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4539987704146070119}
   - component: {fileID: 6527065781600593816}
   m_Layer: 0
-  m_Name: EnemySummoner
+  m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
   totalEnemyCount: 10
   maxEnemiesAtOnce: 5
   spawnDelay: 2
-  spawnPos: {fileID: 1541348054832653775}
+  spawnDistance: 3
   aggroRange: {fileID: 3548616369836336266}
 --- !u!114 &4086204595270897913
 MonoBehaviour:
