@@ -42,7 +42,7 @@ public class Shinobi_ZigHitbox : MonoBehaviour
     {
         if (shouldDmg && other.TryGetComponent(out Entity entity) && entity.Faction != EntityFaction.Hostile && !damagedEntities.Contains(entity))
         {
-            entity.TryDamage(4);
+            entity.TryDamage(2);
             damagedEntities.Add(entity);
         }
     }

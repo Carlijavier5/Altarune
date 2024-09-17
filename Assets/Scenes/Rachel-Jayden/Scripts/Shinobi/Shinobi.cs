@@ -32,25 +32,28 @@ public partial class Shinobi : Entity
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform sweepPoint;
 
-    [Header("Attacks")]
-    [SerializeField] private Shinobi_SweepHitbox sweepHitbox;
-    [SerializeField] private Shinobi_ZigHitbox zigHitbox;
-
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
     private float baseLinearSpeed, baseAngularSpeed;
 
     private Entity player;
 
+    [Header("Attacks")]
+    [SerializeField] private Shinobi_SweepHitbox sweepHitbox;
+    [SerializeField] private Shinobi_ZigHitbox zigHitbox;
+
     [Header("Attributes")]
-    [SerializeField] private float chaseDistance = 7.75f;
+    [SerializeField] private float chaseDistance = 5f;
     [SerializeField] private float sweepDistance = 2.5f;
     [SerializeField] private float sweepDuration = 1.5f;
     [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
-    [SerializeField] private float cooldownTime = 1f;
+    [SerializeField] private float sweepCooldownTime = 1f;
+    [SerializeField] private float zigCooldownTime = 1f;
 
     [NonSerialized] public bool shouldChange;
+
+    private bool didSweep = false;
 
     private void Awake()
     {
@@ -109,6 +112,7 @@ public partial class Shinobi : Entity
             stateMachine.SetState(new State_Follow());
         }
     }
+
     public void Ragdoll()
     {
         foreach (Oscillator osc in oscillators) osc.enabled = false;
@@ -120,7 +124,11 @@ public partial class Shinobi : Entity
             Vector3 torque = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f)) * UnityEngine.Random.Range(250, 300);
             rb.AddTorque(torque);
         }
+
         DetachModules();
+
+        Destroy(sweepRadius);
+        Destroy(aggroRadius);
         Destroy(this);
     }
 
@@ -158,11 +166,14 @@ public partial class Shinobi : Entity
 
         yield return new WaitForSeconds(sweepDuration / TimeScale);
 
+        didSweep = true;
+
         stateMachine.SetState(new State_Idle());
     }
 
     private IEnumerator IZig(Vector3 newPosition1, Vector3 newPosition2, Vector3 newPosition3)
     {
+        shouldChange = false;
         Vector3 yOffset = new(0, sweepPoint.transform.position.y, 0);
 
         Vector3 originalPosition = controller.transform.position;
@@ -191,12 +202,14 @@ public partial class Shinobi : Entity
         zig2.Detonate();
         zig3.Detonate();
 
+        shouldChange = true;
+        didSweep = false;
         stateMachine.SetState(new State_Idle());
     }
 
     private IEnumerator IWait()
     {
-        yield return new WaitForSeconds(cooldownTime);
+        yield return new WaitForSeconds(didSweep ? sweepCooldownTime : zigCooldownTime);
 
         shouldChange = true;
 

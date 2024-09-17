@@ -12,6 +12,7 @@ public partial class Shinobi
 
         public override void Enter(Shinobi_Input input)
         {
+            Debug.Log("follow");
             _agent = input.shinobi.navMeshAgent;
         }
 
@@ -19,6 +20,13 @@ public partial class Shinobi
         {
             _agent.SetDestination(input.player.transform.position);
             _agent.speed = input.shinobi.followSpeed * input.shinobi.TimeScale;
+
+            if (_agent.hasPath && !_agent.pathPending && _agent.remainingDistance < input.shinobi.chaseDistance)
+            {
+                Debug.Log(_agent.remainingDistance);
+                Debug.Log(input.shinobi.chaseDistance);
+                input.shinobi.Aggro();
+            }
         }
 
         public override void Exit(Shinobi_Input input)
