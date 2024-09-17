@@ -8,7 +8,7 @@ public class Shinobi_AggroRadius : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player _) && shinobi.shouldChange)
+        if (shinobi != null && shinobi.shouldChange && other.TryGetComponent(out Player _))
         {
             shinobi.Aggro();
         }
