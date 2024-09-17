@@ -17,7 +17,13 @@ public partial class Shinobi
             input.shinobi.Sweep();
         }
 
-        public override void Update(Shinobi_Input input) { }
+        public override void Update(Shinobi_Input input)
+        {
+
+            Transform t = input.shinobi.transform;
+            Quaternion targetRotation = Quaternion.LookRotation(input.shinobi.player.transform.position - t.position, Vector3.up);
+            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.shinobi.DeltaTime * _agent.angularSpeed);
+        }
 
         public override void Exit(Shinobi_Input input) { }
     }

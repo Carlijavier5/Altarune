@@ -71,9 +71,12 @@ public partial class Shinobi
 
         public override void Update(Shinobi_Input input)
         {
+            Transform t = input.shinobi.transform;
+            Quaternion targetRotation = Quaternion.LookRotation(input.shinobi.player.transform.position - t.position, Vector3.up);
+            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.shinobi.DeltaTime * _agent.angularSpeed);
+
             chargeTimer = Mathf.MoveTowards(chargeTimer, chargeTime, Time.deltaTime * input.shinobi.TimeScale);
             float chargePercent = chargeTimer / chargeTime;
-            Transform t = input.shinobi.transform;
             t.position = new Vector3(positionAnchor.x + Random.Range(-chargeAmplitude,
                                                         chargeAmplitude) * chargePercent,
                                      positionAnchor.y,

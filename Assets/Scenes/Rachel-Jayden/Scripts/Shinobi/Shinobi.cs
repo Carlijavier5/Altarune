@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Windows;
 
 public partial class Shinobi : Entity
 {
@@ -29,6 +30,8 @@ public partial class Shinobi : Entity
     [SerializeField] private Shinobi_AggroRadius aggroRadius;
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private Transform sweepPoint;
+    [SerializeField] private Shinobi_SweepHitbox sweepHitbox;
 
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
@@ -145,7 +148,11 @@ public partial class Shinobi : Entity
     {
         shouldChange = false;
 
-        yield return new WaitForSeconds(sweepDuration);
+        yield return new WaitForSeconds(0.4f / TimeScale);
+
+        Instantiate(sweepHitbox, sweepPoint.position, sweepPoint.rotation);
+
+        yield return new WaitForSeconds(sweepDuration / TimeScale);
 
         stateMachine.SetState(new State_Idle());
     }
