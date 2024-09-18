@@ -2,49 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Layer for status effect and attributes
-/// </summary>
+public enum EntityFaction { Friendly, Neutral, Hostile }
+
 public class Entity : BaseObject {
 
-    protected HashSet<StatusEffect> statusEffects = new();
+    [SerializeField] private EntityFaction faction;
+    public EntityFaction Faction => faction;
 
-    /// <summary>
-    /// If you want your enemy to be buffed by things then they MUST use attributes (WIP)
-    /// </summary>
-    protected class EntityAttributes {
-
-    }
+    public HashSet<StatusEffect> StatusEffects { get; private set; } = new();
+    private readonly Stack<StatusEffect> terminateStack = new();
 
     protected virtual void Update() {
-        foreach (StatusEffect statusEffect in statusEffects) {
+        foreach (StatusEffect statusEffect in StatusEffects) {
             if (statusEffect.Update(this)) {
                 statusEffect.Terminate(this);
-                statusEffects.Remove(statusEffect);
+                terminateStack.Push(statusEffect);
             }
+            if (Perished) break;
+        }
+
+        while (terminateStack.TryPop(out StatusEffect deprecatedEffect)) {
+            StatusEffects.Remove(deprecatedEffect);
         }
     }
 
-    private void ApplyEffects(StatusEffect[] incomingEffects) {
+    public void ApplyEffects(StatusEffect[] incomingEffects) {
         foreach (StatusEffect statusEffect in incomingEffects) {
-            statusEffects.Add(statusEffect);
-            statusEffect.Apply(this);
+            bool isNew = StatusEffects.Add(statusEffect);
+            statusEffect.Apply(this, isNew);
         }
     }
-}
 
-public abstract class StatusEffect {
-    /// <summary>
-    /// Called when the effect gets applied;
-    /// </summary>
-    public abstract void Apply(Entity entity);
-    /// <summary>
-    /// Called from the holding entity's update thread;
-    /// </summary>
-    /// <returns> True if the effect should be returned, false otherwise; </returns>
-    public abstract bool Update(Entity entity);
-    /// <summary>
-    /// Called when the effect is removed;
-    /// </summary>
-    public abstract void Terminate(Entity entity);
+    public override void Perish() {
+        base.Perish();
+        foreach (StatusEffect statusEffect in StatusEffects) {
+            statusEffect.Terminate(this);
+        } StatusEffects.Clear();
+    }
 }
