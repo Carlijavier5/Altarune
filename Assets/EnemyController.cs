@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour {
     public NavMeshAgent navigation;
 
     // Initializing default values for core components
-    [SerializeField] private float health = 100;
+    [SerializeField] private float health = 50;
     [SerializeField] private float attackDmg;
     [SerializeField] private float defense;
 
@@ -22,12 +22,19 @@ public class EnemyController : MonoBehaviour {
     private IEnemyActions phaseTwoState;
     private IEnemyActions phaseThreeState;
 
+    // Initializing the minion prefab and array
+    [SerializeField] private GameObject minionPrefab;
+    private GameObject[] minions;
+
     // First method to run
     void Start() {
         // Initializing variables with Phase files
         phaseOneState = new PhaseOne();
         phaseTwoState = new PhaseTwo();
         phaseThreeState = new PhaseThree();
+
+        // Spawns the minions
+        InitializeMinions();
 
         // Setting the initial phase as PhaseOne
         SetState(phaseOneState);
@@ -61,6 +68,19 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
+    // Method to initialize the minions
+    private void InitializeMinions() {
+        // Spawns between 4 and 6 minions
+        int numMinions = Random.Range(4, 6);
+        minions = new GameObject[numMinions];
+
+        // Minions are spawned at (0, 0, 0), but hidden
+        for (int i = 0; i < numMinions; i++) {
+            minions[i] = Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
+            minions[i].SetActive(false);
+        }
+    }
+
     // Adds auto-implemented properties (read-only, accessible in other files)
     public NavMeshAgent Navigation => navigation;
     public Transform Player => player;
@@ -71,4 +91,6 @@ public class EnemyController : MonoBehaviour {
 
     public float Speed => speed;
     public float StoppingDistance => stoppingDistance;
+
+    public GameObject[] Minions => minions;
 }

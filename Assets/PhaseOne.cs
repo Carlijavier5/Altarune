@@ -2,8 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PhaseOne : IEnemyActions
-{
+public class PhaseOne : MonoBehaviour, IEnemyActions {
     // Creating necessary variables
     private EnemyController enemy;
     private Transform player;
@@ -20,8 +19,14 @@ public class PhaseOne : IEnemyActions
     private bool spinState = false;
     private readonly float spinDuration = 1;
 
+    private bool runOnce = false;
+
     // First method to run
     public void Enter(EnemyController enemy) {
+        // Ensures the method only runs once
+        if (runOnce) return;
+        runOnce = true;
+
         // Initializes the enemy with the current EnemyController
         this.enemy = enemy;
 
