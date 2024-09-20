@@ -9,8 +9,6 @@ public class EnemyController : MonoBehaviour {
 
     // Initializing default values for core components
     [SerializeField] private float health = 50;
-    [SerializeField] private float attackDmg;
-    [SerializeField] private float defense;
 
     // Initializing default values for movement
     [SerializeField] private float speed = 2f;
@@ -86,8 +84,6 @@ public class EnemyController : MonoBehaviour {
     public Transform Player => player;
 
     public float Health => health;
-    public float AttackDmg => attackDmg;
-    public float Defense => defense;
 
     public float Speed => speed;
     public float StoppingDistance => stoppingDistance;

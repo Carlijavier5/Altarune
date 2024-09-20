@@ -2,16 +2,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
+// TryDamage
+
 public class PhaseOne : MonoBehaviour, IEnemyActions {
     // Creating necessary variables
     private EnemyController enemy;
     private Transform player;
     private NavMeshAgent navigation;
     private Coroutine malfunctionCoroutine;
-
-    private float health;
-    private float attackDmg;
-    private float defense;
 
     private float speed;
     private float stoppingDistance;
@@ -42,11 +40,6 @@ public class PhaseOne : MonoBehaviour, IEnemyActions {
     }
 
     public void Execute() {
-        // Initializes variables that will change during this lifecycle
-        health = enemy.Health;
-        attackDmg = enemy.AttackDmg;
-        defense = enemy.Defense;
-
         // Switches between rotating the enemy and following the player
         if (spinState == true && navigation.remainingDistance != 0 && !navigation.pathPending) {
             enemy.transform.Rotate(Vector3.up, 500f * Time.deltaTime);
@@ -78,14 +71,6 @@ public class PhaseOne : MonoBehaviour, IEnemyActions {
         } else {
             LookTowardsPlayer();
         }
-    }
-
-    public void Attack() {
-        
-    }
-
-    public void Defense() {
-        
     }
 
     // Method that randomly (5 - 10 seconds) calls the SpinCoroutine method

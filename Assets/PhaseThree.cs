@@ -13,8 +13,6 @@ public class PhaseThree : MonoBehaviour, IEnemyActions {
         
     }
 
-    public void Attack() {}
-    public void Defense() {}
     public void FollowPlayer() {}
     public void Enter(EnemyController enemy) {}
     public void Execute() {}

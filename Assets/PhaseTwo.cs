@@ -12,8 +12,6 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
     private UnityEngine.AI.NavMeshAgent navigation;
 
     private float health;
-    private float attackDmg;
-    private float defense;
 
     private float speed;
     private float stoppingDistance;
@@ -45,13 +43,10 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
     public void Execute() {
         // Initializes variables that will change during this lifecycle
         health = enemy.Health;
-        attackDmg = enemy.AttackDmg;
-        defense = enemy.Defense;
 
         if (finishedDuplication) {
             FollowPlayer();
             speed = speed / 2;
-            Debug.Log("hi");
         }
     }
 
@@ -136,14 +131,6 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
 
         // Allows the enemy to begin to move towards the player again
         finishedDuplication = true;
-    }
-
-    public void Attack() {
-
-    }
-
-    public void Defense() {
-        
     }
 
     public void HandleMinionDeath() {
