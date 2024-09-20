@@ -114,9 +114,9 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
             activateMinions.Add(minion);
 
             // Sets the player in the minion controller (can't set via GUI for prefabs)
-            MinionController minionController = minion.GetComponent<MinionController>();
+            /*MinionController minionController = minion.GetComponent<MinionController>();
             minionController.SetPlayer(player);
-            minionController.onMinionDeath.AddListener(HandleMinionDeath);
+            minionController.onMinionDeath.AddListener(HandleMinionDeath);*/
 
             // Waits for 1/2 a second between spawns
             yield return new WaitForSeconds(1f);
@@ -126,7 +126,7 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
 
         // Activates every minion
         foreach(GameObject minion in activateMinions) {
-            minion.GetComponent<MinionController>().Activate();
+            //minion.GetComponent<MinionController>().Activate();
         }
 
         // Allows the enemy to begin to move towards the player again
