@@ -14,6 +14,9 @@ public class SummonController : MonoBehaviour {
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
+    // is this supposed to be here
+    [SerializeField] private Material manaConnectionMaterial;
+
     private List<Battery> summonedBatteries = new();
 
     public PlayerInput playerInput;
@@ -117,14 +120,42 @@ public class SummonController : MonoBehaviour {
                     SetSelectionType(SelectionType.None);
                     break;
                 case SelectionType.Tower:
-                    if (hintBatteries.Count() > 0) {
+                    if (hintBatteries.Any()) {
+                        Battery closestBattery = hintBatteries
+                                                .OrderBy(battery => Vector3.Distance(battery.transform.position, lastHitPoint))
+                                                .First();
+
                         Summon tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
                         tower.DoSpawnAnim();
                         SetSelectionType(SelectionType.None);
                         tower.Init();
+
+                        closestBattery.LinkTower(tower);
+                        CreateManaConnection(tower.transform, closestBattery.transform);
                     }
                     break;
             }
         }
     }
+
+    private void CreateManaConnection(Transform batteryTransform, Transform towerTransform)
+    {
+        GameObject lineObject = new GameObject("ManaConnection");
+        LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
+
+        lineRenderer.positionCount = 2;
+
+        Vector3 batteryConnectionPoint = batteryTransform.position;
+        batteryConnectionPoint.y += 0.5f;
+        Vector3 towerConnectionPoint = towerTransform.position;
+        towerConnectionPoint.y += 0.5f;
+
+        lineRenderer.SetPosition(0, batteryConnectionPoint);
+        lineRenderer.SetPosition(1, towerConnectionPoint);
+
+        lineRenderer.startWidth = 0.75f;
+        lineRenderer.endWidth = 0.75f;
+        lineRenderer.material = this.manaConnectionMaterial;
+    }
+
 }

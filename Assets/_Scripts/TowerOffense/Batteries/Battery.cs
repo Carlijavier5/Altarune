@@ -4,9 +4,13 @@ using UnityEngine;
 public class Battery : Summon {
 
     [SerializeField] private GameObject areaIndicator;
-    private List<SampleProjectileTower> linkedTowers = new();
 
-    public void LinkTower(SampleProjectileTower tower) => linkedTowers.Add(tower);
+    private List<Summon> linkedTowers = new();
+
+    public void LinkTower(Summon tower)
+    {
+        linkedTowers.Add(tower);
+    }
 
     public override void Init() { }
 
