@@ -51,26 +51,28 @@ public class SummonController : MonoBehaviour {
                     hintBatteries = hitInfo.Select((info) => info.collider.GetComponent<Battery>())
                                            .Where((item) => item != null);
                     hitInfo = hitInfo.Where((info) => !info.collider.isTrigger);
-                    switch (selectedType) {
-                        case SelectionType.Battery:
-                            if (hintBattery) {
-                                hintBattery.transform.position = hitInfo.First().point;
-                            } else {
-                                hintBattery = Instantiate(batteryData.prefab);
-                                hintBattery.transform.position = hitInfo.First().point;
-                                hintBattery.ToggleHologram(true);
-                            } lastHitPoint = hitInfo.First().point;
-                            break;
-                        case SelectionType.Tower:
-                            if (hintTower) {
-                                hintTower.transform.position = hitInfo.First().point;
-                            } else {
-                                hintTower = Instantiate(towerBlueprints[selectedSlot].prefab);
-                                hintTower.transform.position = hitInfo.First().point;
-                                hintTower.ToggleHologram(true);
-                            } lastHitPoint = hitInfo.First().point;
-                            hintTower.ToggleHologramRed(hintBatteries.Count() <= 0);
-                            break;
+                    if (hitInfo.Count() > 0) {
+                        switch (selectedType) {
+                            case SelectionType.Battery:
+                                if (hintBattery) {
+                                    hintBattery.transform.position = hitInfo.First().point;
+                                } else {
+                                    hintBattery = Instantiate(batteryData.prefab);
+                                    hintBattery.transform.position = hitInfo.First().point;
+                                    hintBattery.ToggleHologram(true);
+                                } lastHitPoint = hitInfo.First().point;
+                                break;
+                            case SelectionType.Tower:
+                                if (hintTower) {
+                                    hintTower.transform.position = hitInfo.First().point;
+                                } else {
+                                    hintTower = Instantiate(towerBlueprints[selectedSlot].prefab);
+                                    hintTower.transform.position = hitInfo.First().point;
+                                    hintTower.ToggleHologram(true);
+                                } lastHitPoint = hitInfo.First().point;
+                                hintTower.ToggleHologramRed(hintBatteries.Count() <= 0);
+                                break;
+                        }
                     }
                 } else DestroyHints();
             }

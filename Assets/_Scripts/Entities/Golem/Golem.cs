@@ -23,9 +23,7 @@ public partial class Golem : Entity {
     [Header("General")]
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] private Collider contactCollider;
-    [SerializeField] private Material flashMat;
-    [SerializeField] private float flashTime;
+    [SerializeField] private AggroRange aggroRange;
 
     private IEnumerable<Rigidbody> rigidbodies;
     private IEnumerable<Oscillator> oscillators;
@@ -40,11 +38,31 @@ public partial class Golem : Entity {
         controller.enabled = false;
         Golem_Input input = new Golem_Input(stateMachine, this);
         stateMachine.Init(input, new State_Idle());
+
+        aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
+        aggroRange.OnAggroExit += AggroRange_OnAggroExit;
+    }
+
+    private void AggroRange_OnAggroEnter(Entity entity) {
+        stateMachine.StateInput.SetTarget(entity);
+        stateMachine.SetState(new State_AggroWait());
+    }
+
+    private void AggroRange_OnAggroExit(Entity entity) {
+        stateMachine.StateInput.SetTarget(null);
+        stateMachine.SetState(new State_Idle());
     }
 
     protected override void Update() {
         base.Update();
         stateMachine.Update();
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Entity entity)
+            && entity.Faction != EntityFaction.Hostile) {
+            entity.TryDamage(4);
+        }
     }
 
     public void Ragdoll() {
@@ -55,41 +73,12 @@ public partial class Golem : Entity {
             rb.AddForce(force);
             Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
             rb.AddTorque(torque);
-        } Destroy(this);
+        } DetachModules();
+        Destroy(this);
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Player player)) {
-            stateMachine.StateInput.SetTarget(player);
-            stateMachine.SetState(new State_AggroWait());
-        }
-    }
-
-    void OnTriggerExit(Collider other) {
-        if (other.TryGetComponent(out Player _)) {
-            stateMachine.StateInput.SetTarget(null);
-            stateMachine.SetState(new State_Idle());
-        }
-    }
-
-    private int health = 3;
-
-    public void TakeDamage() => StartCoroutine(ITakeDamage());
-    private IEnumerator ITakeDamage() {
-        contactCollider.enabled = false;
-        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-        Dictionary<Renderer, Material[]> matDict = new();
-        foreach (Renderer renderer in renderers) {
-            matDict[renderer] = renderer.sharedMaterials;
-            renderer.sharedMaterial = flashMat;
-        }
-        yield return new WaitForSeconds(flashTime);
-        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-            kvp.Key.sharedMaterials = kvp.Value;
-        }
-        contactCollider.enabled = true;
-        if (--health <= 0) {
-            Ragdoll();
-        }
+    public override void Perish() {
+        base.Perish();
+        Ragdoll();
     }
 }
