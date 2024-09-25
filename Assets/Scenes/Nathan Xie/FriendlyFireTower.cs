@@ -44,4 +44,10 @@ public class FriendlyFireTower : Summon
             attackTick = 0;
         }
     }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Entity entity)) {
+            
+        }
+    }
 }

@@ -37,6 +37,35 @@ public abstract partial class BaseObject {
 
 public class LongPushResponse { public PushActionCore actionCore; }
 
+public enum EaseCurve { Fixed, Linear, InOut, Logarithmic, }
+
 public class PushActionCore {
 
+    public EaseCurve EaseCurve { get; private set; }
+
+    private readonly Pushable pushable;
+    public readonly Vector3 direction;
+    public readonly float duration;
+
+    private float lifetime;
+
+    public PushActionCore(Pushable pushable, Vector3 direction, float duration) {
+        this.pushable = pushable;
+        this.direction = direction;
+        this.duration = duration;
+    }
+
+    public PushActionCore SetEase(EaseCurve easeCurve) {
+        EaseCurve = easeCurve;
+        return this;
+    }
+
+    public float UpdateLifetime(float deltaTime) {
+        lifetime += deltaTime;
+        return Mathf.Clamp01(lifetime / duration);
+    }
+
+    public void Kill() {
+        if (pushable) pushable.RemoveCore(this);
+    }
 }
