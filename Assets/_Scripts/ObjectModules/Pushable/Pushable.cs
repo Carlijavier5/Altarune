@@ -4,13 +4,30 @@ using UnityEngine;
 
 public class Pushable : ObjectModule {
 
-    [HideInInspector][SerializeField] private MotionDriver defaultDriver;
+    [HideInInspector][SerializeField] private MotionDriver defaultDriver = new();
+    [SerializeField] private float objectMass = 1;
+
+    private Vector3 dynamicVelocityAdjustment;
+    private Vector3 DynamicVelocityAdjustment {
+        get => dynamicVelocityAdjustment;
+        set {
+            MotionDriver driver = baseObject.MotionDriver;
+            if (driver.Rigidbody && !driver.Rigidbody.isKinematic) {
+                baseObject.MotionDriver.Rigidbody.velocity += value - dynamicVelocityAdjustment;
+                dynamicVelocityAdjustment = value;
+            }
+        }
+    }
+
+    private readonly Queue<Vector3> impulseQueue = new();
+
     private readonly HashSet<PushActionCore> actionCores = new();
     private readonly Stack<PushActionCore> terminateStack = new();
 
     void Awake() {
         baseObject.OnTryFramePush += BaseObject_OnTryFramePush;
         baseObject.OnTryLongPush += BaseObject_OnTryLongPush;
+        baseObject.MotionDriver.OnModeChange += MotionDriver_OnModeChange;
 
         switch (defaultDriver.MotionMode) {
             case MotionMode.Transform:
@@ -26,6 +43,11 @@ public class Pushable : ObjectModule {
                 baseObject.MotionDriver.Set(defaultDriver.NavMeshAgent);
                 break;
         }
+    }
+
+    private void MotionDriver_OnModeChange() {
+        impulseQueue.Clear();
+        dynamicVelocityAdjustment = Vector3.zero;
     }
 
     void FixedUpdate() {
@@ -50,19 +72,31 @@ public class Pushable : ObjectModule {
     }
 
     private void DoFramePush(Vector3 direction) {
-        switch (defaultDriver.MotionMode) {
+        MotionDriver driver = baseObject.MotionDriver;
+        switch (driver.MotionMode) {
             case MotionMode.Transform:
-                defaultDriver.Transform.Translate(direction);
+                Debug.Log("Transform Translation");
+                driver.Transform.Translate(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.Rigidbody:
-                Vector3 targetPosition = defaultDriver.Rigidbody.position + direction;
-                defaultDriver.Rigidbody.MovePosition(targetPosition);
-                break;
+                Debug.Log("Rigidbody Translation");
+                if (driver.Rigidbody.isKinematic) {
+                    Vector3 targetPosition = driver.Rigidbody.position
+                                           + direction * Time.fixedDeltaTime;
+                    driver.Rigidbody.MovePosition(targetPosition);
+                } else {
+                    while (impulseQueue.TryDequeue(out Vector3 impulse)) {
+                        DynamicVelocityAdjustment -= impulse;
+                    } DynamicVelocityAdjustment += direction;
+                    impulseQueue.Enqueue(direction);
+                } break;
             case MotionMode.Controller:
-                defaultDriver.Controller.Move(direction);
+                Debug.Log("Controller Translation");
+                driver.Controller.Move(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.NavMesh:
-                defaultDriver.NavMeshAgent.Move(direction);
+                Debug.Log("Agent Translation");
+                driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
                 break;
         }
     }
@@ -72,5 +106,10 @@ public class Pushable : ObjectModule {
     #if UNITY_EDITOR
     public MotionDriver EDITOR_ONLY_DefaultDriver { get => defaultDriver;
                                                     set => defaultDriver = value; }
+
+    protected override void Reset() {
+        base.Reset();
+        defaultDriver.Set(transform);
+    }
     #endif
 }

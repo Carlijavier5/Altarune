@@ -17,7 +17,7 @@ public abstract partial class BaseObject {
     /// <returns> True if the object was pushed, false otherwise; </returns>
     public bool TryPush(Vector3 direction, float strength) {
         EventResponse response = new();
-        OnTryFramePush?.Invoke(direction * strength, response);
+        OnTryFramePush?.Invoke(direction.normalized * strength, response);
         return response.received;
     }
 
@@ -26,12 +26,21 @@ public abstract partial class BaseObject {
     /// </summary>
     /// <param name="duration"> Duration, in seconds, of the push action; </param>
     /// <returns> True if the object was pushed, false otherwise; </returns>
-    public bool TryLongPush(Vector3 direction, float strength, 
+    public bool TryLongPush(Vector3 direction, float strength,
                             float duration, out PushActionCore actionCore) {
         LongPushResponse response = new();
         OnTryLongPush?.Invoke(direction * strength, duration, response);
         actionCore = response.actionCore;
         return actionCore != null;
+    }
+
+    /// <summary>
+    /// Runs a push coroutine on the object with a set duration;
+    /// </summary>
+    /// <param name="duration"> Duration, in seconds, of the push action; </param>
+    /// <returns> True if the object was pushed, false otherwise; </returns>
+    public bool TryLongPush(Vector3 direction, float strength, float duration) {
+        return TryLongPush(direction, strength, duration, out _);
     }
 }
 

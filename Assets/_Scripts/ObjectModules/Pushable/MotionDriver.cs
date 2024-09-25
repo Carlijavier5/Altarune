@@ -6,7 +6,16 @@ public enum MotionMode { Transform, Rigidbody, Controller, NavMesh }
 [System.Serializable]
 public class MotionDriver {
 
-    public MotionMode MotionMode { get; private set; }
+    public event System.Action OnModeChange;
+
+    private MotionMode motionMode;
+    public MotionMode MotionMode {
+        get => motionMode;
+        private set {
+            OnModeChange?.Invoke();
+            motionMode = value;
+        }
+    }
 
     [SerializeField] private Transform transform;
     public Transform Transform => transform;
@@ -27,6 +36,7 @@ public class MotionDriver {
 
     public void Set(Rigidbody rigidbody) {
         this.rigidbody = rigidbody;
+        rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         MotionMode = MotionMode.Rigidbody;
     }
 
@@ -39,4 +49,24 @@ public class MotionDriver {
         this.navMeshAgent = navMeshAgent;
         MotionMode = MotionMode.NavMesh;
     }
+
+    #if UNITY_EDITOR
+    public void EDITOR_ONLY_SetModeDirect(MotionMode motionMode) => MotionMode = motionMode;
+    public void EDITOR_ONLY_NullMotionField(MotionMode motionMode) {
+        switch (motionMode) {
+            case MotionMode.Transform:
+                transform = null;
+                break;
+            case MotionMode.Rigidbody:
+                rigidbody = null;
+                break;
+            case MotionMode.Controller:
+                controller = null;
+                break;
+            case MotionMode.NavMesh:
+                navMeshAgent = null;
+                break;
+        }
+    }
+    #endif
 }
