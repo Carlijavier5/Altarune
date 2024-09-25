@@ -11,7 +11,7 @@ public class FireTrap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (entitesInTrap.Any()) {
+        if (entitiesInTrap.Count == 0) {
             damageTimer += Time.deltaTime; // Increment damageTimer if any entity is within FireTrap collider
         }
         else {
