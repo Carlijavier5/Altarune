@@ -5,20 +5,21 @@ using UnityEngine;
 public class Bat : Entity
 {
 
-    public float move_speed = 10f;
+    [SerializeField] float move_speed = 10f;
 
     private Vector3 randomDir;
 
-    public float ChangeDirTime = 1f;
+    [SerializeField] float ChangeDirTime = 1f;
 
-    public float wallAvoidanceDistance = 4f;
+    [SerializeField] float wallAvoidanceDistance = 4f;
 
     private float ChangeDirTimer;
 
+    [SerializeField] int damage = 4;
+
 
     // Start is called before the first frame update
-    void Start()
-    {
+    private void Start() {
         randomDir = GetRandomUnitVector2D();
         ChangeDirTimer = ChangeDirTime;
 
@@ -27,8 +28,7 @@ public class Bat : Entity
     }
 
     // Update is called once per frame
-    protected override void Update()
-    {
+    protected override void Update() {
         base.Update();
 
         //FacePlayer();
@@ -36,19 +36,15 @@ public class Bat : Entity
 
 
     }
-    private void OnTriggerEnter(Collider other)
-    {
+    private void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Entity entity)
         && entity.Faction != EntityFaction.Hostile)
         {
-            entity.TryDamage(4);
+            entity.TryDamage(damage);
         }
     }
 
-    void Flying()
-    {
-
-
+    private void Flying() {
 
         if (ChangeDirTimer < 0)
         {
@@ -75,8 +71,7 @@ public class Bat : Entity
         //Debug.Log(ChangeDirTimer);
     }
 
-    Vector3 GetRandomUnitVector2D()
-    {
+    private Vector3 GetRandomUnitVector2D() {
         float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2);
         return new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
     }
