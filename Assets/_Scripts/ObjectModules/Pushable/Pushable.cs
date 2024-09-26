@@ -5,7 +5,7 @@ using UnityEngine;
 public class Pushable : ObjectModule {
 
     [HideInInspector][SerializeField] private MotionDriver defaultDriver = new();
-    [SerializeField] private float objectMass = 1;
+    [SerializeField] private PushableProperties pushableProperties = new();
 
     private Vector3 dynamicVelocityAdjustment;
     private Vector3 DynamicVelocityAdjustment {
@@ -66,7 +66,7 @@ public class Pushable : ObjectModule {
     }
 
     private void BaseObject_OnTryLongPush(Vector3 direction, float duration, LongPushResponse response) {
-        PushActionCore core = new(this, direction, duration);
+        PushActionCore core = new(this, direction, duration, pushableProperties.easeCurves);
         actionCores.Add(core);
         response.actionCore = core;
     }
@@ -75,11 +75,9 @@ public class Pushable : ObjectModule {
         MotionDriver driver = baseObject.MotionDriver;
         switch (driver.MotionMode) {
             case MotionMode.Transform:
-                Debug.Log("Transform Translation");
                 driver.Transform.Translate(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.Rigidbody:
-                Debug.Log("Rigidbody Translation");
                 if (driver.Rigidbody.isKinematic) {
                     Vector3 targetPosition = driver.Rigidbody.position
                                            + direction * Time.fixedDeltaTime;
@@ -91,11 +89,9 @@ public class Pushable : ObjectModule {
                     impulseQueue.Enqueue(direction);
                 } break;
             case MotionMode.Controller:
-                Debug.Log("Controller Translation");
                 driver.Controller.Move(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.NavMesh:
-                Debug.Log("Agent Translation");
                 driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
                 break;
         }
@@ -110,6 +106,14 @@ public class Pushable : ObjectModule {
     protected override void Reset() {
         base.Reset();
         defaultDriver.Set(transform);
+        CJUtils.AssetUtils.TryRetrieveAsset(out pushableProperties.easeCurves);
     }
     #endif
+}
+
+[System.Serializable]
+public class PushableProperties {
+    public DefaultEaseCurves easeCurves;
+    public float objectMass = 1;
+    [Range(0, 1)] public float pushResistance;
 }
