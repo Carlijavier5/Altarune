@@ -9,6 +9,8 @@ public class Damageable : ObjectModule {
     [SerializeField] protected HealthAttributes defaultHPAttributes;
     [SerializeField] protected IFrameProperties iFrameProperties;
 
+    public float Health => runtimeHP.Health;
+
     protected RuntimeHealthAttributes runtimeHP;
     protected bool iFrameOn;
 
