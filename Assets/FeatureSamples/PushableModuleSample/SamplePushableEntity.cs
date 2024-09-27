@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -46,9 +47,20 @@ namespace FeatureSamples {
             bool aEnabled = driverVariables.navMeshAgent.enabled;
             driverVariables.controller.enabled = false;
             driverVariables.navMeshAgent.enabled = false;
-            transform.position = position;
-            driverVariables.controller.enabled = cEnabled;
-            driverVariables.navMeshAgent.enabled = aEnabled;
+            if (aEnabled) {
+                StartCoroutine(TeleportNavMesh(position));
+            } else {
+                transform.position = position;
+                driverVariables.controller.enabled = cEnabled;
+                driverVariables.navMeshAgent.enabled = aEnabled;
+            }
+        }
+
+        private IEnumerator TeleportNavMesh(Vector3 position) {
+            driverVariables.navMeshAgent.Warp(position);
+            driverVariables.navMeshAgent.enabled = false;
+            yield return new WaitForSeconds(0.05f);
+            driverVariables.navMeshAgent.enabled = true;
         }
     }
 }

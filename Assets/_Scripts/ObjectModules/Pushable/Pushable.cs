@@ -5,7 +5,10 @@ using UnityEngine;
 public class Pushable : ObjectModule {
 
     [HideInInspector][SerializeField] private MotionDriver defaultDriver = new();
-    [SerializeField] private PushableProperties pushableProperties = new();
+    [HideInInspector][SerializeField] private CrowdControllable ccModule;
+    [SerializeField] private PushAttributes pushableProperties;
+
+    private RuntimePushAttributes runtimeProperties;
 
     private Vector3 dynamicVelocityAdjustment;
     private Vector3 DynamicVelocityAdjustment {
@@ -43,6 +46,10 @@ public class Pushable : ObjectModule {
                 baseObject.MotionDriver.Set(defaultDriver.NavMeshAgent);
                 break;
         }
+
+        IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
+                                                                      : null;
+        runtimeProperties = pushableProperties.RuntimeClone(effectSource);
     }
 
     private void MotionDriver_OnModeChange() {
@@ -72,6 +79,7 @@ public class Pushable : ObjectModule {
     }
 
     private void DoFramePush(Vector3 direction) {
+        direction = runtimeProperties.ComputePush(direction);
         MotionDriver driver = baseObject.MotionDriver;
         switch (driver.MotionMode) {
             case MotionMode.Transform:
@@ -106,14 +114,11 @@ public class Pushable : ObjectModule {
     protected override void Reset() {
         base.Reset();
         defaultDriver.Set(transform);
-        CJUtils.AssetUtils.TryRetrieveAsset(out pushableProperties.easeCurves);
+        if (CJUtils.AssetUtils.TryRetrieveAsset(out DefaultEaseCurves curves)) {
+            pushableProperties = new(curves);
+        }
     }
-    #endif
-}
 
-[System.Serializable]
-public class PushableProperties {
-    public DefaultEaseCurves easeCurves;
-    public float objectMass = 1;
-    [Range(0, 1)] public float pushResistance;
+    void OnValidate() { if (ccModule == null) TryGetComponent(out ccModule); }
+    #endif
 }
