@@ -470,74 +470,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75909365}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &98140938
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 92340364433473164, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_Name
-      value: TowerSniper
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.3500137
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.0000019073486
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.7447033
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550746929009170975, guid: 14cedc86156251f49951f54907315985,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 14cedc86156251f49951f54907315985, type: 3}
 --- !u!1 &216066243
 GameObject:
   m_ObjectHideFlags: 0
@@ -2070,6 +2002,7 @@ GameObject:
   - component: {fileID: 1490485532}
   - component: {fileID: 1490485531}
   - component: {fileID: 1490485530}
+  - component: {fileID: 1490485533}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -2164,6 +2097,100 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490485528}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1490485533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490485528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774ccc50384c78f4c93a45c574cb6baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summonProperties:
+    fadeMaterial: {fileID: -876546973899608171, guid: a276c71eb26089946b5d58011401a310,
+      type: 3}
+    growthCurveXZ:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.1646215
+        value: 0.8758009
+        inSlope: 1.1709342
+        outSlope: 1.1709342
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.12992807
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    growthCurveY:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.29253945
+        value: 0.6713417
+        inSlope: -1.1218423
+        outSlope: -1.1218423
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 1
+        outWeight: 0.40528244
+      - serializedVersion: 3
+        time: 0.5827094
+        value: 0.40304768
+        inSlope: 2.5438144
+        outSlope: 2.5438144
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.11133078
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    growSpeed: 3
+  projectilePrefab: {fileID: 0}
+  launchPoint: {fileID: 0}
+  attackInterval: 0
 --- !u!1001 &1536624779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2946,6 +2973,12 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 46615047}
+    - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
+        type: 3}
+      propertyPath: towerBlueprints.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: df266b0592ae2f8499fd637a8669eec4,
+        type: 2}
     - target: {fileID: 7801274054568144272, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3160,5 +3193,4 @@ SceneRoots:
   - {fileID: 369307234640293230}
   - {fileID: 687345556}
   - {fileID: 2864628505184561727}
-  - {fileID: 98140938}
   - {fileID: 1536624779}

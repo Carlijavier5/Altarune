@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class TowerSniper : Summon {
 
-    [SerializeField] private TowerProjectile projectilePrefab;
+    [SerializeField] private SniperProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;
     [SerializeField] private float attackInterval;
-    [SerializeField] private float angleShift;
     
     private bool init;
 
@@ -15,9 +14,9 @@ public class TowerSniper : Summon {
     private float attackTick = 0.2f;
 
     // Add comparator to sort by lowest health entities
-    SortedSet<Entity> targets = new SortedSet<Entity>(
-        Comparer<Entity>.Create((a, b) => a.GetHealth().CompareTo(b.GetHealth)));
-
+    // SortedSet<Entity> targets = new SortedSet<Entity>(
+    //     Comparer<Entity>.Create((a, b) => a.GetComponent<Damageable>().Health.CompareTo(b.GetComponent<Damageable>().Health)));
+    List<Entity> targets = new List<Entity>();
     protected override void Awake() {
         base.Awake();
         angle = 0;
@@ -29,14 +28,19 @@ public class TowerSniper : Summon {
         if (!init) return;
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {
-            // Make projectile
-            TowerProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);
-            // Aim Projectile
-            Quaternion myRotation = Quaternion.AngleAxis(angle = (angle + angleShift) % 360, Vector3.up);
-            Vector3 startingDirection = transform.right;
-            Vector3 result = myRotation * startingDirection;
-            // Fire Projectile
-            projectile.Launch(result);
+            Entity lowestHealthEnemy = GetTarget();
+            if (lowestHealthEnemy != null) {
+                // Make projectile
+                SniperProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);
+
+                // Aim Projectile
+                Vector3 direction = lowestHealthEnemy.GetComponent<Transform>().position - transform.position;
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Vector3 result = targetRotation * Vector3.forward;
+
+                // Fire Projectile
+                projectile.Launch(result);
+            }
             attackTick = 0;
         }
     }
@@ -45,8 +49,9 @@ public class TowerSniper : Summon {
         if (other.TryGetComponent(out Entity entity)) {
             // Entity health = priority, low health = higher priority
             if (entity.GetType() != typeof(PlayerController)) {
-                targets.Add(entity);
-                Debug.Log("got a new target in the list");
+                if (entity != null) {
+                    targets.Add(entity);
+                }
             }
         }
     }
@@ -58,6 +63,9 @@ public class TowerSniper : Summon {
     }
 
     Entity GetTarget() {
-        return targets.Min;
+        targets.RemoveAll(enemy => enemy == null);
+        targets.Sort(Comparer<Entity>.Create((a, b) => a.GetComponent<Damageable>().Health.CompareTo(b.GetComponent<Damageable>().Health)));
+        if (targets.Count > 0) return targets[0];
+        else return null;
     }
 }
