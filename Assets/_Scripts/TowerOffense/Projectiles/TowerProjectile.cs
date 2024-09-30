@@ -42,8 +42,8 @@ public class TowerProjectile : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other is BoxCollider && other.TryGetComponent(out Golem golem)) {
-            golem.TakeDamage();
+        if (other.TryGetComponent(out Entity entity)) {
+            entity.TryDamage(1);
             End();
         }
     }
