@@ -12,10 +12,13 @@ GameObject:
   - component: {fileID: 2060652800545249645}
   - component: {fileID: 5825476252678833059}
   - component: {fileID: 6584277923571275090}
-  - component: {fileID: -1851510530935339561}
-  - component: {fileID: 7521065421788573463}
+  - component: {fileID: 1570203959472234346}
+  - component: {fileID: 3452731536080876515}
+  - component: {fileID: -1406027328487747461}
+  - component: {fileID: -338800828176893187}
+  - component: {fileID: 5298639473800101088}
   m_Layer: 0
-  m_Name: FriendlyFireBigProjectile
+  m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,9 +108,9 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-1851510530935339561
+--- !u!114 &1570203959472234346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,39 +119,121 @@ MonoBehaviour:
   m_GameObject: {fileID: 1371820723875410569}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1472f6255600fc847a632ca484e02f99, type: 3}
+  m_Script: {fileID: 11500000, guid: 07f4e5c996a15c144956d1a5826e7ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 7521065421788573463}
-  coll: {fileID: 6584277923571275090}
-  moveForce: 400
-  projectilePrefab: {fileID: -5727755452907932855, guid: d1f790fe81f4bb745a7e32af1bffeb1c,
-    type: 3}
-  numClones: 8
---- !u!54 &7521065421788573463
-Rigidbody:
+  faction: 0
+  damage: 1
+  attackCooldown: 2
+  attackTime: 0.3
+  attackDistance: 2
+  loiterRadius: 1.5
+  visionRadius: 5
+  navMeshAgent: {fileID: 3452731536080876515}
+  id: 0
+  parent: {fileID: 0}
+--- !u!195 &3452731536080876515
+NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371820723875410569}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 2.5
+  m_Acceleration: 20
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 1.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 0
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &-1406027328487747461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371820723875410569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c7c407ddaee33848bcbd831167cf75f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 0
+--- !u!114 &-338800828176893187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371820723875410569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f600c5941852404797ee6ec4a0a93aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 1570203959472234346}
+  defaultHPAttributes:
+    curves:
+      defenseCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      fireResCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      iceResCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      poisonResCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      healModCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    health: 5
+    defense: 0
+    fireRes: 0
+    iceRes: 0
+    poisonRes: 0
+    healModifier: 0
+  iFrameProperties:
+    flashMaterial: {fileID: -8474651742996372913, guid: 185b48093c4cf40418e8e12b4525ca22,
+      type: 3}
+    duration: 0.5
+--- !u!114 &5298639473800101088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371820723875410569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
