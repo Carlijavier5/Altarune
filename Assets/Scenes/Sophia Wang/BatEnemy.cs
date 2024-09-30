@@ -13,16 +13,16 @@ public class BatEnemy : Entity
     private Collider _bcollider;
     private bool _aggro = false;
     private float _timer = 0f;
-    private float _timebetweenmove = 1f;
-    private Bounds bounds;
-    private float _speed = 5f;
-    private Vector3 dest;
+    [SerializeField] private float _timebetweenmove = 1f;
+    private Bounds _bounds;
+    [SerializeField] private float _speed = 5f;
+    private Vector3 _dest;
 
     void Start(){
         _bcollider = GetComponent<BoxCollider>();
-        dest = GetPosInCollider();
+        _dest = GetPosInCollider();
         //dest seems like it's not changing, just 0,0,0
-        bounds = _bcollider.bounds;
+        _bounds = _bcollider.bounds;
     }
 
     // Update is called once per frame
@@ -40,14 +40,14 @@ public class BatEnemy : Entity
         }
         else {
             if (_timer >= _timebetweenmove) {
-                dest = GetPosInCollider();
+                _dest = GetPosInCollider();
                 _timer = 0f;
             }
-            Movement(dest);
+            Movement(_dest);
         }
     }
     private Vector3 GetPosInCollider(){
-        Vector3 randomPos = new Vector3(Random.Range(bounds.min.x, bounds.max.x), Random.Range(bounds.min.y, bounds.max.y), Random.Range(bounds.min.z, bounds.max.z));
+        Vector3 randomPos = new Vector3(Random.Range(_bounds.min.x, _bounds.max.x), Random.Range(_bounds.min.y, _bounds.max.y), Random.Range(_bounds.min.z, _bounds.max.z));
         return randomPos;
     }
 
@@ -64,14 +64,10 @@ public class BatEnemy : Entity
     }
 
     private void OnTriggerStay(Collider other){
-        if (other.gameObject.GetComponent<Player>() == null)
-        {
+        if (other.gameObject.GetComponent<Player>() == null){
             return;
         }
-        else
-        {
-            other.gameObject.GetComponent<Player>().TryDamage(1);
-        }
+        other.gameObject.GetComponent<Player>().TryDamage(1);
         //damage yan?
     }
 }
