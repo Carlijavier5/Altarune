@@ -36,8 +36,8 @@ public class Mimic : MonoBehaviour
         controller.enabled = true;
     }
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject == Player) {
-            Debug.Log("damage will be dealt");
+        if (other.TryGetComponent(out Entity entity) && entity.Faction != EntityFaction.Hostile) {
+            bool isDamageable = entity.TryDamage(5);
         }
     }
 }
