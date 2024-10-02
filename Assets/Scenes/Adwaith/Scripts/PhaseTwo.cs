@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using System.Linq;
 using UnityEngine.Events;
 
-public class PhaseTwo : MonoBehaviour, IEnemyActions {
+public class PhaseTwo : State<EnemyController> {
     // Creating necessary variables
     private EnemyController enemy;
     private Transform player;
@@ -20,6 +20,27 @@ public class PhaseTwo : MonoBehaviour, IEnemyActions {
     private bool finishedDuplication = false;
 
     private int numMinions;
+
+// Spawns the minions
+        InitializeMinions();
+
+            // Method to initialize the minions
+    private void InitializeMinions() {
+        // Spawns between 4 and 6 minions
+        int numMinions = Random.Range(4, 6);
+        minions = new GameObject[numMinions];
+
+        // Minions are spawned at (0, 0, 0), but hidden
+        for (int i = 0; i < numMinions; i++) {
+            minions[i] = Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
+            minions[i].SetActive(false);
+        }
+    }
+        public GameObject[] Minions => minions;
+
+            // Initializing the minion prefab and array
+    [SerializeField] private GameObject minionPrefab;
+    private GameObject[] minions;
 
     public void Enter(EnemyController enemy) {
         // Ensures the method only runs once

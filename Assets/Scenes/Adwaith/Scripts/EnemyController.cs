@@ -4,8 +4,11 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour {
 
     // Accessing the Player and NavMeshAgent
-    public Transform player;
-    public NavMeshAgent navigation;
+    private Transform player;
+    private NavMeshAgent navigation;
+
+    // Initializing the state machine
+    private StateMachine<EnemyStateInput> stateMachine;
 
     // Initializing default values for core components
     [SerializeField] private float health = 50;
@@ -15,24 +18,25 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] private float stoppingDistance = 1.5f;
 
     // Initializing the enemy phases
-    private IEnemyActions currentState;
     private IEnemyActions phaseOneState;
     private IEnemyActions phaseTwoState;
     private IEnemyActions phaseThreeState;
 
-    // Initializing the minion prefab and array
-    [SerializeField] private GameObject minionPrefab;
-    private GameObject[] minions;
-
     // First method to run
     void Start() {
+        // Initializing NavMeshAgent and Player
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        navigation = GetComponent<NavMeshAgent>();
+
         // Initializing variables with Phase files
         phaseOneState = new PhaseOne();
         phaseTwoState = new PhaseTwo();
         phaseThreeState = new PhaseThree();
 
-        // Spawns the minions
-        InitializeMinions();
+        // Initializing the state machine
+        EnemyStateInput stateInput = new EnemyStateInput(this);
+        stateMachine = new StateMachine<EnemyStateInput>();
+        stateMachine.Init(stateInput, phaseOneState);
 
         // Setting the initial phase as PhaseOne
         SetState(phaseOneState);
@@ -40,43 +44,7 @@ public class EnemyController : MonoBehaviour {
 
     // Runs every frame
     void Update() {
-        if (currentState != null) {
-            // Runs the Execute method in the current phase every frame
-            currentState.Execute();
-            // Updates state based on health
-            CheckStateTransition();
-        }
-    }
-
-    // Sets the state and enters it
-    void SetState(IEnemyActions nextPhase) {
-        currentState?.Exit();
-        currentState = nextPhase;
-        currentState.Enter(this);
-    }
-
-    // Updates state based on health
-    void CheckStateTransition() {
-        if (health <= 0) {
-            SetState(null);
-        } else if (health <= 50 && health >= 25) {
-            SetState(phaseTwoState);
-        } else if (health < 25) {
-            SetState(phaseThreeState);
-        }
-    }
-
-    // Method to initialize the minions
-    private void InitializeMinions() {
-        // Spawns between 4 and 6 minions
-        int numMinions = Random.Range(4, 6);
-        minions = new GameObject[numMinions];
-
-        // Minions are spawned at (0, 0, 0), but hidden
-        for (int i = 0; i < numMinions; i++) {
-            minions[i] = Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
-            minions[i].SetActive(false);
-        }
+        stateMachine.Update();
     }
 
     // Adds auto-implemented properties (read-only, accessible in other files)
@@ -84,9 +52,6 @@ public class EnemyController : MonoBehaviour {
     public Transform Player => player;
 
     public float Health => health;
-
     public float Speed => speed;
     public float StoppingDistance => stoppingDistance;
-
-    public GameObject[] Minions => minions;
 }

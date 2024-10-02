@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 // TryDamage
 
-public class PhaseOne : MonoBehaviour, IEnemyActions {
+public class PhaseOne : State<EnemyStateInput> {
     // Creating necessary variables
     private EnemyController enemy;
     private Transform player;
@@ -20,18 +20,19 @@ public class PhaseOne : MonoBehaviour, IEnemyActions {
     private bool runOnce = false;
 
     // First method to run
-    public void Enter(EnemyController enemy) {
+    public override void Enter(EnemyStateInput input) {
         // Ensures the method only runs once
         if (runOnce) return;
         runOnce = true;
 
         // Initializes the enemy with the current EnemyController
-        this.enemy = enemy;
+        enemy = input.EnemyController;
 
-        // Initializes variables with values from the enemy
+        // Initializes methods with values from the enemy
         player = enemy.Player;
         navigation = enemy.Navigation;
 
+        // Initializes variables with values from the enemy
         speed = enemy.Speed;
         stoppingDistance = enemy.StoppingDistance;
 
@@ -39,7 +40,7 @@ public class PhaseOne : MonoBehaviour, IEnemyActions {
         malfunctionCoroutine = enemy.StartCoroutine(MalfunctionCoroutine());
     }
 
-    public void Execute() {
+    public override void Update(EnemyStateInput input) {
         // Switches between rotating the enemy and following the player
         if (spinState == true && navigation.remainingDistance != 0 && !navigation.pathPending) {
             enemy.transform.Rotate(Vector3.up, 500f * Time.deltaTime);
@@ -100,7 +101,7 @@ public class PhaseOne : MonoBehaviour, IEnemyActions {
         enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
     }
 
-    public void Exit() {
+    public override void Exit() {
         // Stop the Coroutine
         if (malfunctionCoroutine != null) {
             enemy.StopCoroutine(malfunctionCoroutine);

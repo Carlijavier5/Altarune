@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhaseThree : MonoBehaviour, IEnemyActions {
+public class PhaseThree : State<EnemyController> {
     // Start is called before the first frame update
     void Start() {
         
