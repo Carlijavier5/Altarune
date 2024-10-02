@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum ElementType { Physical, Fire, Ice, Poison }
-
 [System.Serializable]
 public class HealthAttributes {
 
-    [SerializeField] protected AttributeCurves curves;
+    [SerializeField] protected HealthAttributeCurves curves;
 
     public int health = 10;
     [Range(0, 1)] public float defense;
     [Range(0, 1)] public float fireRes;
     [Range(0, 1)] public float iceRes;
+    [Range(0, 1)] public float shockRes;
     [Range(0, 1)] public float poisonRes;
     [Range(0, 1)] public float healModifier;
 
-    public HealthAttributes(AttributeCurves curves) {
+    public HealthAttributes(HealthAttributeCurves curves) {
         this.curves = curves;
     }
 
@@ -24,8 +23,8 @@ public class HealthAttributes {
 }
 
 [System.Serializable]
-public class AttributeCurves {
+public class HealthAttributeCurves {
     public AnimationCurve defenseCurve, fireResCurve, iceResCurve,
-                          poisonResCurve, healModCurve;
-    public AttributeCurves Clone() => (AttributeCurves) MemberwiseClone();
+                          shockResCurve, poisonResCurve, healModCurve;
+    public HealthAttributeCurves Clone() => (HealthAttributeCurves) MemberwiseClone();
 }

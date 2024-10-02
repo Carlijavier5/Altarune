@@ -8,6 +8,16 @@ public abstract partial class BaseObject {
     public event System.Action<int, ElementType, EventResponse> OnTryDamage;
     public event System.Action<BaseObject> OnPerish;
 
+    public bool Perished { get; private set; }
+
+    /// <summary>
+    /// Override to implement a death behavior for the object; <br/>
+    /// </summary>
+    public virtual void Perish() {
+        Perished = true;
+        OnPerish?.Invoke(this);
+    }
+
     /// <summary>
     /// Damage method, attempts to damage the object;
     /// </summary>

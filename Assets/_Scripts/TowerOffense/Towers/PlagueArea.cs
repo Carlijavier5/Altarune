@@ -12,56 +12,40 @@ public class PlagueArea : MonoBehaviour {
     [SerializeField] private float range;
     private Vector3 targetScale;
     private Renderer rend;
-    private bool fadeOut = false;
-    private List<Collider> enemiesInArea = new List<Collider>();
 
     void Awake() {
         rend = GetComponent<Renderer>();
         targetScale = Vector3.Scale(transform.localScale, new Vector3(range, 1.0f, range));
         transform.localScale = Vector3.zero;
-    }
-
-    void Update() {
-        transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, growSpeed * Time.deltaTime);
-        if(transform.localScale == targetScale && !fadeOut) {
-            enemiesInArea.RemoveAll(x => x == null);
-            fadeOut = true;
-            StartCoroutine(InfectEnemies());
-            StartCoroutine(FadeOut(0f, fadeDuration));
-        }
+        StartCoroutine(ExpandArea());
     }
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Entity entity) && entity.Faction == EntityFaction.Hostile) {
-            if(!enemiesInArea.Contains(other)) {
-                enemiesInArea.Add(other);
-            }
+            InfectEnemy(other);
         }
     }
 
-    void OnTriggerExit(Collider other) {
-        if (enemiesInArea.Contains(other)) {
-            enemiesInArea.Remove(other);
-        }
+    private void InfectEnemy(Collider enemy) {
+        Entity entity = enemy.GetComponent<Entity>();
+        entity.ApplyEffects(new[] {plagueEffect.Clone() });
     }
 
-    private IEnumerator InfectEnemies() {
-        foreach (Collider enemy in enemiesInArea) {
-            if (enemy != null) {
-                Entity entity = enemy.GetComponent<Entity>();
-                entity.ApplyEffects(new[] {plagueEffect.Clone() });
+    private IEnumerator ExpandArea() {
+        while (true) {
+            while (transform.localScale != targetScale) {
+                transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, growSpeed * Time.deltaTime);
+                if (transform.localScale == targetScale) {
+                    StartCoroutine(FadeOut(0f, fadeDuration));
+                }
+                yield return null;
             }
+            yield return new WaitForSeconds(plagueInterval);
         }
-        yield return new WaitForSeconds(plagueInterval);
-        transform.localScale = Vector3.zero;
-        rend.material.SetFloat("_Alpha", 0.7f);
-        fadeOut = false;
     }
 
     private IEnumerator FadeOut(float targetAlpha, float duration) {
-        
         float initialAlpha = rend.material.GetFloat("_Alpha");
-
         float timeElapsed = 0f;
 
         while (timeElapsed < duration) {
@@ -69,7 +53,8 @@ public class PlagueArea : MonoBehaviour {
             rend.material.SetFloat("_Alpha", Mathf.Lerp(initialAlpha, targetAlpha, timeElapsed / duration));
             yield return null;
         }
-        rend.material.SetFloat("_Alpha", targetAlpha);
+        transform.localScale = Vector3.zero;
+        rend.material.SetFloat("_Alpha", 0.7f);
     }
 }
 
