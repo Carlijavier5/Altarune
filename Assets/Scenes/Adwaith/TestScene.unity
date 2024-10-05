@@ -612,6 +612,12 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &314902925 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4595195396528973113, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+    type: 3}
+  m_PrefabInstance: {fileID: 1942190075272092864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &349469307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,7 +1298,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: cc372a5abc0f6a9419c3f2df950d032b, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 21b2f45d28d780f4ab6b7e89710f47b3, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &687345556
 Transform:
@@ -2096,6 +2102,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490485528}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1539122516 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6300008275348826911, guid: 4da58901a428eff4db493b0a1f31b033,
+    type: 3}
+  m_PrefabInstance: {fileID: 1226182491828812391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f600c5941852404797ee6ec4a0a93aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1583900165
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,11 +2896,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1654411398598561785, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1942190075272092865}
     - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2938,7 +2951,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoneGolem
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8907493825237540168, guid: 4da58901a428eff4db493b0a1f31b033,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 314902925}
+    - target: {fileID: 8907493825237540168, guid: 4da58901a428eff4db493b0a1f31b033,
+        type: 3}
+      propertyPath: damageable
+      value: 
+      objectReference: {fileID: 1539122516}
+    - target: {fileID: 8907493825237540168, guid: 4da58901a428eff4db493b0a1f31b033,
+        type: 3}
+      propertyPath: minionPrefab
+      value: 
+      objectReference: {fileID: 3194693474607056342, guid: 28656c3e903ffe64d9c96667fe22d393,
+        type: 3}
+    m_RemovedComponents:
+    - {fileID: 5863081057010701749, guid: 4da58901a428eff4db493b0a1f31b033, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -3011,12 +3041,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2dfbf0698e9e384c90c5b5cf439f510, type: 3}
---- !u!4 &1942190075272092865 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4595195396528973113, guid: a2dfbf0698e9e384c90c5b5cf439f510,
-    type: 3}
-  m_PrefabInstance: {fileID: 1942190075272092864}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2864628505184561727
 PrefabInstance:
   m_ObjectHideFlags: 0

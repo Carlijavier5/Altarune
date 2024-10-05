@@ -93,13 +93,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2498699938228379403}
   - component: {fileID: 6906061550399605482}
-  - component: {fileID: 1654411398598561785}
   - component: {fileID: 8122909792071661056}
-  - component: {fileID: 6434718898131726629}
-  - component: {fileID: 3605687081594267575}
-  - component: {fileID: 7001214964292556351}
   - component: {fileID: 6573025795555639009}
   - component: {fileID: 6300008275348826911}
+  - component: {fileID: 5863081057010701749}
+  - component: {fileID: 8907493825237540168}
   m_Layer: 0
   m_Name: StoneGolem
   m_TagString: Untagged
@@ -136,7 +134,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -148,25 +146,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1654411398598561785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3019376536560387505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ee6fe9a7c52854c82fe97bf4aa0b15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  navigation: {fileID: 6906061550399605482}
-  health: 50
-  speed: 2
-  stoppingDistance: 1.5
-  minionPrefab: {fileID: 3194693474607056342, guid: 28656c3e903ffe64d9c96667fe22d393,
-    type: 3}
 --- !u!65 &8122909792071661056
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -188,42 +167,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 8, z: 1}
   m_Center: {x: 0, y: 5, z: 0}
---- !u!114 &6434718898131726629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3019376536560387505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a3a8c813aef7c6499f6254cee702933, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3605687081594267575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3019376536560387505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 196a6678e375c1944a1cc3ae96819973, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7001214964292556351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3019376536560387505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 148f631d7202caf4a98eb5df3486b8bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6573025795555639009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,6 +324,44 @@ MonoBehaviour:
   iFrameProperties:
     flashMaterial: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
     duration: 0.2
+--- !u!114 &5863081057010701749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3019376536560387505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ee6fe9a7c52854c82fe97bf4aa0b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigation: {fileID: 0}
+  player: {fileID: 0}
+  damageable: {fileID: 0}
+  minionPrefab: {fileID: 0}
+  speed: 2
+  stoppingDistance: 1.5
+  health: 100
+--- !u!114 &8907493825237540168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3019376536560387505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ee6fe9a7c52854c82fe97bf4aa0b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigation: {fileID: 6906061550399605482}
+  player: {fileID: 0}
+  damageable: {fileID: 0}
+  minionPrefab: {fileID: 0}
+  speed: 2
+  stoppingDistance: 1.5
+  health: 100
 --- !u!1 &3980586478659778935
 GameObject:
   m_ObjectHideFlags: 0

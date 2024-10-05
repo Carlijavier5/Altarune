@@ -5,158 +5,169 @@ using UnityEngine.AI;
 using System.Linq;
 using UnityEngine.Events;
 
-public class PhaseTwo : State<EnemyController> {
-    // Creating necessary variables
-    private EnemyController enemy;
-    private Transform player;
-    private UnityEngine.AI.NavMeshAgent navigation;
+namespace Miniboss {
+    public partial class Miniboss {
+        private class PhaseTwo : State<MinibossStateInput> {
+            // Creating necessary variables
+            private Miniboss miniboss;
+            private Transform player;
+            private NavMeshAgent navigation;
 
-    private float health;
+            private float health;
+            private float speed;
+            private float stoppingDistance;
 
-    private float speed;
-    private float stoppingDistance;
+            private bool finishedDuplication = false;
 
-    private bool runOnce = false;
-    private bool finishedDuplication = false;
+            private int numMinions;
 
-    private int numMinions;
-
-// Spawns the minions
-        InitializeMinions();
-
-            // Method to initialize the minions
-    private void InitializeMinions() {
-        // Spawns between 4 and 6 minions
-        int numMinions = Random.Range(4, 6);
-        minions = new GameObject[numMinions];
-
-        // Minions are spawned at (0, 0, 0), but hidden
-        for (int i = 0; i < numMinions; i++) {
-            minions[i] = Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
-            minions[i].SetActive(false);
-        }
-    }
-        public GameObject[] Minions => minions;
 
             // Initializing the minion prefab and array
-    [SerializeField] private GameObject minionPrefab;
-    private GameObject[] minions;
+            private GameObject minionPrefab;
+            private GameObject[] minions;
 
-    public void Enter(EnemyController enemy) {
-        // Ensures the method only runs once
-        if (runOnce) return;
-        runOnce = true;
+            public override void Enter(MinibossStateInput input) {
+                miniboss = input.Miniboss;
 
-        // Initializes the enemy with the current EnemyController
-        this.enemy = enemy;
+                // Initializes methods with values from the enemy
+                player = miniboss.player;
+                navigation = miniboss.navigation;
+                minionPrefab = miniboss.minionPrefab;
 
-        // Initializes variables with values from the enemy
-        player = enemy.Player;
-        navigation = enemy.Navigation;
+                // Initializes variables with values from the enemy
+                speed = miniboss.speed / 2;
+                stoppingDistance = miniboss.stoppingDistance;
 
-        speed = enemy.Speed;
-        stoppingDistance = enemy.StoppingDistance;
+                if (minionPrefab == null) {
+                    Debug.Log(minionPrefab);
+                }
 
-        // Duplicates the minions
-        enemy.StartCoroutine(DuplicateMinion(enemy.transform.position));
-    }
+                // Spawns the minions
+                InitializeMinions();
 
-    public void Execute() {
-        // Initializes variables that will change during this lifecycle
-        health = enemy.Health;
-
-        if (finishedDuplication) {
-            FollowPlayer();
-            speed = speed / 2;
-        }
-    }
-
-    public void FollowPlayer() {
-        // Calculates the normalized vector in the direction of the player
-        Vector3 directionToPlayer = (player.position - enemy.transform.position).normalized;
-        // Calculates the angle between the enemy and the player
-        float angleToPlayer = Vector3.Angle(enemy.transform.forward, directionToPlayer);
-
-        // If the angle is less then 20 degrees
-        if (angleToPlayer <= 10.0f) {
-            navigation.speed = speed;
-            navigation.stoppingDistance = stoppingDistance;
-            navigation.autoBraking = true;
-            navigation.SetDestination(player.position);
-
-            // Logic to ensure the enemy does not move around if the player moves nearby
-            if ((navigation.remainingDistance <= navigation.stoppingDistance) && !navigation.pathPending) {
-                navigation.isStopped = true;
-            } else {
-                navigation.isStopped = false;
+                // Duplicates the minions
+                miniboss.StartCoroutine(DuplicateMinion(miniboss.transform.position));
             }
-        } else {
-            LookTowardsPlayer();
+
+            public override void Update(MinibossStateInput input) {
+                // Initializes variables that will change during this lifecycle
+                health = miniboss.health;
+
+                if (finishedDuplication) {
+                    FollowPlayer();
+                    CheckStateTransition();
+                }
+            }
+
+            private void CheckStateTransition() {
+                if (health <= 25) {
+                    miniboss.stateMachine.SetState(new PhaseThree());
+                }
+            }
+
+            // Method to initialize the minions
+            private void InitializeMinions() {
+                // Spawns between 4 and 6 minions
+                int numMinions = Random.Range(4, 6);
+                minions = new GameObject[numMinions];
+
+                // Minions are spawned at (0, 0, 0), but hidden
+                for (int i = 0; i < numMinions; i++) {
+                    minions[i] = Object.Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
+                    minions[i].SetActive(false);
+                }
+            }
+
+            public void FollowPlayer() {
+                // Calculates the normalized vector in the direction of the player
+                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+                // Calculates the angle between the enemy and the player
+                float angleToPlayer = Vector3.Angle(miniboss.transform.forward, directionToPlayer);
+
+                // If the angle is less then 20 degrees
+                if (angleToPlayer <= 10.0f) {
+                    navigation.speed = speed;
+                    navigation.stoppingDistance = stoppingDistance;
+                    navigation.autoBraking = true;
+                    navigation.SetDestination(player.position);
+
+                    // Logic to ensure the enemy does not move around if the player moves nearby
+                    if ((navigation.remainingDistance <= navigation.stoppingDistance) && !navigation.pathPending) {
+                        navigation.isStopped = true;
+                    } else {
+                        navigation.isStopped = false;
+                    }
+                } else {
+                    LookTowardsPlayer();
+                }
+            }
+
+            public void LookTowardsPlayer() {
+                // Determines how the enemy should rotate towards the player
+                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+
+                Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
+                // Rotates the enemy towards the player (uses slerp)
+                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
+            }
+
+            IEnumerator DuplicateMinion(Vector3 enemyPos) {
+                yield return new WaitForSeconds(0.5f);
+
+                // Stores previous spawn locations
+                List<Vector3> spawnPositions = new List<Vector3>();
+                spawnPositions.Add(enemyPos);
+
+                // Stores all minions.  After they all spawn, they attack
+                List<GameObject> activateMinions = new List<GameObject>();
+
+                // Minimum distance minions should be from each other
+                float minDistance = 1.8f;
+
+                foreach (GameObject minion in minions) {
+                    // Makes the minions visible
+                    minion.SetActive(true);
+                    Vector3 spawnOffset;
+                    
+                    // Finds a good location for the minions to spawn
+                    do {
+                        float offsetX = Random.Range(-2.5f, 2.5f);
+                        float offsetZ = Random.Range(-2.5f, 2.5f);
+                        spawnOffset = new Vector3(offsetX, 0, offsetZ);
+                    } while (spawnPositions.Any(pos => Vector3.Distance(enemyPos + spawnOffset, pos) < minDistance));
+
+                    // Sets the minion spawn location and updates the list
+                    minion.transform.position = enemyPos + spawnOffset;
+                    spawnPositions.Add(minion.transform.position);
+                    activateMinions.Add(minion);
+
+                    // Sets the player in the minion controller (can't set via GUI for prefabs)
+                    MinionController minionController = minion.GetComponent<MinionController>();
+                    minionController.SetPlayer(player);
+                    minionController.onMinionDeath.AddListener(HandleMinionDeath);
+
+                    // Waits for 1/2 a second between spawns
+                    yield return new WaitForSeconds(1f);
+                }
+                
+                numMinions = activateMinions.Count;
+
+                // Activates every minion
+                foreach(GameObject minion in activateMinions) {
+                    minion.GetComponent<MinionController>().Activate();
+                }
+
+                // Allows the enemy to begin to move towards the player again
+                finishedDuplication = true;
+            }
+
+            public void HandleMinionDeath() {
+                health -= 25 / (numMinions);
+            }
+
+            public override void Exit(MinibossStateInput input) {
+                
+            }
         }
     }
-
-    public void LookTowardsPlayer() {
-        // Determines how the enemy should rotate towards the player
-        Vector3 directionToPlayer = (player.position - enemy.transform.position).normalized;
-
-        Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
-        // Rotates the enemy towards the player (uses slerp)
-        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
-    }
-
-    IEnumerator DuplicateMinion(Vector3 enemyPos) {
-        yield return new WaitForSeconds(0.5f);
-
-        // Stores previous spawn locations
-        List<Vector3> spawnPositions = new List<Vector3>();
-        spawnPositions.Add(enemyPos);
-
-        // Stores all minions.  After they all spawn, they attack
-        List<GameObject> activateMinions = new List<GameObject>();
-
-        // Minimum distance minions should be from each other
-        float minDistance = 1.8f;
-
-        foreach (GameObject minion in enemy.Minions) {
-            // Makes the minions visible
-            minion.SetActive(true);
-            Vector3 spawnOffset;
-            
-            // Finds a good location for the minions to spawn
-            do {
-                float offsetX = Random.Range(-2.5f, 2.5f);
-                float offsetZ = Random.Range(-2.5f, 2.5f);
-                spawnOffset = new Vector3(offsetX, 0, offsetZ);
-            } while (spawnPositions.Any(pos => Vector3.Distance(enemyPos + spawnOffset, pos) < minDistance));
-
-            // Sets the minion spawn location and updates the list
-            minion.transform.position = enemyPos + spawnOffset;
-            spawnPositions.Add(minion.transform.position);
-            activateMinions.Add(minion);
-
-            // Sets the player in the minion controller (can't set via GUI for prefabs)
-            MinionController minionController = minion.GetComponent<MinionController>();
-            minionController.SetPlayer(player);
-            minionController.onMinionDeath.AddListener(HandleMinionDeath);
-
-            // Waits for 1/2 a second between spawns
-            yield return new WaitForSeconds(1f);
-        }
-        
-        numMinions = activateMinions.Count;
-
-        // Activates every minion
-        foreach(GameObject minion in activateMinions) {
-            minion.GetComponent<MinionController>().Activate();
-        }
-
-        // Allows the enemy to begin to move towards the player again
-        finishedDuplication = true;
-    }
-
-    public void HandleMinionDeath() {
-        health -= 25 / (numMinions);
-    }
-
-    public void Exit() { }
 }
