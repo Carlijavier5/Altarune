@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ElementType { Physical, Fire, Ice, Shock, Poison }
+
 public class Damageable : ObjectModule {
 
     public event System.Action<int> OnDamageTaken;

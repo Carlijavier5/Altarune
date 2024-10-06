@@ -1,6 +1,7 @@
 ﻿public abstract class StatusEffect {
 
     public HealthAttributeModifiers AttributeMods { get; protected set; }
+    public CCAttributeModifiers CCMods { get; protected set; }
 
     /// <summary>
     /// Called when the effect gets applied;
