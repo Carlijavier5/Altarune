@@ -4,9 +4,9 @@ using UnityEngine.AI;
 namespace Miniboss {
     public partial class Miniboss : MonoBehaviour {
         // Accessing the NavMeshAgent, Player, Damageable, and the minionPrefab
-        [SerializeField] private NavMeshAgent navigation;
-        [SerializeField] private Transform player;
-        [SerializeField] private Damageable damageable;
+        private NavMeshAgent navigation;
+        private Transform player;
+        private Damageable damageable;
         [SerializeField] private GameObject minionPrefab;
 
         // Initializing default values for movement
@@ -23,7 +23,12 @@ namespace Miniboss {
         private PhaseThree phaseThreeState;
 
         // First method to run
-        void Start() {
+        public void Start() {
+            // Initializes base components
+            navigation = GetComponent<NavMeshAgent>();
+            damageable = GetComponent<Damageable>();
+            FindPlayer();
+
             // Initializing variables with Phase files
             phaseOneState = new PhaseOne();
             phaseTwoState = new PhaseTwo();
@@ -36,8 +41,23 @@ namespace Miniboss {
         }
 
         // Runs every frame
-        void Update() {
+        public void Update() {
             stateMachine.Update();
+        }
+
+        // Finds the player, and assigns it to the Transform player
+        public void FindPlayer() {
+            // Initializes the OverlapSphere collider
+            Collider[] findPlayerCollider = Physics.OverlapSphere(
+                transform.position, 
+                10f, 
+                LayerMask.GetMask("Player")
+            );
+
+            // If the player collider is found, assigns it to the transform
+            if (findPlayerCollider != null) {
+                player = findPlayerCollider[0].transform;
+            }
         }
     }
 }

@@ -54,13 +54,13 @@ namespace Miniboss {
                 health = miniboss.health;
 
                 if (finishedDuplication) {
-                    FollowPlayer();
+                    LookTowardsPlayer();
                     CheckStateTransition();
                 }
             }
 
             private void CheckStateTransition() {
-                if (health <= 25) {
+                if (health <= 5) {
                     miniboss.stateMachine.SetState(new PhaseThree());
                 }
             }
@@ -75,30 +75,6 @@ namespace Miniboss {
                 for (int i = 0; i < numMinions; i++) {
                     minions[i] = Object.Instantiate(minionPrefab, Vector3.zero, Quaternion.identity);
                     minions[i].SetActive(false);
-                }
-            }
-
-            public void FollowPlayer() {
-                // Calculates the normalized vector in the direction of the player
-                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
-                // Calculates the angle between the enemy and the player
-                float angleToPlayer = Vector3.Angle(miniboss.transform.forward, directionToPlayer);
-
-                // If the angle is less then 20 degrees
-                if (angleToPlayer <= 10.0f) {
-                    navigation.speed = speed;
-                    navigation.stoppingDistance = stoppingDistance;
-                    navigation.autoBraking = true;
-                    navigation.SetDestination(player.position);
-
-                    // Logic to ensure the enemy does not move around if the player moves nearby
-                    if ((navigation.remainingDistance <= navigation.stoppingDistance) && !navigation.pathPending) {
-                        navigation.isStopped = true;
-                    } else {
-                        navigation.isStopped = false;
-                    }
-                } else {
-                    LookTowardsPlayer();
                 }
             }
 
@@ -123,6 +99,7 @@ namespace Miniboss {
 
                 // Minimum distance minions should be from each other
                 float minDistance = 1.8f;
+                float minDistanceFromEnemy = 1f;
 
                 foreach (GameObject minion in minions) {
                     // Makes the minions visible
@@ -134,7 +111,8 @@ namespace Miniboss {
                         float offsetX = Random.Range(-2.5f, 2.5f);
                         float offsetZ = Random.Range(-2.5f, 2.5f);
                         spawnOffset = new Vector3(offsetX, 0, offsetZ);
-                    } while (spawnPositions.Any(pos => Vector3.Distance(enemyPos + spawnOffset, pos) < minDistance));
+                    } while (spawnPositions.Any(pos => 
+                        Vector3.Distance(enemyPos + spawnOffset, pos) < minDistance));
 
                     // Sets the minion spawn location and updates the list
                     minion.transform.position = enemyPos + spawnOffset;

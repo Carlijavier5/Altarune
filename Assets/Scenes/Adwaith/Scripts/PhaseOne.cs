@@ -6,23 +6,24 @@ using UnityEngine.AI;
 namespace Miniboss {
     public partial class Miniboss {
         private class PhaseOne : State<MinibossStateInput> {
-            // Creating necessary variables
+            // Creating objects
             private Miniboss miniboss;
             private Transform player;
             private NavMeshAgent navigation;
             private Coroutine malfunctionCoroutine;
 
+            // Creating variables
             private float speed;
             private float stoppingDistance;
             private float health;
             
+            // Creating spin components
             private bool spinState = false;
             private readonly float spinDuration = 1;
-            private bool continueRun = true;
 
-            // First method to run
+            // Entrance method
             public override void Enter(MinibossStateInput input) {
-                Debug.Log("Entered Phase 1");
+                // Initializes the enemy using the StateInput
                 miniboss = input.Miniboss;
 
                 // Initializes methods with values from the enemy
@@ -38,6 +39,7 @@ namespace Miniboss {
                 malfunctionCoroutine = miniboss.StartCoroutine(MalfunctionCoroutine());
             }
 
+            // Runs every frame
             public override void Update(MinibossStateInput input) {
                 // Switches between rotating the enemy and following the player
                 if (spinState == true && navigation.remainingDistance != 0 && !navigation.pathPending) {
@@ -48,6 +50,7 @@ namespace Miniboss {
                 CheckStateTransition();
             }
 
+            // Switches to the next state depending on the health
             private void CheckStateTransition() {
                 if (health <= 50) {
                     miniboss.stateMachine.SetState(new PhaseTwo());
@@ -58,7 +61,6 @@ namespace Miniboss {
             public void FollowPlayer() {
                 // Calculates the normalized vector in the direction of the player
                 Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
-                //Debug.Log(directionToPlayer);
                 // Calculates the angle between the enemy and the player
                 float angleToPlayer = Vector3.Angle(miniboss.transform.forward, directionToPlayer);
 

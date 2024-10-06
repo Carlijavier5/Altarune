@@ -5,13 +5,13 @@ using UnityEngine.Events;
 
 namespace Miniboss {
     public class MinionController : MonoBehaviour {
-        public Transform player;
-        public UnityEngine.AI.NavMeshAgent navigation;
+        private Transform player;
+        private UnityEngine.AI.NavMeshAgent navigation;
 
-        private float stoppingDistance = 1.5f;
-        private float speed;
+        [SerializeField] private float stoppingDistance = 1.5f;
+        [SerializeField] private float speed;
+        
         private bool setActive = false;
-
         public UnityEvent onMinionDeath;
 
         void Start() {
@@ -32,7 +32,6 @@ namespace Miniboss {
 
         public void SetPlayer(Transform player) {
             this.player = player;
-            this.navigation = navigation;
         }
 
         public void Activate() {
