@@ -15,17 +15,29 @@ using UnityEngine.AI;
 
 public class BatBehavior : MonoBehaviour
 {
+
+    private BatBodyTrigger _attackTrigger;
     private Collider _collider;
+
+    private Rigidbody _rb;
 
     [SerializeField] private float _timeBetweenMove = 0.35f;
     [SerializeField] private float _speed = 3.5f;
     private float _timer = 0f;
 
+    private float _timeDamaged = 0f;
+    private float _damageCd = 1f;
+    private bool isKnockedBack = false;   //Tracks if the bat is currently knocked back
+    private float knockbackDuration = 0.8f;  //Knockback duration
+    private float knockbackEndTime = 0f;
+
+    private float kbForce = 2f; //Knockback force
+
     private Vector3 destination;
 
     private Player _player; //Will store the player that triggered the chase
-
     private float bias = 0.65f; //Bias towards the player
+
 
     private enum BatState {
         Roam,
@@ -35,8 +47,10 @@ public class BatBehavior : MonoBehaviour
     private BatState state;
     
     void Start() {
+        _attackTrigger = GetComponentInChildren<BatBodyTrigger>();
         _player = FindObjectOfType<Player>();
         _collider = GetComponent<Collider>();
+        _rb = GetComponent<Rigidbody>();
 
         state = BatState.Roam; //Initial state is roam/neutral
 
@@ -44,27 +58,47 @@ public class BatBehavior : MonoBehaviour
     }
 
     void Update() {
+        if (isKnockedBack) { //Don't want to call move commands if being knocked back
+            if (Time.time >= knockbackEndTime) {
+                isKnockedBack = false;
+                _attackTrigger.setCanAttack(true);
+            } else {
+                return;
+            }
+        }
+
+
         if (state == BatState.Roam) {
             roam();
-        } else if (state == BatState.Chase && _player != null) {
+        } else {
             chase();
         }
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.GetComponent<Player>() == null) return;
+        if (other.gameObject.GetComponent<Player>() == null || state == BatState.Chase) return;
 
         state = BatState.Chase;
-        Debug.Log("CHASE!!!!!");
     }
 
-    void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.GetComponent<Player>() == null) return;
-
-        state = BatState.Chase;
-        Debug.Log("KILL!!!");
+    public void dealDamage() {
+        if (Time.time - _timeDamaged < _damageCd) return;
+        Debug.Log("DAMAGE DEALT!");
+        _timeDamaged = Time.time;
+        applyKB();
     }
 
+    private void applyKB() {
+        Vector3 kbDir = (transform.position - _player.transform.position).normalized;
+        kbDir.y = 0;
+
+        _rb.AddForce(kbDir * kbForce, ForceMode.Impulse);
+
+        isKnockedBack = true;
+        _attackTrigger.setCanAttack(false);
+
+        knockbackEndTime = Time.time + knockbackDuration;
+    }
 
 
 
