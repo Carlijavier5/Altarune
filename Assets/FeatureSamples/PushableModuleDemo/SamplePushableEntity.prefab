@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8482548710142065041}
   - component: {fileID: 7206117575844632959}
   - component: {fileID: 6372264922242171906}
+  - component: {fileID: 614164624299424840}
   - component: {fileID: 1021238029495958216}
   - component: {fileID: 1535876100806614225}
   - component: {fileID: 8070684739039370864}
@@ -70,6 +71,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseObject: {fileID: 7206117575844632959}
   defaultDriver:
+    motionMode: 0
     transform: {fileID: 8482548710142065041}
     rigidbody: {fileID: 0}
     controller: {fileID: 0}
@@ -79,6 +81,30 @@ MonoBehaviour:
     easeCurves: {fileID: 11400000, guid: db0e09c772cfafc4fbd0c10b14d95ba8, type: 2}
     objectMass: 1
     pushResistance: 0
+--- !u!114 &614164624299424840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4479787509806254877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab4305337dc99c439cb3d9968f403ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 7206117575844632959}
+  defaultDriver:
+    motionMode: 0
+    transform: {fileID: 8482548710142065041}
+    rigidbody: {fileID: 0}
+    controller: {fileID: 0}
+    navMeshAgent: {fileID: 0}
+  pushableModule: {fileID: 6372264922242171906}
+  teleportableProperties:
+    settings: {fileID: 11400000, guid: 19cdb989acdb9444387ad6f23f4ac034, type: 2}
+    rootTransform: {fileID: 8482548710142065041}
+    duration: 0.25
 --- !u!54 &1021238029495958216
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ public class CCAttributeModifiers {
                              massMod = new(), pushRes = new();
 
     public void ApplyModifiers(RuntimePushAttributes runtimeAttributes,
-                               PushAttributes defaultAttributes) {
+                               PushableAttributes defaultAttributes) {
         runtimeAttributes.objectMass = Mathf.Max(0.1f, defaultAttributes.objectMass * massMod);
         runtimeAttributes.pushResistance = Mathf.Clamp01(defaultAttributes.pushResistance * pushRes);
     }

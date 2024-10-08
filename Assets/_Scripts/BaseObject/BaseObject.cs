@@ -18,7 +18,7 @@ public abstract partial class BaseObject : MonoBehaviour {
     #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
-    private Dictionary<Renderer, Material[]> materialDict = new();
+    private readonly Dictionary<Renderer, Material[]> materialDict = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
         renderers = GetComponentsInChildren<Renderer>(true);

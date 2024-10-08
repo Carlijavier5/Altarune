@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract partial class BaseObject {
 
     public event System.Action<Vector3, EventResponse> OnTryFramePush;
-    public event System.Action<Vector3, float, LongPushResponse> OnTryLongPush;
+    public event System.Action<Vector3, float, EventResponse<PushActionCore>> OnTryLongPush;
 
     public MotionDriver MotionDriver { get; private set; } = new();
 
@@ -28,10 +28,10 @@ public abstract partial class BaseObject {
     /// <returns> True if the object was pushed, false otherwise; </returns>
     public bool TryLongPush(Vector3 direction, float strength,
                             float duration, out PushActionCore actionCore) {
-        LongPushResponse response = new();
+        EventResponse<PushActionCore> response = new();
         OnTryLongPush?.Invoke(direction.normalized * strength, duration, response);
-        actionCore = response.actionCore;
-        return actionCore != null;
+        actionCore = response.objectReference;
+        return response.received;
     }
 
     /// <summary>
@@ -43,5 +43,3 @@ public abstract partial class BaseObject {
         return TryLongPush(direction, strength, duration, out _);
     }
 }
-
-public class LongPushResponse { public PushActionCore actionCore; }

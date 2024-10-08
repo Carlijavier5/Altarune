@@ -17,6 +17,7 @@ namespace FeatureSamples {
             CJUtils.GUIUtils.DrawSeparatorLine();
             EditorGUILayout.GetControlRect(false, 2);
 
+            GUI.enabled = Application.isPlaying;
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox)) {
                 if (GUILayout.Button("Apply Long Push")) {
                     pullSource.ApplyLongPush(strength, duration);
@@ -29,6 +30,7 @@ namespace FeatureSamples {
                     EditorGUIUtility.labelWidth = 0;
                 }
             }
+            GUI.enabled = true;
         }
     }
 }
