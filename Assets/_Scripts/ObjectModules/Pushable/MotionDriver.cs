@@ -8,7 +8,7 @@ public class MotionDriver {
 
     public event System.Action OnModeChange;
 
-    private MotionMode motionMode;
+    [HideInInspector][SerializeField] private MotionMode motionMode;
     public MotionMode MotionMode {
         get => motionMode;
         private set {

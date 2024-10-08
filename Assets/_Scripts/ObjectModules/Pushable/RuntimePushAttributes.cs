@@ -23,8 +23,8 @@ public class RuntimePushAttributes : PushAttributes {
 
         CCAttributeModifiers composite = new();
         foreach (StatusEffect statusEffect in effectSource) {
-            if (statusEffect.CCMods != null) {
-                composite.Compose(statusEffect.CCMods);
+            if (statusEffect.CCModifiers != null) {
+                composite.Compose(statusEffect.CCModifiers);
             }
         }
 

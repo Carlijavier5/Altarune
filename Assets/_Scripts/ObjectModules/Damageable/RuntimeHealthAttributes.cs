@@ -9,7 +9,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
 
     private IEnumerable<StatusEffect> effectSource;
 
-    public RuntimeHealthAttributes(HealthAttributes defaultAttributes, HealthAttributeCurves curves,
+    public RuntimeHealthAttributes(HealthAttributes defaultAttributes, DefaultHealthAttributeCurves curves,
                                    IEnumerable<StatusEffect> effectSource) : base(curves) {
         healthAttributes = defaultAttributes;
         this.effectSource = effectSource;
@@ -49,8 +49,8 @@ public class RuntimeHealthAttributes : HealthAttributes {
 
         HealthAttributeModifiers composite = new();
         foreach (StatusEffect statusEffect in effectSource) {
-            if (statusEffect.AttributeMods != null) {
-                composite.Compose(statusEffect.AttributeMods);
+            if (statusEffect.HealthModifiers != null) {
+                composite.Compose(statusEffect.HealthModifiers);
             }
         }
 

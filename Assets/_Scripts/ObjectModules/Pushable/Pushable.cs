@@ -61,7 +61,7 @@ public class Pushable : ObjectModule {
         foreach (PushActionCore core in actionCores) {
             float lifetime = core.UpdateLifetime(Time.fixedDeltaTime);
             if (lifetime >= 1) terminateStack.Push(core);
-            DoFramePush(core.direction);
+            DoFramePush(core.ValueAtLifetime);
         }
 
         while (terminateStack.TryPop(out PushActionCore core)) RemoveCore(core);
@@ -100,8 +100,9 @@ public class Pushable : ObjectModule {
                 driver.Controller.Move(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.NavMesh:
-                driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
-                break;
+                if (driver.NavMeshAgent.isActiveAndEnabled) {
+                    driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
+                } break;
         }
     }
 

@@ -6,6 +6,7 @@ namespace FeatureSamples {
 
         [SerializeField] private float pullStrength;
         private readonly HashSet<BaseObject> baseObjects = new();
+        private readonly Stack<BaseObject> terminateStack = new();
 
         void OnTriggerEnter(Collider other) {
             if (other.TryGetComponent(out BaseObject baseObject)) {
@@ -15,8 +16,12 @@ namespace FeatureSamples {
 
         private void FixedUpdate() {
             foreach (BaseObject baseObject in baseObjects) {
-                baseObject.TryPush(ComputeXZDirection(baseObject.transform, transform), pullStrength);
+                if (baseObject) {
+                    baseObject.TryPush(ComputeXZDirection(baseObject.transform, transform), pullStrength);
+                } else terminateStack.Push(baseObject);
             }
+
+            while (terminateStack.TryPop(out BaseObject baseObject)) baseObjects.Remove(baseObject);
         }
 
         public void ApplyLongPush(float strength, float duration) {

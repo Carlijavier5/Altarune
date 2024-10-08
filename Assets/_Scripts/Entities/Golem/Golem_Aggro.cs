@@ -17,8 +17,11 @@ public partial class Golem {
 
         public override void Update(Golem_Input input) {
             Transform t = input.golem.transform;
-            Quaternion targetRotation = Quaternion.LookRotation(aggroTarget.transform.position - t.position, Vector3.up);
-            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.golem.DeltaTime * input.golem.navMeshAgent.angularSpeed);
+            Vector3 lookVector = aggroTarget.transform.position - t.position;
+            if (lookVector != Vector3.zero) {
+                Quaternion targetRotation = Quaternion.LookRotation(aggroTarget.transform.position - t.position, Vector3.up);
+                t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.golem.DeltaTime * input.golem.navMeshAgent.angularSpeed);
+            }
         }
     }
     
@@ -30,6 +33,7 @@ public partial class Golem {
         public override void Enter(Golem_Input input) {
             base.Enter(input);
             Golem golem = input.golem;
+            golem.navMeshAgent.ResetPath();
             waitDuration = Random.Range(golem.aggroWaitTimeRange.x,
                                         golem.aggroWaitTimeRange.y);
         }
@@ -52,7 +56,7 @@ public partial class Golem {
 
         public override void Enter(Golem_Input input) {
             base.Enter(input);
-            positionAnchor = input.golem.transform.position;
+            positionAnchor = input.golem.transform.localPosition;
         }
 
         public override void Update(Golem_Input input) {
@@ -60,15 +64,17 @@ public partial class Golem {
             chargeTimer = Mathf.MoveTowards(chargeTimer, input.golem.chargeTime, input.golem.DeltaTime);
             float chargePercent = chargeTimer / input.golem.chargeTime;
             Transform t = input.golem.transform;
-            t.position = new Vector3(positionAnchor.x + Random.Range(-input.golem.chargeAmplitude, 
-                                                        input.golem.chargeAmplitude) * chargePercent,
-                                     positionAnchor.y,
-                                     positionAnchor.z + Random.Range(-input.golem.chargeAmplitude,
-                                                        input.golem.chargeAmplitude) * chargePercent);
+            t.localPosition = new Vector3(positionAnchor.x + Random.Range(-input.golem.chargeAmplitude, 
+                                                                          input.golem.chargeAmplitude) * chargePercent,
+                                          positionAnchor.y,
+                                          positionAnchor.z + Random.Range(-input.golem.chargeAmplitude,
+                                                                          input.golem.chargeAmplitude) * chargePercent);
             if (chargePercent >= 1) input.stateMachine.SetState(new State_Charge());
         }
 
-        public override void Exit(Golem_Input input) { }
+        public override void Exit(Golem_Input input) {
+            input.golem.transform.localPosition = positionAnchor;
+        }
     }
 
     private class State_Charge : State<Golem_Input> {
@@ -78,12 +84,16 @@ public partial class Golem {
         public override void Enter(Golem_Input input) {
             input.golem.controller.enabled = true;
             input.golem.navMeshAgent.enabled = false;
+            input.golem.MotionDriver.Set(input.golem.controller);
         }
 
         public override void Update(Golem_Input input) {
             Golem golem = input.golem;
             chargeTimer += golem.DeltaTime;
-            golem.controller.Move(golem.chargeSpeed * golem.DeltaTime * golem.transform.forward);
+            if (golem.CanMove) {
+                golem.controller.Move(golem.chargeSpeed * golem.DeltaTime * golem.transform.forward);
+            }
+
             if (chargeTimer >= golem.chargeDuration) {
                 input.stateMachine.SetState(input.aggroTarget == null ? new State_Idle() : new State_AggroWait());
             }
@@ -92,6 +102,7 @@ public partial class Golem {
         public override void Exit(Golem_Input input) {
             input.golem.controller.enabled = false;
             input.golem.navMeshAgent.enabled = true;
+            input.golem.MotionDriver.Set(input.golem.navMeshAgent);
         }
     }
 }
