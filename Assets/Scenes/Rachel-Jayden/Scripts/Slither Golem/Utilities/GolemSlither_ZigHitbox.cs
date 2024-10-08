@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
-public class Shinobi_ZigHitbox : MonoBehaviour
+public class GolemSlither_ZigHitbox : MonoBehaviour
 {
     [SerializeField] private float detonateDuration = 0.3f;
     [SerializeField] private Material flashMat;
@@ -13,23 +11,19 @@ public class Shinobi_ZigHitbox : MonoBehaviour
     private bool shouldDmg = false;
     private HashSet<Entity> damagedEntities = new HashSet<Entity>();
 
-    private void Update()
-    {
+    private void Update() {
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= 4f)
-        {
+        if (elapsedTime >= 4f) {
             Destroy(gameObject);
         }
     }
 
-    public void Detonate()
-    {
+    public void Detonate() {
         StartCoroutine(IDetonate());
     }
 
-    private IEnumerator IDetonate()
-    {
+    private IEnumerator IDetonate() {
         gameObject.GetComponent<Renderer>().material = flashMat;
         shouldDmg = true;
 
@@ -38,17 +32,14 @@ public class Shinobi_ZigHitbox : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void DamageEntity(Collider other)
-    {
-        if (shouldDmg && other.TryGetComponent(out Entity entity) && entity.Faction != EntityFaction.Hostile && !damagedEntities.Contains(entity))
-        {
+    private void DamageEntity(Collider other) {
+        if (shouldDmg && other.TryGetComponent(out Entity entity) && entity.Faction != EntityFaction.Hostile && !damagedEntities.Contains(entity)) {
             entity.TryDamage(2);
             damagedEntities.Add(entity);
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
+    private void OnTriggerStay(Collider other) {
         DamageEntity(other);
     }
 }
