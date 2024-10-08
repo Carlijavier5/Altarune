@@ -18,16 +18,6 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     #endregion
 
-    public bool Perished { get; private set; }
-
-    /// <summary>
-    /// Override to implement a death behavior for the object; <br/>
-    /// </summary>
-    public virtual void Perish() {
-        Perished = true;
-        OnPerish?.Invoke(this);
-    }
-
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
