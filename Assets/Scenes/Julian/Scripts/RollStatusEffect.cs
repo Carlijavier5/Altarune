@@ -16,7 +16,7 @@ public class RollStatusEffect : StatusEffect
   [SerializeField] private Material material;
   public override void Apply(Entity entity, bool isNew)
   {
-    AttributeMods = new() { defense = { addMod = defenseAddMod } };
+    HealthModifiers = new() { defense = { addMod = defenseAddMod } };
   }
 
   public override void Terminate(Entity entity)
