@@ -9,7 +9,7 @@ using UnityEngine.AI;
 /// Bat Behavior
 ///    Bat will have 2 states: roam, chase
 ///    Roam state: Random movements biased towards player with objective to face the player
-///    Chase state: when bat can see the player within range x, it will lock on to the player and chase
+///    Chase state: when bat can see the player within its primary box collider, it will lock on to the player and chase
 ///    
 /// </summary>
 
@@ -37,7 +37,6 @@ public class BatBehavior : MonoBehaviour
 
     private Player _player; //Will store the player that triggered the chase
     private float bias = 0.65f; //Bias towards the player
-
 
     private enum BatState {
         Roam,
@@ -92,14 +91,14 @@ public class BatBehavior : MonoBehaviour
         Vector3 kbDir = (transform.position - _player.transform.position).normalized;
         kbDir.y = 0;
 
+        _rb.velocity = Vector3.zero; //Reset velocity to prevent movement conflicts
         _rb.AddForce(kbDir * kbForce, ForceMode.Impulse);
 
         isKnockedBack = true;
         _attackTrigger.setCanAttack(false);
 
-        knockbackEndTime = Time.time + knockbackDuration;
+        knockbackEndTime = _timeDamaged + knockbackDuration;
     }
-
 
 
     private void roam() {
@@ -116,6 +115,7 @@ public class BatBehavior : MonoBehaviour
             _timer = 0f;
         }
     }
+
 
     private void chase() {
         _speed = 5f;
