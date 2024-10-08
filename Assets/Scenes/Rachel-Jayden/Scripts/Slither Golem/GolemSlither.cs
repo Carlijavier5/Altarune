@@ -7,18 +7,6 @@ using UnityEngine.AI;
 
 public partial class GolemSlither : Entity
 {
-   public override float TimeScale {
-        get => base.TimeScale;
-        set {
-            timeScale = value;
-            foreach (Oscillator oscillator in oscillators) {
-                oscillator.SetTimeScale(timeScale);
-                navMeshAgent.speed = baseLinearSpeed * timeScale;
-                navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
-            }
-        }
-    }
-
     [NonSerialized] public readonly StateMachine<GolemSlither_Input> stateMachine = new();
 
     [Header("Setup")]
@@ -52,6 +40,8 @@ public partial class GolemSlither : Entity
     private bool didSweep = false;
 
     private void Awake() {
+        OnTimeScaleSet += GolemSlither_OnTimeScaleSet;
+
         sweepRadius.GetComponent<SphereCollider>().radius = sweepDistance;
         aggroRadius.GetComponent<SphereCollider>().radius = chaseDistance;
 
@@ -69,6 +59,14 @@ public partial class GolemSlither : Entity
         GolemSlither_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Follow());
         stateMachine.StateInput.SetPlayer(player);
+    }
+
+    private void GolemSlither_OnTimeScaleSet(float timeScale) {
+        foreach (Oscillator oscillator in oscillators) {
+            oscillator.SetTimeScale(timeScale);
+            navMeshAgent.speed = baseLinearSpeed * timeScale;
+            navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
+        }
     }
 
     override protected void Update() {
