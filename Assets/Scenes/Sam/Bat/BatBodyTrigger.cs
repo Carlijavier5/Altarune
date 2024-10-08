@@ -13,16 +13,18 @@ public class BatBodyTrigger : MonoBehaviour
         
     }
 
+    //Detects if the player has touched the bat and should take damage
     void OnTriggerEnter(Collider other) {
         if (!_canAttack) return;
         if (other.gameObject.GetComponent<Player>() == null) return;
 
-        _batBehavior.dealDamage();
+        _batBehavior.DealDamage();
 
     }
 
 
-    public void setCanAttack(bool canAttack) {
+    //Sets the bat's attack status
+    public void SetCanAttack(bool canAttack) {
         _canAttack = canAttack;
     }
 }

@@ -53,14 +53,14 @@ public class BatBehavior : MonoBehaviour
 
         state = BatState.Roam; //Initial state is roam/neutral
 
-        destination = getDestination(); //Begin movement pattern towards the player
+        destination = GetDestination(); //Begin movement pattern towards the player
     }
 
     void Update() {
         if (isKnockedBack) { //Don't want to call move commands if being knocked back
             if (Time.time >= knockbackEndTime) {
                 isKnockedBack = false;
-                _attackTrigger.setCanAttack(true);
+                _attackTrigger.SetCanAttack(true); //Bat can attack again after knockback
             } else {
                 return;
             }
@@ -68,26 +68,30 @@ public class BatBehavior : MonoBehaviour
 
 
         if (state == BatState.Roam) {
-            roam();
+            Roam();
         } else {
-            chase();
+            Chase();
         }
     }
 
+
+    //Detects if the player has entered the bat's vision and triggers chase mode
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.GetComponent<Player>() == null || state == BatState.Chase) return;
 
         state = BatState.Chase;
     }
 
-    public void dealDamage() {
+    //Deals damage to the player
+    public void DealDamage() {
         if (Time.time - _timeDamaged < _damageCd) return;
         Debug.Log("DAMAGE DEALT!");
-        _timeDamaged = Time.time;
-        applyKB();
+        _timeDamaged = Time.time; //Store the time bat dealt damage
+        ApplyKB();
     }
 
-    private void applyKB() {
+    //Applies knockback to the bat and disables its attacks
+    private void ApplyKB() {
         Vector3 kbDir = (transform.position - _player.transform.position).normalized;
         kbDir.y = 0;
 
@@ -95,55 +99,59 @@ public class BatBehavior : MonoBehaviour
         _rb.AddForce(kbDir * kbForce, ForceMode.Impulse);
 
         isKnockedBack = true;
-        _attackTrigger.setCanAttack(false);
+        _attackTrigger.SetCanAttack(false); //Make sure the bat can't attack while being knocked back
 
-        knockbackEndTime = _timeDamaged + knockbackDuration;
+        knockbackEndTime = _timeDamaged + knockbackDuration; //Store the time when knockback ends
     }
 
 
-    private void roam() {
-
+    //Roam mode will have the bat move randomly within its vision
+    private void Roam() {
+        
         if (Vector3.Distance(destination, transform.position) < 0.1f) { //If bat is about to reach destination
-            rotateBat();
+            RotateBat();
             _timer += Time.deltaTime;
         }
-
         transform.position = Vector3.MoveTowards(transform.position, destination, _speed * Time.deltaTime);
 
         if (_timer >= _timeBetweenMove) {
-            destination = getDestination(); //Get new destination
+            destination = GetDestination(); //Get new destination
             _timer = 0f;
         }
     }
 
 
-    private void chase() {
+    //Chase mode will have the bat move faster and constantly directly towards the player
+    private void Chase() {
         _speed = 5f;
-        transform.position = Vector3.MoveTowards(transform.position, chasePlayerPosition(), _speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, ChasePlayerPosition(), _speed * Time.deltaTime);
     }
 
-    private Vector3 chasePlayerPosition() {
+    //Rotates the bat to face the player
+    //Returns the position of the player
+    private Vector3 ChasePlayerPosition() {
         Vector3 res = new Vector3();
-        rotateBat();
+        RotateBat();
         res.x = _player.transform.position.x;
         res.y = transform.position.y; //Keep the same height
         res.z = _player.transform.position.z;
         return res;
     }
 
-
-    private Vector3 getDestination() {
+    //Returns a random position within the bounds of the bat's vision
+    private Vector3 GetDestination() {
         Bounds bounds = _collider.bounds;
         Vector3 position = new Vector3();
 
         position.x = Random.Range(bounds.min.x, bounds.max.x);
-        position.y = Random.Range(1.25f, 1.5f);
+        position.y = Random.Range(1.25f, 1.5f); //Allow for wiggle room in y-axis to simulate flight
         position.z = Random.Range(bounds.min.z, bounds.max.z);
 
         return position;
     }
 
-    private void rotateBat() {
+    //Rotates the bat 75% of the way towards the player
+    private void RotateBat() {
         Vector3 dir = transform.position - _player.transform.position;
 
         dir.y = 0; //Don't rotate on y-axis
