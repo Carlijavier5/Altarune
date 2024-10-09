@@ -11,7 +11,7 @@ public class Damageable : ObjectModule {
     [SerializeField] protected HealthAttributes defaultHPAttributes;
     [SerializeField] protected IFrameProperties iFrameProperties;
 
-    public float Health => runtimeHP.Health;
+    public int Health => runtimeHP.Health;
 
     protected RuntimeHealthAttributes runtimeHP;
     protected bool iFrameOn;
@@ -19,10 +19,16 @@ public class Damageable : ObjectModule {
     void Awake() {
         baseObject.UpdateRendererRefs();
         baseObject.OnTryDamage += BaseObject_OnTryDamage;
+        baseObject.OnTryRequestHealth += BaseObject_OnTryRequestHealth;
 
         IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeHP = defaultHPAttributes.RuntimeClone(effectSource);
+    }
+
+    private void BaseObject_OnTryRequestHealth(EventResponse<int> response) {
+        response.received = true;
+        response.objectReference = Health;
     }
 
     /// <summary>

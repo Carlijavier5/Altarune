@@ -12,6 +12,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
     public RuntimeHealthAttributes(HealthAttributes defaultAttributes, DefaultHealthAttributeCurves curves,
                                    IEnumerable<StatusEffect> effectSource) : base(curves) {
         healthAttributes = defaultAttributes;
+        health = defaultAttributes.health;
         this.effectSource = effectSource;
     }
 

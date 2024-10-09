@@ -6,7 +6,23 @@ using UnityEngine;
 public abstract partial class BaseObject {
 
     public event System.Action<int, ElementType, EventResponse> OnTryDamage;
+    public event System.Action<EventResponse<int>> OnTryRequestHealth;
+
     public event System.Action<BaseObject> OnPerish;
+
+    /// <summary>
+    /// Object health; <br/>
+    /// • Returns the current health if damageable and alive; <br/>
+    /// • Returns 0 if damageable and not alive; <br/>
+    /// • Returns -1 if not damageable;
+    /// </summary>
+    public int Health {
+        get {
+            EventResponse<int> response = new();
+            OnTryRequestHealth?.Invoke(response);
+            return response.received ? response.objectReference : -1;
+        }
+    }
 
     public bool Perished { get; private set; }
 
