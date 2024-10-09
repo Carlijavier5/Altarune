@@ -50,11 +50,11 @@ public partial class Armadillo : Entity {
 
     private void Start() {
         OnTimeScaleSet += Armadillo_OnTimeScaleSet;
+        OnTryDamage += HandleTryDamage;
+
         navMeshAgent.speed = roamSpeed;
         navMeshAgent.acceleration = roamAcceleration;
         navMeshAgent.autoBraking = true;
-
-        OnTryDamage += HandleTryDamage;
 
         state = new ArmadilloIdleState();
         state.Enter(this);

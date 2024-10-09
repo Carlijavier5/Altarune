@@ -46,7 +46,6 @@ public partial class Armadillo : Entity {
     foreach (DamageEvent ev in damageEvents) {
       damageSum += ev.damageAmount;
     }
-    Debug.Log(damageSum);
     if (damageSum > rollThresholdDamage) {
       SetState(new ArmadilloRollState());
     }
