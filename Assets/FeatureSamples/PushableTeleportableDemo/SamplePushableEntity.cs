@@ -41,26 +41,5 @@ namespace FeatureSamples {
             driverVariables.navMeshAgent.enabled = true;
             MotionDriver.Set(driverVariables.navMeshAgent);
         }
-
-        public void TeleportTo(Vector3 position) {
-            bool cEnabled = driverVariables.controller.enabled;
-            bool aEnabled = driverVariables.navMeshAgent.enabled;
-            driverVariables.controller.enabled = false;
-            driverVariables.navMeshAgent.enabled = false;
-            if (aEnabled) {
-                StartCoroutine(TeleportNavMesh(position));
-            } else {
-                transform.position = position;
-                driverVariables.controller.enabled = cEnabled;
-                driverVariables.navMeshAgent.enabled = aEnabled;
-            }
-        }
-
-        private IEnumerator TeleportNavMesh(Vector3 position) {
-            driverVariables.navMeshAgent.Warp(position);
-            driverVariables.navMeshAgent.enabled = false;
-            yield return new WaitForSeconds(0.05f);
-            driverVariables.navMeshAgent.enabled = true;
-        }
     }
 }

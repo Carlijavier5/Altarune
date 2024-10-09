@@ -1,12 +1,19 @@
-﻿public abstract class StatusEffect {
+﻿using UnityEngine;
 
-    public HealthAttributeModifiers AttributeMods { get; protected set; }
-    public CCAttributeModifiers CCMods { get; protected set; }
+public abstract class StatusEffect {
+
+    public HealthAttributeModifiers HealthModifiers { get; protected set; }
+    public CCAttributeModifiers CCModifiers { get; protected set; }
+    public CrowdControlEffects CCEffects { get; protected set; }
 
     /// <summary>
     /// Called when the effect gets applied;
     /// </summary>
     public abstract void Apply(Entity entity, bool isNew);
+    /// <summary>
+    /// Called after the effect has been applied, but before the first frame of update;
+    /// </summary>
+    public virtual void Start(Entity entity) { }
     /// <summary>
     /// Called from the holding entity's update thread;
     /// </summary>

@@ -2,12 +2,12 @@
 using UnityEngine;
 
 [System.Serializable]
-public class RuntimePushAttributes : PushAttributes {
+public class RuntimePushAttributes : PushableAttributes {
 
-    private readonly PushAttributes pushAttributes;
+    private readonly PushableAttributes pushAttributes;
     private IEnumerable<StatusEffect> effectSource;
 
-    public RuntimePushAttributes(PushAttributes defaultAttributes, DefaultEaseCurves curves,
+    public RuntimePushAttributes(PushableAttributes defaultAttributes, DefaultEaseCurves curves,
                                IEnumerable<StatusEffect> effectSource) : base(curves) {
         pushAttributes = defaultAttributes;
         this.effectSource = effectSource;
@@ -23,8 +23,8 @@ public class RuntimePushAttributes : PushAttributes {
 
         CCAttributeModifiers composite = new();
         foreach (StatusEffect statusEffect in effectSource) {
-            if (statusEffect.CCMods != null) {
-                composite.Compose(statusEffect.CCMods);
+            if (statusEffect.CCModifiers != null) {
+                composite.Compose(statusEffect.CCModifiers);
             }
         }
 
