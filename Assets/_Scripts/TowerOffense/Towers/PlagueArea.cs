@@ -76,7 +76,7 @@ public class PlagueStatusEffect : StatusEffect {
     public override void Apply(Entity entity, bool isNew) {
         if (isNew) {
             entity.SetMaterial(material);
-            AttributeMods = attMods;
+            HealthModifiers = attMods;
         } else {
             durationTimer = 0;
         }

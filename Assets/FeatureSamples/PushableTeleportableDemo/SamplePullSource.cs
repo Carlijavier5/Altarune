@@ -6,6 +6,7 @@ namespace FeatureSamples {
 
         [SerializeField] private float pullStrength;
         private readonly HashSet<BaseObject> baseObjects = new();
+        private readonly Stack<BaseObject> terminateStack = new();
 
         void OnTriggerEnter(Collider other) {
             if (other.TryGetComponent(out BaseObject baseObject)) {
@@ -15,14 +16,23 @@ namespace FeatureSamples {
 
         private void FixedUpdate() {
             foreach (BaseObject baseObject in baseObjects) {
-                baseObject.TryPush(ComputeXZDirection(baseObject.transform, transform), pullStrength);
+                if (baseObject) {
+                    baseObject.TryPush(ComputeXZDirection(baseObject.transform, transform), pullStrength);
+                } else terminateStack.Push(baseObject);
             }
+
+            while (terminateStack.TryPop(out BaseObject baseObject)) baseObjects.Remove(baseObject);
         }
 
+        /// <summary>
+        /// Applies a long push to each object in range; <br/>
+        /// Sets the ease curve of each push to logarithmic;
+        /// </summary>
         public void ApplyLongPush(float strength, float duration) {
             foreach (BaseObject baseObject in baseObjects) {
                 baseObject.TryLongPush(ComputeXZDirection(baseObject.transform, transform),
-                                       strength, duration);
+                                       strength, duration, out PushActionCore core);
+                core.SetEase(EaseCurve.Logarithmic);
             }
         }
 

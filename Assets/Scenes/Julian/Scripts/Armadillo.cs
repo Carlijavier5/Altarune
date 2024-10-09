@@ -33,19 +33,11 @@ public class Armadillo : Entity
             UpdateNavMeshSpeeds();
         }
     }
-    public override float TimeScale
-    {
-        get => base.TimeScale;
-        set
-        {
-            timeScale = value;
-            UpdateNavMeshSpeeds();
-        }
-    }
+
     public void UpdateNavMeshSpeeds()
     {
-        navMeshAgent.speed = roamSpeed * timeScale * Agitation;
-        navMeshAgent.angularSpeed = roamAngularSpeed * timeScale * Agitation;
+        navMeshAgent.speed = roamSpeed * status.timeScale * Agitation;
+        navMeshAgent.angularSpeed = roamAngularSpeed * status.timeScale * Agitation;
     }
 
     private void SetState(ArmadilloState newState)
@@ -66,6 +58,7 @@ public class Armadillo : Entity
 
     private void Start()
     {
+        OnTimeScaleSet += Armadillo_OnTimeScaleSet;
         navMeshAgent.speed = roamSpeed;
         navMeshAgent.acceleration = roamAcceleration;
         navMeshAgent.autoBraking = true;
@@ -80,6 +73,9 @@ public class Armadillo : Entity
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
 
     }
+
+    private void Armadillo_OnTimeScaleSet(float timeScale) => UpdateNavMeshSpeeds();
+
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Entity entity)
