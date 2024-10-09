@@ -24,10 +24,15 @@ namespace FeatureSamples {
             while (terminateStack.TryPop(out BaseObject baseObject)) baseObjects.Remove(baseObject);
         }
 
+        /// <summary>
+        /// Applies a long push to each object in range; <br/>
+        /// Sets the ease curve of each push to logarithmic;
+        /// </summary>
         public void ApplyLongPush(float strength, float duration) {
             foreach (BaseObject baseObject in baseObjects) {
                 baseObject.TryLongPush(ComputeXZDirection(baseObject.transform, transform),
-                                       strength, duration);
+                                       strength, duration, out PushActionCore core);
+                core.SetEase(EaseCurve.Logarithmic);
             }
         }
 
