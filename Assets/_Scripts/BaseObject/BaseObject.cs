@@ -7,16 +7,8 @@ using UnityEngine;
 /// The object that all interactable objects inherit from; <br/>
 /// When object A interacts with object B you interact through this base object class; <br/>
 /// </summary>
+[DisallowMultipleComponent]
 public abstract partial class BaseObject : MonoBehaviour {
-
-    #region || Local Timescale ||
-
-    protected float timeScale = 1;
-    public virtual float TimeScale { get => timeScale; set => timeScale = value; }
-
-    protected float DeltaTime => Time.deltaTime * timeScale;
-
-    #endregion
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
@@ -26,7 +18,7 @@ public abstract partial class BaseObject : MonoBehaviour {
     #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
-    private Dictionary<Renderer, Material[]> materialDict = new();
+    private readonly Dictionary<Renderer, Material[]> materialDict = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
         renderers = GetComponentsInChildren<Renderer>(true);

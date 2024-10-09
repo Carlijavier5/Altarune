@@ -11,7 +11,8 @@ public class AggroRange : MonoBehaviour {
     public HashSet<Entity> AggroTargets { get; private set; } = new();
 
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
+        if (!transform.IsChildOf(other.transform)
+            && other.TryGetComponent(out Entity entity)
             && sensitiveFactions.Any((faction) => faction == entity.Faction)) {
             if (AggroTargets.Add(entity)) {
                 entity.OnPerish += Entity_OnPerish;
@@ -21,7 +22,8 @@ public class AggroRange : MonoBehaviour {
     }
 
     void OnTriggerExit(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
+        if (!transform.IsChildOf(other.transform)
+            && other.TryGetComponent(out Entity entity)
             && sensitiveFactions.Any((faction) => faction == entity.Faction)) {
             TryRemoveEntity(entity);
         }
