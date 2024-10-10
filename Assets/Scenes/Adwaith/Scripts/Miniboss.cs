@@ -12,7 +12,7 @@ namespace Miniboss {
         // Initializing default values for movement
         [SerializeField] private float speed = 2.5f;
         [SerializeField] private float stoppingDistance = 1.5f;
-        [SerializeField] private float health = 100;
+        [SerializeField] private float health;
 
         // Initializing the state machine
         private StateMachine<MinibossStateInput> stateMachine;
@@ -28,6 +28,9 @@ namespace Miniboss {
             navigation = GetComponent<NavMeshAgent>();
             damageable = GetComponent<Damageable>();
             FindPlayer();
+
+            // Initializes health
+            health = damageable.Health;
 
             // Initializing variables with Phase files
             phaseOneState = new PhaseOne();

@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-// TryDamage
 namespace Miniboss {
     public partial class Miniboss {
         private class PhaseOne : State<MinibossStateInput> {
@@ -10,6 +9,7 @@ namespace Miniboss {
             private Miniboss miniboss;
             private Transform player;
             private NavMeshAgent navigation;
+            private Damageable damageable;
             private Coroutine malfunctionCoroutine;
 
             // Creating variables
@@ -29,6 +29,7 @@ namespace Miniboss {
                 // Initializes methods with values from the enemy
                 player = miniboss.player;
                 navigation = miniboss.navigation;
+                damageable = miniboss.damageable;
                 health = miniboss.health;
 
                 // Initializes variables with values from the enemy
@@ -52,7 +53,7 @@ namespace Miniboss {
 
             // Switches to the next state depending on the health
             private void CheckStateTransition() {
-                if (health <= 50) {
+                if (health <= 5) {
                     miniboss.stateMachine.SetState(new PhaseTwo());
                 }
             }
@@ -106,6 +107,12 @@ namespace Miniboss {
                 Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
                 // Rotates the enemy towards the player (uses slerp)
                 miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
+            }
+
+            public void OnTriggerEnter(Collider other) {
+                if (other.TryGetComponent(out BaseObject hostile)) {
+                    bool isDamageable = hostile.TryDamage(3);
+                }
             }
 
             public override void Exit(MinibossStateInput input) {

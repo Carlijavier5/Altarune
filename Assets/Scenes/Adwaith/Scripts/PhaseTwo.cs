@@ -12,6 +12,7 @@ namespace Miniboss {
             private Miniboss miniboss;
             private Transform player;
             private NavMeshAgent navigation;
+            private Damageable damageable;
 
             private float health;
             private float speed;
@@ -33,6 +34,10 @@ namespace Miniboss {
                 player = miniboss.player;
                 navigation = miniboss.navigation;
                 minionPrefab = miniboss.minionPrefab;
+                damageable = miniboss.damageable;
+                
+                // Makes the enemy invulnerable during this phase
+                damageable.ToggleIFrame(true);
 
                 // Initializes variables with values from the enemy
                 speed = miniboss.speed / 2;
@@ -144,7 +149,7 @@ namespace Miniboss {
             }
 
             public override void Exit(MinibossStateInput input) {
-                
+                damageable.ToggleIFrame(false);
             }
         }
     }
