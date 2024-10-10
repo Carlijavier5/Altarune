@@ -12,7 +12,7 @@ public class JetpackBehavior : Entity
 
     
 
-
+    //Flying Vars
     private Vector3 randomDir;
 
     public float ChangeDirTime = 1f;
@@ -21,6 +21,16 @@ public class JetpackBehavior : Entity
 
     private float ChangeDirTimer;
 
+    //Grounded Vars
+
+
+    //Transition Vars
+
+    private bool isFlying = true;
+
+    public float flyTime = 5f;
+
+    public float groundTime = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -53,9 +63,6 @@ public class JetpackBehavior : Entity
 
     void Flying()
     {
-
-
-
         if (ChangeDirTimer < 0)
         {
             randomDir = GetRandomUnitVector2D();
@@ -79,6 +86,11 @@ public class JetpackBehavior : Entity
         
 
         //Debug.Log(ChangeDirTimer);
+    }
+
+    void Grounded()
+    {
+
     }
 
     Vector3 GetRandomUnitVector2D()

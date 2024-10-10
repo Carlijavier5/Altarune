@@ -11,7 +11,7 @@ public class FireTrap : MonoBehaviour
     [SerializeField]
     private EntityFaction faction = EntityFaction.Friendly;
     void Update() {
-        if (entitiesInTrap.Count == 0) {
+        if (entitiesInTrap.Count > 0) {
             damageTimer += Time.deltaTime; // Increment damageTimer if any entity is within FireTrap collider
         } else {
             damageTimer = 0.0f; // Reset damageTimer if there are no entitites
@@ -22,6 +22,7 @@ public class FireTrap : MonoBehaviour
                     entity.TryDamage(1);
                 }
             }
+            damageTimer = 0;
         }
     }
 
