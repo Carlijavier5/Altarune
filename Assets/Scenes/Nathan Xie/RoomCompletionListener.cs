@@ -9,16 +9,12 @@ using UnityEngine;
 public class RoomCompletionListener : MonoBehaviour
 {
     //Work with the assumption that additional enemies will not be summoned after the creation of the room or will not be necessary for completion
-    public HashSet<Entity> currentEnemies = new(); 
+    [SerializeField] private List<Entity> currentEnemies; 
 
     void Start()
     {
-        Entity[] objects = UnityEngine.Object.FindObjectsOfType<Entity>();
-        foreach(Entity i in objects){
-            if (i.Faction == EntityFaction.Hostile) {
-                currentEnemies.Add(i);
-                i.OnPerish += Enemy_OnPerish;
-            }
+        foreach(Entity i in currentEnemies){
+            i.OnPerish += Enemy_OnPerish;
         }
     }
 
