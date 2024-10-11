@@ -10,7 +10,7 @@ public class TowerSniper : Summon {
     
     private bool init;
 
-    private float angle;
+    //private float angle;
     private float attackTick = 0.2f;
 
     // Add comparator to sort by lowest health entities
@@ -19,7 +19,7 @@ public class TowerSniper : Summon {
     List<Entity> targets = new List<Entity>();
     protected override void Awake() {
         base.Awake();
-        angle = 0;
+        //angle = 0;
     }
 
     public override void Init() => init = true;
@@ -64,7 +64,7 @@ public class TowerSniper : Summon {
 
     Entity GetTarget() {
         targets.RemoveAll(enemy => enemy == null);
-        targets.Sort(Comparer<Entity>.Create((a, b) => a.GetComponent<Damageable>().Health.CompareTo(b.GetComponent<Damageable>().Health)));
+        targets.Sort(Comparer<Entity>.Create((a, b) => a.Health.CompareTo(b.Health)));
         if (targets.Count > 0) return targets[0];
         else return null;
     }
