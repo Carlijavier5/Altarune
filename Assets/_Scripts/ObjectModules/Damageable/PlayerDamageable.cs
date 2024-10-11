@@ -8,7 +8,7 @@ public class PlayerDamageable : Damageable {
     [SerializeField] private int doubleDamageThreshold;
 
     protected override void BaseObject_OnTryDamage(int amount, ElementType element, EventResponse response) {
-        if (!iFrameOn) {
+        if (!IFrameOn) {
             response.received = true;
 
             int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
@@ -24,13 +24,13 @@ public class PlayerDamageable : Damageable {
     }
 
     protected override IEnumerator ISimulateIFrame() {
-        iFrameOn = true;
+        localIFrameOn = true;
         baseObject.SetMaterial(iFrameProperties.settings.flashMaterial);
         Time.timeScale = 0.6f;
         yield return new WaitForSeconds(iFrameProperties.duration / 2);
         Time.timeScale = 1f;
         baseObject.ResetMaterials();
         yield return new WaitForSeconds(iFrameProperties.duration / 2);
-        iFrameOn = false;
+        localIFrameOn = false;
     }
 }

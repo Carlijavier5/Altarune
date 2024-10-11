@@ -14,7 +14,9 @@ public class Damageable : ObjectModule {
     public int Health => runtimeHP.Health;
 
     protected RuntimeHealthAttributes runtimeHP;
-    protected bool iFrameOn;
+
+    protected bool localIFrameOn, externalIFrameOn;
+    protected bool IFrameOn => localIFrameOn || externalIFrameOn;
 
     void Awake() {
         baseObject.UpdateRendererRefs();
@@ -36,14 +38,12 @@ public class Damageable : ObjectModule {
     /// </summary>
     /// <param name="on"> True makes the object invulnerable, false makes it vulnerable; </param>
     public void ToggleIFrame(bool on) {
-        StopAllCoroutines();
-        baseObject.ResetMaterials();
-        iFrameOn = on;
+        externalIFrameOn = on;
     }
 
     protected virtual void BaseObject_OnTryDamage(int amount, ElementType element,
                                                   EventResponse response) {
-        if (!iFrameOn) {
+        if (!IFrameOn) {
             response.received = true;
 
             int processedAmount = runtimeHP.DoDamage(amount);
@@ -58,11 +58,11 @@ public class Damageable : ObjectModule {
     }
 
     protected virtual IEnumerator ISimulateIFrame() {
-        iFrameOn = true;
+        localIFrameOn = true;
         baseObject.SetMaterial(iFrameProperties.settings.flashMaterial);
         yield return new WaitForSeconds(iFrameProperties.duration);
         baseObject.ResetMaterials();
-        iFrameOn = false;
+        localIFrameOn = false;
     }
 
     #if UNITY_EDITOR
