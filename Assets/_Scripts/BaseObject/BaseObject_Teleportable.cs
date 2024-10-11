@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class BaseObject {
+public abstract partial class BaseObject {
 
     /// <summary>
     /// Called to request teleportation from a Teleport Module;
