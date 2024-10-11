@@ -26,7 +26,7 @@ public class JetpackBehavior : Entity
 
     //Transition Vars
 
-    private bool isFlying = true;
+    //private bool isFlying = true;
 
     public float flyTime = 5f;
 

@@ -10,7 +10,7 @@ public class TimeMagicCircleController : MonoBehaviour
     #region Properties
 
     [Header("Components")]
-    [SerializeField] Renderer renderer;
+    [SerializeField] new Renderer renderer;
 
     [Space] [Header("Animation Settings")]
     [SerializeField] float radius = 7f;
