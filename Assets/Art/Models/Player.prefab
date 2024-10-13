@@ -49,13 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d195186499cc095499936c11ab2cf7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 4339699122144314708}
-  animator: {fileID: 771621385791667774}
-  linearAcceleration: 12
-  linearDrag: 20
-  angularSpeed: 675
-  maxSpeed: 6
-  dodgeSpeed: 12
+  cameraBrain: {fileID: 0}
 --- !u!114 &2208400701102557967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +63,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
+  controller: {fileID: 4339699122144314708}
+  inputSource: {fileID: 8726108569643392650}
+  animator: {fileID: 771621385791667774}
+  meleeLocomotionProperties:
+    linearAcceleration: 40
+    linearDrag: 200
+    angularSpeed: 720
+    maxSpeed: 3
+  normalMotionProperties:
+    linearAcceleration: 25
+    linearDrag: 20
+    angularSpeed: 675
+    maxSpeed: 6
+  dodgeLocomotionProperties:
+    linearAcceleration: 80
+    linearDrag: 80
+    angularSpeed: 720
+    maxSpeed: 12
 --- !u!95 &771621385791667774
 Animator:
   serializedVersion: 5

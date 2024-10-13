@@ -7,8 +7,9 @@ public abstract partial class BaseObject {
 
     protected class CCStatus {
         public float timeScale = 1;
-        public bool isGrounded, isStunned,
-                    canMove = true;
+        public bool isGrounded = true,
+                    canMove = true,
+                    isStunned;
     }
     
     /// <summary>
@@ -60,6 +61,18 @@ public abstract partial class BaseObject {
             if (status.canMove != value) {
                 status.canMove = value;
                 OnRootSet?.Invoke(value);
+            }
+        }
+    }
+
+    protected event System.Action<bool> OnGroundedSet;
+    
+    public bool IsGrounded {
+        get => status.isGrounded;
+        set {
+            if (status.isGrounded != value) {
+                status.isGrounded = value;
+                OnGroundedSet?.Invoke(value);
             }
         }
     }
