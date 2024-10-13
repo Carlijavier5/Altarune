@@ -37,9 +37,11 @@ namespace Miniboss {
                 // Initializes objects with values from the enemy
                 player = miniboss.player;
                 navigation = miniboss.navigation;
-                miniboss.MotionDriver.Set(navigation);
                 minionPrefab = miniboss.minionPrefab;
                 damageable = miniboss.damageable;
+
+                // Pushable implementation
+                miniboss.MotionDriver.Set(navigation);
 
                 // Initializes variables with values from the enemy
                 speed = miniboss.speed / 1.5f;
@@ -126,9 +128,9 @@ namespace Miniboss {
                 finishedDuplication = true;
             }
 
-            public override void Update(MinibossStateInput input) {   
+            public override void Update(MinibossStateInput input) {
+                CheckStateTransition();
                 if (finishedDuplication) {
-                    CheckStateTransition();
                     LookTowardsPlayer();
                 }
             }
@@ -143,7 +145,6 @@ namespace Miniboss {
 
             private void CheckStateTransition() {
                 if (health <= 40) {
-                    miniboss.health = 40;
                     miniboss.stateMachine.SetState(new PhaseThree());
                 }
             }
@@ -164,7 +165,14 @@ namespace Miniboss {
             }
 
             public override void Exit(MinibossStateInput input) {
+                // Makes the enemy damageable again
                 damageable.ToggleIFrame(false);
+
+                // Stops the Coroutine
+                if (moveToCenter != null) {
+                    miniboss.StopCoroutine(moveToCenter);
+                    moveToCenter = null;
+                }
             }
         }
     }

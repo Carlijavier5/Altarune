@@ -27,8 +27,11 @@ namespace Miniboss {
                 // Initializes objects with values from the enemy
                 player = miniboss.player;
                 navigation = miniboss.navigation;
-                miniboss.MotionDriver.Set(navigation);
                 damageable = miniboss.damageable;
+
+                // Pushable implementation
+                miniboss.MotionDriver.Set(navigation);
+
 
                 // Initializes variables with values from the enemy
                 speed = miniboss.speed * 2;

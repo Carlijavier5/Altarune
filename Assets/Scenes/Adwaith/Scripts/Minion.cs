@@ -10,25 +10,34 @@ namespace Miniboss {
         private Transform player;
         private Damageable damageable;
 
-        // Creating health variable
-        private float health;
-
         // Creating default values for movement
         [SerializeField] private float stoppingDistance = 1.5f;
+        public float RootMult => CanMove ? 1 : 0;
         private float speed;
+
+        // Creating health variable
+        private float health;
         
         // Creating minion death components
         private bool setActive = false;
         public UnityEvent onMinionDeath;
 
-        void Start() {
+        public void Start() {
             // Initializes the base objects
             navigation = GetComponent<UnityEngine.AI.NavMeshAgent>();
             damageable = GetComponent<Damageable>();
             damageable.ToggleIFrame(false);
 
+            // Pushable implementation
+            MotionDriver.Set(navigation);
+
             // Initializes health
             health = damageable.Health;
+
+            // Adding listeners
+            OnStunSet += setStunned;
+            OnRootSet += setRooted;
+            OnTimeScaleSet += setTimeScaled;
         }
 
         // Sets the Player transform
@@ -44,7 +53,7 @@ namespace Miniboss {
             setActive = true;
         }
 
-        void Update() {
+        protected override void Update() {
             if (player != null && setActive == true) {
                 FollowPlayer();
             }
@@ -67,10 +76,32 @@ namespace Miniboss {
             }
         }
 
-        // Method that tells listeners a game object is gone
-        public void HandleDeath() {
+        // Method called when the enemy is stunned
+        private void setStunned(bool isStunned) {
+            if (isStunned) {
+                navigation.speed = 0;
+            } else {
+                navigation.speed = speed;
+            }
+        }
+
+        // Method called when the enemy is rooted
+        private void setRooted(bool canMove) {
+            navigation.speed = speed * status.timeScale * RootMult;
+        }
+
+        // Method called when the time scale is adjusted
+        private void setTimeScaled(float timeScale) {
+            navigation.speed = speed * timeScale * RootMult;
+        }
+
+        // Method called when enemy loses all its health
+        public override void Perish() {
             onMinionDeath.Invoke();
-            gameObject.SetActive(false);
+            DetachModules();
+            enabled = false;
+            Destroy(gameObject, 5);
+            base.Perish();
         }
     }
 }

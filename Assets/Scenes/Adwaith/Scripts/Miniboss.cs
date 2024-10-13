@@ -26,7 +26,6 @@ namespace Miniboss {
         private PhaseThree phaseThreeState;
         private Stunned stunnedPhase;
 
-        // First method to run
         public void Start() {
             // Initializes base components
             navigation = GetComponent<NavMeshAgent>();
@@ -68,7 +67,6 @@ namespace Miniboss {
             }
         }
 
-        // Runs every frame
         protected override void Update() {
             // Updates the health
             health = damageable.Health;
@@ -89,10 +87,12 @@ namespace Miniboss {
             }
         }
 
+        // Method called when the enemy is rooted
         private void setRooted(bool canMove) {
             navigation.speed = speed * status.timeScale * RootMult;
         }
 
+        // Method called when the time scale is adjusted
         private void setTimeScaled(float timeScale) {
             navigation.speed = speed * timeScale * RootMult;
         }

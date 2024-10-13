@@ -28,8 +28,10 @@ namespace Miniboss {
                 // Initializes objects with values from the enemy
                 player = miniboss.player;
                 navigation = miniboss.navigation;
-                miniboss.MotionDriver.Set(navigation);
                 damageable = miniboss.damageable;
+
+                // Pushable implementation
+                miniboss.MotionDriver.Set(navigation);
 
                 // Initializes variables with values from the enemy
                 health = miniboss.health;
@@ -45,7 +47,7 @@ namespace Miniboss {
                 if (spinState == true) {
                     // Makes the enemy invulnerable while spinning
                     damageable.ToggleIFrame(true);
-                    miniboss.transform.Rotate(Vector3.up, 500f * Time.deltaTime);
+                    miniboss.transform.Rotate(Vector3.up, 500f * miniboss.DeltaTime);
                 } else {
                     damageable.ToggleIFrame(false);
                     FollowPlayer();
@@ -93,7 +95,7 @@ namespace Miniboss {
                 Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
                 Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
                 // Rotates the enemy towards the player (uses slerp)
-                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
+                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * miniboss.DeltaTime);
             }
 
             // Method that randomly (5 - 10 seconds) calls the SpinCoroutine method
