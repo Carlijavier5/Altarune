@@ -2,87 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour {
 
-    [SerializeField] private CharacterController controller;
-    [SerializeField] private Animator animator;
-    [SerializeField] private float linearAcceleration,
-                                   linearDrag, angularSpeed,
-                                   maxSpeed, dodgeSpeed;
+    public event System.Action OnPlayerInit;
+    public event System.Action OnDodgePerformed;
+    public event System.Action OnMeleePerformed;
 
+    [SerializeField] private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
-    private float moveSpeed, alignmentMult;
-    private Vector3 moveVector, moveDir;
 
-    private class PHDodgeBuffer {
-        public Vector3 dir;
-        public float amount;
-        public PHDodgeBuffer(Vector3 dir) => this.dir = dir;
-        public bool Perform() => (amount = Mathf.MoveTowards(amount, 1, Time.deltaTime * 4.5f)) == 1;
-    } private PHDodgeBuffer dodgeBuffer;
+    public Vector3 InputVector {
+        get {
+            Transform cameraTransform = cameraBrain ? cameraBrain.OutputCamera.transform 
+                                                    : Camera.main.transform;
+
+            Vector3 inputVector = playerInput.Movement.Movement.ReadValue<Vector2>();
+            if (inputVector.magnitude > 0) {
+                Vector3 camRight = cameraTransform.right,
+                camForward = cameraTransform.forward;
+                camRight.y = 0;
+                camForward.y = 0;
+                camRight.Normalize();
+                camForward.Normalize();
+                inputVector = (inputVector.x * camRight + inputVector.y * camForward).normalized;
+            }
+            return inputVector;
+        }
+        
+    }
 
     void Awake() {
         playerInput = new();
         playerInput.Movement.Enable();
-        playerInput.Movement.Dodge.performed += Dodge_performed;
-        moveDir = transform.forward;
+        playerInput.Actions.Enable();
+
+        playerInput.Movement.Dodge.performed += Dodge_Performed;
+        playerInput.Actions.MeleeAttack.performed += MeleeAttack_Performed;
+        
+        /// Replace after actual initialization;
+        Init(cameraBrain);
     }
 
-    private void Dodge_performed(InputAction.CallbackContext context) {
-        if (context.performed && dodgeBuffer == null) {
-            Vector2 inputVector = playerInput.Movement.Movement.ReadValue<Vector2>();
-            Vector3 dir = inputVector.magnitude > 0 ? new Vector3(inputVector.x, 0, inputVector.y) : moveDir;
-            dodgeBuffer = new PHDodgeBuffer(dir);
-            moveDir = dir;
-            moveSpeed = 0;
-            animator.Play("Dodge");
-        }
+    public void Init(CinemachineBrain cameraBrain) {
+        this.cameraBrain = cameraBrain;
+        StartCoroutine(ISyncInitialization());
     }
 
-    void FixedUpdate() {
-        if (dodgeBuffer == null) {
-            InputMovement();
-        } else {
-            InputRoll();
-        } InputRotation();
-        controller.Move(moveVector * Time.deltaTime);
+    private IEnumerator ISyncInitialization() {
+        yield return new WaitForEndOfFrame();
+        OnPlayerInit?.Invoke();
     }
 
-    private void InputMovement() {
-        Vector2 inputVector = playerInput.Movement.Movement.ReadValue<Vector2>();
-        bool isMoving = inputVector.magnitude != 0;
-
-        if (isMoving) {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, linearAcceleration * Time.deltaTime);
-            Vector3 camRight = Camera.main.transform.right,
-                    camForward = Camera.main.transform.forward;
-            camRight.y = 0;
-            camForward.y = 0;
-            camRight.Normalize();
-            camForward.Normalize();
-            moveDir = (inputVector.x * camRight + inputVector.y * camForward).normalized;
-        } else {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, 0, linearDrag * Time.deltaTime);
-        }
-
-        moveVector = alignmentMult * moveSpeed * moveDir;
-        animator.SetFloat("MoveSpeed", (moveSpeed / maxSpeed));
+    private void Dodge_Performed(InputAction.CallbackContext context) {
+        if (context.performed) OnDodgePerformed?.Invoke();
     }
 
-    private void InputRoll() {
-        if (dodgeBuffer.Perform()) {
-            moveSpeed = moveSpeed = Mathf.MoveTowards(moveSpeed, 0, linearDrag * Time.deltaTime * 2);
-            if (moveSpeed <= maxSpeed / 2) dodgeBuffer = null;
-        } else {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, dodgeSpeed, linearAcceleration * 6.5f * Time.deltaTime);
-        }
-        moveVector = moveSpeed * moveDir;
-    }
-
-    private void InputRotation() {
-        Quaternion targetRotation = Quaternion.LookRotation(moveDir, Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, angularSpeed * Time.deltaTime);
-        alignmentMult = Mathf.Clamp(1 - Quaternion.Angle(transform.rotation, targetRotation) / 180, 0, 1);
+    private void MeleeAttack_Performed(InputAction.CallbackContext context) {
+        if (context.performed) OnMeleePerformed?.Invoke();
     }
 }
