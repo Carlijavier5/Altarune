@@ -81,7 +81,7 @@ public abstract partial class BaseObject {
     /// Utilize this value instead of <b>Time.deltaTime</b>
     /// where the object's local time scale is relevant;
     /// </summary>
-    protected float DeltaTime => Time.deltaTime * status.timeScale;
+    public float DeltaTime => Time.deltaTime * status.timeScale;
 
     /// Staggers are exclusive to the CrowdControllable Module;
     /// Implement the local timescale if you want your object to be staggerable;

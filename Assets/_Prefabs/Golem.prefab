@@ -888,6 +888,7 @@ GameObject:
   - component: {fileID: 5096571036659176866}
   - component: {fileID: 7244036395087272603}
   - component: {fileID: 4295962233685033886}
+  - component: {fileID: 1308781995663629197}
   - component: {fileID: 425408896015153853}
   - component: {fileID: 7990416550785050984}
   - component: {fileID: 6022249076964588611}
@@ -933,6 +934,7 @@ MonoBehaviour:
   controller: {fileID: 6022249076964588611}
   navMeshAgent: {fileID: 425408896015153853}
   aggroRange: {fileID: 3618322109459798283}
+  bodyTransform: {fileID: 3862158570344152569}
   aggroWaitTimeRange: {x: 0.75, y: 1}
   chargeAmplitude: 0.2
   chargeTime: 0.75
@@ -1012,6 +1014,29 @@ MonoBehaviour:
     stunResistance: 0
     rootResistance: 0
     slowResistance: 0
+--- !u!114 &1308781995663629197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278850283009805638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab4305337dc99c439cb3d9968f403ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 5593935329474835780}
+  defaultDriver:
+    motionMode: 0
+    transform: {fileID: 6539724813760751204}
+    rigidbody: {fileID: 0}
+    controller: {fileID: 0}
+    navMeshAgent: {fileID: 0}
+  pushableModule: {fileID: 7244036395087272603}
+  teleportableProperties:
+    settings: {fileID: 11400000, guid: 19cdb989acdb9444387ad6f23f4ac034, type: 2}
+    rootTransform: {fileID: 3862158570344152569}
 --- !u!195 &425408896015153853
 NavMeshAgent:
   m_ObjectHideFlags: 0

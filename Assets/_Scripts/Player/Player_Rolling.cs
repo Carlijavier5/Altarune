@@ -2,10 +2,11 @@ using UnityEngine;
 
 public partial class Player {
 
+    [Header("Dodge Roll State")]
+    [SerializeField] private float dodgeDuration = 0.2f;
     [SerializeField] private LocomotionProperties dodgeLocomotionProperties;
-    private readonly float dodgeDuration = 0.2f;
 
-    private class State_Roll : State<Player_Input> {
+    private class State_Rolling : State<Player_Input> {
 
         private float amount;
         private Vector3 dir;
@@ -19,12 +20,12 @@ public partial class Player {
         }
 
         public override void Update(Player_Input input) {
-            float amountDelta = Time.deltaTime / input.player.dodgeDuration;
+            float amountDelta = input.player.DeltaTime / input.player.dodgeDuration;
             bool performed = (amount = Mathf.MoveTowards(amount, 1, amountDelta)) == 1;
             if (performed) {
                 /// Passing a 0-magnitude vector stops the motion;
                 input.player.driver.Move(Vector2.zero);
-                if (input.player.driver.MoveSpeed <= input.player.normalMotionProperties.maxSpeed / 2) {
+                if (input.player.driver.MoveSpeed <= input.player.normalLocomotionProperties.maxSpeed / 2) {
                     input.stateMachine.SetState(new State_Normal());
                 }
             } else {

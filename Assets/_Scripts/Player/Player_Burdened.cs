@@ -2,14 +2,13 @@ using UnityEngine;
 
 public partial class Player {
 
-    [Header("Normal State")]
-    [SerializeField] private LocomotionProperties normalLocomotionProperties;
+    [Header("Burdened State")]
+    [SerializeField] private LocomotionProperties burdenedLocomotionProperties;
 
-    private class State_Normal : State<Player_Input> {
+    private class State_Burdened : State<Player_Input> {
 
         public override void Enter(Player_Input input) {
-            Player player = input.player;
-            player.driver.ReplaceProperties(player.normalLocomotionProperties);
+            input.player.driver.ReplaceProperties(input.player.burdenedLocomotionProperties);
         }
 
         public override void Update(Player_Input input) {
