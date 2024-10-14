@@ -934,6 +934,7 @@ MonoBehaviour:
   controller: {fileID: 6022249076964588611}
   navMeshAgent: {fileID: 425408896015153853}
   aggroRange: {fileID: 3618322109459798283}
+  attackCollider: {fileID: 8505787705523193643}
   bodyTransform: {fileID: 3862158570344152569}
   aggroWaitTimeRange: {x: 0.75, y: 1}
   chargeAmplitude: 0.2
@@ -1046,7 +1047,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 7278850283009805638}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1106,7 +1107,7 @@ CharacterController:
   m_Enabled: 0
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1129,9 +1130,9 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1}
+  m_Size: {x: 1.1, y: 2, z: 1.1}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &2508751262942717590
 Animator:
