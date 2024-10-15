@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2208400701102557967}
   - component: {fileID: 771621385791667774}
   - component: {fileID: 4339699122144314708}
+  - component: {fileID: 321847321855962569}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -48,13 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d195186499cc095499936c11ab2cf7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 4339699122144314708}
-  animator: {fileID: 771621385791667774}
-  linearAcceleration: 12
-  linearDrag: 20
-  angularSpeed: 675
-  maxSpeed: 6
-  dodgeSpeed: 12
+  cameraBrain: {fileID: 0}
 --- !u!114 &2208400701102557967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +62,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee0d278b3a37824d99011bb334afa59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 0
+  controller: {fileID: 4339699122144314708}
+  inputSource: {fileID: 8726108569643392650}
+  animator: {fileID: 771621385791667774}
+  meleeLocomotionProperties:
+    linearAcceleration: 40
+    linearDrag: 200
+    angularSpeed: 720
+    maxSpeed: 3
+  normalMotionProperties:
+    linearAcceleration: 25
+    linearDrag: 20
+    angularSpeed: 675
+    maxSpeed: 6
+  dodgeLocomotionProperties:
+    linearAcceleration: 80
+    linearDrag: 80
+    angularSpeed: 720
+    maxSpeed: 12
 --- !u!95 &771621385791667774
 Animator:
   serializedVersion: 5
@@ -114,6 +128,32 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &321847321855962569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774512824984236609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23b029a60a3cf254fb9df8a149d51625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 2208400701102557967}
+  defaultHPAttributes:
+    curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
+    health: 10
+    defense: 0
+    fireRes: 0
+    iceRes: 0
+    shockRes: 0
+    poisonRes: 0
+    healModifier: 0
+  iFrameProperties:
+    settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
+    duration: 1
+  doubleDamageThreshold: 20
 --- !u!1001 &7228530925472516182
 PrefabInstance:
   m_ObjectHideFlags: 0

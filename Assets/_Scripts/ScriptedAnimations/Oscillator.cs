@@ -13,7 +13,9 @@ public class Oscillator : MonoBehaviour {
     }
 
     void Update() {
-        transform.localPosition = anchor + Mathf.Sin(Time.time * timeScale * speed) * amplitude * Vector3.up;
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition,
+                                                      anchor + Mathf.Sin(Time.time * speed) * amplitude * Vector3.up,
+                                                      Time.deltaTime * speed * timeScale);
     }
 
     public void SetTimeScale(float timeScale) => this.timeScale = timeScale;
