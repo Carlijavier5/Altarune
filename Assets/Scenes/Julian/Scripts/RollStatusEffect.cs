@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class RollStatusEffect : StatusEffect
-{
+public class RollStatusEffect : StatusEffect {
   [SerializeField]
   private float defenseAddMod;
 
@@ -14,22 +13,17 @@ public class RollStatusEffect : StatusEffect
   private bool stop = false;
 
   [SerializeField] private Material material;
-  public override void Apply(Entity entity, bool isNew)
-  {
+  public override void Apply(Entity entity, bool isNew) {
     HealthModifiers = new() { defense = { addMod = defenseAddMod } };
   }
 
-  public override void Terminate(Entity entity)
-  {
-  }
+  public override void Terminate(Entity entity) { }
 
-  public void Stop()
-  {
+  public void Stop() {
     stop = true;
   }
 
-  public override bool Update(Entity entity)
-  {
+  public override bool Update(Entity entity) {
     return stop;
   }
 }
