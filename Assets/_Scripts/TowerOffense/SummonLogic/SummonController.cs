@@ -3,22 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SummonType { None = 0, Battery, Tower }
+
 public class SummonController : MonoBehaviour {
 
-    [SerializeField] private Camera mainCamera;
+    [SerializeField] private PlayerController inputSource;
     [SerializeField] private PHSelector phSelector;
 
-    public enum SelectionType { None = 0, Battery, Tower }
-    private SelectionType selectedType;
+    private SummonType selectedType;
 
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
-    private List<Battery> summonedBatteries = new();
+    private readonly HashSet<Battery> summonedBatteries = new();
 
-    public PlayerInput playerInput;
-
-    private Vector3 prevMousePos;
+    private Vector2 prevMousePos;
 
     private IEnumerable<Battery> hintBatteries;
     private Vector3 lastHitPoint;
@@ -29,30 +28,23 @@ public class SummonController : MonoBehaviour {
     private int selectedSlot = 0;
 
     void Awake() {
-        playerInput = new();
-        playerInput.Actions.Enable();
-        playerInput.Actions.Summon.performed += Summon_Performed; ;
+        inputSource.OnPlayerInit += InputSource_OnPlayerInit;
+    }
+
+    private void InputSource_OnPlayerInit() {
+        inputSource.OnSummonPerformed += InputSource_OnSummonPerformed;
+        inputSource.OnSummonSelect += InputSource_OnSummonSelect;
     }
 
     void Update() {
         if (selectedType != 0) {
-            if (prevMousePos != Input.mousePosition) {
-                RaycastSummon();
-            }
-            prevMousePos = Input.mousePosition;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            SetSelectionType(selectedType == SelectionType.Battery ? SelectionType.None : SelectionType.Battery);
-        } else if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 0);
-        } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 1);
+            if (prevMousePos != inputSource.CursorPosition) RaycastSummon();
+            prevMousePos = inputSource.CursorPosition;
         }
     }
 
     private void RaycastSummon() {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = inputSource.OutputCamera.ScreenPointToRay(inputSource.CursorPosition);
 
         IEnumerable<RaycastHit> objectsHit;
 
@@ -60,7 +52,7 @@ public class SummonController : MonoBehaviour {
             && Mathf.Max(groundHit.normal.x, groundHit.normal.y, groundHit.normal.z) == groundHit.normal.y) {
 
             switch (selectedType) {
-                case SelectionType.Battery:
+                case SummonType.Battery:
                     if (hintBattery) {
                         hintBattery.transform.position = groundHit.point;
                     } else {
@@ -69,7 +61,7 @@ public class SummonController : MonoBehaviour {
                         hintBattery.ToggleHologram(true);
                     } lastHitPoint = groundHit.point;
                     break;
-                case SelectionType.Tower:
+                case SummonType.Tower:
                     if ((objectsHit = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 8)).Count() > 0) {
                         hintBatteries = objectsHit.Select(info => info.collider.GetComponent<Battery>());
                     } else hintBatteries = null;
@@ -87,24 +79,30 @@ public class SummonController : MonoBehaviour {
         } else DestroyHints();
     }
 
-    private void SetSelectionType(SelectionType selectionType, int index = 0) {
+    private void SetSelectionType(SummonType selectionType, int index = 0) {
         DestroyHints();
-        prevMousePos = Vector3.zero;
+        StartCoroutine(DelayCast());
+
         selectedType = selectionType;
         phSelector.SetSelectedImage(selectionType, index);
         selectedSlot = index;
 
         switch (selectedType) {
-            case SelectionType.None:
-            case SelectionType.Battery:
+            case SummonType.None:
+            case SummonType.Battery:
                 foreach (Battery battery in summonedBatteries) {
                     battery.ToggleArea(false);
                 } break;
-            case SelectionType.Tower:
+            case SummonType.Tower:
                 foreach (Battery battery in summonedBatteries) {
                     battery.ToggleArea(true);
                 } break;
         }
+    }
+
+    private IEnumerator DelayCast() {
+        yield return new WaitForEndOfFrame();
+        RaycastSummon();
     }
 
     private void DestroyHints() {
@@ -112,23 +110,36 @@ public class SummonController : MonoBehaviour {
         if (hintTower) Destroy(hintTower.gameObject);
     }
 
-    private void Summon_Performed(UnityEngine.InputSystem.InputAction.CallbackContext context) {
-        if (context.performed && selectedType != 0) {
+    private void InputSource_OnSummonPerformed() {
+        if (selectedType != 0) {
             switch (selectedType) {
-                case SelectionType.Battery:
+                case SummonType.Battery:
                     Battery battery = Instantiate(batteryData.prefab, lastHitPoint, Quaternion.identity);
                     summonedBatteries.Add(battery);
                     battery.DoSpawnAnim();
-                    SetSelectionType(SelectionType.None);
+                    SetSelectionType(SummonType.None);
                     break;
-                case SelectionType.Tower:
+                case SummonType.Tower:
                     if (hintBatteries != null) {
                         Summon tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
                         tower.DoSpawnAnim();
-                        SetSelectionType(SelectionType.None);
+                        SetSelectionType(SummonType.None);
                         tower.Init();
                     } break;
             }
+        }
+    }
+
+    private void InputSource_OnSummonSelect(SummonType selectionType, int slotNum) {
+        switch (selectionType) {
+            case SummonType.None:
+                break;
+            case SummonType.Battery:
+                SetSelectionType(selectedType == SummonType.Battery ? SummonType.None : SummonType.Battery);
+                break;
+            case SummonType.Tower:
+                SetSelectionType(selectedType == SummonType.Tower ? SummonType.None : SummonType.Tower, slotNum - 1);
+                break; 
         }
     }
 }
