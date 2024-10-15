@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4390603102152196239}
   - component: {fileID: 7217854052161433768}
   - component: {fileID: 4390551959860819724}
-  - component: {fileID: 2974668184720241370}
+  - component: {fileID: -4677349663710140412}
   m_Layer: 0
   m_Name: Minion
   m_TagString: Untagged
@@ -125,7 +125,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -143,8 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccc88ed2425dec34ea2eb2b3e633a944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 2
   stoppingDistance: 1.5
-  speed: 0
   onMinionDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 2
---- !u!114 &2974668184720241370
+--- !u!114 &-4677349663710140412
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
