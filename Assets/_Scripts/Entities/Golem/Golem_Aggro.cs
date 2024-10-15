@@ -88,7 +88,6 @@ public partial class Golem {
         private float chargeTimer;
 
         public override void Enter(Golem_Input input) {
-            input.golem.attackCollider.enabled = true;
             input.golem.controller.enabled = true;
             input.golem.navMeshAgent.enabled = false;
             input.golem.MotionDriver.Set(input.golem.controller);
@@ -107,7 +106,6 @@ public partial class Golem {
         }
 
         public override void Exit(Golem_Input input) {
-            input.golem.attackCollider.enabled = false;
             input.golem.controller.enabled = false;
             input.golem.navMeshAgent.enabled = true;
             input.golem.MotionDriver.Set(input.golem.navMeshAgent);
