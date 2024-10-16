@@ -5,8 +5,10 @@ public enum EntityFaction { Friendly, Neutral, Hostile }
 
 public class Entity : BaseObject {
 
-    [SerializeField] private EntityFaction faction;
+    [SerializeField] protected EntityFaction faction;
     public EntityFaction Faction => faction;
+
+    public event System.Action<StatusEffect> OnEffectApplied;
 
     public HashSet<StatusEffect> StatusEffects { get; private set; } = new();
     private readonly Stack<StatusEffect> terminateStack = new();
@@ -29,6 +31,8 @@ public class Entity : BaseObject {
         foreach (StatusEffect statusEffect in incomingEffects) {
             bool isNew = StatusEffects.Add(statusEffect);
             statusEffect.Apply(this, isNew);
+            OnEffectApplied?.Invoke(statusEffect);
+            statusEffect.Start(this);
         }
     }
 

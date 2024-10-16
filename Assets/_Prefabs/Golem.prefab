@@ -886,10 +886,13 @@ GameObject:
   - component: {fileID: 6539724813760751204}
   - component: {fileID: 5593935329474835780}
   - component: {fileID: 5096571036659176866}
+  - component: {fileID: 7244036395087272603}
+  - component: {fileID: 4295962233685033886}
   - component: {fileID: 425408896015153853}
   - component: {fileID: 7990416550785050984}
   - component: {fileID: 6022249076964588611}
   - component: {fileID: 8505787705523193643}
+  - component: {fileID: 2508751262942717590}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Untagged
@@ -937,8 +940,10 @@ MonoBehaviour:
   chargeDuration: 0.4
   roamWaitTimeRange: {x: 2, y: 3}
   roamDistanceRange: {x: 3, y: 5}
+  maxRoamDuration: 4
   roamWallBuffer: 2
   roamSpeed: 10
+  animator: {fileID: 2508751262942717590}
 --- !u!114 &5096571036659176866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -953,136 +958,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseObject: {fileID: 5593935329474835780}
   defaultHPAttributes:
-    curves:
-      defenseCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: -0.93688995
-          outSlope: -0.93688995
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.3625
-        - serializedVersion: 3
-          time: 1
-          value: 0.4
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 136
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      fireResCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: -0.004166667
-          value: 1.0023584
-          inSlope: -1.6071426
-          outSlope: -1.6071426
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.23045267
-        - serializedVersion: 3
-          time: 1.0083333
-          value: -0
-          inSlope: -0.03537736
-          outSlope: -0.03537736
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.19753084
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      iceResCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: -0.004166667
-          value: 1.0023584
-          inSlope: -1.6071426
-          outSlope: -1.6071426
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.23045267
-        - serializedVersion: 3
-          time: 1.0083333
-          value: 0
-          inSlope: -0.03537736
-          outSlope: -0.03537736
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.19753084
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      poisonResCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: -0.004166667
-          value: 1.0023584
-          inSlope: -1.6071426
-          outSlope: -1.6071426
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.23045267
-        - serializedVersion: 3
-          time: 1.0083333
-          value: 0
-          inSlope: -0.03537736
-          outSlope: -0.03537736
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.19753084
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      healModCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: -0.93688995
-          outSlope: -0.93688995
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.3625
-        - serializedVersion: 3
-          time: 1
-          value: 0.4
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 136
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+    curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
     health: 10
     defense: 0
     fireRes: 0
     iceRes: 0
+    shockRes: 0
     poisonRes: 0
     healModifier: 0
   iFrameProperties:
-    flashMaterial: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
+    settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
     duration: 0.2
+--- !u!114 &7244036395087272603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278850283009805638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a5381a43155a349809c19ee821ee38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 5593935329474835780}
+  defaultDriver:
+    motionMode: 3
+    transform: {fileID: 0}
+    rigidbody: {fileID: 0}
+    controller: {fileID: 0}
+    navMeshAgent: {fileID: 425408896015153853}
+  ccModule: {fileID: 4295962233685033886}
+  pushableProperties:
+    easeCurves: {fileID: 11400000, guid: db0e09c772cfafc4fbd0c10b14d95ba8, type: 2}
+    objectMass: 1
+    pushResistance: 0
+--- !u!114 &4295962233685033886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278850283009805638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb1e2c5798f2a5478b1913f73b79781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 5593935329474835780}
+  ccAttributes:
+    ccSettings: {fileID: 11400000, guid: 88f98db0b10a96241b82c6ea3213c90b, type: 2}
+    ccResistance: 0
+    stunResistance: 0
+    rootResistance: 0
+    slowResistance: 0
 --- !u!195 &425408896015153853
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1097,7 +1026,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 0
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1129,7 +1058,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 1
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!143 &6022249076964588611
@@ -1149,7 +1078,7 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
@@ -1179,6 +1108,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!95 &2508751262942717590
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278850283009805638}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a4a3940173d4bc42ad4f67ac0b33edb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2043725474164754282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1191,6 +1141,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AggroRange
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888123081506049845, guid: 9e399320993ddcd42b56f7ff27c6019f,
+        type: 3}
+      propertyPath: m_Radius
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5607965777330320083, guid: 9e399320993ddcd42b56f7ff27c6019f,
         type: 3}
