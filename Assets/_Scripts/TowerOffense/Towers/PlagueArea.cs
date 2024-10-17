@@ -95,7 +95,7 @@ public class PlagueStatusEffect : StatusEffect {
             if (plagueArea == null) {
                 plagueArea = Object.Instantiate(enemyPlagueArea, entity.transform.position, Quaternion.identity);
                 plagueArea.transform.parent = entity.transform;
-                plagueArea.parentID = entity.GetInstanceID();
+                plagueArea.ParentID = entity.GetInstanceID();
             } else {
                 plagueArea.gameObject.SetActive(true);
             }
