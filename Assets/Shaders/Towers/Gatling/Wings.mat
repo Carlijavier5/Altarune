@@ -7,15 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Outline
-  m_Shader: {fileID: -6465566751694194690, guid: 9c92a8711b3c17a47a21c7e27f8346ff,
+  m_Name: Wings
+  m_Shader: {fileID: -6465566751694194690, guid: e02df02083d716d439501a49fecd050c,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _OVERLAY
+  m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -25,14 +24,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AddAdditionalLights_2f33006b9b3749679ad94edb9d722155_Posterization_1666173476_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 9875244e50551a243847681c9acbf432, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_ef062a48e8414bbbbebda964d62d442f_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 9875244e50551a243847681c9acbf432, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -47,9 +38,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Color_Threshold: 1.1
-    - _Normal_Threshold: 0.5
-    - _OVERLAY: 1
+    - _Amplitude: 0.02
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Wavelength: 3
     m_Colors:
-    - _Outline_Color: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 0}
+    - _Emission: {r: 3.5169811, g: 3.5169811, b: 3.5169811, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &2985632189280590020
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
