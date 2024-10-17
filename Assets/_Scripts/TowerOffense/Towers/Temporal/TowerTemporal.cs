@@ -5,38 +5,37 @@ using UnityEngine;
 public class TowerTemporal : Summon {
 
     [SerializeField] private TempoArea tempoArea;
+    [SerializeField] private TimeMagicCircleController magicCircleController;
+    [SerializeField] private HourglassController hourglassController;
     [SerializeField] private Transform launchPoint;
-    [SerializeField] private float tempoSpawnDelay,
-                                   gyroMaxSpeed,
-                                   gyroAccel;
-    [SerializeField] private Transform gyroOuter, gyroInner;
+    [SerializeField] private float tempoSpawnDelay;
 
-    private Oscillator oscillator;
-    private float gyroSpeed;
     private bool init;
 
-    protected override void Awake() {
-        base.Awake();
-        oscillator = GetComponentInChildren<Oscillator>(true);
-        oscillator.enabled = false;
+    void Start() {
+        magicCircleController.SetRadiusLerp(0);
     }
 
     public override void Init() {
         init = true;
-        oscillator.enabled = true;
         StartCoroutine(ISpawnTempoArea());
     }
 
     void Update() {
         if (init) {
-            gyroSpeed = Mathf.MoveTowards(gyroSpeed, gyroMaxSpeed, Time.deltaTime * gyroAccel);
-            gyroOuter.Rotate(gyroSpeed * Time.deltaTime * Vector3.one);
-            gyroInner.Rotate(-2 * gyroSpeed * Time.deltaTime * Vector3.one);
+            float lerp = 0.2f + Mathf.Abs(Mathf.PingPong(Time.time, 0.8f));
+            hourglassController.SetFill(lerp);
         }
     }
 
     private IEnumerator ISpawnTempoArea() {
         yield return new WaitForSeconds(tempoSpawnDelay);
         Instantiate(tempoArea, launchPoint.transform.position, Quaternion.identity);
+        float lerpVal = 0;
+        while (lerpVal < 1) {
+            lerpVal = Mathf.MoveTowards(lerpVal, 1, Time.deltaTime);
+            magicCircleController.SetRadiusLerp(lerpVal);
+            yield return null;
+        }
     }
 }
