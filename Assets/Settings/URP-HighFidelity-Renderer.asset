@@ -78,7 +78,8 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: 8401294802513431134}
   - {fileID: -4209761751597707668}
-  m_RendererFeatureMap: adc0de57c6d2eee55e0a26651c6597746c0efebefdeb93c5
+  - {fileID: 6881410334549867848}
+  m_RendererFeatureMap: adc0de57c6d2eee55e0a26651c6597746c0efebefdeb93c548fd8b703dae7f5f
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -121,7 +122,7 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &8401294802513431134
+--- !u!114 &6881410334549867848
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,22 +131,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
-  m_Name: Blit
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: Outlines
   m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    Event: 500
-    blitMaterial: {fileID: 2100000, guid: ee3470e518c36f5498ec8730d173249b, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
-    canShowInSceneView: 1
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: 6
+  passMaterial: {fileID: 2100000, guid: 7dce43993a69962419a488b428e89bc4, type: 2}
+  passIndex: 1
+  bindDepthStencilAttachment: 0
+  m_Version: 1

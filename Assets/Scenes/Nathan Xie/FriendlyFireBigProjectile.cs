@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,13 +13,10 @@ public class FriendlyFireBigProjectile : MonoBehaviour{
         rb.AddForce(direction * moveForce);
     }
      void OnTriggerEnter(Collider other){
-        if ((other is MeshCollider
-            || other is BoxCollider
-            || other is TerrainCollider)) {
-            End(); 
-        }
         if(other.TryGetComponent(out Entity entity)){
             entity.TryDamage(2);
+            End();
+        } else if(!other.isTrigger){
             End();
         }
     }

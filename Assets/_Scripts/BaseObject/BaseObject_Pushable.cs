@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract partial class BaseObject {
 
     public event System.Action<Vector3, EventResponse> OnTryFramePush;
-    public event System.Action<Vector3, float, LongPushResponse> OnTryLongPush;
+    public event System.Action<Vector3, float, EventResponse<PushActionCore>> OnTryLongPush;
 
     public MotionDriver MotionDriver { get; private set; } = new();
 
@@ -17,7 +17,7 @@ public abstract partial class BaseObject {
     /// <returns> True if the object was pushed, false otherwise; </returns>
     public bool TryPush(Vector3 direction, float strength) {
         EventResponse response = new();
-        OnTryFramePush?.Invoke(direction * strength, response);
+        OnTryFramePush?.Invoke(direction.normalized * strength, response);
         return response.received;
     }
 
@@ -26,17 +26,20 @@ public abstract partial class BaseObject {
     /// </summary>
     /// <param name="duration"> Duration, in seconds, of the push action; </param>
     /// <returns> True if the object was pushed, false otherwise; </returns>
-    public bool TryLongPush(Vector3 direction, float strength, 
+    public bool TryLongPush(Vector3 direction, float strength,
                             float duration, out PushActionCore actionCore) {
-        LongPushResponse response = new();
-        OnTryLongPush?.Invoke(direction * strength, duration, response);
-        actionCore = response.actionCore;
-        return actionCore != null;
+        EventResponse<PushActionCore> response = new();
+        OnTryLongPush?.Invoke(direction.normalized * strength, duration, response);
+        actionCore = response.objectReference;
+        return response.received;
     }
-}
 
-public class LongPushResponse { public PushActionCore actionCore; }
-
-public class PushActionCore {
-
+    /// <summary>
+    /// Runs a push coroutine on the object with a set duration;
+    /// </summary>
+    /// <param name="duration"> Duration, in seconds, of the push action; </param>
+    /// <returns> True if the object was pushed, false otherwise; </returns>
+    public bool TryLongPush(Vector3 direction, float strength, float duration) {
+        return TryLongPush(direction, strength, duration, out _);
+    }
 }
