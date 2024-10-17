@@ -7,17 +7,17 @@ public class PHSelector : MonoBehaviour {
     [SerializeField] private Image battery;
     [SerializeField] private Image[] towers;
 
-    public void SetSelectedImage(SummonController.SelectionType selectionType, int index) {
+    public void SetSelectedImage(SummonType selectionType, int index) {
         switch (selectionType) {
-            case SummonController.SelectionType.None:
+            case SummonType.None:
                 battery.sprite = unselected;
                 foreach (Image tower in towers) tower.sprite = unselected;
                 break;
-            case SummonController.SelectionType.Battery:
+            case SummonType.Battery:
                 battery.sprite = selected;
                 foreach (Image tower in towers) tower.sprite = unselected;
                 break;
-            case SummonController.SelectionType.Tower:
+            case SummonType.Tower:
                 battery.sprite = unselected;
                 foreach (Image tower in towers) tower.sprite = unselected;
                 towers[index].sprite = selected;

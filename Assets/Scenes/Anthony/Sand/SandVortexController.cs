@@ -7,7 +7,7 @@ public class SandVortexController : MonoBehaviour
 {
     #region Properties
 
-    [SerializeField] Renderer renderer;
+    [SerializeField] new Renderer renderer;
     // Far camera
     [SerializeField] float minDepth = 5;
     // Near camera
