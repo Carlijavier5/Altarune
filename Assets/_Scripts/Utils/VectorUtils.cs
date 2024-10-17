@@ -45,6 +45,10 @@ public static class VectorUtils {
     }
 
     /// <summary>
+    /// Get a random unit direction vector in the X-Z plane
+    /// </summary>
+
+    /// <summary>
     /// Offset an array of vectors;
     /// </summary>
     /// <param name="vecs"> Array to operate on; </param>
@@ -85,5 +89,10 @@ public static class VectorUtils {
         return new Vector3Int(Mathf.RoundToInt(vec.x),
                               Mathf.RoundToInt(vec.y),
                               Mathf.RoundToInt(vec.z));
+    }
+
+    public static Vector3 GetRandomUnitVector2D() {
+        float angle = Random.Range(0f, Mathf.PI * 2);
+        return new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
     }
 }

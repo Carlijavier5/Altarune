@@ -6,7 +6,8 @@ public class Pushable : ObjectModule {
 
     [HideInInspector][SerializeField] private MotionDriver defaultDriver = new();
     [HideInInspector][SerializeField] private CrowdControllable ccModule;
-    [SerializeField] private PushAttributes pushableProperties;
+
+    [SerializeField] private PushableAttributes pushableProperties;
 
     private RuntimePushAttributes runtimeProperties;
 
@@ -61,7 +62,7 @@ public class Pushable : ObjectModule {
         foreach (PushActionCore core in actionCores) {
             float lifetime = core.UpdateLifetime(Time.fixedDeltaTime);
             if (lifetime >= 1) terminateStack.Push(core);
-            DoFramePush(core.direction);
+            DoFramePush(core.ValueAtLifetime);
         }
 
         while (terminateStack.TryPop(out PushActionCore core)) RemoveCore(core);
@@ -72,10 +73,12 @@ public class Pushable : ObjectModule {
         response.received = true;
     }
 
-    private void BaseObject_OnTryLongPush(Vector3 direction, float duration, LongPushResponse response) {
+    private void BaseObject_OnTryLongPush(Vector3 direction, float duration, 
+                                          EventResponse<PushActionCore> response) {
         PushActionCore core = new(this, direction, duration, pushableProperties.easeCurves);
         actionCores.Add(core);
-        response.actionCore = core;
+        response.objectReference = core;
+        response.received = true;
     }
 
     private void DoFramePush(Vector3 direction) {
@@ -100,8 +103,9 @@ public class Pushable : ObjectModule {
                 driver.Controller.Move(direction * Time.fixedDeltaTime);
                 break;
             case MotionMode.NavMesh:
-                driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
-                break;
+                if (driver.NavMeshAgent.isActiveAndEnabled) {
+                    driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
+                } break;
         }
     }
 
@@ -119,6 +123,8 @@ public class Pushable : ObjectModule {
         }
     }
 
-    void OnValidate() { if (ccModule == null) TryGetComponent(out ccModule); }
+    public override void EDITOR_ONLY_AttachModule() { 
+        if (ccModule == null) TryGetComponent(out ccModule);
+    }
     #endif
 }

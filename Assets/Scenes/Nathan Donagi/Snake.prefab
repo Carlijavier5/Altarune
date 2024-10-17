@@ -181,46 +181,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseObject: {fileID: 1570203959472234346}
   defaultHPAttributes:
-    curves:
-      defenseCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      fireResCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      iceResCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      poisonResCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      healModCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+    curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
     health: 5
     defense: 0
     fireRes: 0
     iceRes: 0
+    shockRes: 0
     poisonRes: 0
     healModifier: 0
   iFrameProperties:
-    flashMaterial: {fileID: -8474651742996372913, guid: 185b48093c4cf40418e8e12b4525ca22,
-      type: 3}
+    settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
     duration: 0.5
 --- !u!114 &5298639473800101088
 MonoBehaviour:

@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-
-[System.Serializable]
+﻿[System.Serializable]
 public class IFrameProperties {
 
-    public Material flashMaterial;
+    public DefaultIFrameSettings settings;
     public float duration;
 
     public IFrameProperties Clone() => MemberwiseClone() as IFrameProperties;
