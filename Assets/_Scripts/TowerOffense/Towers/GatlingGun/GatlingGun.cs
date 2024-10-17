@@ -5,6 +5,7 @@ using System.Linq;
 
 public class GatlingGun : Summon {
     [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private Transform rootTransform;
     [SerializeField] private GameObject smallArea;
     [SerializeField] private GameObject bigArea;
     [SerializeField] private float rotationSpeed = 5f;
@@ -144,8 +145,8 @@ public class GatlingGun : Summon {
     /// </summary>
     /// <returns></returns>
     private IEnumerator Rotate() {
-        while (transform.rotation != targetRotation) {
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        while (rootTransform.rotation != targetRotation) {
+            rootTransform.rotation = Quaternion.Slerp(rootTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             yield return null;
         }
     }
