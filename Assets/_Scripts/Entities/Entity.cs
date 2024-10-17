@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum EntityFaction { Friendly, Neutral, Hostile }
 
-public class Entity : BaseObject {
+public abstract class Entity : BaseObject {
 
     [SerializeField] protected EntityFaction faction;
     public EntityFaction Faction => faction;

@@ -2,13 +2,14 @@ using UnityEngine;
 
 public partial class Player {
 
-    [SerializeField] private LocomotionProperties normalMotionProperties;
+    [Header("Normal State")]
+    [SerializeField] private LocomotionProperties normalLocomotionProperties;
 
     private class State_Normal : State<Player_Input> {
 
         public override void Enter(Player_Input input) {
             Player player = input.player;
-            player.driver.ReplaceProperties(player.normalMotionProperties);
+            player.driver.ReplaceProperties(player.normalLocomotionProperties);
         }
 
         public override void Update(Player_Input input) {
@@ -16,7 +17,7 @@ public partial class Player {
             input.player.driver.ResolveRotation();
             input.player.driver.ResolveGravity();
             input.player.animator.SetFloat("MoveSpeed", (input.player.driver.MoveSpeed
-                                                       / input.player.normalMotionProperties.maxSpeed));
+                                                       / input.player.normalLocomotionProperties.maxSpeed));
         }
 
         public override void Exit(Player_Input input) { }
