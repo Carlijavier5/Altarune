@@ -8,31 +8,33 @@ public class GatlingGun : Summon {
     [SerializeField] private GameObject smallArea;
     [SerializeField] private GameObject bigArea;
     [SerializeField] private float rotationSpeed = 5f;
+    [Header("Timers")]
     [SerializeField] private float bigAreaDuration = 10f;
     [SerializeField] private float smallAreaDuration = 3f;
     [SerializeField] private float smallAreaSpawnDelay = 0.5f;
     [SerializeField] private float bigAreaSpawnDelay = 3.0f;
+    [Header("Sizes")]
     [SerializeField] private float bigAreaSize = 5.0f;
     [SerializeField] private float minSmallSize = 0.5f;
     [SerializeField] private float maxSmallSize = 2.0f;
     [SerializeField] private int maxSmallAreas = 3;
+    [Header("Damage")]
     [SerializeField] private int damage = 1;
-    [SerializeField] private float smallAreaDamageInterval = 1f;
+    [SerializeField] private float damageInterval = 1f;
 
     private Entity aggroTarget;
     private GameObject currentBigArea;
     public List<GameObject> SmallAreas { get; private set; } = new List<GameObject>();
+    public int NumOfInactive { get; set; }
     private bool isAggroed = false;
     private float smallAreaSpawnTimer = 0f;
     private float bigAreaSpawnTimer = 0f;
     private bool init;
     private bool targetSet;
-    private Quaternion initialRotation;
     private Quaternion targetRotation;
 
     protected override void Awake() {
         base.Awake();
-        initialRotation = transform.rotation;
         bigAreaSpawnTimer = bigAreaSpawnDelay;
         aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
@@ -44,7 +46,8 @@ public class GatlingGun : Summon {
 
     void Update() {
         // Calls SpawnSmallArea on a delay
-        if (init && isAggroed && currentBigArea != null && SmallAreas.Count < maxSmallAreas) {
+        if (init && isAggroed && currentBigArea != null &&
+           (SmallAreas.Count < maxSmallAreas || NumOfInactive >= 1)) {
             smallAreaSpawnTimer += Time.deltaTime;
             if (smallAreaSpawnTimer >= smallAreaSpawnDelay) {
                 SpawnSmallArea();
@@ -93,8 +96,7 @@ public class GatlingGun : Summon {
         if (currentBigArea != null) Destroy(currentBigArea);
         SmallAreas.ForEach(area => Destroy(area));
         SmallAreas.Clear();
-        targetRotation = initialRotation;
-        StartCoroutine(Rotate());
+        NumOfInactive = 0;
     }
 
     /// <summary>
@@ -105,6 +107,7 @@ public class GatlingGun : Summon {
         Vector3 areaPosition = aggroTarget.transform.position;
         currentBigArea = Instantiate(bigArea, areaPosition, Quaternion.identity);
         currentBigArea.GetComponent<BigGatlingArea>().Init(bigAreaDuration, bigAreaSize, this);
+        // Get rotation towards big area
         Vector3 direction = (currentBigArea.transform.position - transform.position).normalized;
         targetRotation = Quaternion.LookRotation(direction);
         targetRotation *= Quaternion.Euler(0, -90, 0);
@@ -115,15 +118,31 @@ public class GatlingGun : Summon {
     /// Spawns a small area
     /// </summary>
     private void SpawnSmallArea() {
-        if (SmallAreas.Count >= maxSmallAreas) return;
         // Create a random position within large radius - small radius
         Vector2 randomPos = Random.insideUnitCircle * (currentBigArea.transform.localScale.x / 2f - maxSmallSize / 2.5f);
         Vector3 smallAreaPos = currentBigArea.transform.position + new Vector3(randomPos.x, 0, randomPos.y);
-        GameObject newSmallArea = Instantiate(smallArea, smallAreaPos, Quaternion.identity);
-        newSmallArea.GetComponent<SmallGatlingArea>().Init(smallAreaDuration, damage, smallAreaDamageInterval, minSmallSize, maxSmallSize, this);
-        SmallAreas.Add(newSmallArea);
+        if (SmallAreas.Count < maxSmallAreas) {
+            // Create more small areas if they don't exist.
+            GameObject newSmallArea = Instantiate(smallArea, smallAreaPos, Quaternion.identity);
+            newSmallArea.GetComponent<SmallGatlingArea>().Init(smallAreaDuration, damage, damageInterval, minSmallSize, maxSmallSize, this);
+            SmallAreas.Add(newSmallArea);
+        } else {
+            // Enable existing areas
+            for (int i = 0; i < SmallAreas.Count; i++) {
+                if (!SmallAreas[i].activeSelf) {
+                    SmallAreas[i].transform.position = smallAreaPos;
+                    SmallAreas[i].SetActive(true);
+                    NumOfInactive--;
+                    break;
+                }
+            }
+        }
     }
 
+    /// <summary>
+    /// Rotate the gatling gun towards a target
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Rotate() {
         while (transform.rotation != targetRotation) {
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
