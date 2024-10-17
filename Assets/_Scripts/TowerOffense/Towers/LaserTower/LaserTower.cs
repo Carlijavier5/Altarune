@@ -2,20 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LaserTower : Summon {
 
 	[SerializeField] private LaserTowerProjectile towerProjectile;
+	[SerializeField] private AltLaserTowerBeam altTowerProjectile;
 	[SerializeField] private Transform muzzle;
-	[SerializeField] private float attackInterval;
+	[SerializeField] private float attackInterval, altAttackCooldown;
 	[SerializeField] private float checkClosestEnemyInterval;
+	[SerializeField] private float range = -1, altAttackRange = -1;
 	//This prefab needs to have the enemy factions set to include enemies
 	[SerializeField] private AggroRange attackRangePrefab;
-	private bool init;
+	private bool init, altAttackMode = false;
 	private float attackTick = 0.2f, checkClosestEnemyTick = 0.2f;
+	// TODO: Fix Layermask
+	private int environmentLayerMask = ~(1 << 6), enemyAndEnvironmentLayerMask = ~((1 << 6) ^ 3); //Environment Mask for checking collisions
 	private AggroRange attackRange;
-	private Entity closestEnemy;
+	private Entity closestEnemy, altAttackTarget;
+	private AltLaserTowerBeam altAttackBeam;
 
 	protected override void Awake()
 	{
@@ -26,6 +32,10 @@ public class LaserTower : Summon {
 		attackRange = Instantiate<AggroRange>(attackRangePrefab, gameObject.transform);
 		
 		init = true;
+	}
+
+	private void clearAltAttackBeam() {
+		altAttackBeam = null;
 	}
 
 	void Update() {
@@ -52,13 +62,39 @@ public class LaserTower : Summon {
 		}
 
 		attackTick += Time.deltaTime;
-		if (attackTick >= attackInterval && closestEnemy != null) {
-			Debug.Log("Firing!");
-			Instantiate(towerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
+		if (!altAttackMode) {
+			if (attackTick >= attackInterval && closestEnemy != null) {
+				bool hit = Physics.Raycast(muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position) * Vector3.forward, out RaycastHit raycastHit, range < 0 ? Mathf.Infinity : range, environmentLayerMask, QueryTriggerInteraction.Ignore);
+				
+				UnityEngine.Object laserProjectile = Instantiate(towerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
+				laserProjectile.GetComponent<LaserTowerProjectile>().setOGscale(raycastHit.distance);
 
-			attackTick = 0;
-		} else if (attackTick >= attackInterval) {
-			Debug.Log("No closest enemy to fire at");
+				attackTick = 0;
+			}
+		} else {
+			if (attackTick >= altAttackCooldown) {
+				if (altAttackTarget == null || Vector3.Distance(altAttackTarget.gameObject.transform.position, gameObject.transform.position) > altAttackRange) {
+					Debug.Log("Set attack target");
+					altAttackTarget = closestEnemy;
+				}
+
+				if (altAttackTarget != null && altAttackBeam == null && Physics.Raycast(muzzle.transform.position, Quaternion.LookRotation(altAttackTarget.transform.position - gameObject.transform.position) * Vector3.forward, out RaycastHit raycastHit, range < 0 ? Vector3.Distance(altAttackTarget.transform.position, gameObject.transform.position) : range, enemyAndEnvironmentLayerMask, QueryTriggerInteraction.Ignore)) {
+					if (raycastHit.collider.gameObject.layer != 6) {
+						UnityEngine.Object laserProjectile = Instantiate(altTowerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
+
+						altAttackBeam = laserProjectile.GetComponent<AltLaserTowerBeam>();
+						altAttackBeam.giveData(altAttackRange < 0 ? 5f : altAttackRange, altAttackTarget, this.clearAltAttackBeam);
+						attackTick = 0;
+					} else {
+						altAttackTarget = null;
+					}
+				}
+			} else if (altAttackBeam != null) {
+				attackTick = 0;
+			} else {
+				attackTick += Time.deltaTime;
+			}
 		}
+		
 	}
 }

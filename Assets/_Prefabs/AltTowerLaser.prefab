@@ -92,11 +92,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7291756187318948685}
-  - component: {fileID: 1886599199103776619}
   - component: {fileID: 8874020499080655446}
   - component: {fileID: 2566959171687742646}
+  - component: {fileID: 712086604096917093}
   m_Layer: 0
-  m_Name: TowerLaser
+  m_Name: AltTowerLaser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,23 +118,6 @@ Transform:
   - {fileID: 6743340420957199975}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1886599199103776619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5380620843753948835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11933eabbd2139c3b998f657ae88a4aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 8874020499080655446}
-  coll: {fileID: 2566959171687742646}
-  damage: 1
-  animTimeScale: 25
-  lifetime: 0.25
 --- !u!54 &8874020499080655446
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -185,3 +168,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 1}
+--- !u!114 &712086604096917093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380620843753948835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d23f548d5eed010a450bb4d66dc997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 8874020499080655446}
+  coll: {fileID: 2566959171687742646}
+  damage: 1
+  animTimeScale: 15
+  fullRampUpTime: 0.5
+  enemyTag: Please Add Enemy Tag thanks
