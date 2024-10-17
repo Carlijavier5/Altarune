@@ -14,10 +14,18 @@ public class BatEnemy : Entity
     private bool _aggro = false;
     private float _timer = 0f;
     [SerializeField] private float _timebetweenmove = 1f;
+    [SerializeField] private float _timecc = 3f;
     private Bounds _bounds;
-    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _speed = 3f;
     private Vector3 _dest;
-
+    private bool canMove = true;
+    private bool canHurt = true;
+    void Awake()
+    {
+        OnStunSet += Bat_Stun;
+        OnTimeScaleSet += Bat_Time;
+        OnRootSet += Bat_Root;
+    }
     void Start(){
         _bcollider = GetComponent<BoxCollider>();
         _dest = GetPosInCollider();
@@ -31,19 +39,41 @@ public class BatEnemy : Entity
         _player = GameObject.Find("Player");
         Behavior();
     }
-
+    private void Bat_Stun(bool stunned){
+        canMove = false;
+        canHurt = false;
+    }
+    private void Bat_Time(float timeScale){
+        _speed *= timeScale;
+    }
+    private void Bat_Root(bool rooted){
+        canMove = false;
+    }
     private void Behavior(){
         _timer += Time.deltaTime;
-        if (_aggro){
-            Vector3 playerPos = new Vector3(_player.transform.position.x, _player.transform.position.y, _player.transform.position.z);
-            transform.position = Vector3.MoveTowards(transform.position, playerPos, _speed*Time.deltaTime);
-        }
-        else {
-            if (_timer >= _timebetweenmove) {
-                _dest = GetPosInCollider();
+        if (canMove){
+            if (_aggro)
+            {
+                Vector3 playerPos = new Vector3(_player.transform.position.x, _player.transform.position.y, _player.transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, playerPos, _speed * Time.deltaTime);
+            }
+            else
+            {
+                if (_timer >= _timebetweenmove)
+                {
+                    _dest = GetPosInCollider();
+                    _timer = 0f;
+                }
+                Movement(_dest);
+            }
+        } else {
+            _speed = 0f;
+            if (_timer >= _timecc){
+                _speed = 3f;
+                canMove = true;
+                canHurt = true;
                 _timer = 0f;
             }
-            Movement(_dest);
         }
     }
     private Vector3 GetPosInCollider(){
@@ -67,7 +97,15 @@ public class BatEnemy : Entity
         if (other.gameObject.GetComponent<Player>() == null){
             return;
         }
-        other.gameObject.GetComponent<Player>().TryDamage(1);
+        if (canHurt){
+            other.gameObject.GetComponent<Player>().TryDamage(1);
+        }
         //damage yan?
+    }
+    public override void Perish()
+    {
+        base.Perish();
+        Destroy(gameObject, 1);
+        print("bat ded");
     }
 }
