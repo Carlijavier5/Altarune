@@ -74,7 +74,6 @@ public class LaserTower : Summon {
 		} else {
 			if (attackTick >= altAttackCooldown) {
 				if (altAttackTarget == null || Vector3.Distance(altAttackTarget.gameObject.transform.position, gameObject.transform.position) > altAttackRange) {
-					Debug.Log("Set attack target");
 					altAttackTarget = closestEnemy;
 				}
 
