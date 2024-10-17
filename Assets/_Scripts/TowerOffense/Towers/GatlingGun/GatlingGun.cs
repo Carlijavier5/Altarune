@@ -5,10 +5,10 @@ using System.Linq;
 
 public class GatlingGun : Summon {
     [SerializeField] private AggroRange aggroRange;
-    [SerializeField] private Transform rootTransform;
-    [SerializeField] private GameObject smallArea;
-    [SerializeField] private GameObject bigArea;
-    [SerializeField] private float rotationSpeed = 5f;
+    //[SerializeField] private Transform rootTransform;
+    [SerializeField] private SmallGatlingArea smallArea;
+    [SerializeField] private BigGatlingArea bigArea;
+    //[SerializeField] private float rotationSpeed = 5f;
     [Header("Timers")]
     [SerializeField] private float bigAreaDuration = 10f;
     [SerializeField] private float smallAreaDuration = 3f;
@@ -22,17 +22,18 @@ public class GatlingGun : Summon {
     [Header("Damage")]
     [SerializeField] private int damage = 1;
     [SerializeField] private float damageInterval = 1f;
+    [Header("Visual")] [SerializeField] private GatlingAnimator animator;
 
     private Entity aggroTarget;
-    private GameObject currentBigArea;
-    public List<GameObject> SmallAreas { get; private set; } = new List<GameObject>();
+    private BigGatlingArea currentBigArea;
+    public List<SmallGatlingArea> SmallAreas { get; private set; } = new List<SmallGatlingArea>();
     public int NumOfInactive { get; set; }
     private bool isAggroed = false;
     private float smallAreaSpawnTimer = 0f;
     private float bigAreaSpawnTimer = 0f;
     private bool init;
     private bool targetSet;
-    private Quaternion targetRotation;
+    //private Quaternion targetRotation;
 
     protected override void Awake() {
         base.Awake();
@@ -107,12 +108,13 @@ public class GatlingGun : Summon {
         if (currentBigArea != null) Destroy(currentBigArea);
         Vector3 areaPosition = aggroTarget.transform.position;
         currentBigArea = Instantiate(bigArea, areaPosition, Quaternion.identity);
+        animator.SemiFire(areaPosition);
         currentBigArea.GetComponent<BigGatlingArea>().Init(bigAreaDuration, bigAreaSize, this);
         // Get rotation towards big area
-        Vector3 direction = (currentBigArea.transform.position - transform.position).normalized;
-        targetRotation = Quaternion.LookRotation(direction);
-        targetRotation *= Quaternion.Euler(0, -90, 0);
-        StartCoroutine(Rotate());
+        //Vector3 direction = (currentBigArea.transform.position - transform.position).normalized;
+        //targetRotation = Quaternion.LookRotation(direction);
+        //targetRotation *= Quaternion.Euler(0, -90, 0);
+        //StartCoroutine(Rotate());
     }
 
     /// <summary>
@@ -124,15 +126,15 @@ public class GatlingGun : Summon {
         Vector3 smallAreaPos = currentBigArea.transform.position + new Vector3(randomPos.x, 0, randomPos.y);
         if (SmallAreas.Count < maxSmallAreas) {
             // Create more small areas if they don't exist.
-            GameObject newSmallArea = Instantiate(smallArea, smallAreaPos, Quaternion.identity);
-            newSmallArea.GetComponent<SmallGatlingArea>().Init(smallAreaDuration, damage, damageInterval, minSmallSize, maxSmallSize, this);
+            SmallGatlingArea newSmallArea = Instantiate(smallArea, smallAreaPos, Quaternion.identity);
+            newSmallArea.Init(smallAreaDuration, damage, damageInterval, minSmallSize, maxSmallSize, this);
             SmallAreas.Add(newSmallArea);
         } else {
             // Enable existing areas
             for (int i = 0; i < SmallAreas.Count; i++) {
-                if (!SmallAreas[i].activeSelf) {
+                if (!SmallAreas[i].gameObject.activeSelf) {
                     SmallAreas[i].transform.position = smallAreaPos;
-                    SmallAreas[i].SetActive(true);
+                    SmallAreas[i].gameObject.SetActive(true);
                     NumOfInactive--;
                     break;
                 }
@@ -144,10 +146,10 @@ public class GatlingGun : Summon {
     /// Rotate the gatling gun towards a target
     /// </summary>
     /// <returns></returns>
-    private IEnumerator Rotate() {
-        while (rootTransform.rotation != targetRotation) {
-            rootTransform.rotation = Quaternion.Slerp(rootTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            yield return null;
-        }
-    }
+    // private IEnumerator Rotate() {
+    //     while (rootTransform.rotation != targetRotation) {
+    //         rootTransform.rotation = Quaternion.Slerp(rootTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    //         yield return null;
+    //     }
+    // }
 }
