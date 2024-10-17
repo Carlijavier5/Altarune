@@ -42,6 +42,16 @@ public class GatlingAnimator : MonoBehaviour
             }
     }
 
+    public void SemiFire(Vector3 aimPos) {
+        activePos = aimPos;
+        if (activeAction == null) {
+            activePos = aim.position;
+            activePos.y = body.position.y;
+            activeAction = FireAction();
+            StartCoroutine(activeAction);
+        }
+    }
+
     private IEnumerator FireAction() {
         body.DOLookAt(activePos, fireDuration, AxisConstraint.None, Vector3.up).SetEase(Ease.InOutElastic);
         StartCoroutine(FireFX());
