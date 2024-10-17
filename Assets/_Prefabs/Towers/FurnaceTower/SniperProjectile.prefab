@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 800847524367133588}
-  - component: {fileID: 9062378026335477262}
+  - component: {fileID: 3782081999992796225}
+  - component: {fileID: 7309434232142785311}
   - component: {fileID: 3525777844057465787}
   - component: {fileID: 4260719451389796544}
   - component: {fileID: 2964580968309320660}
-  - component: {fileID: 3461325632994416178}
   - component: {fileID: 958265585786650703}
   m_Layer: 0
   m_Name: SniperProjectile
@@ -37,7 +37,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9062378026335477262
+--- !u!114 &3782081999992796225
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,13 +46,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 7199330269594084388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54f799623acf33b4eb48c4eda16f9701, type: 3}
+  m_Script: {fileID: 11500000, guid: 8285cf293784bfc489d777e95f396b1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 3525777844057465787}
-  coll: {fileID: 3461325632994416178}
+  coll: {fileID: 7309434232142785311}
   speed: 0.3
-  damage: 5
+  damage: 1
+--- !u!136 &7309434232142785311
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7199330269594084388}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 25
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!54 &3525777844057465787
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -76,9 +99,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!33 &4260719451389796544
 MeshFilter:
@@ -130,27 +153,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3461325632994416178
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7199330269594084388}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!96 &958265585786650703
 TrailRenderer:
   serializedVersion: 3

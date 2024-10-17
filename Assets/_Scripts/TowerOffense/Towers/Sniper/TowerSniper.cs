@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TowerSniper : Summon {
 
-    [SerializeField] private SniperProjectile projectilePrefab;
+    [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;
     [SerializeField] private float attackInterval;
     
@@ -31,10 +31,10 @@ public class TowerSniper : Summon {
             Entity lowestHealthEnemy = GetTarget();
             if (lowestHealthEnemy != null) {
                 // Make projectile
-                SniperProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);
+                TowerProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);
 
                 // Aim Projectile
-                Vector3 direction = lowestHealthEnemy.GetComponent<Transform>().position - transform.position;
+                Vector3 direction = lowestHealthEnemy.transform.position - transform.position;
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 Vector3 result = targetRotation * Vector3.forward;
 
@@ -63,7 +63,7 @@ public class TowerSniper : Summon {
     }
 
     Entity GetTarget() {
-        targets.RemoveAll(enemy => enemy == null);
+        targets.RemoveAll(enemy => enemy == null || enemy.Faction == EntityFaction.Friendly);
         targets.Sort(Comparer<Entity>.Create((a, b) => a.Health.CompareTo(b.Health)));
         if (targets.Count > 0) return targets[0];
         else return null;

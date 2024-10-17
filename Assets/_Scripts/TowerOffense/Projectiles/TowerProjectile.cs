@@ -32,7 +32,7 @@ public class TowerProjectile : MonoBehaviour {
             && !(baseObject is Entity
                  && (baseObject as Entity).Faction == EntityFaction.Friendly)) {
             if (baseObject.TryDamage(4)) End();
-        } else if (!other.isTrigger && other.gameObject.layer != 7) {
+        } else if (!other.isTrigger && other.gameObject.layer != 4) {
             End();
         }
     }
