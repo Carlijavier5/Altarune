@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-// TryDamage
 namespace Miniboss {
     public partial class Miniboss {
         private class PhaseOne : State<MinibossStateInput> {
@@ -10,6 +9,7 @@ namespace Miniboss {
             private Miniboss miniboss;
             private Transform player;
             private NavMeshAgent navigation;
+            private Damageable damageable;
             private Coroutine malfunctionCoroutine;
 
             // Creating variables
@@ -21,17 +21,20 @@ namespace Miniboss {
             private bool spinState = false;
             private readonly float spinDuration = 1;
 
-            // Entrance method
             public override void Enter(MinibossStateInput input) {
                 // Initializes the enemy using the StateInput
                 miniboss = input.Miniboss;
 
-                // Initializes methods with values from the enemy
+                // Initializes objects with values from the enemy
                 player = miniboss.player;
                 navigation = miniboss.navigation;
-                health = miniboss.health;
+                damageable = miniboss.damageable;
+
+                // Pushable implementation
+                miniboss.MotionDriver.Set(navigation);
 
                 // Initializes variables with values from the enemy
+                health = miniboss.health;
                 speed = miniboss.speed;
                 stoppingDistance = miniboss.stoppingDistance;
 
@@ -39,20 +42,23 @@ namespace Miniboss {
                 malfunctionCoroutine = miniboss.StartCoroutine(MalfunctionCoroutine());
             }
 
-            // Runs every frame
             public override void Update(MinibossStateInput input) {
                 // Switches between rotating the enemy and following the player
-                if (spinState == true && navigation.remainingDistance != 0 && !navigation.pathPending) {
-                    miniboss.transform.Rotate(Vector3.up, 500f * Time.deltaTime);
+                if (spinState == true) {
+                    // Makes the enemy invulnerable while spinning
+                    damageable.ToggleIFrame(true);
+                    miniboss.transform.Rotate(Vector3.up, 500f * miniboss.DeltaTime);
                 } else {
+                    damageable.ToggleIFrame(false);
                     FollowPlayer();
                 }
+                health = miniboss.health;
                 CheckStateTransition();
             }
 
             // Switches to the next state depending on the health
             private void CheckStateTransition() {
-                if (health <= 50) {
+                if (health <= 70) {
                     miniboss.stateMachine.SetState(new PhaseTwo());
                 }
             }
@@ -64,8 +70,9 @@ namespace Miniboss {
                 // Calculates the angle between the enemy and the player
                 float angleToPlayer = Vector3.Angle(miniboss.transform.forward, directionToPlayer);
 
-                // If the angle is less then 20 degrees
-                if (angleToPlayer <= 20.0f) {
+                // If the angle is less then 60 degrees
+                if (angleToPlayer <= 60.0f) {
+                    navigation.isStopped = false;
                     navigation.speed = speed;
                     navigation.stoppingDistance = stoppingDistance;
                     navigation.autoBraking = true;
@@ -78,8 +85,17 @@ namespace Miniboss {
                         navigation.isStopped = false;
                     }
                 } else {
+                    navigation.isStopped = true;
                     LookTowardsPlayer();
                 }
+            }
+
+            public void LookTowardsPlayer() {
+                // Determines how the enemy should rotate towards the player
+                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+                Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
+                // Rotates the enemy towards the player (uses slerp)
+                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * miniboss.DeltaTime);
             }
 
             // Method that randomly (5 - 10 seconds) calls the SpinCoroutine method
@@ -100,12 +116,12 @@ namespace Miniboss {
                 spinState = false;
             }
 
-            public void LookTowardsPlayer() {
-                // Determines how the enemy should rotate towards the player
-                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
-                Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
-                // Rotates the enemy towards the player (uses slerp)
-                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
+            // Method to try to damage non-hostile factions
+            public void OnTriggerEnter(Collider other) {
+                    if (other.TryGetComponent(out Entity entity)
+                        && entity.Faction != EntityFaction.Hostile) {
+                        bool isDamageable = entity.TryDamage(3);
+                    }
             }
 
             public override void Exit(MinibossStateInput input) {

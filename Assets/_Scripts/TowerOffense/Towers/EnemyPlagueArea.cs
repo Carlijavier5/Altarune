@@ -11,7 +11,7 @@ public class EnemyPlagueArea : MonoBehaviour {
     [SerializeField] private float range;
     private Vector3 targetScale;
     private Renderer rend;
-    public int parentID;
+    public int ParentID { get; set; }
 
     void Awake() {
         rend = GetComponent<Renderer>();
@@ -25,7 +25,7 @@ public class EnemyPlagueArea : MonoBehaviour {
     }
  
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity) && entity.Faction == EntityFaction.Hostile && entity.GetInstanceID() != parentID) {
+        if (other.TryGetComponent(out Entity entity) && entity.Faction == EntityFaction.Hostile && entity.GetInstanceID() != ParentID) {
                 InfectEnemy(other);
         }
     }
