@@ -13,9 +13,10 @@ public static class SceneLoader
     private class LoadingMonoBehavior : MonoBehaviour { }
 
     public enum Scene {
-        MainMenu,
-        Game,
-        Loading,
+        M2_MainMenu,
+        M2_Game,
+        M2_Lab,
+        M2_Loading,
     }
 
     private static Action onLoaderCallback;
@@ -29,7 +30,7 @@ public static class SceneLoader
         };
 
         // load the loading scene
-        SceneManager.LoadScene(Scene.Loading.ToString());
+        SceneManager.LoadScene(Scene.M2_Loading.ToString());
     }
 
     private static IEnumerator LoadSceneAsync(Scene scene) {
