@@ -12,6 +12,6 @@ public class LoadingProgressBar : MonoBehaviour
     }
 
     void Update() {
-        _img.fillAmount = Loader.GetLoadingProcess();
+        _img.fillAmount = SceneLoader.GetLoadingProcess();
     }
 }

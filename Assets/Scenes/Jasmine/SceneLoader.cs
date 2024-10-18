@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// For loading into a different scene
 /// </summary>
-public static class Loader
+public static class SceneLoader
 {
     // dummy class to run coroutine
     private class LoadingMonoBehavior : MonoBehaviour { }
