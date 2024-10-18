@@ -54,7 +54,7 @@ public class PHGameManager : MonoBehaviour {
 
         roomIndex--;
 
-        RoomTransitionLoader.Instance.FadeOut(immediateFade);
+        if (RoomTransitionLoader.Instance != null) RoomTransitionLoader.Instance.FadeOut(immediateFade);
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1;
@@ -75,7 +75,7 @@ public class PHGameManager : MonoBehaviour {
 
         yield return new WaitForSecondsRealtime(1);
         Time.timeScale = 0;
-        RoomTransitionLoader.Instance.FadeIn();
+        if (RoomTransitionLoader.Instance != null) RoomTransitionLoader.Instance.FadeIn();
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1;
     }
