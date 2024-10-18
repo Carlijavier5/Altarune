@@ -1389,6 +1389,7 @@ GameObject:
   - component: {fileID: 2208400701102557967}
   - component: {fileID: 321847321855962569}
   - component: {fileID: 4003890123180924856}
+  - component: {fileID: 7001210429291939791}
   - component: {fileID: 2514813924241962995}
   - component: {fileID: 4339699122144314708}
   m_Layer: 3
@@ -1445,6 +1446,7 @@ MonoBehaviour:
   controller: {fileID: 4339699122144314708}
   inputSource: {fileID: 8726108569643392650}
   animator: {fileID: 8131366000181368453}
+  healthUIManager: {fileID: 123352603465148095}
   burdenedLocomotionProperties:
     linearAcceleration: 10
     linearDrag: 20
@@ -1493,7 +1495,7 @@ MonoBehaviour:
     healModifier: 0
   iFrameProperties:
     settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
-    duration: 1
+    duration: 2
   doubleDamageThreshold: 20
 --- !u!114 &4003890123180924856
 MonoBehaviour:
@@ -1514,6 +1516,30 @@ MonoBehaviour:
     stunResistance: 0
     rootResistance: 0
     slowResistance: 0
+--- !u!114 &7001210429291939791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774512824984236609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a5381a43155a349809c19ee821ee38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 2208400701102557967}
+  defaultDriver:
+    motionMode: 2
+    transform: {fileID: 4595195396528973113}
+    rigidbody: {fileID: 0}
+    controller: {fileID: 4339699122144314708}
+    navMeshAgent: {fileID: 0}
+  ccModule: {fileID: 4003890123180924856}
+  pushableProperties:
+    easeCurves: {fileID: 11400000, guid: db0e09c772cfafc4fbd0c10b14d95ba8, type: 2}
+    objectMass: 1
+    pushResistance: 0
 --- !u!114 &2514813924241962995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,7 +1559,7 @@ MonoBehaviour:
     rigidbody: {fileID: 0}
     controller: {fileID: 4339699122144314708}
     navMeshAgent: {fileID: 0}
-  pushableModule: {fileID: 0}
+  pushableModule: {fileID: 7001210429291939791}
   teleportableProperties:
     settings: {fileID: 11400000, guid: 19cdb989acdb9444387ad6f23f4ac034, type: 2}
     rootTransform: {fileID: 2754028821354253567}

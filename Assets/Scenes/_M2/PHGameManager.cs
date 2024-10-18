@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Cinemachine;
 
 public class PHGameManager : MonoBehaviour {
@@ -13,6 +14,9 @@ public class PHGameManager : MonoBehaviour {
     [SerializeField] private Player player;
     [SerializeField] private RoomControl[] rooms;
 
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip track1, track2;
+
     private RoomControl currentRoom;
 
     void Awake() {
@@ -22,7 +26,7 @@ public class PHGameManager : MonoBehaviour {
 
         playerController.Init(cameraBrain);
         foreach (RoomControl room in rooms) room.Init(player);
-        ChangeRoom(1);
+        ChangeRoom(1, true);
     }
 
     void Update() {
@@ -32,10 +36,25 @@ public class PHGameManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator IChangeRoom(int roomIndex) {
+    private IEnumerator IChangeRoom(int roomIndex, bool immediateFade = false) {
+
+        if (roomIndex <= 2) {
+            if (musicSource.clip != track1) {
+                musicSource.Stop();
+                musicSource.clip = track1;
+                musicSource.Play();
+            }
+        } else {
+            if (musicSource.clip != track2) {
+                musicSource.Stop();
+                musicSource.clip = track2;
+                musicSource.Play();
+            }
+        }
+
         roomIndex--;
 
-        RoomTransitionLoader.Instance.FadeOut();
+        RoomTransitionLoader.Instance.FadeOut(immediateFade);
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1;
@@ -61,11 +80,21 @@ public class PHGameManager : MonoBehaviour {
         Time.timeScale = 1;
     }
 
-    public void ChangeRoom(int roomIndex) {
-        StartCoroutine(IChangeRoom(roomIndex));
+    public void ChangeRoom(int roomIndex, bool immediateFade = false) {
+        StartCoroutine(IChangeRoom(roomIndex, immediateFade));
     }
 
     public void ForceCompleteRoom() {
         currentRoom.ForceCompletion();
+    }
+
+    public void DoGameOver() {
+        StartCoroutine(RestartScene());
+    }
+
+    private IEnumerator RestartScene() {
+        RoomTransitionLoader.Instance.FadeOut();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

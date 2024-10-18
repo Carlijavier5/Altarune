@@ -10,6 +10,8 @@ public partial class Player : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private PlayerController inputSource;
     [SerializeField] private Animator animator;
+    [SerializeField] private HealthUIManager healthUIManager;
+
     private Vector3 InputVector => inputSource.InputVector;
 
     private readonly Dictionary<int, Coroutine> layerWeightCoroutineMap = new();
@@ -24,8 +26,13 @@ public partial class Player : Entity {
         Player_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Normal());
 
+        OnDamageReceived += Player_OnDamageReceived;
         inputSource.OnDodgePerformed += InputSource_OnDodgePerformed;
         inputSource.OnMeleePerformed += InputSource_OnMeleePerformed;
+    }
+
+    private void Player_OnDamageReceived(int _) {
+        healthUIManager.UpdateHealth(Health);
     }
 
     private void InputSource_OnMeleePerformed() {
