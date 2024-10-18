@@ -33,9 +33,9 @@ public abstract class Summon : BaseObject {
     }
 
     public void ToggleHologram(bool on) {
-        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-            kvp.Key.sharedMaterials = on ? new Material[] { settings.fadeMaterial } : kvp.Value;
-        }
+        // foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
+        //     kvp.Key.sharedMaterials = on ? new Material[] { settings.fadeMaterial } : kvp.Value;
+        // }
     }
 
     public void ToggleHologramRed(bool doRed) {
