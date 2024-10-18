@@ -95,8 +95,8 @@ public class GatlingGun : Summon {
     /// </summary>
     public void StopAggro() {
         isAggroed = false;
-        if (currentBigArea != null) Destroy(currentBigArea);
-        SmallAreas.ForEach(area => Destroy(area));
+        if (currentBigArea != null) Destroy(currentBigArea.gameObject);
+        SmallAreas.ForEach(area => Destroy(area.gameObject));
         SmallAreas.Clear();
         NumOfInactive = 0;
     }
@@ -108,7 +108,7 @@ public class GatlingGun : Summon {
         if (currentBigArea != null) Destroy(currentBigArea);
         Vector3 areaPosition = aggroTarget.transform.position;
         currentBigArea = Instantiate(bigArea, areaPosition, Quaternion.identity);
-        animator.SemiFire(areaPosition);
+        animator.SemiFire(areaPosition, bigAreaDuration);
         currentBigArea.GetComponent<BigGatlingArea>().Init(bigAreaDuration, bigAreaSize, this);
         // Get rotation towards big area
         //Vector3 direction = (currentBigArea.transform.position - transform.position).normalized;

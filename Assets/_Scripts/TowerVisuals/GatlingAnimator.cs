@@ -10,11 +10,12 @@ public class GatlingAnimator : MonoBehaviour
     [SerializeField] private Transform body;
     [SerializeField] private Transform muzzleFlashFX;
     [SerializeField] private Transform bulletFX;
-    [SerializeField] private float fireDuration;
+    [SerializeField] private Transform groundFX;
+    [SerializeField] private float windupDuration = 1f;
+    private float fireDuration = -1f;
     [SerializeField] private int rounds = 16;
     [SerializeField] private float recoil = 0.3f;
     [SerializeField] private int vibrato = 40;
-    [SerializeField] private Transform aim;
 
     [Tooltip("Full-Auto Parameters")] [SerializeField]
     private float rotationSpeed = 2.0f;
@@ -24,7 +25,9 @@ public class GatlingAnimator : MonoBehaviour
     private IEnumerator activeAction;
     private Tween shake;
     void Start() {
-        shake = body.transform.DOShakePosition(fireDuration / 2, recoil, vibrato, 90f, false, false).SetAutoKill(false);
+        muzzleFlashFX.gameObject.SetActive(false);
+        bulletFX.gameObject.SetActive(false);
+        groundFX.gameObject.SetActive(false);
     }
     
     void Update()
@@ -32,7 +35,6 @@ public class GatlingAnimator : MonoBehaviour
         if (debugMode)
             if (Input.GetMouseButton(0)) {
                 if (activeAction == null) {
-                    activePos = aim.position;
                     activePos.y = body.position.y;
                     activeAction = FireAction();
                     StartCoroutine(activeAction);
@@ -42,18 +44,23 @@ public class GatlingAnimator : MonoBehaviour
             }
     }
 
-    public void SemiFire(Vector3 aimPos) {
+    public void SemiFire(Vector3 aimPos, float fireDuration) {
+        if (this.fireDuration < 0) {
+            shake = body.transform.DOShakePosition(fireDuration, recoil, 200, 90f, false, false).SetAutoKill(false);
+        }
+        float dist = (aimPos - transform.position).magnitude;
+        bulletFX.GetComponent<VisualEffect>().SetFloat("Lifetime",  0f);
         activePos = aimPos;
+        this.fireDuration = fireDuration;
         if (activeAction == null) {
-            activePos = aim.position;
-            activePos.y = body.position.y;
+            //activePos.y = body.position.y;
             activeAction = FireAction();
             StartCoroutine(activeAction);
         }
     }
 
     private IEnumerator FireAction() {
-        body.DOLookAt(activePos, fireDuration, AxisConstraint.None, Vector3.up).SetEase(Ease.InOutElastic);
+        body.DOLookAt(activePos, windupDuration, AxisConstraint.None, Vector3.up).SetEase(Ease.InOutElastic);
         StartCoroutine(FireFX());
         yield return new WaitForSecondsRealtime(fireDuration);
         activeAction = null;
@@ -61,14 +68,21 @@ public class GatlingAnimator : MonoBehaviour
     }
 
     private IEnumerator FireFX() {
-        yield return new WaitForSeconds(fireDuration / 2);
+        yield return new WaitForSeconds(windupDuration / 2);
+        muzzleFlashFX.gameObject.SetActive(true);
+        bulletFX.gameObject.SetActive(true);
+        groundFX.gameObject.SetActive(true);
+        groundFX.position = activePos;
         shake.Restart();
-        for (int i = 0; i < rounds; i++) {
+        for (int i = 0; i < rounds * fireDuration; i++) {
             muzzleFlashFX.GetComponent<VisualEffect>().Play();
             bulletFX.GetComponent<VisualEffect>().Play();
-            yield return new WaitForSeconds(fireDuration / rounds / 2);
+            yield return null;
+            yield return new WaitForSeconds(1f / rounds);
         }
-
+        muzzleFlashFX.gameObject.SetActive(false);
+        bulletFX.gameObject.SetActive(false);
+        groundFX.gameObject.SetActive(false);
         yield return null;
     }
     
@@ -85,14 +99,14 @@ public class GatlingAnimator : MonoBehaviour
         }
 
         // Get direction to the enemy
-        Vector3 direction = aim.position - transform.position;
-        direction.y = 0;  // Optional: Ignore Y axis to keep rotation only on the horizontal plane
-
-        // Get the target rotation to face the enemy
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        // Gradually rotate towards the target rotation using Lerp
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        // Vector3 direction = aim.position - transform.position;
+        // direction.y = 0;  // Optional: Ignore Y axis to keep rotation only on the horizontal plane
+        //
+        // // Get the target rotation to face the enemy
+        // Quaternion targetRotation = Quaternion.LookRotation(direction);
+        //
+        // // Gradually rotate towards the target rotation using Lerp
+        // transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
     
     private IEnumerator ReplayVFXAfterDelay() {
