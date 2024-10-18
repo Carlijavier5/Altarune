@@ -45,13 +45,15 @@ public class TimeMagicCircleController : MonoBehaviour
             return mpb;
         }
     }
-    
+
+    private float maxRadius;
+
     #endregion
     
     #region Mono
-    void Start()
+    void Awake()
     {
-        
+        maxRadius = radius;
     }
 
     void Update()
@@ -125,6 +127,12 @@ public class TimeMagicCircleController : MonoBehaviour
         }
 
         StartCoroutine(OnStateTransition());
+    }
+
+    public void SetRadiusLerp(float lerpVal)
+    {
+        radius = Mathf.Lerp(0, maxRadius, lerpVal);
+        UpdateCircleRadius();
     }
 
     public IEnumerator OnStateTransition()

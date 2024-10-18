@@ -7,6 +7,7 @@ public enum ElementType { Physical, Fire, Ice, Shock, Poison }
 public class Damageable : ObjectModule {
 
     public event System.Action<int> OnDamageTaken;
+    public event System.Action<int> OnHealReceived;
 
     [SerializeField] protected HealthAttributes defaultHPAttributes;
     [SerializeField] protected IFrameProperties iFrameProperties;
@@ -47,12 +48,14 @@ public class Damageable : ObjectModule {
             response.received = true;
 
             int processedAmount = runtimeHP.DoDamage(amount);
-            OnDamageTaken?.Invoke(processedAmount);
-            StartCoroutine(ISimulateIFrame());
+            if (processedAmount > 0) {
+                OnDamageTaken?.Invoke(processedAmount);
+                StartCoroutine(ISimulateIFrame());
 
-            if (runtimeHP.Health <= 0) {
-                baseObject.Perish();
-                ToggleIFrame(true);
+                if (runtimeHP.Health <= 0) {
+                    baseObject.Perish();
+                    ToggleIFrame(true);
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ public partial class Golem : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private Collider attackCollider;
 
     public float RootMult => CanMove ? 1 : 0;
 
