@@ -27,14 +27,6 @@ public class HourglassController : MonoBehaviour
             FillSand();
         }
     }
-
-    void Update()
-    {
-        if (SandTop != null && SandBot != null)
-        {
-            FillSand();
-        }
-    }
     
     void FillSand()
     {
@@ -43,5 +35,13 @@ public class HourglassController : MonoBehaviour
 
         SandTop.shapePadding = Mathf.Lerp(topPaddingMinMax.x, topPaddingMinMax.y, fill);
         SandBot.shapePadding = Mathf.Lerp(botPaddingMinMax.x, botPaddingMinMax.y, fill);
+    }
+
+    public void SetFill(float fill)
+    {
+        if (SandTop != null && SandBot != null) {
+            this.fill = fill;
+            FillSand();
+        }
     }
 }

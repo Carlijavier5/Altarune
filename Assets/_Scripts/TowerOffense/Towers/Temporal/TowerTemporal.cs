@@ -4,39 +4,70 @@ using UnityEngine;
 
 public class TowerTemporal : Summon {
 
-    [SerializeField] private TempoArea tempoArea;
-    [SerializeField] private Transform launchPoint;
-    [SerializeField] private float tempoSpawnDelay,
-                                   gyroMaxSpeed,
-                                   gyroAccel;
-    [SerializeField] private Transform gyroOuter, gyroInner;
+    [SerializeField] private TemporalArea tempoArea;
+    [SerializeField] private TimeMagicCircleController magicCircleController;
+    [SerializeField] private HourglassController hourglassController;
+    [Range(0, 1)] [SerializeField] private float slowMultiplier;
+    [SerializeField] private float slowDuration, effectRadius, tempoSpawnDelay;
 
-    private Oscillator oscillator;
-    private float gyroSpeed;
+    private readonly Dictionary<Collider, BaseObject> objectMap = new();
     private bool init;
 
     protected override void Awake() {
         base.Awake();
-        oscillator = GetComponentInChildren<Oscillator>(true);
-        oscillator.enabled = false;
+        magicCircleController.SetRadius(0);
     }
 
     public override void Init() {
         init = true;
-        oscillator.enabled = true;
-        StartCoroutine(ISpawnTempoArea());
+        StartCoroutine(IDevelopTempoArea());
     }
 
     void Update() {
         if (init) {
-            gyroSpeed = Mathf.MoveTowards(gyroSpeed, gyroMaxSpeed, Time.deltaTime * gyroAccel);
-            gyroOuter.Rotate(gyroSpeed * Time.deltaTime * Vector3.one);
-            gyroInner.Rotate(-2 * gyroSpeed * Time.deltaTime * Vector3.one);
+            float lerp = 0.2f + Mathf.Abs(Mathf.PingPong(Time.time, 0.8f));
+            hourglassController.SetFill(lerp);
         }
     }
 
-    private IEnumerator ISpawnTempoArea() {
+    private IEnumerator IDevelopTempoArea() {
         yield return new WaitForSeconds(tempoSpawnDelay);
-        Instantiate(tempoArea, launchPoint.transform.position, Quaternion.identity);
+        InitArea();
+
+        float radius, lerpVal = 0;
+        while (lerpVal < 1) {
+            lerpVal = Mathf.MoveTowards(lerpVal, 1, Time.deltaTime);
+            radius = Mathf.Lerp(0, effectRadius, lerpVal);
+            magicCircleController.SetRadius(radius);
+            tempoArea.SetRadius(radius);
+            yield return null;
+        }
+    }
+
+    private void TemporalArea_OnContactStay(Collider other) {
+        if (objectMap.ContainsKey(other)) {
+            ApplyEffect(objectMap[other]);
+        } else if (other.TryGetComponent(out BaseObject baseObject)) {
+            objectMap[other] = baseObject;
+            ApplyEffect(baseObject);
+        }
+    }
+
+    private void TemporalArea_OnContactExit(Collider other) => objectMap.Remove(other);
+
+    private void ApplyEffect(BaseObject baseObject) {
+        TemporalDistortionEffect effect = new(slowMultiplier, slowDuration);
+        if (baseObject is Entity) {
+            Entity entity = baseObject as Entity;
+            entity.ApplyEffects(new[] { effect });
+        } else if (baseObject is Tower) {
+            // Apply effect to towers;
+        }
+    }
+
+    private void InitArea() {
+        tempoArea.gameObject.SetActive(true);
+        tempoArea.OnContactStay += TemporalArea_OnContactStay;
+        tempoArea.OnContactExit += TemporalArea_OnContactExit;
     }
 }
