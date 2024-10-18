@@ -129,9 +129,9 @@ public class TimeMagicCircleController : MonoBehaviour
         StartCoroutine(OnStateTransition());
     }
 
-    public void SetRadiusLerp(float lerpVal)
+    public void SetRadius(float radius)
     {
-        radius = Mathf.Lerp(0, maxRadius, lerpVal);
+        this.radius = radius;
         UpdateCircleRadius();
     }
 

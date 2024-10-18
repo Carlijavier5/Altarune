@@ -7,6 +7,7 @@ public class TowerProjectile : MonoBehaviour {
     [SerializeField] private Collider coll;
     [SerializeField] private float speed;
     [SerializeField] private int damage;
+    [SerializeField] private float lifetime;
 
     private bool active;
     private Vector3 dir;
@@ -25,6 +26,8 @@ public class TowerProjectile : MonoBehaviour {
 
     void Update() {
         if (active) rb.MovePosition(rb.position + dir * speed);
+        lifetime -= Time.deltaTime;
+        if (lifetime <= 0) End();
     }
 
     void OnTriggerEnter(Collider other) {

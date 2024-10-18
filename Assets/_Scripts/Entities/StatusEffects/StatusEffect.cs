@@ -25,4 +25,6 @@ public abstract class StatusEffect {
     public abstract void Terminate(Entity entity);
 
     public StatusEffect Clone() => MemberwiseClone() as StatusEffect;
+
+    public override int GetHashCode() => GetType().FullName.GetHashCode();
 }
