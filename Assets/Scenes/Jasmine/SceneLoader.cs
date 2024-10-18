@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// For loading into a different scene
 /// </summary>
-public static class SceneLoader
+public class SceneLoader : MonoBehaviour
 {
+    public static SceneLoader Instance;
+
     // dummy class to run coroutine
     private class LoadingMonoBehavior : MonoBehaviour { }
 
@@ -22,7 +24,16 @@ public static class SceneLoader
     private static Action onLoaderCallback;
     private static AsyncOperation loadingAsyncOperation;
 
-    public static void Load(Scene scene) {
+    private void Awake() {
+        if (Instance != null) {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void Load(Scene scene) {
         // set the loader callback action to load the target scene
         onLoaderCallback = () => {
             GameObject loadingGameObject = new GameObject("Loading Game Object");
@@ -33,7 +44,7 @@ public static class SceneLoader
         SceneManager.LoadScene(Scene.M2_Loading.ToString());
     }
 
-    private static IEnumerator LoadSceneAsync(Scene scene) {
+    private IEnumerator LoadSceneAsync(Scene scene) {
         yield return null;
 
         loadingAsyncOperation = SceneManager.LoadSceneAsync(scene.ToString());
@@ -43,12 +54,12 @@ public static class SceneLoader
         }
     }
 
-    public static float GetLoadingProcess() {
+    public float GetLoadingProcess() {
         if (loadingAsyncOperation != null) { return loadingAsyncOperation.progress; }
         else { return 1f; }
     }
 
-    public static void LoaderCallback() {
+    public void LoaderCallback() {
         // triggered after the first update which lets the screen refresh
         // execute the loader callback action which will load the target scene
         if (onLoaderCallback != null) {
