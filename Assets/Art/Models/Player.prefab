@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8726108569643392650}
   - component: {fileID: 2208400701102557967}
   - component: {fileID: 321847321855962569}
+  - component: {fileID: 4003890123180924856}
   - component: {fileID: 2514813924241962995}
   - component: {fileID: 771621385791667774}
   - component: {fileID: 4339699122144314708}
@@ -119,6 +120,25 @@ MonoBehaviour:
     settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
     duration: 1
   doubleDamageThreshold: 20
+--- !u!114 &4003890123180924856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774512824984236609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb1e2c5798f2a5478b1913f73b79781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 2208400701102557967}
+  ccAttributes:
+    ccSettings: {fileID: 11400000, guid: 88f98db0b10a96241b82c6ea3213c90b, type: 2}
+    ccResistance: 0
+    stunResistance: 0
+    rootResistance: 0
+    slowResistance: 0
 --- !u!114 &2514813924241962995
 MonoBehaviour:
   m_ObjectHideFlags: 0
