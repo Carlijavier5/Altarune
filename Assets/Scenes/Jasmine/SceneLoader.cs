@@ -7,15 +7,16 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// For loading into a different scene
 /// </summary>
-public static class Loader
+public static class SceneLoader
 {
     // dummy class to run coroutine
     private class LoadingMonoBehavior : MonoBehaviour { }
 
     public enum Scene {
-        MainMenu,
-        Game,
-        Loading,
+        M2_MainMenu,
+        M2_Game,
+        M2_Lab,
+        M2_Loading,
     }
 
     private static Action onLoaderCallback;
@@ -29,7 +30,7 @@ public static class Loader
         };
 
         // load the loading scene
-        SceneManager.LoadScene(Scene.Loading.ToString());
+        SceneManager.LoadScene(Scene.M2_Loading.ToString());
     }
 
     private static IEnumerator LoadSceneAsync(Scene scene) {
