@@ -10,6 +10,7 @@ public class PlayerMeleeArea : MonoBehaviour {
     private Vector3 SourcePosition => playerSource.transform.position;
 
     [SerializeField] private int damageAmount;
+    [SerializeField] private float manaPerHit;
     [SerializeField] private float staggerDuration,
                                    pushStrength, pushDuration;
 
@@ -43,6 +44,7 @@ public class PlayerMeleeArea : MonoBehaviour {
             && collSet.Add(baseObject) && playerSource) {
 
             baseObject.TryDamage(damageAmount);
+            playerSource.ManaSource += manaPerHit;
             baseObject.TryStagger(staggerDuration);
 
             Vector3 direction = baseObject.transform.position - SourcePosition;

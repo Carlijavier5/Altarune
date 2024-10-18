@@ -8,12 +8,15 @@ public enum SummonType { None = 0, Battery, Tower }
 public class SummonController : MonoBehaviour {
 
     [SerializeField] private PlayerController inputSource;
+    [SerializeField] private Player player;
     [SerializeField] private PHSelector phSelector;
 
     private SummonType selectedType;
 
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
+
+    [SerializeField] private float batteryCost, towerCost;
 
     private readonly HashSet<Battery> summonedBatteries = new();
 
@@ -34,6 +37,13 @@ public class SummonController : MonoBehaviour {
     private void InputSource_OnPlayerInit() {
         inputSource.OnSummonPerformed += InputSource_OnSummonPerformed;
         inputSource.OnSummonSelect += InputSource_OnSummonSelect;
+        player.OnManaCollapse += Player_OnManaCollapse;
+    }
+
+    private void Player_OnManaCollapse() {
+        foreach (Battery battery in summonedBatteries) {
+            battery.Collapse();
+        } summonedBatteries.Clear();
     }
 
     void Update() {
@@ -116,16 +126,19 @@ public class SummonController : MonoBehaviour {
                     if (hintBattery == null) return;
                     Battery battery = Instantiate(batteryData.prefab, lastHitPoint, Quaternion.identity);
                     summonedBatteries.Add(battery);
+                    player.ManaSource -= batteryCost;
                     battery.DoSpawnAnim();
                     SetSelectionType(SummonType.None);
                     break;
                 case SummonType.Tower:
                     if (hintTower == null) return;
-                    if (hintBatteries != null) {
+                    if (hintBatteries != null && hintBatteries.First().active) {
                         Summon tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
+                        hintBatteries.First().LinkTower(tower);
+                        player.ManaSource -= towerCost;
                         tower.DoSpawnAnim();
                         SetSelectionType(SummonType.None);
-                        tower.Init();
+                        tower.Init(player);
                     } break;
             }
         }

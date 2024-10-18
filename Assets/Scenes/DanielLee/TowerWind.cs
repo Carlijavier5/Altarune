@@ -15,10 +15,14 @@ public class TowerWind : Summon
     private bool init = false;
     private float timer = 0;
 
-    public override void Init() => init = true;
+    public override void Init(Player player) {
+        base.Init(player);
+        init = true;
+    }
 
-    private void Update(){
+    protected override void Update(){
         if (!init) return;
+        base.Update();
         if (timer < _attackCooldown) {
             timer += Time.deltaTime;
             return;

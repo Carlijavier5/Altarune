@@ -15,7 +15,8 @@ public class JarOfEndlessSnakes : Summon
 
     private bool init = false;
 
-    public override void Init(){
+    public override void Init(Player player) {
+        base.Init(player);
         timeToNextSummon = summonCooldown;
         init = true;
     }
@@ -28,8 +29,9 @@ public class JarOfEndlessSnakes : Summon
     }
 
     // Update is called once per frame
-    void Update(){
+    protected override void Update(){
         if(!init) return;
+        base.Update();
         timeToNextSummon -= Time.deltaTime;
         if(snakes.Count == maxSnakes){
             timeToNextSummon = summonCooldown;
