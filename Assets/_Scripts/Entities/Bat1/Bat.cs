@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bat : Entity
 {
+    [SerializeField] private Rigidbody rb;
 
     [SerializeField] float move_speed = 10f;
 
@@ -38,7 +39,7 @@ public class Bat : Entity
     }
     private void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Entity entity)
-        && entity.Faction != EntityFaction.Hostile)
+            && entity.Faction != EntityFaction.Hostile)
         {
             entity.TryDamage(damage);
         }
@@ -65,7 +66,8 @@ public class Bat : Entity
 
         ChangeDirTimer -= Time.deltaTime;
 
-        transform.Translate(randomDir * move_speed * Time.deltaTime);
+        rb.AddForce(randomDir * move_speed * Time.deltaTime, ForceMode.Force);
+        transform.LookAt(transform.position + rb.velocity);
 
 
         //Debug.Log(ChangeDirTimer);
@@ -76,4 +78,22 @@ public class Bat : Entity
         return new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
     }
 
+
+    public override void Perish() {
+        base.Perish();
+        Ragdoll();
+    }
+
+    private void Ragdoll() {
+        rb.constraints = new();
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
+        rb.AddForce(force);
+        Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
+        rb.AddTorque(torque);
+        DetachModules();
+        enabled = false;
+        Destroy(gameObject, 2);
+    }
 }
