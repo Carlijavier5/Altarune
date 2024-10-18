@@ -39,8 +39,7 @@ public class Teleportable : ObjectModule {
     }
 
     private void BaseObject_OnTryTeleport(Vector3 desiredPosition, EventResponse<Vector3> response) {
-        if (timer == 0 && NavMesh.SamplePosition(desiredPosition, out NavMeshHit hitInfo, 4, NavMesh.AllAreas)) {
-            Debug.Log(TProps.duration);
+        if (timer <= 0 && NavMesh.SamplePosition(desiredPosition, out NavMeshHit hitInfo, 4, NavMesh.AllAreas)) {
             StopAllCoroutines();
             StartCoroutine(ITeleport(hitInfo.position));
             response.objectReference = desiredPosition;
@@ -59,10 +58,10 @@ public class Teleportable : ObjectModule {
         baseObject.SetMaterial(TProps.settings.material);
         Vector3 originalScale = TProps.rootTransform.localScale;
 
-        while (timer < TProps.duration) {
-            timer = Mathf.MoveTowards(timer, TProps.duration, Time.deltaTime);
+        while (timer < TProps.settings.duration) {
+            timer = Mathf.MoveTowards(timer, TProps.settings.duration, Time.deltaTime);
             if (baseObject.MotionDriver.MotionMode != MotionMode.NavMesh) {
-                UpdateRootScale(timer / TProps.duration, originalScale);
+                UpdateRootScale(timer / TProps.settings.duration, originalScale);
             }
             yield return null;
         }
@@ -76,7 +75,7 @@ public class Teleportable : ObjectModule {
                 break;
             case MotionMode.Controller:
                 driver.Controller.enabled = false;
-                driver.Transform.position = targetPosition;
+                driver.Controller.transform.position = targetPosition;
                 driver.Controller.enabled = true;
                 break;
             case MotionMode.NavMesh:
@@ -90,9 +89,7 @@ public class Teleportable : ObjectModule {
 
         while (timer > 0) {
             timer = Mathf.MoveTowards(timer, 0, Time.deltaTime);
-            if (baseObject.MotionDriver.MotionMode != MotionMode.NavMesh) {
-                UpdateRootScale(timer / TProps.duration, originalScale);
-            }
+            UpdateRootScale(timer / TProps.settings.duration, originalScale);
             yield return null;
         }
 

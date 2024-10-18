@@ -13,12 +13,15 @@ public class PlayerDamageable : Damageable {
 
             int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
             runtimeHP.DoDamage(processedAmount);
-            OnPlayerDamage?.Invoke(processedAmount);
-            StartCoroutine(ISimulateIFrame());
 
-            if (runtimeHP.Health <= 0) {
-                Debug.Log("Player ded");
-                ToggleIFrame(true);
+            if (processedAmount > 0) {
+                OnPlayerDamage?.Invoke(processedAmount);
+                StartCoroutine(ISimulateIFrame());
+
+                if (runtimeHP.Health <= 0) {
+                    Debug.Log("Player ded");
+                    ToggleIFrame(true);
+                }
             }
         }
     }

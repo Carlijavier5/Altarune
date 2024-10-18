@@ -8,7 +8,7 @@ public class HourglassSand : MonoBehaviour
 	[SerializeField]
 	Mesh mesh;
 	[SerializeField]
-	Renderer renderer;
+	new Renderer renderer;
 
 	[Range(0f, 1f)]
 	public float fill;
