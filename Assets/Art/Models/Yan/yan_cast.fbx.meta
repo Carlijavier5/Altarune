@@ -17,9 +17,46 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: 
+    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Inbetween bone
+      rotation in copied configuration does not match rotation in animation file:\n\t'DEF-shin.L.001'
+      : rotation error = 0.363258 deg\n\t'DEF-thigh.R.001' : rotation error = 10.497257
+      deg\n\t'DEF-shin.R.001' : rotation error = 7.206470 deg\n\t'MCH-spine.002'
+      : rotation error = 0.960802 deg\n\t'MCH-spine.003' : rotation error = 0.960807
+      deg\n\t'ORG-spine.004' : rotation error = 0.866609 deg\n\t'ORG-spine.006' :
+      rotation error = 5.194946 deg\n\t'DEF-upper_arm.L.001' : rotation error = 3.174019
+      deg\n\t'DEF-forearm.L.001' : rotation error = 23.148592 deg\n\t'DEF-upper_arm.R.001'
+      : rotation error = 20.299654 deg\n\t'DEF-forearm.R.001' : rotation error =
+      16.721197 deg\n"
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'rig|rigAction.002' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'MCH-spine.001' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'MCH-spine' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-thigh.L'
+      has scale animation that will be discarded.\n\t'DEF-thigh.L.001' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-shin.L.001'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-foot.L'
+      has scale animation that will be discarded.\n\t'DEF-thigh.R' has scale animation
+      that will be discarded.\n\t'DEF-thigh.R.001' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'DEF-shin.R' has scale
+      animation that will be discarded.\n\t'DEF-shin.R.001' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'DEF-foot.R'
+      has scale animation that will be discarded.\n\t'MCH-spine.002' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'MCH-spine.003'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'ORG-spine.004'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'ORG-spine.005'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'ORG-spine.006'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-upper_arm.L'
+      has scale animation that will be discarded.\n\t'DEF-upper_arm.L.001' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-forearm.L'
+      has scale animation that will be discarded.\n\t'DEF-forearm.L.001' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-hand.L'
+      has scale animation that will be discarded.\n\t'DEF-upper_arm.R' has scale
+      animation that will be discarded.\n\t'DEF-upper_arm.R.001' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'DEF-forearm.R'
+      has scale animation that will be discarded.\n\t'DEF-forearm.R.001' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-hand.R'
+      has scale animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -384,138 +421,138 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: yan_model(Clone)
+    - name: Yan_Model(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Sphere.001
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cone
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.008
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.009
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.001
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.002
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Sphere
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.004
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.011
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.012
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.013
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.005
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.006
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.014
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.007
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.010
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.015
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.016
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.017
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.018
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.019
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.020
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.021
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: Cube.022
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -6.123235e-17, y: 1, z: 6.123235e-17, w: 0.00000019470718}
       scale: {x: 0.1, y: 0.1, z: 0.1}
     - name: rig
-      parentName: yan_model(Clone)
+      parentName: Yan_Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 10, y: 10, z: 10}

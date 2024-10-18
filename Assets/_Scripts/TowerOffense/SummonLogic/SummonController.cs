@@ -47,7 +47,6 @@ public class SummonController : MonoBehaviour {
         Ray ray = inputSource.OutputCamera.ScreenPointToRay(inputSource.CursorPosition);
 
         IEnumerable<RaycastHit> objectsHit;
-
         if (Physics.Raycast(ray, out RaycastHit groundHit, Mathf.Infinity, 1 << 4)
             && Mathf.Max(groundHit.normal.x, groundHit.normal.y, groundHit.normal.z) == groundHit.normal.y) {
 
