@@ -136,6 +136,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Select Summon"",
+                    ""type"": ""Value"",
+                    ""id"": ""ef282ba8-9b1c-4d0a-af3a-37cf9e48e989"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -160,6 +169,94 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Summon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ade4ef4-b055-47df-9794-7764a552e545"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=-1)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eedd2fcf-92b1-4e59-a0ea-814f4ef79a64"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96f248dd-3dee-4977-be80-76925b0de32a"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=2)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f79a107-9d52-40a6-9929-7af2a6485c83"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=3)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cedd2ae0-4726-497d-a298-49d0cefe79cb"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=4)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""70a62901-48b4-4b93-81f0-c051093124ca"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=5)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8f72565-3822-4e20-9697-c94b8647eb6f"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=6)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f87f41d3-c713-471a-a3da-5b88a43993a9"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=7)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -174,6 +271,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Actions = asset.FindActionMap("Actions", throwIfNotFound: true);
         m_Actions_MeleeAttack = m_Actions.FindAction("Melee Attack", throwIfNotFound: true);
         m_Actions_Summon = m_Actions.FindAction("Summon", throwIfNotFound: true);
+        m_Actions_SelectSummon = m_Actions.FindAction("Select Summon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -291,12 +389,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IActionsActions> m_ActionsActionsCallbackInterfaces = new List<IActionsActions>();
     private readonly InputAction m_Actions_MeleeAttack;
     private readonly InputAction m_Actions_Summon;
+    private readonly InputAction m_Actions_SelectSummon;
     public struct ActionsActions
     {
         private @PlayerInput m_Wrapper;
         public ActionsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @MeleeAttack => m_Wrapper.m_Actions_MeleeAttack;
         public InputAction @Summon => m_Wrapper.m_Actions_Summon;
+        public InputAction @SelectSummon => m_Wrapper.m_Actions_SelectSummon;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -312,6 +412,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Summon.started += instance.OnSummon;
             @Summon.performed += instance.OnSummon;
             @Summon.canceled += instance.OnSummon;
+            @SelectSummon.started += instance.OnSelectSummon;
+            @SelectSummon.performed += instance.OnSelectSummon;
+            @SelectSummon.canceled += instance.OnSelectSummon;
         }
 
         private void UnregisterCallbacks(IActionsActions instance)
@@ -322,6 +425,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Summon.started -= instance.OnSummon;
             @Summon.performed -= instance.OnSummon;
             @Summon.canceled -= instance.OnSummon;
+            @SelectSummon.started -= instance.OnSelectSummon;
+            @SelectSummon.performed -= instance.OnSelectSummon;
+            @SelectSummon.canceled -= instance.OnSelectSummon;
         }
 
         public void RemoveCallbacks(IActionsActions instance)
@@ -348,5 +454,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnMeleeAttack(InputAction.CallbackContext context);
         void OnSummon(InputAction.CallbackContext context);
+        void OnSelectSummon(InputAction.CallbackContext context);
     }
 }

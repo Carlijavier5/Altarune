@@ -4,13 +4,7 @@ using UnityEngine;
 
 public abstract class Summon : BaseObject {
 
-    [System.Serializable]
-    protected class SummonProperties {
-        public Material fadeMaterial;
-        public AnimationCurve growthCurveXZ, growthCurveY;
-        public float growSpeed = 3;
-    } [SerializeField] protected SummonProperties summonProperties = new();
-
+    [SerializeField] private DefaultSummonProperties settings;
     private readonly Dictionary<Renderer, Material[]> matDict = new();
 
     protected virtual void Awake() {
@@ -30,18 +24,18 @@ public abstract class Summon : BaseObject {
 
         float lerpVal = 0;
         while (lerpVal < 1) {
-            lerpVal = Mathf.MoveTowards(lerpVal, 1, Time.deltaTime * summonProperties.growSpeed);
-            t.localScale = new Vector3(summonProperties.growthCurveXZ.Evaluate(lerpVal),
-                                       summonProperties.growthCurveY.Evaluate(lerpVal),
-                                       summonProperties.growthCurveXZ.Evaluate(lerpVal));
+            lerpVal = Mathf.MoveTowards(lerpVal, 1, Time.deltaTime * settings.growSpeed);
+            t.localScale = new Vector3(settings.growthCurveXZ.Evaluate(lerpVal),
+                                       settings.growthCurveY.Evaluate(lerpVal),
+                                       settings.growthCurveXZ.Evaluate(lerpVal));
             yield return null;
         }
     }
 
     public void ToggleHologram(bool on) {
-        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-            kvp.Key.sharedMaterials = on ? new Material[] { summonProperties.fadeMaterial } : kvp.Value;
-        }
+        // foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
+        //     kvp.Key.sharedMaterials = on ? new Material[] { settings.fadeMaterial } : kvp.Value;
+        // }
     }
 
     public void ToggleHologramRed(bool doRed) {
@@ -54,12 +48,8 @@ public abstract class Summon : BaseObject {
 
     #if UNITY_EDITOR
     void Reset() {
-        CJUtils.AssetUtils.TryRetrieveAsset(out DefaultSummonProperties properties);
-        if (properties) {
-            summonProperties.fadeMaterial = properties.fadeMaterial;
-            summonProperties.growthCurveXZ = properties.growthCurveXZ;
-            summonProperties.growthCurveY = properties.growthCurveY;
-        }
+        CJUtils.AssetUtils.TryRetrieveAsset(out DefaultSummonProperties settings);
+        this.settings = settings;
     }
     #endif
 }

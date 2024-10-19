@@ -112,7 +112,7 @@ public partial class GolemSlither : Entity
 
         Destroy(sweepRadius);
         Destroy(aggroRadius);
-        Destroy(this);
+        Destroy(gameObject, 2);
     }
 
     public override void Perish() {
