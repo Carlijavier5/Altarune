@@ -132,7 +132,7 @@ public class SummonController : MonoBehaviour {
                     break;
                 case SummonType.Tower:
                     if (hintTower == null) return;
-                    if (hintBatteries != null && hintBatteries.First().active) {
+                    if (hintBatteries != null) {
                         Summon tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
                         hintBatteries.First().LinkTower(tower);
                         player.ManaSource -= towerCost;
