@@ -14,11 +14,12 @@ public class PixelizeFeature : ScriptableRendererFeature
     }
 
     [SerializeField] private CustomPassSettings settings;
+    [SerializeField] private Shader pixelate;
     private PixelizePass customPass;
 
     public override void Create()
     {
-        customPass = new PixelizePass(settings);
+        customPass = new PixelizePass(settings, pixelate);
     }
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {

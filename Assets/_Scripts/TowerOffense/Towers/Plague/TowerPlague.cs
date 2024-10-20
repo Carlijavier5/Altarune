@@ -11,13 +11,15 @@ public class TowerPlague : Summon {
         base.Awake();
     }
 
-    public override void Init() {
+    public override void Init(Player player) {
+        base.Init(player);
         init = true;
         SpawnPlagueArea();
     }
 
-    void Update() {
+    protected override void Update() {
         if (!init) return;
+        base.Update();
     }
 
     private void SpawnPlagueArea() {

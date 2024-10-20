@@ -10,6 +10,6 @@ public class M2_MenuUI : MonoBehaviour
 
 
     void Awake() {
-        _startBtn.onClick.AddListener(()  => SceneLoader.Load(SceneLoader.Scene.M2_Lab));
+        _startBtn.onClick.AddListener(()  => SceneLoader.Instance.Load(SceneLoader.Scene.M2_Lab));
     }
 }

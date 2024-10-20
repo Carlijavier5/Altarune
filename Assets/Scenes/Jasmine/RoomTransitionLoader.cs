@@ -28,8 +28,12 @@ public class RoomTransitionLoader : MonoBehaviour
         StartCoroutine(i_FadeIn());
     }
 
-    public void FadeOut() {
-        StartCoroutine(i_FadeOut());
+    public void FadeOut(bool immediateFade = false) {
+        if (immediateFade) {
+            img.color = new Color(0f, 0f, 0f, 1);
+        } else {
+            StartCoroutine(i_FadeOut());
+        }
     }
 
     // ---------------
