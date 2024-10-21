@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,6 +13,7 @@ namespace Miniboss {
         // Initializing default values for movement
         [SerializeField] private float speed = 2.5f;
         [SerializeField] private float stoppingDistance = 1.5f;
+        [SerializeField] private Rigidbody rb;
         public float RootMult => CanMove ? 1 : 0;
         
         // Creating health variable
@@ -26,34 +28,43 @@ namespace Miniboss {
         private PhaseThree phaseThreeState;
         private Stunned stunnedPhase;
 
+        private bool active;
+
         public void Start() {
             // Initializes base components
             navigation = GetComponent<NavMeshAgent>();
             damageable = GetComponent<Damageable>();
-            FindPlayer();
+        }
 
-            // Initializes health
-            health = damageable.Health;
+        void OnEnable() => TryStart();
 
-            // Initializing variables with Phase files
-            phaseOneState = new PhaseOne();
-            phaseTwoState = new PhaseTwo();
-            phaseThreeState = new PhaseThree();
-            stunnedPhase = new Stunned();
+        private void TryStart() {
+            if (FindPlayer()) {
+                active = true;
 
-            // Initializing the state machine and setting initial phase
-            stateMachine = new StateMachine<MinibossStateInput>();
-            MinibossStateInput stateInput = new MinibossStateInput(this);
-            stateMachine.Init(stateInput, phaseOneState);
+                // Initializes health
+                health = damageable.Health;
 
-            // Adding listeners
-            OnStunSet += setStunned;
-            OnRootSet += setRooted;
-            OnTimeScaleSet += setTimeScaled;
+                // Initializing variables with Phase files
+                phaseOneState = new PhaseOne();
+                phaseTwoState = new PhaseTwo();
+                phaseThreeState = new PhaseThree();
+                stunnedPhase = new Stunned();
+
+                // Initializing the state machine and setting initial phase
+                stateMachine = new StateMachine<MinibossStateInput>();
+                MinibossStateInput stateInput = new MinibossStateInput(this);
+                stateMachine.Init(stateInput, phaseOneState);
+
+                // Adding listeners
+                OnStunSet += setStunned;
+                OnRootSet += setRooted;
+                OnTimeScaleSet += setTimeScaled;
+            }
         }
 
         // Finds the player, and assigns it to the Transform player
-        public void FindPlayer() {
+        public bool FindPlayer() {
             // Initializes the OverlapSphere collider
             Collider[] findPlayerCollider = Physics.OverlapSphere(
                 transform.position, 
@@ -61,17 +72,29 @@ namespace Miniboss {
                 LayerMask.GetMask("Player")
             );
 
+            bool foundPlayer = findPlayerCollider != null && findPlayerCollider.Length > 0;
+
             // If the player collider is found, assigns it to the transform
-            if (findPlayerCollider != null) {
+            if (foundPlayer) {
                 player = findPlayerCollider[0].transform;
+            } else {
+                StartCoroutine(AwaitFindPlayer());
             }
+            return foundPlayer;
+        }
+
+        private IEnumerator AwaitFindPlayer() {
+            yield return new WaitForSeconds(1);
+            TryStart();
         }
 
         protected override void Update() {
             base.Update();
             // Updates the health
-            health = damageable.Health;
-            stateMachine.Update();
+            if (active) {
+                health = damageable.Health;
+                stateMachine.Update();
+            }
         }
 
         // Method called when the enemy is stunned
@@ -108,10 +131,19 @@ namespace Miniboss {
 
         // Method called when enemy loses all its health
         public override void Perish() {
+            base.Perish();
+            Ragdoll();
+        }
+
+        public void Ragdoll() {
+            rb.isKinematic = false;
+            Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
+            rb.AddForce(force);
+            Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
+            rb.AddTorque(torque);
             DetachModules();
             enabled = false;
-            Destroy(gameObject, 5);
-            base.Perish();
+            Destroy(gameObject, 2);
         }
     }
 }

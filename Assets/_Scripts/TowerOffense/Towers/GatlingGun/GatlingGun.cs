@@ -42,11 +42,12 @@ public class GatlingGun : Summon {
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
     }
 
-    public override void Init() {
+    public override void Init(Player player) {
+        base.Init(player);
         init = true;
     }
 
-    void Update() {
+    protected override void Update() {
         // Calls SpawnSmallArea on a delay
         if (init && isAggroed && currentBigArea != null &&
            (SmallAreas.Count < maxSmallAreas || NumOfInactive >= 1)) {
@@ -65,6 +66,7 @@ public class GatlingGun : Summon {
                 bigAreaSpawnTimer = 0f;
             }
         }
+        if (init) base.Update();
     }
 
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();

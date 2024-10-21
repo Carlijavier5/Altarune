@@ -12,6 +12,7 @@ public partial class Player {
         private Vector3 dir;
 
         public override void Enter(Player_Input input) {
+            input.player.TryToggleIFrame(true);
             input.player.driver.ReplaceProperties(input.player.dodgeLocomotionProperties);
             Vector2 inputVector = input.player.InputVector;
             dir = inputVector.magnitude > 0 ? input.player.inputSource.InputVector
@@ -35,6 +36,8 @@ public partial class Player {
             input.player.driver.ResolveGravity();
         }
 
-        public override void Exit(Player_Input input) { }
+        public override void Exit(Player_Input input) {
+            input.player.TryToggleIFrame(false);
+        }
     }
 }

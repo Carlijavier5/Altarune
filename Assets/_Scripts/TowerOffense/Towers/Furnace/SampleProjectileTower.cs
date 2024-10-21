@@ -17,10 +17,14 @@ public class SampleProjectileTower : Summon {
         angle = Random.Range(0, 360);
     }
 
-    public override void Init() => init = true;
+    public override void Init(Player player) {
+        base.Init(player);
+        init = true;
+    }
 
-    void Update() {
+    protected override void Update() {
         if (!init) return;
+        base.Update();
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {
             TowerProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);

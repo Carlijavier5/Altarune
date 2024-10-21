@@ -1553,7 +1553,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.23333333
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 1b034a9307e54494089b98eeb4bdb85f, type: 2}
   m_BuildHeightMesh: 0
@@ -3263,12 +3263,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 32363873440944699, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+    - target: {fileID: 3203732643398435602, guid: a2dfbf0698e9e384c90c5b5cf439f510,
         type: 3}
-      propertyPath: towerBlueprints.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 377f94a554838404ca29ff50026a4ed8,
-        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3203732643398435602, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3203732643398435602, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3774512824984236609, guid: a2dfbf0698e9e384c90c5b5cf439f510,
         type: 3}
       propertyPath: m_Name
@@ -3322,6 +3331,21 @@ PrefabInstance:
     - target: {fileID: 4595195396528973113, guid: a2dfbf0698e9e384c90c5b5cf439f510,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6276571474664543610, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+        type: 3}
+      propertyPath: debugMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955940061678156738, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955940061678156738, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8726108569643392650, guid: a2dfbf0698e9e384c90c5b5cf439f510,

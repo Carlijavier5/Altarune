@@ -18,11 +18,15 @@ public class FriendlyFireTower : Summon{
         base.Awake();
     }
 
-    public override void Init() => init = true;
+    public override void Init(Player player) {
+        base.Init(player);
+        init = true;
+    }
 
     // Update is called once per frame
-    void Update(){
+    protected override void Update(){
         Target();
+        base.Update();
     }
     /// <summary>
     /// Calculates the closest entity within it's aggro range and launches a FriendlyFireBigProjectile toward the entity with a random spread
