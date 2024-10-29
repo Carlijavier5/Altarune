@@ -6,11 +6,26 @@ using System.Linq;
 public partial class Player : Entity {
 
     private readonly StateMachine<Player_Input> stateMachine = new();
+    public event System.Action OnManaCollapse;
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private PlayerController inputSource;
     [SerializeField] private Animator animator;
     [SerializeField] private HealthUIManager healthUIManager;
+
+    [SerializeField] private float manaGain;
+    [SerializeField] private ManaUIManager manaUIManager;
+    [SerializeField] private float maxMana;
+
+    private float manaSource;
+    public float ManaSource {
+        get => manaSource;
+        set {
+            manaSource = Mathf.Clamp(value, 0, maxMana);
+            if (manaSource == 0) OnManaCollapse?.Invoke();
+            manaUIManager.UpdateBar(manaSource, maxMana);
+        }
+    }
 
     private Vector3 InputVector => inputSource.InputVector;
 
@@ -19,6 +34,7 @@ public partial class Player : Entity {
 
     private void Awake() {
         inputSource.OnPlayerInit += PlayerController_OnPlayerInit;
+        ManaSource = maxMana;
     }
 
     private void PlayerController_OnPlayerInit() {
@@ -52,6 +68,8 @@ public partial class Player : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
+
+        ManaSource += Time.deltaTime * manaGain;
 
         if (Input.GetKeyDown(KeyCode.J) && stateMachine.State is State_Normal) {
             stateMachine.SetState(new State_Summoning());

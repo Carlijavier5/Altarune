@@ -1447,6 +1447,9 @@ MonoBehaviour:
   inputSource: {fileID: 8726108569643392650}
   animator: {fileID: 8131366000181368453}
   healthUIManager: {fileID: 123352603465148095}
+  manaGain: 5
+  manaUIManager: {fileID: 6276571474664543610}
+  maxMana: 100
   burdenedLocomotionProperties:
     linearAcceleration: 10
     linearDrag: 20
@@ -2726,6 +2729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 0
+  manaPerHit: 25
   staggerDuration: 0.2
   pushStrength: 10
   pushDuration: 0.25
@@ -7884,8 +7888,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
         type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 2208400701102557967}
+    - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
+        type: 3}
+      propertyPath: towerCost
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
+        type: 3}
       propertyPath: mainCamera
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
+        type: 3}
+      propertyPath: batteryCost
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6561479735888861104, guid: d61a1d2d3462fd74984e6ef0ec6b20e8,
         type: 3}

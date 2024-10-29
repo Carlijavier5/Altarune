@@ -30,8 +30,9 @@ public class LaserTower : Summon {
 		base.Awake();
 	}
 
-	public override void Init() {
-		attackRange = Instantiate<AggroRange>(attackRangePrefab, gameObject.transform);
+	public override void Init(Player player) {
+		base.Init(player);
+		attackRange = Instantiate(attackRangePrefab, gameObject.transform);
 		
 		init = true;
 	}
@@ -40,9 +41,9 @@ public class LaserTower : Summon {
 		altAttackBeam = null;
 	}
 
-	void Update() {
+	protected override void Update() {
 		if (!init) return;
-
+		base.Update();
 		checkClosestEnemyTick += Time.deltaTime;
 		if (checkClosestEnemyTick >= checkClosestEnemyInterval) {
 			float range = closestEnemy != null ? Vector3.Distance(gameObject.transform.position, closestEnemy.transform.position) : -1;
