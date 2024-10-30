@@ -26,6 +26,7 @@ namespace Miniboss {
         private PhaseOne phaseOneState;
         private PhaseTwo phaseTwoState;
         private PhaseThree phaseThreeState;
+        private Tornado tornadoState;
         private Stunned stunnedPhase;
 
         private bool active;
@@ -39,6 +40,8 @@ namespace Miniboss {
         void OnEnable() => TryStart();
 
         private void TryStart() {
+            Start();
+
             if (FindPlayer()) {
                 active = true;
 

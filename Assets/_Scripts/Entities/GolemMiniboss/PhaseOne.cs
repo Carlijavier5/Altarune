@@ -16,10 +16,6 @@ namespace Miniboss {
             private float speed;
             private float stoppingDistance;
             private float health;
-            
-            // Creating spin components
-            private bool spinState = false;
-            private readonly float spinDuration = 1;
 
             public override void Enter(MinibossStateInput input) {
                 // Initializes the enemy using the StateInput
@@ -43,16 +39,10 @@ namespace Miniboss {
             }
 
             public override void Update(MinibossStateInput input) {
-                // Switches between rotating the enemy and following the player
-                if (spinState == true) {
-                    // Makes the enemy invulnerable while spinning
-                    damageable.ToggleIFrame(true);
-                    miniboss.transform.Rotate(Vector3.up, 500f * miniboss.DeltaTime);
-                } else {
-                    damageable.ToggleIFrame(false);
-                    FollowPlayer();
-                }
                 health = miniboss.health;
+                speed = miniboss.speed;
+                
+                FollowPlayer();
                 CheckStateTransition();
             }
 
@@ -102,18 +92,8 @@ namespace Miniboss {
             IEnumerator MalfunctionCoroutine() {
                 while(true) {
                     yield return new WaitForSeconds(Random.Range(5, 10));
-                    yield return SpinCoroutine();
+                    miniboss.stateMachine.SetState(new Tornado());
                 }
-            }
-
-            // Method that performs the spin logic
-            IEnumerator SpinCoroutine() {
-                spinState = true;
-                // Spin duration is 1 second
-                yield return new WaitForSeconds(spinDuration);
-                // Forces the enemy to look at the player before moving
-                LookTowardsPlayer();
-                spinState = false;
             }
 
             public override void Exit(MinibossStateInput input) {
