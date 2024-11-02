@@ -106,6 +106,9 @@ public partial class Golem {
         }
 
         public override void Exit(Golem_Input input) {
+            input.golem.attackCollider.enabled = false;
+            input.golem.attackCollider.enabled = true;
+
             input.golem.controller.enabled = false;
             input.golem.navMeshAgent.enabled = true;
             input.golem.MotionDriver.Set(input.golem.navMeshAgent);

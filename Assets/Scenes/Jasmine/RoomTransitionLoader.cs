@@ -28,8 +28,12 @@ public class RoomTransitionLoader : MonoBehaviour
         StartCoroutine(i_FadeIn());
     }
 
-    public void FadeOut() {
-        StartCoroutine(i_FadeOut());
+    public void FadeOut(bool immediateFade = false) {
+        if (immediateFade) {
+            img.color = new Color(0f, 0f, 0f, 1);
+        } else {
+            StartCoroutine(i_FadeOut());
+        }
     }
 
     // ---------------
@@ -38,7 +42,7 @@ public class RoomTransitionLoader : MonoBehaviour
         float t = fadeTime;    // time
 
         while (t > 0) {
-            t -= Time.deltaTime;
+            t -= Time.unscaledDeltaTime;
             float a = curve.Evaluate(t);
             img.color = new Color(0f, 0f, 0f, a);
             yield return 0;         // wait a frame and then continue
@@ -49,7 +53,7 @@ public class RoomTransitionLoader : MonoBehaviour
         float t = 0;    // time
 
         while (t < fadeTime) {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
             float a = curve.Evaluate(t);
             img.color = new Color(0f, 0f, 0f, a);
             yield return 0;         // wait a frame and then continue

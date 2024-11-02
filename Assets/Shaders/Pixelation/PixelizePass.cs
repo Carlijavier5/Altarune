@@ -16,11 +16,11 @@ public class PixelizePass : ScriptableRenderPass
     private Material material;
     private int pixelScreenHeight, pixelScreenWidth;
 
-    public PixelizePass(PixelizeFeature.CustomPassSettings settings)
+    public PixelizePass(PixelizeFeature.CustomPassSettings settings, Shader shader)
     {
         this.settings = settings;
         this.renderPassEvent = settings.renderPassEvent;
-        if (material == null) material = CoreUtils.CreateEngineMaterial("Hidden/Pixelize");
+        if (material == null) material = CoreUtils.CreateEngineMaterial(shader);
     }
 
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
