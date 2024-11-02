@@ -118,10 +118,11 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
-  - {fileID: 8401294802513431134}
   - {fileID: -4209761751597707668}
   - {fileID: -3334246434730621156}
-  m_RendererFeatureMap: adc0de57c6d2eee55e0a26651c6597746c0efebefdeb93c51cc744808860bad1
+  - {fileID: 8210257117036791162}
+  - {fileID: 930903882685195204}
+  m_RendererFeatureMap: adc0de57c6d2eee56c0efebefdeb93c51cc744808860bad17ac5991f59b1f071c4a37b2f263ceb0c
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -164,7 +165,7 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &8401294802513431134
+--- !u!114 &930903882685195204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,22 +174,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
-  m_Name: Blit
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: -1
+  passMaterial: {fileID: 2100000, guid: 7dce43993a69962419a488b428e89bc4, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 1
+  m_Version: 1
+--- !u!114 &8210257117036791162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cec72095bb4ce5b47818bb004976a95f, type: 3}
+  m_Name: PixelizeFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
   settings:
-    Event: 500
-    blitMaterial: {fileID: 2100000, guid: ee3470e518c36f5498ec8730d173249b, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
-    canShowInSceneView: 1
+    renderPassEvent: 550
+    screenHeight: 244
+  pixelate: {fileID: 4800000, guid: 60b7e25d14dbd924e9f4742687382cb9, type: 3}

@@ -13,8 +13,7 @@ using UnityEngine.AI;
 ///    
 /// </summary>
 
-public class BatBehavior : MonoBehaviour
-{
+public class BatBehavior : Entity {
 
     private BatBodyTrigger _attackTrigger;
     private Collider _collider;
@@ -56,7 +55,8 @@ public class BatBehavior : MonoBehaviour
         destination = GetDestination(); //Begin movement pattern towards the player
     }
 
-    void Update() {
+    protected override void Update() {
+        base.Update();
         if (isKnockedBack) { //Don't want to call move commands if being knocked back
             if (Time.time >= knockbackEndTime) {
                 isKnockedBack = false;
@@ -77,15 +77,15 @@ public class BatBehavior : MonoBehaviour
 
     //Detects if the player has entered the bat's vision and triggers chase mode
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.GetComponent<Player>() == null || state == BatState.Chase) return;
+        if (!other.TryGetComponent(out Player _) || state == BatState.Chase) return;
 
         state = BatState.Chase;
     }
 
     //Deals damage to the player
-    public void DealDamage() {
+    public void DealDamage(Player player) {
         if (Time.time - _timeDamaged < _damageCd) return;
-        Debug.Log("DAMAGE DEALT!");
+        player.TryDamage(1);
         _timeDamaged = Time.time; //Store the time bat dealt damage
         ApplyKB();
     }
@@ -165,6 +165,16 @@ public class BatBehavior : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * 5f);
         }
 
+    }
+
+    public override void Perish() {
+        base.Perish();
+        DetachModules();
+        enabled = false;
+        _rb.constraints = new();
+        _rb.isKinematic = false;
+        _rb.useGravity = true;
+        Destroy(gameObject, 2);
     }
 }
 

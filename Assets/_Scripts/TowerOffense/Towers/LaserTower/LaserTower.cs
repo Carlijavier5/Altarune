@@ -23,13 +23,16 @@ public class LaserTower : Summon {
 	private Entity closestEnemy, altAttackTarget;
 	private AltLaserTowerBeam altAttackBeam;
 
+	[SerializeField] private LaserTowerAnimator animator;
+
 	protected override void Awake()
 	{
 		base.Awake();
 	}
 
-	public override void Init() {
-		attackRange = Instantiate<AggroRange>(attackRangePrefab, gameObject.transform);
+	public override void Init(Player player) {
+		base.Init(player);
+		attackRange = Instantiate(attackRangePrefab, gameObject.transform);
 		
 		init = true;
 	}
@@ -38,9 +41,9 @@ public class LaserTower : Summon {
 		altAttackBeam = null;
 	}
 
-	void Update() {
+	protected override void Update() {
 		if (!init) return;
-
+		base.Update();
 		checkClosestEnemyTick += Time.deltaTime;
 		if (checkClosestEnemyTick >= checkClosestEnemyInterval) {
 			float range = closestEnemy != null ? Vector3.Distance(gameObject.transform.position, closestEnemy.transform.position) : -1;
@@ -68,6 +71,7 @@ public class LaserTower : Summon {
 				
 				UnityEngine.Object laserProjectile = Instantiate(towerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
 				laserProjectile.GetComponent<LaserTowerProjectile>().setOGscale(raycastHit.distance);
+				animator.PlayLaser(Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
 
 				attackTick = 0;
 			}
@@ -80,7 +84,7 @@ public class LaserTower : Summon {
 				if (altAttackTarget != null && altAttackBeam == null && Physics.Raycast(muzzle.transform.position, Quaternion.LookRotation(altAttackTarget.transform.position - gameObject.transform.position) * Vector3.forward, out RaycastHit raycastHit, range < 0 ? Vector3.Distance(altAttackTarget.transform.position, gameObject.transform.position) : range, enemyAndEnvironmentLayerMask, QueryTriggerInteraction.Ignore)) {
 					if (raycastHit.collider.gameObject.layer != 6) {
 						UnityEngine.Object laserProjectile = Instantiate(altTowerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
-
+						animator.PlayLaser(Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
 						altAttackBeam = laserProjectile.GetComponent<AltLaserTowerBeam>();
 						altAttackBeam.giveData(altAttackRange < 0 ? 5f : altAttackRange, altAttackTarget, this.clearAltAttackBeam);
 						attackTick = 0;

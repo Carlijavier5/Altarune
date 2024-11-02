@@ -18,10 +18,6 @@ public partial class Golem {
                 golem.navMeshAgent.ResetPath();
             }
 
-            foreach (Oscillator oscillator in golem.oscillators) {
-                oscillator.enabled = false;
-            }
-
             golem.animator.SetBool(STUN_PARAMETER, input.golem.IsStunned);
         }
 
@@ -30,9 +26,6 @@ public partial class Golem {
         public override void Exit(Golem_Input input) {
             Golem golem = input.golem;
 
-            foreach (Oscillator oscillator in golem.oscillators) {
-                oscillator.enabled = true;
-            }
             golem.animator.SetBool(STUN_PARAMETER, input.golem.IsStunned);
         }
     }
