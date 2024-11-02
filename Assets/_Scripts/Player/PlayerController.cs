@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    private bool init;
+
     public Camera OutputCamera => cameraBrain ? cameraBrain.OutputCamera
                                               : Camera.main;
 
@@ -56,10 +58,11 @@ public class PlayerController : MonoBehaviour {
         playerInput.Actions.ActivateSkill.performed += Skill_Performed;
 
         /// Replace after actual initialization;
-        Init(cameraBrain);
+        if (cameraBrain && !init) Init(cameraBrain);
     }
 
     public void Init(CinemachineBrain cameraBrain) {
+        init = true;
         this.cameraBrain = cameraBrain;
         StartCoroutine(ISyncInitialization());
     }
@@ -82,9 +85,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void SelectSummon_performed(InputAction.CallbackContext context) {
-        int value = (int) context.ReadValue<float>();
-        if (value == -1) OnSummonSelect?.Invoke(SummonType.Battery, 0);
-        else if (value > 0) OnSummonSelect?.Invoke(SummonType.Tower, value);
+        if (context.performed) {
+            int value = (int) context.ReadValue<float>();
+            if (value == -1) OnSummonSelect?.Invoke(SummonType.Battery, 0);
+            else if (value > 0) OnSummonSelect?.Invoke(SummonType.Tower, value);
+        }
     }
 
     private void Skill_Performed(InputAction.CallbackContext context) {

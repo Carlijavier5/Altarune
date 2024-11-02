@@ -11,7 +11,7 @@ public class LabCircle : MonoBehaviour
         timer += Time.deltaTime;
 
         if (timer >= waitForSeconds) {
-            SceneLoader.Load(SceneLoader.Scene.M2_Game);
+            SceneLoader.Instance.Load(SceneLoader.Scene.M2_Game);
         }
     }
 

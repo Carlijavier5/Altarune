@@ -13,7 +13,7 @@ public class DamageableEditor : Editor {
             using (new EditorGUILayout.HorizontalScope()) {
                 GUILayout.Label("Runtime Health: ");
                 using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox)) {
-                    GUILayout.Label($"{Damageable.Health}");
+                    if (Damageable != null) GUILayout.Label($"{Damageable.Health}");
                 }
             }
         }

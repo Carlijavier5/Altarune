@@ -72,7 +72,7 @@ public class EnemySpawner : Entity {
         }
         enemies = null;
         DetachModules();
-        Destroy(this);
+        Destroy(gameObject, 2);
         enabled = false;
     }
 

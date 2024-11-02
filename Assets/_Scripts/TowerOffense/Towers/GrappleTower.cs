@@ -25,9 +25,13 @@ public class GrappleTower : Summon
         sCollider.radius = range;
     }
 
-    public override void Init() => init = true;
+    public override void Init(Player player) {
+        base.Init(player);
+        init = true;
+    }
 
-    void Update() {
+    protected override void Update() {
+        base.Update();
         //Debug.Log(sCollider.radius);
         if (!init) return;
         grappleTick += Time.deltaTime;
