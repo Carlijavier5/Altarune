@@ -123,6 +123,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Activate Skill",
+                    "type": "Button",
+                    "id": "c5799cb3-9bd4-40bf-8c19-e1c41eb5e945",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -211,6 +220,17 @@
                     "processors": "Scale(factor=5)",
                     "groups": "",
                     "action": "Select Summon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4ce0601-f325-4fe3-a149-13496e6935d5",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Activate Skill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
