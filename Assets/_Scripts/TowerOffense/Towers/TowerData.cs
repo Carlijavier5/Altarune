@@ -1,9 +1,4 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu()]
-public class TowerData : ScriptableObject {
-
-    public Summon prefab;
-    public Sprite icon;
-    public float energyCost;
-}
+public class TowerData : SummonData<Summon> { }

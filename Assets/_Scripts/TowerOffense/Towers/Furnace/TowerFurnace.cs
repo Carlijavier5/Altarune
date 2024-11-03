@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class SampleProjectileTower : Summon {
+public class TowerFurnace : Summon {
 
     [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;
@@ -12,13 +12,12 @@ public class SampleProjectileTower : Summon {
     private float angle;
     private float attackTick = 0.2f;
 
-    protected override void Awake() {
-        base.Awake();
+    void Awake() {
         angle = Random.Range(0, 360);
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
     }
 

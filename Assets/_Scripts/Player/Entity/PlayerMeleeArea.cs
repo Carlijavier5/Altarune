@@ -44,7 +44,7 @@ public class PlayerMeleeArea : MonoBehaviour {
             && collSet.Add(baseObject) && playerSource) {
 
             baseObject.TryDamage(damageAmount);
-            playerSource.ManaSource += manaPerHit;
+            playerSource.ManaSource.Fill(manaPerHit);
             baseObject.TryStagger(staggerDuration);
 
             Vector3 direction = baseObject.transform.position - SourcePosition;

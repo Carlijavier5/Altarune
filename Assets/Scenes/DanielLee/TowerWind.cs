@@ -15,8 +15,8 @@ public class TowerWind : Summon
     private bool init = false;
     private float timer = 0;
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
     }
 

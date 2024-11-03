@@ -35,15 +35,14 @@ public class GatlingGun : Summon {
     private bool targetSet;
     //private Quaternion targetRotation;
 
-    protected override void Awake() {
-        base.Awake();
+    void Awake() {
         bigAreaSpawnTimer = bigAreaSpawnDelay;
         aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
     }
 

@@ -25,13 +25,9 @@ public class LaserTower : Summon {
 
 	[SerializeField] private LaserTowerAnimator animator;
 
-	protected override void Awake()
-	{
-		base.Awake();
-	}
 
-	public override void Init(Player player) {
-		base.Init(player);
+	public override void Init(ManaSource manaSource) {
+		base.Init(manaSource);
 		attackRange = Instantiate(attackRangePrefab, gameObject.transform);
 		
 		init = true;

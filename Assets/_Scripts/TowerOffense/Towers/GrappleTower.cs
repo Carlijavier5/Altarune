@@ -18,15 +18,14 @@ public class GrappleTower : Summon
     private float angle;
     private float grappleTick = 0.0f;
 
-    protected override void Awake() {
-        base.Awake();
+    void Awake() {
         angle = UnityEngine.Random.Range(0, 360);
         sCollider = GetComponent<SphereCollider>();
         sCollider.radius = range;
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
     }
 

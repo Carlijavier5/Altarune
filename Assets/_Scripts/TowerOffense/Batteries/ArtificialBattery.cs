@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Battery : Summon {
+public class ArtificialBattery : Summon, IBattery {
 
     [SerializeField] private GameObject areaIndicator;
-    private HashSet<Summon> linkedTowers = new();
+    private readonly HashSet<Summon> linkedTowers = new();
+
+    public ManaSource ManaSource => manaSource;
+    public Vector3 Position => transform.position;
+    public bool IsActive => active;
 
     public void LinkTower(Summon tower) => linkedTowers.Add(tower);
-
-    public override void Init(Player player) {
-        base.Init(player);
-    }
 
     public override void Collapse() {
         foreach (Summon tower in linkedTowers) {
