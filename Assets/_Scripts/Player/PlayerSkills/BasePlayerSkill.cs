@@ -7,7 +7,5 @@ using UnityEngine;
 /// </summary>
 public abstract class BasePlayerSkill : MonoBehaviour    // maybe inherit from base object
 {
-    protected virtual void CastSkill() {
-        // decrement mana cost here
-    }
+    
 }
