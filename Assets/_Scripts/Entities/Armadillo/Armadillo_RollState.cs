@@ -17,12 +17,13 @@ public partial class Armadillo : Entity {
       randomDirection = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad));
 
       armadillo.navMeshAgent.enabled = true;
+      armadillo.MotionDriver.Set(armadillo.navMeshAgent);
 
       armadillo.rollParticleSystem.Play();
     }
 
     public override void Update(Armadillo armadillo) {
-      timeRemaining -= Time.deltaTime * armadillo.TimeScale;
+      timeRemaining -= armadillo.DeltaTime;
       if (timeRemaining <= 0) {
         armadillo.SetState(new ArmadilloRoamState());
         return;
@@ -36,6 +37,7 @@ public partial class Armadillo : Entity {
       effect.Stop();
       armadillo.UpdateNavMeshSpeeds();
       armadillo.navMeshAgent.enabled = false;
+      armadillo.MotionDriver.Set(armadillo.transform);
       armadillo.rollParticleSystem.Stop();
 
     }
