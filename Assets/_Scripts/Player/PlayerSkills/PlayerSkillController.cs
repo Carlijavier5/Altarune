@@ -42,6 +42,10 @@ public class PlayerSkillController : MonoBehaviour
 
         // calcs the direction from player to spawn position
         Vector3 direction = (targetPos - _inputSource.transform.position).normalized;
+
+        // --> here
+        _currSkill.prefab.GetComponent<BasePlayerSkill>().SpawnSkill();
+
         Vector3 spawnPos = _inputSource.transform.position + direction * _currSkill.spawnDistance;
 
         Instantiate(_currSkill.prefab, spawnPos, Quaternion.identity);
