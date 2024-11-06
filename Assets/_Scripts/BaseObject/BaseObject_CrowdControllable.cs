@@ -12,6 +12,8 @@ public abstract partial class BaseObject {
                     isStunned;
     }
     
+    public Vector3 LastGroundPoint { get; private set; }
+
     /// <summary>
     /// Crowd control status of the object; 
     /// </summary>
@@ -72,6 +74,7 @@ public abstract partial class BaseObject {
         set {
             if (status.isGrounded != value) {
                 status.isGrounded = value;
+                if (!value) LastGroundPoint = transform.position;
                 OnGroundedSet?.Invoke(value);
             }
         }
