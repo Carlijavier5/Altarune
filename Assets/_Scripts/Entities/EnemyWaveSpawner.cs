@@ -43,8 +43,6 @@ public class EnemyWaveSpawner : Entity {
         base.Update();
         if (isActive && Time.time > _nextSpawnTime) {
             _nextSpawnTime = Time.time + spawnDelay;
-            Debug.Log("wave"+currentWave);
-            Debug.Log("eindex"+enemyIndex);
 
             if (enemies.Count < maxEnemiesAtOnce && enemyIndex < waves[currentWave].Count()) {
             
