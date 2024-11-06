@@ -43,8 +43,12 @@ public class EnemyWaveSpawner : Entity {
         base.Update();
         if (isActive && Time.time > _nextSpawnTime) {
             _nextSpawnTime = Time.time + spawnDelay;
+            Debug.Log("wave"+currentWave);
+            Debug.Log("eindex"+enemyIndex);
 
             if (enemies.Count < maxEnemiesAtOnce && enemyIndex < waves[currentWave].Count()) {
+            
+
                 Entity enemyPrefab = (Entity) waves[currentWave][enemyIndex];
                 enemyIndex++;
 
@@ -70,8 +74,10 @@ public class EnemyWaveSpawner : Entity {
                 // remove enemies from this object's list on perish so they don't get deleted alongside the spawner
                 newEnemy.OnPerish += e=>{
                     enemies?.Remove(newEnemy);
-                    if (enemies?.Count <= 0)
+                    if (enemies?.Count <= 0) {
                         currentWave++;
+                        enemyIndex = 0;
+                    }
                 };
 
                 enemies.Add(newEnemy);
