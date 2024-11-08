@@ -1737,6 +1737,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
+  _timeBetweenMove: 0.01
+  _speed: 3.5
 --- !u!135 &761223336
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1752,7 +1754,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
