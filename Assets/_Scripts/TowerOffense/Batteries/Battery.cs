@@ -4,15 +4,19 @@ using UnityEngine;
 public class Battery : Summon {
 
     [SerializeField] private GameObject areaIndicator;
+    private HashSet<Summon> linkedTowers = new();
 
-    private List<Summon> linkedTowers = new();
+    public void LinkTower(Summon tower) => linkedTowers.Add(tower);
 
-    public void LinkTower(Summon tower)
-    {
-        linkedTowers.Add(tower);
+    public override void Init(Player player) {
+        base.Init(player);
     }
 
-    public override void Init() { }
+    public override void Collapse() {
+        foreach (Summon tower in linkedTowers) {
+            tower.Collapse();
+        } base.Collapse();
+    }
 
     public void ToggleArea(bool on) {
         areaIndicator.SetActive(on);

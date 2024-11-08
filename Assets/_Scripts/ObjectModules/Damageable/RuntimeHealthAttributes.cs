@@ -9,9 +9,10 @@ public class RuntimeHealthAttributes : HealthAttributes {
 
     private IEnumerable<StatusEffect> effectSource;
 
-    public RuntimeHealthAttributes(HealthAttributes defaultAttributes, AttributeCurves curves,
+    public RuntimeHealthAttributes(HealthAttributes defaultAttributes, DefaultHealthAttributeCurves curves,
                                    IEnumerable<StatusEffect> effectSource) : base(curves) {
         healthAttributes = defaultAttributes;
+        health = defaultAttributes.health;
         this.effectSource = effectSource;
     }
 
@@ -20,6 +21,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
         int absAmount = Mathf.Abs(amount);
         float elementMult = element switch { ElementType.Fire => curves.fireResCurve.Evaluate(fireRes),
                                              ElementType.Ice => curves.fireResCurve.Evaluate(iceRes),
+                                             ElementType.Shock => curves.shockResCurve.Evaluate(shockRes),
                                              ElementType.Poison => curves.poisonResCurve.Evaluate(poisonRes),
                                              _ => 1 };
         return Mathf.CeilToInt(absAmount * elementMult * curves.defenseCurve.Evaluate(defense));
@@ -48,8 +50,8 @@ public class RuntimeHealthAttributes : HealthAttributes {
 
         HealthAttributeModifiers composite = new();
         foreach (StatusEffect statusEffect in effectSource) {
-            if (statusEffect.AttributeMods != null) {
-                composite.Compose(statusEffect.AttributeMods);
+            if (statusEffect.HealthModifiers != null) {
+                composite.Compose(statusEffect.HealthModifiers);
             }
         }
 
