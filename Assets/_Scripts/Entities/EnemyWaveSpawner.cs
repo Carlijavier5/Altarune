@@ -12,9 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemySpawner : Entity {
-    [SerializeField] public Entity enemyPrefab;
-    [SerializeField] public int totalEnemyCount = 10; // Total enemies this tower can spawn
+public class EnemyWaveSpawner : Entity {
+    [SerializeField] public List<PseudoList> waves;
     [SerializeField] public int maxEnemiesAtOnce = 5; // Max enemies from this tower at a time
     [SerializeField] public float spawnDelay = 2.0f; // Delay between enemy spawns
     // [SerializeField] public Transform spawnPos;
@@ -23,17 +22,21 @@ public class EnemySpawner : Entity {
     
     private List<Entity> enemies;
     private IEnumerable<Rigidbody> rigidbodies;
-    private int enemiesLeft;
+    private int enemyIndex;
     private float _nextSpawnTime;
     private bool isActive;
+    private int currentWave;
+
+
     public void Awake() {
         enemies = new List<Entity>(maxEnemiesAtOnce);
-        enemiesLeft = totalEnemyCount;
         isActive = false;
         rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
 
         aggroRange.OnAggroEnter += e => {Activate();};
         aggroRange.OnAggroExit += e => {Deactivate();};
+        currentWave = 0;
+        enemyIndex = 0;
     }
 
     protected override void Update() {
@@ -41,7 +44,12 @@ public class EnemySpawner : Entity {
         if (isActive && Time.time > _nextSpawnTime) {
             _nextSpawnTime = Time.time + spawnDelay;
 
-            if (enemies.Count < maxEnemiesAtOnce) {
+            if (enemies.Count < maxEnemiesAtOnce && enemyIndex < waves[currentWave].Count()) {
+            
+
+                Entity enemyPrefab = (Entity) waves[currentWave][enemyIndex];
+                enemyIndex++;
+
                 Vector2 vec = Random.insideUnitCircle.normalized * spawnDistance;
                 Vector3 newPos = transform.position + new Vector3(vec[0], 0, vec[1]);
                 Bounds bounds = enemyPrefab.GetComponent<Collider>().bounds;
@@ -62,11 +70,17 @@ public class EnemySpawner : Entity {
 
                 Entity newEnemy = Instantiate(enemyPrefab, newPos, Quaternion.identity);
                 // remove enemies from this object's list on perish so they don't get deleted alongside the spawner
-                newEnemy.OnPerish += e=>{enemies?.Remove(newEnemy);};
+                newEnemy.OnPerish += e=>{
+                    enemies?.Remove(newEnemy);
+                    if (enemies?.Count <= 0) {
+                        currentWave++;
+                        enemyIndex = 0;
+                    }
+                };
 
                 enemies.Add(newEnemy);
-                enemiesLeft--;
-                if (enemiesLeft <= 0) {
+                if (waves[currentWave].innerList.Count() <= enemyIndex && currentWave >= waves.Count - 1) {
+                    // if it's the last wave and we've run out of enemies, perish
                     Perish();
                 }
             } 
@@ -87,7 +101,7 @@ public class EnemySpawner : Entity {
         }
         enemies = null;
         DetachModules();
-        Destroy(gameObject, 2);
+        Destroy(this);
         enabled = false;
     }
 

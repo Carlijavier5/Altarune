@@ -17,6 +17,9 @@ public class SummonController : MonoBehaviour {
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
+    // is this supposed to be here
+    // reply: not really lol, but it's 100% ok, we'll take it :D
+    [SerializeField] private Material manaConnectionMaterial;
     [SerializeField] private float batteryCost, towerCost;
     [SerializeField] private float overlapRadius;
 
@@ -177,6 +180,7 @@ public class SummonController : MonoBehaviour {
                         batterySource.Drain(towerCost);
 
                         SetSelectionType(SummonType.None);
+                        CreateManaConnection(tower.transform, closestBattery.transform);
                     } break;
             }
         }
@@ -193,5 +197,24 @@ public class SummonController : MonoBehaviour {
                 SetSelectionType(selectedType == SummonType.Tower ? SummonType.None : SummonType.Tower, slotNum - 1);
                 break; 
         }
+    }
+
+    private void CreateManaConnection(Transform batteryTransform, Transform towerTransform) {
+        GameObject lineObject = new GameObject("ManaConnection");
+        LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
+
+        lineRenderer.positionCount = 2;
+
+        Vector3 batteryConnectionPoint = batteryTransform.position;
+        batteryConnectionPoint.y += 0.5f;
+        Vector3 towerConnectionPoint = towerTransform.position;
+        towerConnectionPoint.y += 0.5f;
+
+        lineRenderer.SetPosition(0, batteryConnectionPoint);
+        lineRenderer.SetPosition(1, towerConnectionPoint);
+
+        lineRenderer.startWidth = 0.75f;
+        lineRenderer.endWidth = 0.75f;
+        lineRenderer.material = this.manaConnectionMaterial;
     }
 }
