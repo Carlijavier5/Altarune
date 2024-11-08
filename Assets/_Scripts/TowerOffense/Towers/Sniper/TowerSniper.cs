@@ -17,13 +17,9 @@ public class TowerSniper : Summon {
     // SortedSet<Entity> targets = new SortedSet<Entity>(
     //     Comparer<Entity>.Create((a, b) => a.GetComponent<Damageable>().Health.CompareTo(b.GetComponent<Damageable>().Health)));
     List<Entity> targets = new List<Entity>();
-    protected override void Awake() {
-        base.Awake();
-        //angle = 0;
-    }
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
     }
 

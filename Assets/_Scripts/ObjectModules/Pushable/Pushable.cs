@@ -23,7 +23,7 @@ public class Pushable : ObjectModule {
         }
     }
 
-    private readonly Queue<Vector3> impulseQueue = new();
+    private readonly Queue<Vector3> pastImpulseQueue = new();
 
     private readonly HashSet<PushActionCore> actionCores = new();
     private readonly Stack<PushActionCore> terminateStack = new();
@@ -54,7 +54,7 @@ public class Pushable : ObjectModule {
     }
 
     private void MotionDriver_OnModeChange() {
-        impulseQueue.Clear();
+        pastImpulseQueue.Clear();
         dynamicVelocityAdjustment = Vector3.zero;
     }
 
@@ -94,10 +94,10 @@ public class Pushable : ObjectModule {
                                            + direction * Time.fixedDeltaTime;
                     driver.Rigidbody.MovePosition(targetPosition);
                 } else {
-                    while (impulseQueue.TryDequeue(out Vector3 impulse)) {
+                    while (pastImpulseQueue.TryDequeue(out Vector3 impulse)) {
                         DynamicVelocityAdjustment -= impulse;
                     } DynamicVelocityAdjustment += direction;
-                    impulseQueue.Enqueue(direction);
+                    pastImpulseQueue.Enqueue(direction);
                 } break;
             case MotionMode.Controller:
                 driver.Controller.Move(direction * Time.fixedDeltaTime);

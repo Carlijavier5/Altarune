@@ -7,12 +7,8 @@ public class TowerPlague : Summon {
     [SerializeField] private Transform launchPoint;
     private bool init;
 
-    protected override void Awake() {
-        base.Awake();
-    }
-
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
         SpawnPlagueArea();
     }

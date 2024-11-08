@@ -13,13 +13,12 @@ public class TowerTemporal : Summon {
     private readonly Dictionary<Collider, BaseObject> objectMap = new();
     private bool init;
 
-    protected override void Awake() {
-        base.Awake();
+    void Awake() {
         magicCircleController.SetRadius(0);
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         init = true;
         StartCoroutine(IDevelopTempoArea());
     }

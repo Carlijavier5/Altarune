@@ -15,15 +15,14 @@ public class JarOfEndlessSnakes : Summon
 
     private bool init = false;
 
-    public override void Init(Player player) {
-        base.Init(player);
+    public override void Init(ManaSource manaSource) {
+        base.Init(manaSource);
         timeToNextSummon = summonCooldown;
         init = true;
     }
     
-    protected override void Awake(){
-        base.Awake();
-        if(player == null){
+    void Awake() {
+        if (player == null){
             player = FindObjectOfType<PlayerController>().gameObject;
         }
     }

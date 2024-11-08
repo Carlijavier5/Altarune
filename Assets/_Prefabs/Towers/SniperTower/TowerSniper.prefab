@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 184703163551297938}
   - component: {fileID: 6573488618673428734}
   - component: {fileID: 2314017069526810355}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2550746929009170975}
   - component: {fileID: -6973167824309850973}
   - component: {fileID: 8588183723860154149}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TowerSniper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
   projectilePrefab: {fileID: 3782081999992796225, guid: 1c5c5592e34154745af73df179a383e9,
     type: 3}
   launchPoint: {fileID: 9067446884199606921}
@@ -164,7 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4613688277624857598}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +207,7 @@ GameObject:
   - component: {fileID: 8926504655167078842}
   - component: {fileID: 2122491468233650697}
   - component: {fileID: 4848283547128602352}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +290,7 @@ GameObject:
   - component: {fileID: 624899916520846242}
   - component: {fileID: 8893822911808947276}
   - component: {fileID: 8171514381503072484}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +373,7 @@ GameObject:
   - component: {fileID: 1592312466626171286}
   - component: {fileID: 4516790743550304150}
   - component: {fileID: 5507828761327891561}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Lowball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +456,7 @@ GameObject:
   - component: {fileID: 5081680433548568696}
   - component: {fileID: 2025253470500133338}
   - component: {fileID: 8191947859496384393}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,7 +539,7 @@ GameObject:
   - component: {fileID: 4628754007814149188}
   - component: {fileID: 8833928448544990559}
   - component: {fileID: 1134210449918323810}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -621,7 +622,7 @@ GameObject:
   - component: {fileID: 88027554309975377}
   - component: {fileID: 9143878831336919588}
   - component: {fileID: 1086963595540230711}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -704,7 +705,7 @@ GameObject:
   - component: {fileID: 9067446884199606921}
   - component: {fileID: 5879512391984318560}
   - component: {fileID: 6158426934407527534}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HighBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -858,6 +859,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Torus
+      objectReference: {fileID: 0}
+    - target: {fileID: 8730438640879839645, guid: 32acca1c7746bc14fbac4cb5081f448a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

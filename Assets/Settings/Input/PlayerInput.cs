@@ -257,6 +257,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Select Summon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0219fde-fcdd-4ed2-b8ef-52c229f1089f"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=8)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
