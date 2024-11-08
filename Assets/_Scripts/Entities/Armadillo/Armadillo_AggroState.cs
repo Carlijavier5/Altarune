@@ -8,6 +8,7 @@ public partial class Armadillo : Entity {
     public override void Enter(Armadillo armadillo) {
       armadillo.Agitation = 1.75f;
       armadillo.navMeshAgent.enabled = true;
+      armadillo.MotionDriver.Set(armadillo.navMeshAgent);
     }
 
     public override void Update(Armadillo armadillo) {
@@ -17,7 +18,10 @@ public partial class Armadillo : Entity {
       }
     }
 
-    public override void Exit(Armadillo armadillo) { armadillo.navMeshAgent.enabled = false; }
+    public override void Exit(Armadillo armadillo) {
+      armadillo.navMeshAgent.enabled = false;
+      armadillo.MotionDriver.Set(armadillo.transform);
+    }
   }
 
 }
