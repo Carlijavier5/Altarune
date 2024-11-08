@@ -60,7 +60,6 @@ public partial class Player : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
-
         ManaSource.Fill(Time.deltaTime * manaGain);
 
         if (Input.GetKeyDown(KeyCode.J) && stateMachine.State is State_Normal) {
@@ -70,6 +69,10 @@ public partial class Player : Entity {
             if (stateMachine.State is State_Normal) stateMachine.SetState(new State_Burdened());
             else if (stateMachine.State is State_Burdened) stateMachine.SetState(new State_Normal());
         }
+    }
+
+    void FixedUpdate() {
+        stateMachine.FixedUpdate();
     }
 
     private void SetTopLayerWeight(int layer, float target, float speed) {

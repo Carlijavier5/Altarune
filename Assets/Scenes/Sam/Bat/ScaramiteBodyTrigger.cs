@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BatBodyTrigger : MonoBehaviour
+public class ScaramiteBodyTrigger : MonoBehaviour
 {
-    private BatBehavior _batBehavior;
+    private Scaramite _batBehavior;
 
     private bool _canAttack;
     void Start() {
-        _batBehavior = GetComponentInParent<BatBehavior>();
+        _batBehavior = GetComponentInParent<Scaramite>();
         _canAttack = true;
         
     }

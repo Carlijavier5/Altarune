@@ -21,19 +21,21 @@ public partial class Player {
         }
 
         public override void Update(Player_Input input) {
-            float amountDelta = input.player.DeltaTime / input.player.dodgeDuration;
+            input.player.driver.ResolveRotation();
+        }
+
+        public override void FixedUpdate(Player_Input input) {
+            float amountDelta = input.player.FixedDeltaTime / input.player.dodgeDuration;
             bool performed = (amount = Mathf.MoveTowards(amount, 1, amountDelta)) == 1;
             if (performed) {
                 /// Passing a 0-magnitude vector stops the motion;
                 input.player.driver.Move(Vector2.zero);
-                if (input.player.driver.MoveSpeed <= input.player.normalLocomotionProperties.maxSpeed / 2) {
+                if (input.player.driver.MoveSpeed <= input.player.normalLocomotionProperties.maxSpeed *  0.75f) {
                     input.stateMachine.SetState(new State_Normal());
                 }
             } else {
                 input.player.driver.Move(dir);
             }
-            input.player.driver.ResolveRotation();
-            input.player.driver.ResolveGravity();
         }
 
         public override void Exit(Player_Input input) {

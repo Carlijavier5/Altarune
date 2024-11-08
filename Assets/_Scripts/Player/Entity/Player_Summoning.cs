@@ -19,17 +19,20 @@ public partial class Player {
         }
 
         public override void Update(Player_Input input) {
-            float amountDelta = input.player.DeltaTime / input.player.summonDuration;
+            input.player.driver.ResolveRotation();
+            input.player.animator.SetFloat("MoveSpeed", (input.player.driver.MoveSpeed
+                                           / input.player.normalLocomotionProperties.maxSpeed));
+        }
+
+        public override void FixedUpdate(Player_Input input) {
+            input.player.driver.Move(input.player.InputVector);
+            input.player.driver.ResolveGravity();
+
+            float amountDelta = input.player.FixedDeltaTime / input.player.summonDuration;
             bool performed = (amount = Mathf.MoveTowards(amount, 1, amountDelta)) == 1;
             if (performed) {
                 input.stateMachine.SetState(new State_Normal());
             }
-
-            input.player.driver.Move(input.player.InputVector);
-            input.player.driver.ResolveRotation();
-            input.player.driver.ResolveGravity();
-            input.player.animator.SetFloat("MoveSpeed", (input.player.driver.MoveSpeed
-                                           / input.player.normalLocomotionProperties.maxSpeed));
         }
 
         public override void Exit(Player_Input input) {

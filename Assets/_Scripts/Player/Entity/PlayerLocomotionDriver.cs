@@ -30,7 +30,7 @@ public partial class Player {
             }
 
             Vector3 moveVector = alignmentMult * MoveSpeed * MoveDir;
-            Controller.Move(moveVector * player.DeltaTime);
+            Controller.Move(moveVector * player.FixedDeltaTime);
         }
 
         public void ResolveRotation() {
@@ -43,7 +43,7 @@ public partial class Player {
         public void ResolveGravity() {
             player.IsGrounded = Controller.isGrounded;
             if (!player.IsGrounded) {
-                verticalSpeed = Mathf.MoveTowards(verticalSpeed, -0.5f, player.DeltaTime / 8f);
+                verticalSpeed = Mathf.MoveTowards(verticalSpeed, -0.4f, player.DeltaTime / 2f);
                 Controller.Move(new Vector3(0, verticalSpeed, 0));
             } else verticalSpeed = 0;
         }

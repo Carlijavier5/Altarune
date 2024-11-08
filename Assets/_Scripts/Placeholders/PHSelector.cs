@@ -9,6 +9,7 @@ public class PHSelector : MonoBehaviour {
     [SerializeField] private Image[] towers;
 
     public void SetSelectedImage(SummonType selectionType, int index) {
+        if (index >= towers.Length) return;
         switch (selectionType) {
             case SummonType.None:
                 battery.sprite = unselected;

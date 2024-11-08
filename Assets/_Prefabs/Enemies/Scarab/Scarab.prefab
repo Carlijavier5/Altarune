@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.001, y: 1.001, z: 1.001}
-  m_Center: {x: 0.0003859997, y: -1.4448992e-13, z: 0}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &7067434270079243832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 1735518033671451403}
   - component: {fileID: 4125462934371689212}
   - component: {fileID: 2742314740529029804}
-  - component: {fileID: 6731652002558692233}
+  - component: {fileID: 1735360006934155020}
   - component: {fileID: 3001228195307169060}
   m_Layer: 0
   m_Name: Scarab
@@ -220,10 +220,10 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 5.5807834}
-  m_Center: {x: 0, y: 0, z: -2.2903917}
---- !u!65 &6731652002558692233
-BoxCollider:
+  m_Size: {x: 1, y: 1, z: 5.5}
+  m_Center: {x: 0, y: 0.25, z: -2.25}
+--- !u!135 &1735360006934155020
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -241,8 +241,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!54 &3001228195307169060
 Rigidbody:
   m_ObjectHideFlags: 0
