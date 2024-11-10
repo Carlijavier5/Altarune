@@ -11,20 +11,19 @@ public class TowerTemporal : Summon {
     [SerializeField] private float slowDuration, effectRadius, tempoSpawnDelay;
 
     private readonly Dictionary<Collider, BaseObject> objectMap = new();
-    private bool init;
 
     void Awake() {
         magicCircleController.SetRadius(0);
     }
 
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
-        init = true;
+    public override void Init(Entity summoner,
+                              ManaSource manaSource) {
+        base.Init(summoner, manaSource);
         StartCoroutine(IDevelopTempoArea());
     }
 
     protected override void Update() {
-        if (init) {
+        if (active) {
             float lerp = 0.2f + Mathf.Abs(Mathf.PingPong(Time.time, 0.8f));
             hourglassController.SetFill(lerp);
             base.Update();

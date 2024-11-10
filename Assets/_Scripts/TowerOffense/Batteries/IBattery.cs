@@ -10,4 +10,6 @@ public interface IBattery {
 
     public void LinkTower(Summon tower);
     public void ToggleArea(bool on);
+
+    public MonoBehaviour MonoScript => this as MonoBehaviour;
 }

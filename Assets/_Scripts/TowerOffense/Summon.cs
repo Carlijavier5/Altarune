@@ -8,9 +8,12 @@ public abstract class Summon : BaseObject {
     [SerializeField] protected float manaDepletion = 1f;
 
     protected ManaSource manaSource;
+    protected Entity summoner;
     protected bool active;
 
-    public virtual void Init(ManaSource manaSource) {
+    public virtual void Init(Entity summoner,
+                             ManaSource manaSource) {
+        this.summoner = summoner;
         this.manaSource = manaSource;
         active = true;
     }

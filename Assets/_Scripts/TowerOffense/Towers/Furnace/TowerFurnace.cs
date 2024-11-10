@@ -7,7 +7,6 @@ public class TowerFurnace : Summon {
     [SerializeField] private Transform launchPoint;
     [SerializeField] private float attackInterval;
     [SerializeField] private float angleShift;
-    private bool init;
 
     private float angle;
     private float attackTick = 0.2f;
@@ -16,13 +15,8 @@ public class TowerFurnace : Summon {
         angle = Random.Range(0, 360);
     }
 
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
-        init = true;
-    }
-
     protected override void Update() {
-        if (!init) return;
+        if (!active) return;
         base.Update();
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {

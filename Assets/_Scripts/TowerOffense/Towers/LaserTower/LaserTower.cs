@@ -15,7 +15,7 @@ public class LaserTower : Summon {
 	[SerializeField] private float range = -1, altAttackRange = -1;
 	//This prefab needs to have the enemy factions set to include enemies
 	[SerializeField] private AggroRange attackRangePrefab;
-	private bool init, altAttackMode = false;
+	private bool altAttackMode = false;
 	private float attackTick = 0.2f, checkClosestEnemyTick = 0.2f;
 	// TODO: Fix Layermask
 	private int environmentLayerMask = ~(1 << 6), enemyAndEnvironmentLayerMask = ~((1 << 6) ^ 3); //Environment Mask for checking collisions
@@ -26,11 +26,10 @@ public class LaserTower : Summon {
 	[SerializeField] private LaserTowerAnimator animator;
 
 
-	public override void Init(ManaSource manaSource) {
-		base.Init(manaSource);
+	public override void Init(Entity summoner,
+						      ManaSource manaSource) {
+		base.Init(summoner, manaSource);
 		attackRange = Instantiate(attackRangePrefab, gameObject.transform);
-		
-		init = true;
 	}
 
 	private void clearAltAttackBeam() {
@@ -38,7 +37,7 @@ public class LaserTower : Summon {
 	}
 
 	protected override void Update() {
-		if (!init) return;
+		if (!active) return;
 		base.Update();
 		checkClosestEnemyTick += Time.deltaTime;
 		if (checkClosestEnemyTick >= checkClosestEnemyInterval) {
