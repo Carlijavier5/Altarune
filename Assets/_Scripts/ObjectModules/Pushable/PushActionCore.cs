@@ -5,11 +5,13 @@ public class PushActionCore {
     public AnimationCurve EaseCurve { get; private set; }
     private readonly DefaultEaseCurves defaultCurves;
 
+    public event System.Action OnPushFinished;
+
     private readonly Pushable pushable;
     public readonly Vector3 direction;
     public readonly float duration;
 
-    public Vector3 ValueAtLifetime => direction * EaseCurve.Evaluate(lifetime);
+    public Vector3 CurrentPushVector => direction * EaseCurve.Evaluate(lifetime);
     private float lifetime;
 
     public PushActionCore(Pushable pushable, Vector3 direction,
@@ -38,5 +40,7 @@ public class PushActionCore {
 
     public void Kill() {
         if (pushable) pushable.RemoveCore(this);
+        OnPushFinished?.Invoke();
+        OnPushFinished = null;
     }
 }
