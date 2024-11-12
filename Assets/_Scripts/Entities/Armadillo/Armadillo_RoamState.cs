@@ -7,6 +7,7 @@ public partial class Armadillo : Entity {
   private record ArmadilloRoamState : ArmadilloState {
     public override void Enter(Armadillo armadillo) {
       armadillo.navMeshAgent.enabled = true;
+      armadillo.MotionDriver.Set(armadillo.navMeshAgent);
       SetNewRoamTarget(armadillo);
     }
     public override void Update(Armadillo armadillo) {
@@ -41,6 +42,9 @@ public partial class Armadillo : Entity {
       }
       armadillo.navMeshAgent.SetDestination(targetLocation);
     }
-    public override void Exit(Armadillo armadillo) { armadillo.navMeshAgent.enabled = false; }
+    public override void Exit(Armadillo armadillo) {
+      armadillo.navMeshAgent.enabled = false;
+      armadillo.MotionDriver.Set(armadillo.transform);
+    }
   }
 }

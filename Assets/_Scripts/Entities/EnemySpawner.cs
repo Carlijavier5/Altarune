@@ -40,13 +40,28 @@ public class EnemySpawner : Entity {
         base.Update();
         if (isActive && Time.time > _nextSpawnTime) {
             _nextSpawnTime = Time.time + spawnDelay;
-            // spawn an enemy
+
             if (enemies.Count < maxEnemiesAtOnce) {
-                // probably redo this?
                 Vector2 vec = Random.insideUnitCircle.normalized * spawnDistance;
-                Vector3 newPos = transform.position + new Vector3(vec[0], vec[1], 0);
+                Vector3 newPos = transform.position + new Vector3(vec[0], 0, vec[1]);
+                Bounds bounds = enemyPrefab.GetComponent<Collider>().bounds;
+                float longestBound = System.Math.Max(bounds.extents.x, bounds.extents.z);
+
+                // Check for entity within the chosen spawn location
+                // ensures no enemy stacking, or spawning right on top of player
+                Collider[] colls = Physics.OverlapSphere(newPos, longestBound + 1.5f);
+                foreach (Collider col in colls) {
+                    Entity entity = col.gameObject.GetComponent<Entity>();
+                    // ignore spawn collisions with the spawner itself; use spawnradius instead.
+                    if (!col.isTrigger && entity != null && entity.GetType() != typeof(EnemySpawner)) {
+                        // if failed to place enemy, don't reset timer
+                        _nextSpawnTime = Time.time + 0.1f;
+                        return;
+                    }
+                }
 
                 Entity newEnemy = Instantiate(enemyPrefab, newPos, Quaternion.identity);
+                // remove enemies from this object's list on perish so they don't get deleted alongside the spawner
                 newEnemy.OnPerish += e=>{enemies?.Remove(newEnemy);};
 
                 enemies.Add(newEnemy);

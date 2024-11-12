@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7238670655922746010}
   - component: {fileID: 3301684674909122583}
-  m_Layer: 0
+  - component: {fileID: 4705809755692650824}
+  m_Layer: 6
   m_Name: TowerGatlingGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
   aggroRange: {fileID: 6767414917338092509}
   smallArea: {fileID: 8232291451846330549, guid: 399c80ab984c9b742818693176774fb1,
     type: 3}
@@ -62,6 +64,29 @@ MonoBehaviour:
   damage: 1
   damageInterval: 0.2
   animator: {fileID: 281767972017262234}
+--- !u!136 &4705809755692650824
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905732771733073507}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &5961594720638404586
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,7 +98,7 @@ GameObject:
   - component: {fileID: 792323427481074155}
   - component: {fileID: 1602139256971719760}
   - component: {fileID: 1273785839412273991}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GatlingGroundFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,6 +214,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AggroRange
       objectReference: {fileID: 0}
+    - target: {fileID: 2020385305260358967, guid: 9e399320993ddcd42b56f7ff27c6019f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3344513934887149153, guid: 9e399320993ddcd42b56f7ff27c6019f,
         type: 3}
       propertyPath: sensitiveFactions.Array.data[0]
@@ -275,10 +305,55 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7238670655922746010}
     m_Modifications:
+    - target: {fileID: 1131514728097869056, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1161497437390846170, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1941648269964402099, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2931359899513319662, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4433384183294068882, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5077060721522832552, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5932199305125909034, guid: 8d1239f8246fe28478e42745d6814e8f,
         type: 3}
       propertyPath: m_Name
       value: Gatling_Gun_Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932199305125909034, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069056566248489448, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6198086087881343980, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7887359903294572309, guid: 8d1239f8246fe28478e42745d6814e8f,
         type: 3}
@@ -329,6 +404,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8958727512244161559, guid: 8d1239f8246fe28478e42745d6814e8f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8995811063246903393, guid: 8d1239f8246fe28478e42745d6814e8f,
         type: 3}

@@ -12,16 +12,6 @@ public class FriendlyFireTower : Summon{
     [SerializeField] private AggroRange aggroRange;
 
     private float attackTick = -0.2f;
-    private bool init;
-
-    protected override void Awake(){
-        base.Awake();
-    }
-
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
-    }
 
     // Update is called once per frame
     protected override void Update(){
@@ -33,7 +23,7 @@ public class FriendlyFireTower : Summon{
     /// </summary>
     private void Target(){
         Vector3 closestVector = new Vector3(float.MaxValue, float.MaxValue, Int32.MaxValue);
-        if(!init) return;
+        if (!active) return;
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval && aggroRange.AggroTargets.Count != 0) {
             foreach(Entity i in aggroRange.AggroTargets){
