@@ -656,6 +656,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputSource: {fileID: 0}
+  summoner: {fileID: 0}
+  manaSource: {fileID: 0}
   phSelector: {fileID: 3015806664493042645}
   towerBlueprints:
   - {fileID: 11400000, guid: c04e930eeff5c894090dbdab87dcc17d, type: 2}
@@ -666,6 +668,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: df266b0592ae2f8499fd637a8669eec4, type: 2}
   - {fileID: 11400000, guid: b7466b291ee0deca4970a90cd788c67f, type: 2}
   batteryData: {fileID: 11400000, guid: ca2040fcfc35a7f41b65dfe756859b8a, type: 2}
+  manaConnectionMaterial: {fileID: 2100000, guid: b0f698a863be1bf449a901dc83076e3f,
+    type: 2}
+  batteryCost: 0
+  towerCost: 0
+  overlapRadius: 1.5
 --- !u!1 &9209107716837739798
 GameObject:
   m_ObjectHideFlags: 0
