@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 using UnityEngine.Events;
-using Miniboss;
+using GolemSavage;
 
-namespace Miniboss {
-    public partial class Miniboss {
-        private class PhaseTwo : State<MinibossStateInput> {
+namespace GolemSavage {
+    public partial class GolemSavage {
+        private class GolemSavage_PhaseTwo : State<GolemSavageStateInput> {
             // Creating objects
-            private Miniboss miniboss;
+            private GolemSavage golemSavage;
             private Transform player;
             private NavMeshAgent navigation;
             private Damageable damageable;
@@ -30,23 +30,23 @@ namespace Miniboss {
             private GameObject minionPrefab;
             private GameObject[] minions;
 
-            public override void Enter(MinibossStateInput input) {
+            public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
-                miniboss = input.Miniboss;
+                golemSavage = input.GolemSavage;
 
                 // Initializes objects with values from the enemy
-                player = miniboss.player;
-                navigation = miniboss.navigation;
-                minionPrefab = miniboss.minionPrefab;
-                damageable = miniboss.damageable;
+                player = golemSavage.player;
+                navigation = golemSavage.navigation;
+                minionPrefab = golemSavage.minionPrefab;
+                damageable = golemSavage.damageable;
 
                 // Pushable implementation
-                miniboss.MotionDriver.Set(navigation);
+                golemSavage.MotionDriver.Set(navigation);
 
                 // Initializes variables with values from the enemy
-                speed = miniboss.speed / 1.5f;
+                speed = golemSavage.speed / 1.5f;
                 stoppingDistance = 0;
-                health = miniboss.health;
+                health = golemSavage.health;
 
                 // Initializes the NavMeshAgent
                 navigation.speed = speed;
@@ -66,7 +66,7 @@ namespace Miniboss {
                 };
 
                 // Makes the enemy move to the center of the map
-                moveToCenter = miniboss.StartCoroutine(MoveToCenter(new Vector3(0, 0, 0)));
+                moveToCenter = golemSavage.StartCoroutine(MoveToCenter(new Vector3(0, 0, 0)));
             }
 
             private IEnumerator MoveToCenter(Vector3 targetPos) {
@@ -79,7 +79,7 @@ namespace Miniboss {
                 InitializeMinions();
 
                 // Duplicates the minions
-                miniboss.StartCoroutine(DuplicateMinion(miniboss.transform.position));
+                golemSavage.StartCoroutine(DuplicateMinion(golemSavage.transform.position));
             }
 
             // Method to initialize the minions
@@ -128,7 +128,7 @@ namespace Miniboss {
                 finishedDuplication = true;
             }
 
-            public override void Update(MinibossStateInput input) {
+            public override void Update(GolemSavageStateInput input) {
                 CheckStateTransition();
                 if (finishedDuplication) {
                     LookTowardsPlayer();
@@ -145,16 +145,16 @@ namespace Miniboss {
 
             private void CheckStateTransition() {
                 if (health <= 40) {
-                    miniboss.stateMachine.SetState(new PhaseThree());
+                    golemSavage.stateMachine.SetState(new GolemSavage_PhaseThree());
                 }
             }
 
             public void LookTowardsPlayer() {
                 // Determines how the enemy should rotate towards the player
-                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+                Vector3 directionToPlayer = (player.position - golemSavage.transform.position).normalized;
                 Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
                 // Rotates the enemy towards the player (uses slerp)
-                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
+                golemSavage.transform.rotation = Quaternion.Slerp(golemSavage.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
             }
 
             public void HandleMinionDeath() {
@@ -164,13 +164,13 @@ namespace Miniboss {
                 }
             }
 
-            public override void Exit(MinibossStateInput input) {
+            public override void Exit(GolemSavageStateInput input) {
                 // Makes the enemy damageable again
                 damageable.ToggleIFrame(false);
 
                 // Stops the Coroutine
                 if (moveToCenter != null) {
-                    miniboss.StopCoroutine(moveToCenter);
+                    golemSavage.StopCoroutine(moveToCenter);
                     moveToCenter = null;
                 }
             }

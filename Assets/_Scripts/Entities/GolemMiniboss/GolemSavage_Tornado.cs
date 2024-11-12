@@ -2,11 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Miniboss {
-    public partial class Miniboss {
-        private class Tornado : State<MinibossStateInput> {
+namespace GolemSavage {
+    public partial class GolemSavage {
+        private class GolemSavage_Tornado : State<GolemSavageStateInput> {
             // Creating objects
-            private Miniboss miniboss;
+            private GolemSavage golemSavage;
             private Transform player;
             private NavMeshAgent navigation;
             private Damageable damageable;
@@ -36,31 +36,30 @@ namespace Miniboss {
             [SerializeField] private float rayCastDistance = 1f;
             private Vector3 moveDirection;
 
-            public override void Enter(MinibossStateInput input) {
+            public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
-                miniboss = input.Miniboss;
+                golemSavage = input.GolemSavage;
 
                 // Initializes the player and damageable
-                player = miniboss.player;
-                damageable = miniboss.damageable;
+                player = golemSavage.player;
+                damageable = golemSavage.damageable;
 
                 // Initilalizes and clears the navmeshagent
-                navigation = miniboss.navigation;
-                navigation.SetDestination(miniboss.transform.position);
+                navigation = golemSavage.navigation;
+                navigation.SetDestination(golemSavage.transform.position);
                 navigation.velocity = Vector3.zero;
 
-
                 // Pushable implementation
-                miniboss.MotionDriver.Set(navigation);
+                golemSavage.MotionDriver.Set(navigation);
 
                 // Makes the miniboss invulnerable during the tornado attack
                 damageable.ToggleIFrame(true);
 
                 // Initializes a Coroutine used for random spinning
-                startSpin = miniboss.StartCoroutine(StartSpin());
+                startSpin = golemSavage.StartCoroutine(StartSpin());
             }
 
-            public override void Update(MinibossStateInput input) {
+            public override void Update(GolemSavageStateInput input) {
                 // Check whether to switch states every frame
                 CheckStateTransition();
             }
@@ -69,7 +68,7 @@ namespace Miniboss {
             private void CheckStateTransition() {
                 if (finishTornado) {
                     damageable.ToggleIFrame(false);
-                    miniboss.stateMachine.SetState(new PhaseOne());
+                    golemSavage.stateMachine.SetState(new GolemSavage_PhaseOne());
                 }
             }
 
@@ -83,16 +82,16 @@ namespace Miniboss {
 
                     // Creates the smooth acceleration effect (linear interpolation)
                     currentSpinSpeed = Mathf.Lerp(0, maxSpinSpeed, spinElapsedTime / spinAccelerationTime);
-                    miniboss.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
+                    golemSavage.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
                     yield return null;
                 }
 
                 // Calls the method to start movement
-                startMove = miniboss.StartCoroutine(StartMove());
+                startMove = golemSavage.StartCoroutine(StartMove());
 
                 // Continues spinning at top speed
                 while (!deactivateTornado) {
-                    miniboss.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
+                    golemSavage.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
                     yield return null;
 
                     // Determines when to switch to deactivate the torando attack
@@ -104,7 +103,7 @@ namespace Miniboss {
                 }
 
                 // Calls the spin deceleration method
-                endSpin = miniboss.StartCoroutine(StopSpin());
+                endSpin = golemSavage.StartCoroutine(StopSpin());
             }
 
             // Method that starts the move logic (called after spin is at top speed)
@@ -122,19 +121,27 @@ namespace Miniboss {
                         currentMoveSpeed = Mathf.Lerp(0, maxMoveSpeed, moveElapsedTime / moveAccelerationTime);
                     }
 
-                    // Sets the direction and speed in the NavMeshAgent
-                    navigation.Move(moveDirection * currentMoveSpeed * Time.deltaTime);
+                    // Stores information about the collision (specifically the normal vector)
+                    RaycastHit hit;
 
                     // Casts a Raycast to determine when to change directions (1f away from a wall)
-                    if (Physics.Raycast(miniboss.transform.position, moveDirection, rayCastDistance)) {
-                        ChooseStartDirection();
+                    if (Physics.Raycast(golemSavage.transform.position, moveDirection, out hit, rayCastDistance)) {
+                        // Perfectly reflects the direction off of the wall
+                        moveDirection = Vector3.Reflect(moveDirection, hit.normal);
+
+                        // Adds some variation to the reflection
+                        float randomVariation = Random.Range(-45f, 45f);
+                        moveDirection = Quaternion.Euler(0, randomVariation, 0) * moveDirection;
                     }
+
+                    // Sets the direction and speed in the NavMeshAgent
+                    navigation.Move(moveDirection * currentMoveSpeed * Time.deltaTime);
 
                     yield return null;
                 }
 
                 // Calls the move deceleration method
-                endMove = miniboss.StartCoroutine(StopMove());
+                endMove = golemSavage.StartCoroutine(StopMove());
             }
 
             // Randomly calculates a vector to move towards
@@ -153,7 +160,7 @@ namespace Miniboss {
                 while (spinElapsedTime < spinDecelerationTime) {
                     spinElapsedTime += Time.deltaTime;
                     currentSpinSpeed = Mathf.Lerp(maxSpinSpeed, 0, spinElapsedTime / spinDecelerationTime);
-                    miniboss.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
+                    golemSavage.transform.Rotate(Vector3.up, currentSpinSpeed * Time.deltaTime);
                     yield return null;
                 }
             }
@@ -169,7 +176,7 @@ namespace Miniboss {
                     navigation.Move(moveDirection * currentMoveSpeed * Time.deltaTime);
 
                     // Continues to switch directions while decelerating
-                    if (Physics.Raycast(miniboss.transform.position, moveDirection, rayCastDistance)) {
+                    if (Physics.Raycast(golemSavage.transform.position, moveDirection, rayCastDistance)) {
                         ChooseStartDirection();
                     }
 
@@ -181,12 +188,12 @@ namespace Miniboss {
             }
 
             // Method called when exiting the state
-            public override void Exit(MinibossStateInput input) {
+            public override void Exit(GolemSavageStateInput input) {
                 // Stop the Coroutines
-                miniboss.StopCoroutine(startSpin);
-                miniboss.StopCoroutine(startMove);
-                miniboss.StopCoroutine(endSpin);
-                miniboss.StopCoroutine(endMove);
+                golemSavage.StopCoroutine(startSpin);
+                golemSavage.StopCoroutine(startMove);
+                golemSavage.StopCoroutine(endSpin);
+                golemSavage.StopCoroutine(endMove);
 
                 // Makes the enemy vulnerable to damage again
                 damageable.ToggleIFrame(false);

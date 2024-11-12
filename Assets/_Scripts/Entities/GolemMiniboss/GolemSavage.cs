@@ -2,17 +2,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Miniboss {
-    public partial class Miniboss : Entity {
+namespace GolemSavage {
+    public partial class GolemSavage : Entity {
         // Creating the NavMeshAgent, Player, Damageable, and the minionPrefab
         private NavMeshAgent navigation;
         private Transform player;
         private Damageable damageable;
         [SerializeField] private GameObject minionPrefab;
+        [SerializeField] private GameObject meteorPrefab;
 
         // Initializing default values for movement
         [SerializeField] private float speed = 2.5f;
-        [SerializeField] private float stoppingDistance = 1.5f;
+        [SerializeField] private float stoppingDistance = 1f;
         [SerializeField] private Rigidbody rb;
         public float RootMult => CanMove ? 1 : 0;
         
@@ -20,14 +21,16 @@ namespace Miniboss {
         private float health;
 
         // Creating the state machine
-        private StateMachine<MinibossStateInput> stateMachine;
+        private StateMachine<GolemSavageStateInput> stateMachine;
 
         // Creating the enemy phases
-        private PhaseOne phaseOneState;
-        private PhaseTwo phaseTwoState;
-        private PhaseThree phaseThreeState;
-        private Tornado tornadoState;
-        private Stunned stunnedPhase;
+        private GolemSavage_PhaseOne phaseOneState;
+        private GolemSavage_PhaseTwo phaseTwoState;
+        private GolemSavage_PhaseThree phaseThreeState;
+        private GolemSavage_Tornado tornado;
+        private GolemSavage_GroundSlam groundSlam;
+        private GolemSavage_MeteorStrike meteorStrike;
+        private GolemSavage_Stunned stunnedPhase;
 
         private bool active;
 
@@ -49,14 +52,11 @@ namespace Miniboss {
                 health = damageable.Health;
 
                 // Initializing variables with Phase files
-                phaseOneState = new PhaseOne();
-                phaseTwoState = new PhaseTwo();
-                phaseThreeState = new PhaseThree();
-                stunnedPhase = new Stunned();
+                phaseOneState = new GolemSavage_PhaseOne();
 
                 // Initializing the state machine and setting initial phase
-                stateMachine = new StateMachine<MinibossStateInput>();
-                MinibossStateInput stateInput = new MinibossStateInput(this);
+                stateMachine = new StateMachine<GolemSavageStateInput>();
+                GolemSavageStateInput stateInput = new GolemSavageStateInput(this);
                 stateMachine.Init(stateInput, phaseOneState);
 
                 // Adding listeners
@@ -104,13 +104,13 @@ namespace Miniboss {
         private void setStunned(bool isStunned) {
             // Only stuns if the enemy is in Phase 1 or 3
             if (isStunned && (health > 70 || health <= 40)) {
-                stateMachine.SetState(new Stunned());
+                stateMachine.SetState(new GolemSavage_Stunned());
             } else {
                 // Logic to switch back to current state
                 if (health > 70) {
-                    stateMachine.SetState(new PhaseOne());
+                    stateMachine.SetState(new GolemSavage_PhaseOne());
                 }
-                stateMachine.SetState(new PhaseThree());
+                stateMachine.SetState(new GolemSavage_PhaseThree());
             }
         }
 

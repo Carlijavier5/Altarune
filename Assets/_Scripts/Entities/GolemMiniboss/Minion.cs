@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Miniboss {
+namespace GolemSavage {
     public class Minion : Entity {
         // Creating the NavMeshAgent, Player, and Damageable
         private UnityEngine.AI.NavMeshAgent navigation;

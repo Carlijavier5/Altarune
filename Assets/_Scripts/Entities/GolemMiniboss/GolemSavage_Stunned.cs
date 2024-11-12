@@ -4,31 +4,31 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 using UnityEngine.Events;
-using Miniboss;
+using GolemSavage;
 
-namespace Miniboss {
-    public partial class Miniboss {
-        private class Stunned : State<MinibossStateInput> {
+namespace GolemSavage {
+    public partial class GolemSavage {
+        private class GolemSavage_Stunned : State<GolemSavageStateInput> {
             // Creating objects
-            private Miniboss miniboss;
+            private GolemSavage golemSavage;
             private NavMeshAgent navigation;
             private Damageable damageable;
 
             private float health;
            
-            public override void Enter(MinibossStateInput input) {
+            public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
-                miniboss = input.Miniboss;
+                golemSavage = input.GolemSavage;
 
                 // Initializes objects with values from the enemy
-                navigation = miniboss.navigation;
-                miniboss.MotionDriver.Set(navigation);
-                damageable = miniboss.damageable;
+                navigation = golemSavage.navigation;
+                golemSavage.MotionDriver.Set(navigation);
+                damageable = golemSavage.damageable;
 
-                health = miniboss.health;
+                health = golemSavage.health;
             }
 
-            public override void Update(MinibossStateInput input) {   
+            public override void Update(GolemSavageStateInput input) {   
                 
             }
 
@@ -44,7 +44,7 @@ namespace Miniboss {
                
             }
 
-            public override void Exit(MinibossStateInput input) {
+            public override void Exit(GolemSavageStateInput input) {
                 
             }
         }

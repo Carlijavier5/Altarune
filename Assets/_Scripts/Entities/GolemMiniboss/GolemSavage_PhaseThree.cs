@@ -1,64 +1,59 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
+using UnityEngine.Events;
+using GolemSavage;
 
-namespace Miniboss {
-    public partial class Miniboss {
-        private class PhaseOne : State<MinibossStateInput> {
+namespace GolemSavage {
+    public partial class GolemSavage {
+        private class GolemSavage_PhaseThree : State<GolemSavageStateInput> {
             // Creating objects
-            private Miniboss miniboss;
+            private GolemSavage golemSavage;
             private Transform player;
             private NavMeshAgent navigation;
             private Damageable damageable;
-            private Coroutine malfunctionCoroutine;
 
-            // Creating variables
+            // Creating essential variables
+            private float health;
             private float speed;
             private float stoppingDistance;
-            private float health;
 
-            public override void Enter(MinibossStateInput input) {
+            private Coroutine meteorCoroutine;
+
+            public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
-                miniboss = input.Miniboss;
+                golemSavage = input.GolemSavage;
 
                 // Initializes objects with values from the enemy
-                player = miniboss.player;
-                navigation = miniboss.navigation;
-                damageable = miniboss.damageable;
+                player = golemSavage.player;
+                navigation = golemSavage.navigation;
+                damageable = golemSavage.damageable;
 
                 // Pushable implementation
-                miniboss.MotionDriver.Set(navigation);
+                golemSavage.MotionDriver.Set(navigation);
 
                 // Initializes variables with values from the enemy
-                health = miniboss.health;
-                speed = miniboss.speed;
-                stoppingDistance = miniboss.stoppingDistance;
+                speed = golemSavage.speed * 2;
+                stoppingDistance = 1.5f;
+                health = golemSavage.health;
 
-                // Initializes a Coroutine used for random spinning
-                malfunctionCoroutine = miniboss.StartCoroutine(MalfunctionCoroutine());
+                // Initializes a Coroutine used for the meteor attack
+                meteorCoroutine = golemSavage.StartCoroutine(MeteorCoroutine());
             }
 
-            public override void Update(MinibossStateInput input) {
-                health = miniboss.health;
-                speed = miniboss.speed;
-                
+            public override void Update(GolemSavageStateInput input) {
                 FollowPlayer();
-                CheckStateTransition();
-            }
-
-            // Switches to the next state depending on the health
-            private void CheckStateTransition() {
-                if (health <= 70) {
-                    miniboss.stateMachine.SetState(new PhaseTwo());
-                }
+                health = golemSavage.health;
             }
 
             // Method that outlines how the enemy follows the player
             public void FollowPlayer() {
                 // Calculates the normalized vector in the direction of the player
-                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+                Vector3 directionToPlayer = (player.position - golemSavage.transform.position).normalized;
                 // Calculates the angle between the enemy and the player
-                float angleToPlayer = Vector3.Angle(miniboss.transform.forward, directionToPlayer);
+                float angleToPlayer = Vector3.Angle(golemSavage.transform.forward, directionToPlayer);
 
                 // If the angle is less then 60 degrees
                 if (angleToPlayer <= 60.0f) {
@@ -82,25 +77,33 @@ namespace Miniboss {
 
             public void LookTowardsPlayer() {
                 // Determines how the enemy should rotate towards the player
-                Vector3 directionToPlayer = (player.position - miniboss.transform.position).normalized;
+                Vector3 directionToPlayer = (player.position - golemSavage.transform.position).normalized;
                 Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
                 // Rotates the enemy towards the player (uses slerp)
-                miniboss.transform.rotation = Quaternion.Slerp(miniboss.transform.rotation, rotateToPlayer, 2f * miniboss.DeltaTime);
+                golemSavage.transform.rotation = Quaternion.Slerp(golemSavage.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
             }
 
             // Method that randomly (5 - 10 seconds) calls the SpinCoroutine method
-            IEnumerator MalfunctionCoroutine() {
+            IEnumerator MeteorCoroutine() {
                 while(true) {
                     yield return new WaitForSeconds(Random.Range(5, 10));
-                    miniboss.stateMachine.SetState(new Tornado());
+                    golemSavage.stateMachine.SetState(new GolemSavage_MeteorStrike());
                 }
             }
 
-            public override void Exit(MinibossStateInput input) {
+            // Method to try to damage non-hostile factions
+            public void OnTriggerEnter(Collider other) {
+                if (other.TryGetComponent(out Entity entity)
+                    && entity.Faction != EntityFaction.Hostile) {
+                    bool isDamageable = entity.TryDamage(3);
+                }
+            }
+
+            public override void Exit(GolemSavageStateInput input) {
                 // Stop the Coroutine
-                if (malfunctionCoroutine != null) {
-                    miniboss.StopCoroutine(malfunctionCoroutine);
-                    malfunctionCoroutine = null;
+                if (meteorCoroutine != null) {
+                    golemSavage.StopCoroutine(meteorCoroutine);
+                    meteorCoroutine = null;
                 }
             }
         }
