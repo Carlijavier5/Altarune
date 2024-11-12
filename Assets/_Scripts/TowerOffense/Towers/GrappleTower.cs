@@ -12,7 +12,7 @@ public class GrappleTower : Summon
     [SerializeField] private float grappleSpeed;
     [SerializeField] private float grappleTime;
     [SerializeField] private float cooldownInterval;
-    private bool init;
+
     private SphereCollider sCollider;
 
     private float angle;
@@ -24,15 +24,10 @@ public class GrappleTower : Summon
         sCollider.radius = range;
     }
 
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
-        init = true;
-    }
-
     protected override void Update() {
         base.Update();
         //Debug.Log(sCollider.radius);
-        if (!init) return;
+        if (!active) return;
         grappleTick += Time.deltaTime;
         if (grappleTick >= cooldownInterval) {
             //Find all nearby gameobjects

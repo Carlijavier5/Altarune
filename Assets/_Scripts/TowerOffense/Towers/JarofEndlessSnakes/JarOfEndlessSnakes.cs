@@ -13,12 +13,10 @@ public class JarOfEndlessSnakes : Summon
     private float timeToNextSummon = 0;
     private List<Snake> snakes = new List<Snake>();
 
-    private bool init = false;
-
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
+    public override void Init(Entity summoner,
+                              ManaSource manaSource) {
+        base.Init(summoner, manaSource);
         timeToNextSummon = summonCooldown;
-        init = true;
     }
     
     void Awake() {
@@ -29,7 +27,7 @@ public class JarOfEndlessSnakes : Summon
 
     // Update is called once per frame
     protected override void Update(){
-        if(!init) return;
+        if(!active) return;
         base.Update();
         timeToNextSummon -= Time.deltaTime;
         if(snakes.Count == maxSnakes){

@@ -23,7 +23,7 @@ public class Scaramite : Entity {
     [Header("Movement Variables")]
     [SerializeField] private float linearAcceleration;
     [SerializeField] private float angularSpeed;
-    [SerializeField] private float bias = 0.65f; //Bias towards the player
+    [SerializeField] private float playerBias = 0.65f;
 
     [Header("Roam Variables")]
     [SerializeField] private float timeBetweenMove = 0.35f;
@@ -131,7 +131,7 @@ public class Scaramite : Entity {
         }
 
         Vector3 dir = (transform.position - destination).normalized;
-        Vector3 forceVector = dir * linearAcceleration * FixedDeltaTime;
+        Vector3 forceVector = FixedDeltaTime * linearAcceleration * dir;
         rb.AddRelativeForce(forceVector.x / (speed + 1f), 0f, forceVector.y / (speed + 1f), ForceMode.Acceleration);
 
         if (timer >= timeBetweenMove) {
@@ -143,6 +143,7 @@ public class Scaramite : Entity {
 
     //Chase mode will have the bat move faster and constantly directly towards the player
     private void Chase() {
+
         transform.position = Vector3.MoveTowards(transform.position, ChasePlayerPosition(), speed * FixedDeltaTime);
     }
 
@@ -171,8 +172,8 @@ public class Scaramite : Entity {
 
         //Make sure the bat isn't going 100% towards the player 
         //(it's actually unplayable otherwise lol)
-        dir.x *= bias;
-        dir.z *= bias;
+        dir.x *= playerBias;
+        dir.z *= playerBias;
 
         if (dir != Vector3.zero) {
             transform.rotation = Quaternion.Slerp(transform.rotation, 

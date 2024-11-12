@@ -5,16 +5,15 @@ public class TowerPlague : Summon {
 
     [SerializeField] private PlagueArea plagueArea;
     [SerializeField] private Transform launchPoint;
-    private bool init;
 
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
-        init = true;
+    public override void Init(Entity summoner,
+                              ManaSource manaSource) {
+        base.Init(summoner, manaSource);
         SpawnPlagueArea();
     }
 
     protected override void Update() {
-        if (!init) return;
+        if (!active) return;
         base.Update();
     }
 

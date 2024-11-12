@@ -31,7 +31,6 @@ public class GatlingGun : Summon {
     private bool isAggroed = false;
     private float smallAreaSpawnTimer = 0f;
     private float bigAreaSpawnTimer = 0f;
-    private bool init;
     private bool targetSet;
     //private Quaternion targetRotation;
 
@@ -41,14 +40,9 @@ public class GatlingGun : Summon {
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
     }
 
-    public override void Init(ManaSource manaSource) {
-        base.Init(manaSource);
-        init = true;
-    }
-
     protected override void Update() {
         // Calls SpawnSmallArea on a delay
-        if (init && isAggroed && currentBigArea != null &&
+        if (active && isAggroed && currentBigArea != null &&
            (SmallAreas.Count < maxSmallAreas || NumOfInactive >= 1)) {
             smallAreaSpawnTimer += Time.deltaTime;
             if (smallAreaSpawnTimer >= smallAreaSpawnDelay) {
@@ -57,7 +51,7 @@ public class GatlingGun : Summon {
             }
         }
         // Calls SpawnBigArea on a delay
-        if (init && currentBigArea == null) {
+        if (active && currentBigArea == null) {
             bigAreaSpawnTimer += Time.deltaTime;
             if (bigAreaSpawnTimer >= bigAreaSpawnDelay && aggroTarget != null) {
                 SpawnBigArea();
@@ -65,7 +59,7 @@ public class GatlingGun : Summon {
                 bigAreaSpawnTimer = 0f;
             }
         }
-        if (init) base.Update();
+        if (active) base.Update();
     }
 
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();

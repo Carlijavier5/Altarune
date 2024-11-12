@@ -11,7 +11,9 @@ public class SummonController : MonoBehaviour {
     public event System.Action<BatteryData> OnBatterySelected;
 
     [SerializeField] private PlayerController inputSource;
+    [SerializeField] private Entity summoner;
     [SerializeField] private ManaSource manaSource;
+
     [SerializeField] private PHSelector phSelector;
 
     [SerializeField] private TowerData[] towerBlueprints;
@@ -161,7 +163,7 @@ public class SummonController : MonoBehaviour {
                     summonedBatteries.Add(battery);
                     battery.DoSpawnAnim();
 
-                    battery.Init(manaSource);
+                    battery.Init(summoner, manaSource);
                     manaSource.Drain(batteryCost);
 
                     SetSelectionType(SummonType.None);
@@ -176,11 +178,11 @@ public class SummonController : MonoBehaviour {
                         targetBattery.LinkTower(tower);
                         tower.DoSpawnAnim();
 
-                        tower.Init(batterySource);
+                        tower.Init(summoner, batterySource);
                         batterySource.Drain(towerCost);
 
                         SetSelectionType(SummonType.None);
-                        CreateManaConnection(tower.transform, closestBattery.transform);
+                        CreateManaConnection(tower.transform, targetBattery.MonoScript.transform);
                     } break;
             }
         }
