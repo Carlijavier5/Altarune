@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 184703163551297938}
   - component: {fileID: 6573488618673428734}
   - component: {fileID: 2314017069526810355}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2550746929009170975}
   - component: {fileID: 1002966531839762965}
-  m_Layer: 0
+  - component: {fileID: 5488943393899387145}
+  m_Layer: 6
   m_Name: TowerPlague
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +110,7 @@ Transform:
   m_GameObject: {fileID: 92340364433473164}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.474, y: 1.215, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -129,9 +130,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
   plagueArea: {fileID: 1376637598071585699, guid: b9e1ab66dd17b714a95749eb1cfe13c4,
     type: 3}
   launchPoint: {fileID: 1592312466626171286}
+--- !u!136 &5488943393899387145
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92340364433473164}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &901021575514432436
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4613688277624857598}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +208,7 @@ GameObject:
   - component: {fileID: 8926504655167078842}
   - component: {fileID: 2122491468233650697}
   - component: {fileID: 4848283547128602352}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +291,7 @@ GameObject:
   - component: {fileID: 624899916520846242}
   - component: {fileID: 8893822911808947276}
   - component: {fileID: 8171514381503072484}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +374,7 @@ GameObject:
   - component: {fileID: 1592312466626171286}
   - component: {fileID: 4516790743550304150}
   - component: {fileID: 5507828761327891561}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Lowball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,7 +457,7 @@ GameObject:
   - component: {fileID: 5081680433548568696}
   - component: {fileID: 2025253470500133338}
   - component: {fileID: 8191947859496384393}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +540,7 @@ GameObject:
   - component: {fileID: 4628754007814149188}
   - component: {fileID: 8833928448544990559}
   - component: {fileID: 1134210449918323810}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +623,7 @@ GameObject:
   - component: {fileID: 88027554309975377}
   - component: {fileID: 9143878831336919588}
   - component: {fileID: 1086963595540230711}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -681,7 +706,7 @@ GameObject:
   - component: {fileID: 9067446884199606921}
   - component: {fileID: 5879512391984318560}
   - component: {fileID: 6158426934407527534}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HighBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -835,6 +860,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Torus
+      objectReference: {fileID: 0}
+    - target: {fileID: 8730438640879839645, guid: 32acca1c7746bc14fbac4cb5081f448a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

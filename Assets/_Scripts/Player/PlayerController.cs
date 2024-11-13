@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
     public event System.Action OnSummonPerformed;
     public event System.Action<SummonType, int> OnSummonSelect;
 
+    public event System.Action OnSkillPerformed;
+
     [SerializeField] private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
 
@@ -53,6 +55,8 @@ public class PlayerController : MonoBehaviour {
         playerInput.Actions.Summon.performed += Summon_Performed;
         playerInput.Actions.SelectSummon.performed += SelectSummon_performed;
 
+        playerInput.Actions.ActivateSkill.performed += Skill_Performed;
+
         /// Replace after actual initialization;
         if (cameraBrain && !init) Init(cameraBrain);
     }
@@ -86,5 +90,9 @@ public class PlayerController : MonoBehaviour {
             if (value == -1) OnSummonSelect?.Invoke(SummonType.Battery, 0);
             else if (value > 0) OnSummonSelect?.Invoke(SummonType.Tower, value);
         }
+    }
+
+    private void Skill_Performed(InputAction.CallbackContext context) {
+        if (context.performed) OnSkillPerformed?.Invoke();
     }
 }

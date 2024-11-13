@@ -22,6 +22,8 @@ public partial class Armadillo : Entity {
     [SerializeField] private AggroRange aggroRange;
     private Entity aggroEntity;
     private float agitation = 1.0f;
+
+    private float rootedMult = 1.0f;
     private float Agitation {
         get => agitation;
         set {
@@ -31,8 +33,8 @@ public partial class Armadillo : Entity {
     }
 
     public void UpdateNavMeshSpeeds() {
-        navMeshAgent.speed = roamSpeed * status.timeScale * Agitation;
-        navMeshAgent.angularSpeed = roamAngularSpeed * status.timeScale * Agitation;
+        navMeshAgent.speed = roamSpeed * status.timeScale * Agitation * rootedMult;
+        navMeshAgent.angularSpeed = roamAngularSpeed * status.timeScale * Agitation * rootedMult;
     }
 
     private void SetState(ArmadilloState newState) {
@@ -42,7 +44,7 @@ public partial class Armadillo : Entity {
     }
     public void CalmDown() {
         if (Agitation > 1) {
-            Agitation -= Time.deltaTime * TimeScale * 0.1f;
+            Agitation -= DeltaTime * 0.1f;
             if (Agitation < 1) Agitation = 1;
         }
     }
@@ -51,12 +53,16 @@ public partial class Armadillo : Entity {
     private void Start() {
         OnTimeScaleSet += Armadillo_OnTimeScaleSet;
         OnTryDamage += HandleTryDamage;
+        OnStunSet += Armadillo_OnStunSet;
+        OnRootSet += Armadillo_OnRootSet;
 
         navMeshAgent.speed = roamSpeed;
         navMeshAgent.acceleration = roamAcceleration;
         navMeshAgent.autoBraking = true;
+        navMeshAgent.enabled = false;
 
         state = new ArmadilloIdleState();
+        MotionDriver.Set(transform);
         state.Enter(this);
         rollParticleSystem.Stop();
 
@@ -67,12 +73,6 @@ public partial class Armadillo : Entity {
 
     private void Armadillo_OnTimeScaleSet(float timeScale) => UpdateNavMeshSpeeds();
 
-    void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
-            && entity.Faction != EntityFaction.Hostile) {
-            entity.TryDamage(4);
-        }
-    }
     public override void Perish() {
         base.Perish();
         Destroy(gameObject);
@@ -81,6 +81,26 @@ public partial class Armadillo : Entity {
         base.Update();
         state.Update(this);
         CleanUpOldDamageEvents();
+    }
+
+    private void Armadillo_OnStunSet(bool stunned) {
+        ArmadilloState newState = stunned ? new ArmadilloStunState() : new ArmadilloIdleState();
+        SetState(newState);
+    }
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Entity entity)
+            && entity.Faction != EntityFaction.Hostile) {
+            entity.TryDamage(4);
+        }
+    }
+    private void Armadillo_OnRootSet(bool rooted) {
+        if (rooted) {
+            rootedMult = 0;
+        }
+        else {
+            rootedMult = 1;
+        }
+        UpdateNavMeshSpeeds();
     }
     private abstract record ArmadilloState {
 
