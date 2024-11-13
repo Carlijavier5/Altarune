@@ -277,6 +277,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Select Summon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be886a7f-5557-4a2d-8443-8ed18872b243"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Activate Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
