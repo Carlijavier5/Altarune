@@ -16,6 +16,8 @@ public class SandPit : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float updateTime;
     [SerializeField] private float suckUpdateTime;
+    [SerializeField] private float suckSpeed;
+    [SerializeField] private float suckScale;
 
     private Transform player;
     private float updateClock;
@@ -49,7 +51,9 @@ public class SandPit : MonoBehaviour
         if (suckUpdateClock > suckUpdateTime) {
             suckUpdateClock = 0;
             foreach (Entity i in suckTargets) {
-                Vector3 difference = Vector3.Normalize(this.transform.position - player.transform.position) * moveSpeed;
+                Vector3 distance = this.transform.position - player.transform.position;
+                float strenth = suckScale / distance.magnitude;
+                Vector3 difference = Vector3.Normalize(distance) * (suckSpeed * suckScale);
             
                 player.position += difference;
                 updateClock = 0;
@@ -60,11 +64,16 @@ public class SandPit : MonoBehaviour
     void OnTriggerEnter(Collider other){
         if(other.TryGetComponent(out Entity entity) && 
         entity.Faction == EntityFaction.Friendly){
-            Debug.Log("I'm touching " + entity);
             suckTargets.Add(entity);
         }
     }
 
+    void OnTriggerExit(Collider other) {
+        if(other.TryGetComponent(out Entity entity) && 
+        entity.Faction == EntityFaction.Friendly){
+            suckTargets.Remove(entity);
+        }
+    }
 
     
     private bool FindPlayer() {
