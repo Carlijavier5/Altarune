@@ -12,6 +12,8 @@ public abstract partial class BaseObject {
                     isStunned;
     }
     
+    public Vector3 LastGroundPoint { get; private set; }
+
     /// <summary>
     /// Crowd control status of the object; 
     /// </summary>
@@ -72,6 +74,7 @@ public abstract partial class BaseObject {
         set {
             if (status.isGrounded != value) {
                 status.isGrounded = value;
+                if (!value) LastGroundPoint = transform.position;
                 OnGroundedSet?.Invoke(value);
             }
         }
@@ -81,7 +84,13 @@ public abstract partial class BaseObject {
     /// Utilize this value instead of <b>Time.deltaTime</b>
     /// where the object's local time scale is relevant;
     /// </summary>
-    protected float DeltaTime => Time.deltaTime * status.timeScale;
+    public float DeltaTime => Time.deltaTime * status.timeScale;
+
+    /// <summary>
+    /// Utilize this value instead of <b>Time.fixedDeltaTime</b>
+    /// where the object's local time scale is relevant;
+    /// </summary>
+    public float FixedDeltaTime => Time.fixedDeltaTime * status.timeScale;
 
     /// Staggers are exclusive to the CrowdControllable Module;
     /// Implement the local timescale if you want your object to be staggerable;

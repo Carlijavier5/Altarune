@@ -11,11 +11,11 @@ public partial class Golem : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private Collider attackCollider;
 
     public float RootMult => CanMove ? 1 : 0;
 
     private IEnumerable<Rigidbody> rigidbodies;
-    private IEnumerable<Oscillator> oscillators;
     private float baseLinearSpeed, baseAngularSpeed;
 
     void Awake() {
@@ -26,7 +26,6 @@ public partial class Golem : Entity {
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = navMeshAgent.angularSpeed;
         rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
-        oscillators = GetComponentsInChildren<Oscillator>(true);
 
         controller.enabled = false;
         Golem_Input input = new(stateMachine, this);
@@ -49,9 +48,6 @@ public partial class Golem : Entity {
 
     private void Golem_OnTimeScaleSet(float timeScale) {
         animator.speed = timeScale;
-        foreach (Oscillator oscillator in oscillators) {
-            oscillator.SetTimeScale(timeScale);
-        }
         navMeshAgent.speed = baseLinearSpeed * timeScale * RootMult;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
@@ -99,7 +95,6 @@ public partial class Golem : Entity {
     }
 
     public void Ragdoll() {
-        foreach (Oscillator osc in oscillators) osc.enabled = false;
         foreach (Rigidbody rb in rigidbodies) {
             rb.isKinematic = false;
             Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);

@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class PlayerDamageable : Damageable {
 
-    public event System.Action<int> OnPlayerDamage;
     [SerializeField] private int doubleDamageThreshold;
 
     protected override void BaseObject_OnTryDamage(int amount, ElementType element, EventResponse response) {
         if (!IFrameOn) {
             response.received = true;
 
-            int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
-            runtimeHP.DoDamage(processedAmount);
-            OnPlayerDamage?.Invoke(processedAmount);
-            StartCoroutine(ISimulateIFrame());
+            if (amount > 0) {
+                int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
+                runtimeHP.DoDamage(processedAmount);
+                baseObject.PropagateDamage(processedAmount);
+                StartCoroutine(ISimulateIFrame());
 
-            if (runtimeHP.Health <= 0) {
-                Debug.Log("Player ded");
-                ToggleIFrame(true);
+                if (runtimeHP.Health <= 0) {
+                    baseObject.Perish();
+                    ToggleIFrame(true);
+                    PHGameManager.Instance.DoGameOver();
+                }
             }
         }
     }

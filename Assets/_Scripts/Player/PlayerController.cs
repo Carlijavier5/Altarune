@@ -10,6 +10,11 @@ public class PlayerController : MonoBehaviour {
     public event System.Action OnDodgePerformed;
     public event System.Action OnMeleePerformed;
 
+    public event System.Action OnSummonPerformed;
+    public event System.Action<SummonType, int> OnSummonSelect;
+
+    public event System.Action OnSkillPerformed;
+
     [SerializeField] private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
 
@@ -30,8 +35,14 @@ public class PlayerController : MonoBehaviour {
             }
             return inputVector;
         }
-        
     }
+
+    private bool init;
+
+    public Camera OutputCamera => cameraBrain ? cameraBrain.OutputCamera
+                                              : Camera.main;
+
+    public Vector2 CursorPosition => Mouse.current.position.ReadValue();
 
     void Awake() {
         playerInput = new();
@@ -40,12 +51,18 @@ public class PlayerController : MonoBehaviour {
 
         playerInput.Movement.Dodge.performed += Dodge_Performed;
         playerInput.Actions.MeleeAttack.performed += MeleeAttack_Performed;
-        
+
+        playerInput.Actions.Summon.performed += Summon_Performed;
+        playerInput.Actions.SelectSummon.performed += SelectSummon_performed;
+
+        playerInput.Actions.ActivateSkill.performed += Skill_Performed;
+
         /// Replace after actual initialization;
-        Init(cameraBrain);
+        if (cameraBrain && !init) Init(cameraBrain);
     }
 
     public void Init(CinemachineBrain cameraBrain) {
+        init = true;
         this.cameraBrain = cameraBrain;
         StartCoroutine(ISyncInitialization());
     }
@@ -61,5 +78,21 @@ public class PlayerController : MonoBehaviour {
 
     private void MeleeAttack_Performed(InputAction.CallbackContext context) {
         if (context.performed) OnMeleePerformed?.Invoke();
+    }
+
+    private void Summon_Performed(InputAction.CallbackContext context) {
+        if (context.performed) OnSummonPerformed?.Invoke();
+    }
+
+    private void SelectSummon_performed(InputAction.CallbackContext context) {
+        if (context.performed) {
+            int value = (int) context.ReadValue<float>();
+            if (value == -1) OnSummonSelect?.Invoke(SummonType.Battery, 0);
+            else if (value > 0) OnSummonSelect?.Invoke(SummonType.Tower, value);
+        }
+    }
+
+    private void Skill_Performed(InputAction.CallbackContext context) {
+        if (context.performed) OnSkillPerformed?.Invoke();
     }
 }
