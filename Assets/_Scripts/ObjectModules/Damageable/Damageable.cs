@@ -6,6 +6,8 @@ public enum ElementType { Physical, Fire, Ice, Shock, Poison }
 
 public class Damageable : ObjectModule {
 
+    public event System.Action OnModuleInit;
+
     [SerializeField] protected HealthAttributes defaultHPAttributes;
     [SerializeField] protected IFrameProperties iFrameProperties;
 
@@ -26,6 +28,8 @@ public class Damageable : ObjectModule {
         IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeHP = defaultHPAttributes.RuntimeClone(effectSource);
+
+        OnModuleInit?.Invoke();
     }
 
     private void BaseObject_OnTryToggleIFrame(bool on, EventResponse response) {
