@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// Bat Behavior
@@ -15,19 +10,24 @@ using UnityEngine.AI;
 
 public class Scaramite : Entity {
 
-    [SerializeField] private Collider visionCollider,
-                                      bodyCollider;
+    [SerializeField] private Collider visionCollider;
+    [SerializeField] private AggroRange aggroRange;
     [SerializeField] private ScaramiteBodyTrigger attackTrigger;
-    [SerializeField] private Rigidbody rb;
+
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Rigidbody ayayay;
 
     [Header("Movement Variables")]
-    [SerializeField] private float linearAcceleration;
-    [SerializeField] private float angularSpeed;
+    [SerializeField] private float linearAcceleration = 3f;
+    [SerializeField] private float angularSpeed = 360f;
     [SerializeField] private float playerBias = 0.65f;
 
     [Header("Roam Variables")]
     [SerializeField] private float timeBetweenMove = 0.35f;
     [SerializeField] private float roamSpeed = 3.5f;
+    [SerializeField] private float minRoamDistance;
+    [SerializeField] private float maxRoamDistance;
+    [SerializeField] private float stoppingDistance = 0.1f;
 
     [Header("Chase Variables")]
     [SerializeField] private float chaseSpeed = 5f;
@@ -59,6 +59,7 @@ public class Scaramite : Entity {
     
     void Start() {
         destination = GetRoamDestination(); //Begin movement pattern towards the player
+        player = FindAnyObjectByType<Player>();
     }
 
     protected override void Update() {
@@ -112,8 +113,7 @@ public class Scaramite : Entity {
         Vector3 kbDir = (transform.position - player.transform.position).normalized;
         kbDir.y = 0;
 
-        rb.velocity = Vector3.zero; //Reset velocity to prevent movement conflicts
-        rb.AddForce(kbDir * knockbackForce, ForceMode.Impulse);
+        TryLongPush(kbDir, knockbackForce, knockbackDuration);
 
         isKnockedBack = true;
         attackTrigger.SetCanAttack(false); //Make sure the scaramite can't attack while being knocked back
@@ -124,15 +124,16 @@ public class Scaramite : Entity {
 
     //Roam mode will have the scaramite move randomly within its vision
     private void Roam() {
-        
-        if (Vector3.Distance(destination, transform.position) < 0.1f) { //If scaramite is about to reach destination
-            DoRotation();
-            timer += FixedDeltaTime;
-        }
 
-        Vector3 dir = (transform.position - destination).normalized;
-        Vector3 forceVector = FixedDeltaTime * linearAcceleration * dir;
-        rb.AddRelativeForce(forceVector.x / (speed + 1f), 0f, forceVector.y / (speed + 1f), ForceMode.Acceleration);
+        timer += FixedDeltaTime;
+
+        if (Vector3.Distance(destination, transform.position) < stoppingDistance) { //If scaramite is about to reach destination
+            DoRotation();
+        } else {
+            Vector3 dir = (destination - transform.position).normalized;
+            Vector3 moveVector = roamSpeed * dir;
+            controller.Move(moveVector * FixedDeltaTime);
+        }
 
         if (timer >= timeBetweenMove) {
             destination = GetRoamDestination(); //Get new destination
@@ -143,25 +144,20 @@ public class Scaramite : Entity {
 
     //Chase mode will have the bat move faster and constantly directly towards the player
     private void Chase() {
+        Vector3 playerPos = new (player.transform.position.x, 0,
+                                 player.transform.position.z);
 
-        transform.position = Vector3.MoveTowards(transform.position, ChasePlayerPosition(), speed * FixedDeltaTime);
-    }
-
-    //Rotates the bat to face the player
-    //Returns the position of the player
-    private Vector3 ChasePlayerPosition() {
-        DoRotation();
-        return new Vector3(player.transform.position.x,
-                           transform.position.y,
-                           player.transform.position.z);
+        Vector3 moveVector = (playerPos - transform.position) * chaseSpeed;
+        controller.Move(moveVector * FixedDeltaTime);
     }
 
     //Returns a random position within the bounds of the bat's vision
     private Vector3 GetRoamDestination() {
-        Bounds bounds = visionCollider.bounds;
-        return new Vector3(Random.Range(bounds.min.x, bounds.max.x),
-                           Random.Range(1.25f, 1.5f),
-                           Random.Range(bounds.min.z, bounds.max.z));
+        float distance = Random.Range(minRoamDistance, maxRoamDistance);
+        bool pathIsValid = PathfindingUtils.FindRandomRoamingPoint(transform.position, distance,
+                                                                   10, out Vector3 clearPoint);
+        Debug.Log($"Destination: {clearPoint}, Transform: {transform.position}");
+        return pathIsValid ? clearPoint : transform.position;
     }
 
     //Rotates the bat 75% of the way towards the player
@@ -186,12 +182,11 @@ public class Scaramite : Entity {
         base.Perish();
         DetachModules();
         enabled = false;
-        bodyCollider.enabled = false;
+        //attackTrigger.Disable();
         visionCollider.enabled = false;
-        rb.constraints = new();
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        //rb.constraints = new();
+        //rb.isKinematic = false;
+        //rb.useGravity = true;
         Destroy(gameObject, 2);
     }
 }
-

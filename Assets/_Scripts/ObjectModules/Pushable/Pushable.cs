@@ -62,10 +62,10 @@ public class Pushable : ObjectModule {
         foreach (PushActionCore core in actionCores) {
             float lifetime = core.UpdateLifetime(Time.fixedDeltaTime);
             if (lifetime >= 1) terminateStack.Push(core);
-            DoFramePush(core.ValueAtLifetime);
+            DoFramePush(core.CurrentPushVector);
         }
 
-        while (terminateStack.TryPop(out PushActionCore core)) RemoveCore(core);
+        while (terminateStack.TryPop(out PushActionCore core)) core.Kill();
     }
 
     private void BaseObject_OnTryFramePush(Vector3 direction, EventResponse response) {
