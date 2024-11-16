@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 69756828378134342}
   - component: {fileID: 6214191932393982732}
   - component: {fileID: 3541133945013290166}
+  - component: {fileID: -7987184467038111076}
   m_Layer: 0
   m_Name: SandPit
   m_TagString: Untagged
@@ -154,6 +155,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0.004
   updateTime: 0.001
-  suckUpdateTime: 0.001
-  suckSpeed: 0.007
-  suckScale: 1.2
+  suckUpdateTime: 0.0008
+  suckSpeed: 0.008
+  suckScale: 1.5
+--- !u!195 &-7987184467038111076
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3609581708941627600}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4

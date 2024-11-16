@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SandPit : MonoBehaviour
 {
@@ -12,9 +14,6 @@ public class SandPit : MonoBehaviour
      Middle most: A strong pull which is stronger than yan's running speed. Is outpaced by yan's dodge
      Center: Super strong pull which requires lots of dodging by Yan.
     */
-
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float updateTime;
     [SerializeField] private float suckUpdateTime;
     [SerializeField] private float suckSpeed;
     [SerializeField] private float suckScale;
@@ -23,11 +22,15 @@ public class SandPit : MonoBehaviour
     private float updateClock;
     private float suckUpdateClock;
     private HashSet<Entity> suckTargets = new();
+    private NavMeshAgent navigation;
+    private bool  firstDestination = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        FindPlayer();
+        navigation = GetComponent<NavMeshAgent>();
+        navigation.speed = 4;
     }
 
     // Update is called once per frame
@@ -38,12 +41,8 @@ public class SandPit : MonoBehaviour
     }
     
     private void Move(){
-        updateClock += Time.deltaTime;
-        if (player != null && updateClock > updateTime) {
-            Vector3 difference = Vector3.Normalize(player.position - this.transform.position) * moveSpeed;
-            
-            this.transform.position += difference;
-            updateClock = 0;
+        if(!navigation.hasPath && !navigation.pathPending) {
+            navigation.SetDestination(UnityEngine.Random.insideUnitSphere * 80);
         }
     }
     private void Suck(){
@@ -73,29 +72,5 @@ public class SandPit : MonoBehaviour
         entity.Faction == EntityFaction.Friendly){
             suckTargets.Remove(entity);
         }
-    }
-
-    
-    private bool FindPlayer() {
-        // Initializes the OverlapSphere collider
-        Collider[] findPlayerCollider = Physics.OverlapSphere(
-            transform.position, 
-            10f, 
-            LayerMask.GetMask("Player")
-        );
-
-        bool foundPlayer = findPlayerCollider != null && findPlayerCollider.Length > 0;
-
-        // If the player collider is found, assigns it to the transform
-        if (foundPlayer) {
-            player = findPlayerCollider[0].transform;
-        } else {
-            StartCoroutine(AwaitFindPlayer());
-        }
-        return foundPlayer;
-    }
-    private IEnumerator AwaitFindPlayer() {
-            yield return new WaitForSeconds(1);
-            Start();
     }
 }
