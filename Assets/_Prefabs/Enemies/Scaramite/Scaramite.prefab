@@ -95,72 +95,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &2644624548614281147
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9069270207330262313}
-  - component: {fileID: 7067434270079243832}
-  - component: {fileID: 8052423302456046935}
-  m_Layer: 0
-  m_Name: ScaramiteBody
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9069270207330262313
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2644624548614281147}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4857534561571980099}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7067434270079243832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2644624548614281147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f9574f8b7cb14604a7f546a9305e5cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!65 &8052423302456046935
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2644624548614281147}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3212776523426029119
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,16 +119,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3212776523426029119}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9069270207330262313}
   - {fileID: 3301463314825988639}
   - {fileID: 4735430472689043346}
   m_Father: {fileID: 8833125801593088398}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &6107894150973979798
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,8 +172,9 @@ GameObject:
   - component: {fileID: 7466325785813828294}
   - component: {fileID: 1735518033671451403}
   - component: {fileID: 4125462934371689212}
-  - component: {fileID: 3001228195307169060}
   - component: {fileID: 526250893555311602}
+  - component: {fileID: 3001228195307169060}
+  - component: {fileID: 8153668774513325722}
   m_Layer: 0
   m_Name: Scaramite
   m_TagString: Untagged
@@ -277,24 +211,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 2
-  visionCollider: {fileID: 5446092742392072749}
   aggroRange: {fileID: 2454117036707031840}
-  attackTrigger: {fileID: 7067434270079243832}
   controller: {fileID: 526250893555311602}
-  ayayay: {fileID: 3001228195307169060}
-  linearAcceleration: 10
-  angularSpeed: 320
-  playerBias: 0.65
-  timeBetweenMove: 2
-  roamSpeed: 2
-  minRoamDistance: 1
-  maxRoamDistance: 2
-  stoppingDistance: 0.1
-  chaseSpeed: 3
+  rb: {fileID: 0}
+  linearAcceleration: 6
+  linearDrag: 6
+  angularSpeed: 180
   damageAmount: 1
-  damageCD: 1
+  damageCD: 0.8
+  chaseSpeed: 5
   knockbackForce: 2
   knockbackDuration: 0.8
+  moveTimeRange: {x: 3, y: 4.5}
+  roamSpeed: 2.5
+  minRoamDistance: 3
+  maxRoamDistance: 6
+  stoppingDistance: 0.1
+  playerBias: 0.65
 --- !u!114 &1735518033671451403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,6 +277,32 @@ MonoBehaviour:
     easeCurves: {fileID: 11400000, guid: db0e09c772cfafc4fbd0c10b14d95ba8, type: 2}
     objectMass: 1
     pushResistance: 0
+--- !u!143 &526250893555311602
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272153213212479021}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.1
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &3001228195307169060
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -370,9 +329,9 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 84
-  m_CollisionDetection: 0
---- !u!143 &526250893555311602
-CharacterController:
+  m_CollisionDetection: 1
+--- !u!65 &8153668774513325722
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -386,16 +345,11 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.4
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1001 &149981656069922616
 PrefabInstance:
