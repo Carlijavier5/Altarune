@@ -35,7 +35,6 @@ public class CommonEnemyHealthBar : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(damageable.Health);
         lockRotation();
         updateInterpolationLayer();
         updateTopLayer();
