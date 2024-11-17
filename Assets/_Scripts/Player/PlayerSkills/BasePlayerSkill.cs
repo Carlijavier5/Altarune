@@ -10,25 +10,41 @@ public abstract class BasePlayerSkill : MonoBehaviour    // maybe inherit from b
 {
     protected PlayerSkillData _data;
 
+    private Vector3 _targetPos;
+
     // inject behavior logic
-    private ISkillSpawn _spawnBehavior;
+    private ISkillMovement _movementBehavior;
+
+    protected void InitSkill(PlayerSkillData data, Vector3 targetPos, ISkillMovement move) {
+        _data = data;
+        _targetPos = targetPos;
+        _movementBehavior = move;
+        Invoke("DespawnSkill", _data.despawnTime);
+
+        if (_movementBehavior == null) { _movementBehavior = new DefaultSkillMovement(); }
+    }
+
+    void Update() { MoveSkill(); }
 
     /// <summary>
     /// Spawns the skill. You can either spawn it at yan, or another point entirely
+    /// You can override this method entirely if you want your own spawn behavior
     /// </summary>
-    public virtual void SpawnSkill(PlayerSkillData data, Vector3 playerPos, Vector3 targetPos) {
-        // init the skill data
-        this._data = data;
-        
+    public virtual void SpawnSkill(PlayerSkillData data, Vector3 playerPos, Vector3 targetPos, ISkillSpawn spawnBehavior, ISkillMovement moveBehavior) {
+
         // if no spawn behavior is set
-        if (_spawnBehavior == null) { _spawnBehavior = new DefaultSpawn(); }
+        if (spawnBehavior == null) { spawnBehavior = new DefaultSpawn(); }
 
-        _spawnBehavior.SpawnSkill(this.gameObject, playerPos, targetPos);
+        BasePlayerSkill skill = spawnBehavior.SpawnSkill(data.prefab, playerPos, targetPos);
+        skill.InitSkill(data, targetPos, moveBehavior);
     }
 
-    public virtual void DespawnSkill() {
-
+    public virtual void MoveSkill() {
+        _movementBehavior.MoveSkill(this.gameObject, _targetPos, _data.moveSpeed);
     }
 
-    protected void SetSpawnBehavior(ISkillSpawn spawnBehavior) { _spawnBehavior = spawnBehavior; }
+    protected virtual void DespawnSkill() {
+        Destroy(this.gameObject);
+    }
+
 }

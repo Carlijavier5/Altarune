@@ -8,4 +8,7 @@ public class PlayerSkillData : ScriptableObject {
     public Sprite icon;
     public float energyCost;
     public float spawnDistance;
+    public float despawnTime;
+
+    public float moveSpeed;
 }

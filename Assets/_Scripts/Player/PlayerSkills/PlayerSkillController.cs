@@ -35,18 +35,18 @@ public class PlayerSkillController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
         RaycastHit hit;
 
-        Vector3 targetPos;
+        Vector3 og_targetPos;
         // check if the skill collides with something else (idk if we want to keep this)
-        if (Physics.Raycast(ray, out hit)) { targetPos = hit.point; }
-        else { targetPos = ray.origin + ray.direction * _currSkill.spawnDistance; }
+        if (Physics.Raycast(ray, out hit)) { og_targetPos = hit.point; }
+        else { og_targetPos = ray.origin + ray.direction * _currSkill.spawnDistance; }
 
         // calcs the direction from player to spawn position
-        Vector3 direction = (targetPos - _inputSource.transform.position).normalized;
+        Vector3 direction = (og_targetPos - _inputSource.transform.position).normalized;
 
-        Vector3 spawnPos = _inputSource.transform.position + direction * _currSkill.spawnDistance;
+        Vector3 constained_targetPos = _inputSource.transform.position + direction * _currSkill.spawnDistance;
 
         // spawn skill
-        _currSkill.prefab.GetComponent<BasePlayerSkill>().SpawnSkill(_currSkill, this.gameObject.transform.position, targetPos);
+        _currSkill.prefab.GetComponent<BasePlayerSkill>().SpawnSkill(_currSkill, this.gameObject.transform.position, constained_targetPos, null, null);
 
         GetRandomSkill();
     }

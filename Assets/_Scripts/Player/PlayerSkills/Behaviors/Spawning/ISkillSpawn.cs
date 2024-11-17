@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ISkillSpawn
 {
-    void SpawnSkill(GameObject skillObject, Vector3 playerPos, Vector3 targetPos);
+    BasePlayerSkill SpawnSkill(BasePlayerSkill skillObject, Vector3 playerPos, Vector3 targetPos);
 }

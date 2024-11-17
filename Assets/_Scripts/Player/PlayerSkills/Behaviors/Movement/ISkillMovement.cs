@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public interface ISkillMovement
 {
-    void MoveSkill(GameObject skillObject, Vector3 targetPos, int speed);
+    void MoveSkill(GameObject skillObject, Vector3 targetPos, float speed);
 }

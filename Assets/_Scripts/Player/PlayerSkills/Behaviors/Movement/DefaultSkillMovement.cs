@@ -6,5 +6,5 @@ using UnityEngine;
 /// Default movement is nothing (static skill)
 /// </summary>
 public class DefaultSkillMovement : MonoBehaviour, ISkillMovement {
-    public void MoveSkill(GameObject skillObject, Vector3 targetPos, int speed) { }
+    public void MoveSkill(GameObject skillObject, Vector3 targetPos, float speed) { }
 }
