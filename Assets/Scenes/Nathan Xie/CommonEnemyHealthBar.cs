@@ -19,33 +19,39 @@ public class CommonEnemyHealthBar : MonoBehaviour
     float originalInterpFill;
     float originalTopFill;
 
-    [SerializeField] UnityEngine.UI.Image topLayer;
-    [SerializeField] UnityEngine.UI.Image interpolationLayer;
-    [SerializeField] UnityEngine.UI.Image backgroundLayer;
-    [SerializeField] TestCanvas attachedEntity; //Change to damagable when using on Enemies. Set to TestCanvas for testing
-    int maxHealth; //Manually set until OnEntityInit is created;
+    [SerializeField] private UnityEngine.UI.Image topLayer;
+    [SerializeField] private UnityEngine.UI.Image interpolationLayer;
+    [SerializeField] private UnityEngine.UI.Image backgroundLayer;
+    [SerializeField] private BaseObject attachedEntity; //Change to damagable when using on Enemies. Set to TestCanvas for testing
+    [SerializeField] private Damageable damageable;
+    int maxHealth;
     void Awake(){
-        attachedEntity.OnHealReceived += OnHealRecieved;
-        attachedEntity.OnDamageTaken += OnDamageTaken;
-        attachedEntity.OnEntityInit += OnEntityInit;
+        attachedEntity.OnHealingReceived += OnHealRecieved;
+        attachedEntity.OnDamageReceived += OnDamageTaken;
+        damageable.OnModuleInit += OnEntityInit;
         fillAmount = 1;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
+        Debug.Log(damageable.Health);
         lockRotation();
         updateInterpolationLayer();
         updateTopLayer();
         shaking();
     }
 
-    private void OnEntityInit(int test){
-        maxHealth = attachedEntity.Health;
+    private void OnEntityInit(){
+        maxHealth = damageable.Health;
     }
     private void lockRotation(){
         Camera camera = Camera.main;
-        transform.LookAt(transform.position + camera.transform.rotation * Vector3.back, camera.transform.rotation * Vector3.up);
+        Vector3 layerRotation = Quaternion.LookRotation(camera.transform.position).eulerAngles;
+        //layerRotation.y = layerRotation.z = 0;
+        topLayer.transform.rotation = Quaternion.Euler(layerRotation);
+        backgroundLayer.transform.rotation = Quaternion.Euler(layerRotation);
+        interpolationLayer.transform.rotation = Quaternion.Euler(layerRotation);
     }
 
     private void OnHealRecieved(int heal){

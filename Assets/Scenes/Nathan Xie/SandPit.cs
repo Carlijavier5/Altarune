@@ -18,12 +18,9 @@ public class SandPit : MonoBehaviour
     [SerializeField] private float suckSpeed;
     [SerializeField] private float suckScale;
 
-    private Transform player;
-    private float updateClock;
     private float suckUpdateClock;
     private HashSet<Entity> suckTargets = new();
     private NavMeshAgent navigation;
-    private bool  firstDestination = false;
 
 
     // Start is called before the first frame update
@@ -50,12 +47,11 @@ public class SandPit : MonoBehaviour
         if (suckUpdateClock > suckUpdateTime) {
             suckUpdateClock = 0;
             foreach (Entity i in suckTargets) {
-                Vector3 distance = this.transform.position - player.transform.position;
+                Vector3 distance = this.transform.position - i.transform.position;
                 float strenth = suckScale / distance.magnitude;
                 Vector3 difference = Vector3.Normalize(distance) * (suckSpeed * suckScale);
             
-                player.position += difference;
-                updateClock = 0;
+                i.transform.position += difference;
             }
         }
     }
