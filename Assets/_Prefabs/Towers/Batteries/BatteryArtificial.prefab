@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 8958283641582543824}
   - component: {fileID: 2484941254177114339}
   - component: {fileID: 5472741718083983829}
+  - component: {fileID: 171729811382439987}
   m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
@@ -252,7 +253,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8261878352563687149}
@@ -285,7 +286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 559b307148fcda0468b85a78031d302f, type: 2}
+  - {fileID: 2100000, guid: b9fb81cd4b6863a479c6480d8162db0b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -307,6 +308,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &171729811382439987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188600795943318727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c9727860a04c343a4d68cc37b11d49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0.2
+  collider: {fileID: 2143017362248983902}
 --- !u!1001 &8554761293388311367
 PrefabInstance:
   m_ObjectHideFlags: 0
