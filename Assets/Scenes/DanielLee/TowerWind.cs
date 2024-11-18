@@ -12,16 +12,10 @@ public class TowerWind : Summon
     [SerializeField] private float _pushDuration;
     [SerializeField] private float _pushStrength;
   
-    private bool init = false;
     private float timer = 0;
 
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
-    }
-
     protected override void Update(){
-        if (!init) return;
+        if (!active) return;
         base.Update();
         if (timer < _attackCooldown) {
             timer += Time.deltaTime;

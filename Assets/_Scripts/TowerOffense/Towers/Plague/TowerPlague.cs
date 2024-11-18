@@ -1,24 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class TowerPlague : Summon {
 
     [SerializeField] private PlagueArea plagueArea;
     [SerializeField] private Transform launchPoint;
-    private bool init;
 
-    protected override void Awake() {
-        base.Awake();
+    [SerializeField] bool debug;
+
+    void Start() {
+        if (debug) {
+            Init(null, null);
+        }
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
+
+    public override void Init(Entity summoner,
+                              ManaSource manaSource) {
+        base.Init(summoner, manaSource);
         SpawnPlagueArea();
     }
 
     protected override void Update() {
-        if (!init) return;
+        if (!active) return;
         base.Update();
     }
 

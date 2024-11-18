@@ -58,23 +58,13 @@ public partial class Golem : Entity {
 
     private void UpdateAggro() {
         if (stateMachine.State is State_Stunned) return;
-        if (aggroRange.AggroTargets.Count > 0) {
-            Entity closestTarget = aggroRange.AggroTargets.First();
-            float closestDistance = Vector3.Distance(closestTarget.transform.position,
-                                                     transform.position);
-            foreach (Entity target in aggroRange.AggroTargets) {
-                float newDistance = Vector3.Distance(target.transform.position,
-                                                     transform.position);
-                if (newDistance < closestDistance) {
-                    closestTarget = target;
-                    closestDistance = newDistance;
-                }
-            }
 
-            stateMachine.StateInput.SetTarget(closestTarget);
+        Entity closestTarget = aggroRange.ClosestTarget;
+        stateMachine.StateInput.SetTarget(closestTarget);
+
+        if (closestTarget != null) {
             stateMachine.SetState(new State_AggroWait());
         } else {
-            stateMachine.StateInput.SetTarget(null);
             stateMachine.SetState(new State_Idle());
         }
     }

@@ -12,28 +12,22 @@ public class GrappleTower : Summon
     [SerializeField] private float grappleSpeed;
     [SerializeField] private float grappleTime;
     [SerializeField] private float cooldownInterval;
-    private bool init;
+
     private SphereCollider sCollider;
 
     private float angle;
     private float grappleTick = 0.0f;
 
-    protected override void Awake() {
-        base.Awake();
+    void Awake() {
         angle = UnityEngine.Random.Range(0, 360);
         sCollider = GetComponent<SphereCollider>();
         sCollider.radius = range;
     }
 
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
-    }
-
     protected override void Update() {
         base.Update();
         //Debug.Log(sCollider.radius);
-        if (!init) return;
+        if (!active) return;
         grappleTick += Time.deltaTime;
         if (grappleTick >= cooldownInterval) {
             //Find all nearby gameobjects

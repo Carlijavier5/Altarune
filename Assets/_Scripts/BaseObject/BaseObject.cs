@@ -15,6 +15,15 @@ public abstract partial class BaseObject : MonoBehaviour {
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
     }
 
+    public bool IsFaction(EntityFaction exceptionFaction) {
+        Entity entity = this as Entity;
+        return entity && exceptionFaction == entity.Faction;
+    }
+
+    public bool IsFactions(EntityFaction[] exceptionFactions) {
+        return exceptionFactions.Any((faction) => IsFaction(faction));
+    }
+
     #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
