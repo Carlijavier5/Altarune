@@ -42,8 +42,6 @@ public class LightningChainTower : Summon
     }
     public void OnDestroy(){
         while(balls.Count > 0){
-            Debug.Log(balls.Count);
-            Debug.Log(balls.Peek());
             balls.Peek().End();
         }
         balls.Clear();
