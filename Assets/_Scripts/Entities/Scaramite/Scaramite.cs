@@ -107,29 +107,22 @@ public partial class Scaramite : Entity {
         return pathIsValid ? clearPoint : transform.position;
     }
 
-    void OnDrawGizmosSelected() {
-        if (player) {
-            Vector3 playerVector = new Vector3(player.transform.position.x, 0, player.transform.position.z)
-             - new Vector3(transform.position.x, 0, transform.position.z);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.right);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.forward);
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, transform.position + playerVector);
-            float playerAngle = playerVector.XZAngle360();
-            //Debug.Log(playerAngle);
-        }
-    }
-
-    public override void Perish() {
-        base.Perish();
+    public void Ragdoll() {
         DetachModules();
         enabled = false;
         aggroRange.Disable();
         rb.constraints = new();
         rb.isKinematic = false;
         rb.useGravity = true;
+        Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
+        rb.AddForce(force);
+        Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
+        rb.AddTorque(torque);
         Destroy(gameObject, 2);
+    }
+
+    public override void Perish() {
+        base.Perish();
+        Ragdoll();
     }
 }
