@@ -48,8 +48,8 @@ public class SandPit : MonoBehaviour
             suckUpdateClock = 0;
             foreach (Entity i in suckTargets) {
                 Vector3 distance = this.transform.position - i.transform.position;
-                float strenth = suckScale / distance.magnitude;
-                Vector3 difference = Vector3.Normalize(distance) * (suckSpeed * suckScale);
+                float strength = suckScale / distance.magnitude;
+                Vector3 difference = Vector3.Normalize(distance) * (suckSpeed * strength);
             
                 i.transform.position += difference;
             }
