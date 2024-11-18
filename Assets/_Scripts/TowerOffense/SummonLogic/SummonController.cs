@@ -19,9 +19,6 @@ public class SummonController : MonoBehaviour {
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
-    // is this supposed to be here
-    // reply: not really lol, but it's 100% ok, we'll take it :D
-    [SerializeField] private Material manaConnectionMaterial;
     [SerializeField] private float batteryCost, towerCost;
     [SerializeField] private float overlapRadius;
 
@@ -84,7 +81,7 @@ public class SummonController : MonoBehaviour {
                             if (hitInfo.collider.TryGetComponent(out BatteryArea batteryArea) && batteryArea.IsActive) {
                                 IBattery battery = batteryArea.Battery;
                                 float distance = Vector3.Distance(groundHit.point, battery.Position);
-                                if (closestBatteryCache == null || distance > closestBatteryCache.distance) {
+                                if (closestBatteryCache == null || distance < closestBatteryCache.distance) {
                                     closestBatteryCache = new() { battery = battery, distance = distance };
                                 }
                             }
@@ -169,7 +166,9 @@ public class SummonController : MonoBehaviour {
                     SetSelectionType(SummonType.None);
                     break;
                 case SummonType.Tower:
-                    if (closestBatteryCache != null) {
+                    if (closestBatteryCache != null
+                        && closestBatteryCache.battery != null
+                        && closestBatteryCache.battery.IsActive) {
                         Summon tower = Instantiate(towerBlueprints[selectedSlot].prefabSummon, lastHitPoint, Quaternion.identity);
 
                         IBattery targetBattery = closestBatteryCache.battery;
@@ -182,7 +181,6 @@ public class SummonController : MonoBehaviour {
                         batterySource.Drain(towerCost);
 
                         SetSelectionType(SummonType.None);
-                        CreateManaConnection(tower.transform, targetBattery.MonoScript.transform);
                     } break;
             }
         }
@@ -199,24 +197,5 @@ public class SummonController : MonoBehaviour {
                 SetSelectionType(selectedType == SummonType.Tower ? SummonType.None : SummonType.Tower, slotNum - 1);
                 break; 
         }
-    }
-
-    private void CreateManaConnection(Transform batteryTransform, Transform towerTransform) {
-        GameObject lineObject = new GameObject("ManaConnection");
-        LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
-
-        lineRenderer.positionCount = 2;
-
-        Vector3 batteryConnectionPoint = batteryTransform.position;
-        batteryConnectionPoint.y += 0.5f;
-        Vector3 towerConnectionPoint = towerTransform.position;
-        towerConnectionPoint.y += 0.5f;
-
-        lineRenderer.SetPosition(0, batteryConnectionPoint);
-        lineRenderer.SetPosition(1, towerConnectionPoint);
-
-        lineRenderer.startWidth = 0.75f;
-        lineRenderer.endWidth = 0.75f;
-        lineRenderer.material = this.manaConnectionMaterial;
     }
 }
