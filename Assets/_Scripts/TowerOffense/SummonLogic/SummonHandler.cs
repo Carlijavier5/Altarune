@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class SummonHandler : MonoBehaviour {
 
-    private const int MAX_RCD = 100;
-
     [SerializeField] private SummonController inputSource;
     [SerializeField] private SummonData[] summonBlueprints;
 
@@ -65,12 +63,12 @@ public class SummonHandler : MonoBehaviour {
 
     private void InputSource_OnRaycastUpdate(Ray cursorRay) {
         if (selectedData != null
-            && Physics.Raycast(cursorRay, out RaycastHit groundHit, MAX_RCD, LayerUtils.GroundLayerMask)
+            && Physics.Raycast(cursorRay, out RaycastHit groundHit, LayerUtils.MAX_RCD, LayerUtils.GroundLayerMask)
             && Mathf.Max(groundHit.normal.x, groundHit.normal.y, groundHit.normal.z) == groundHit.normal.y) {
 
             if (selectedData is TowerData) {
                 IEnumerable<RaycastHit> objectsHit;
-                if ((objectsHit = Physics.RaycastAll(cursorRay, MAX_RCD, LayerUtils.SummonHintLayerMask)).Count() > 0) {
+                if ((objectsHit = Physics.RaycastAll(cursorRay, LayerUtils.MAX_RCD, LayerUtils.SummonHintLayerMask)).Count() > 0) {
                     foreach (RaycastHit hitInfo in objectsHit) {
                         if (hitInfo.collider.TryGetComponent(out BatteryArea batteryArea) && batteryArea.IsActive) {
                             IBattery battery = batteryArea.Battery;
