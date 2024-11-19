@@ -1584,6 +1584,7 @@ GameObject:
   - component: {fileID: 761223332}
   - component: {fileID: 761223337}
   - component: {fileID: 761223336}
+  - component: {fileID: 761223338}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1737,8 +1738,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
-  _timeBetweenMove: 0.01
-  _speed: 3.5
+  _timeBetweenMove: 0.03
+  _speed: 2
+  _wiggleAmplitude: 0.5
+  _wiggleFrequency: 2
 --- !u!135 &761223336
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1783,6 +1786,33 @@ MonoBehaviour:
   teleportableProperties:
     settings: {fileID: 11400000, guid: 19cdb989acdb9444387ad6f23f4ac034, type: 2}
     rootTransform: {fileID: 761223331}
+--- !u!54 &761223338
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761223327}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &794424688
 GameObject:
   m_ObjectHideFlags: 0
