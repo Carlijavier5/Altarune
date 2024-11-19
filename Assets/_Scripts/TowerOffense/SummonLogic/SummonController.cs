@@ -7,6 +7,7 @@ public enum SummonType { None = 0, Battery, Tower }
 
 public class SummonController : MonoBehaviour {
 
+    public event System.Action<SummonData[]> OnRosterSetup;
     public event System.Action<SummonType, SummonData> OnSummonSelected;
     public event System.Action<Ray> OnRaycastUpdate;
 
@@ -35,6 +36,8 @@ public class SummonController : MonoBehaviour {
     private void InputSource_OnPlayerInit() {
         inputSource.OnSummonPerformed += InputSource_OnPointerConfirm;
         inputSource.OnSummonSelect += InputSource_OnSummonSelect;
+        OnRosterSetup?.Invoke(new SummonData[] { batteryData }
+                             .Concat(towerBlueprints).ToArray());
     }
 
     void Update() {
