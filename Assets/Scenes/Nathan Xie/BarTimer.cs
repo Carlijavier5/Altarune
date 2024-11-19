@@ -68,9 +68,6 @@ public class BarTimer : MonoBehaviour
             }
             lockRotation();
         }
-        if(Input.GetKeyDown(KeyCode.L)) {
-            StartTimer(3);
-        }
     }
 
     private void lockRotation(){
