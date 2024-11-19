@@ -1,16 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class CommonEnemyHealthBar : MonoBehaviour
 {
     Vector3 rotationLock = new Vector3(34.5f, 0, 0);
     int damage;
-    float shrinkTime = 1f;
     float fillAmount;
     Boolean shakeEffect = false;
     float time;
