@@ -1274,7 +1274,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410643380}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -1300,9 +1300,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65524461c40d534a8cb0b81482bb6bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeInTime: 0.3
+  fadeInTime: 0.2
   attatchedObject: {fileID: 567242714}
   topLayer: {fileID: 1300461378}
+  backgroundLayer: {fileID: 1441381819}
   canvasGroup: {fileID: 410643386}
 --- !u!225 &410643386
 CanvasGroup:
@@ -1902,6 +1903,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3541133945013290166, guid: 4f7bea904d2ee6546b7c14b8997cf960,
+        type: 3}
+      propertyPath: suckScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3541133945013290166, guid: 4f7bea904d2ee6546b7c14b8997cf960,
+        type: 3}
+      propertyPath: suckSpeed
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 3609581708941627600, guid: 4f7bea904d2ee6546b7c14b8997cf960,
         type: 3}
       propertyPath: m_Name
@@ -2372,7 +2383,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 3}
-  m_SizeDelta: {x: 10, y: 2}
+  m_SizeDelta: {x: 4, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1300461378
 MonoBehaviour:
@@ -2402,7 +2413,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1300461379
@@ -2777,7 +2788,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 3}
-  m_SizeDelta: {x: 10, y: 2}
+  m_SizeDelta: {x: 4, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1441381819
 MonoBehaviour:
@@ -3909,5 +3920,5 @@ SceneRoots:
   - {fileID: 2864628505184561727}
   - {fileID: 593512015756788250}
   - {fileID: 1193933640}
-  - {fileID: 707866364}
   - {fileID: 410643384}
+  - {fileID: 707866364}
