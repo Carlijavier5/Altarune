@@ -7,36 +7,27 @@ using UnityEngine;
 /// The object that all interactable objects inherit from; <br/>
 /// When object A interacts with object B you interact through this base object class; <br/>
 /// </summary>
+[DisallowMultipleComponent]
 public abstract partial class BaseObject : MonoBehaviour {
-
-    #region || Local Timescale ||
-
-    protected float timeScale = 1;
-    public virtual float TimeScale { get => timeScale; set => timeScale = value; }
-
-    protected float DeltaTime => Time.deltaTime * timeScale;
-
-    #endregion
-
-    public bool Perished { get; private set; }
-
-    /// <summary>
-    /// Override to implement a death behavior for the object; <br/>
-    /// </summary>
-    public virtual void Perish() {
-        Perished = true;
-        OnPerish?.Invoke(this);
-    }
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
     }
 
+    public bool IsFaction(EntityFaction exceptionFaction) {
+        Entity entity = this as Entity;
+        return entity && exceptionFaction == entity.Faction;
+    }
+
+    public bool IsFactions(EntityFaction[] exceptionFactions) {
+        return exceptionFactions.Any((faction) => IsFaction(faction));
+    }
+
     #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
-    private Dictionary<Renderer, Material[]> materialDict = new();
+    private readonly Dictionary<Renderer, Material[]> materialDict = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
         renderers = GetComponentsInChildren<Renderer>(true);

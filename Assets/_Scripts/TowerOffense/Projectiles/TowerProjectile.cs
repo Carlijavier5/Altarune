@@ -5,7 +5,12 @@ public class TowerProjectile : MonoBehaviour {
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Collider coll;
-    [SerializeField] private float moveForce;
+    [SerializeField] private float speed;
+    [SerializeField] private int damage;
+    [SerializeField] private float lifetime;
+
+    private bool active;
+    private Vector3 dir;
     private Vector3 ogScale;
 
     void Awake() {
@@ -15,13 +20,22 @@ public class TowerProjectile : MonoBehaviour {
     }
 
     public void Launch(Vector3 direction) {
-        rb.AddForce(direction * moveForce);
+        dir = direction.normalized;
+        active = true;
     }
 
-    void OnCollisionEnter(Collision coll) {
-        if ((coll.collider is MeshCollider
-            || coll.collider is BoxCollider
-            || coll.collider is TerrainCollider)) {
+    void Update() {
+        if (active) rb.MovePosition(rb.position + dir * speed);
+        lifetime -= Time.deltaTime;
+        if (lifetime <= 0) End();
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out BaseObject baseObject)
+            && !(baseObject is Entity
+                 && (baseObject as Entity).Faction == EntityFaction.Friendly)) {
+            if (baseObject.TryDamage(4)) End();
+        } else if (!other.isTrigger && other.gameObject.layer != 4) {
             End();
         }
     }
@@ -34,23 +48,18 @@ public class TowerProjectile : MonoBehaviour {
     }
 
     private IEnumerator IEnd() {
-        while (transform.localScale != Vector3.zero) {
+        while (transform.localScale.magnitude > Mathf.Epsilon) {
             transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.zero, Time.deltaTime * 5);
             yield return null;
         }
         Destroy(gameObject);
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)) {
-            entity.TryDamage(1);
-            End();
-        }
-    }
-
     private void End() {
-        Destroy(rb);
-        Destroy(coll);
+        active = false;
+        coll.enabled = false;
+
+        StopAllCoroutines();
         StartCoroutine(IEnd());
     }
 }

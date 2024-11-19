@@ -6,7 +6,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 public class AmbientLightTest : MonoBehaviour
 {
     // Start is called before the first frame update
-    private Light light;
+    private new Light light;
 
     [SerializeField] private float intensityVarianceStrength;
     [SerializeField] private float intensityVarianceAmplitude;

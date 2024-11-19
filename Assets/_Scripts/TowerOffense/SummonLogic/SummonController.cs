@@ -3,128 +3,199 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SummonType { None = 0, Battery, Tower }
+
 public class SummonController : MonoBehaviour {
 
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private PHSelector phSelector;
+    public event System.Action<TowerData> OnTowerSelected;
+    public event System.Action<BatteryData> OnBatterySelected;
 
-    public enum SelectionType { None = 0, Battery, Tower }
-    private SelectionType selectedType;
+    [SerializeField] private PlayerController inputSource;
+    [SerializeField] private Entity summoner;
+    [SerializeField] private ManaSource manaSource;
+
+    [SerializeField] private PHSelector phSelector;
 
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
-    private List<Battery> summonedBatteries = new();
+    [SerializeField] private float batteryCost, towerCost;
+    [SerializeField] private float overlapRadius;
 
-    public PlayerInput playerInput;
+    private readonly HashSet<ArtificialBattery> summonedBatteries = new();
 
-    private Vector3 prevMousePos;
+    private SummonType selectedType;
+    private Vector2 prevMousePos;
 
-    private IEnumerable<Battery> hintBatteries;
+    private class ClosestBatteryCache {
+        public IBattery battery;
+        public float distance;
+    } private ClosestBatteryCache closestBatteryCache;
     private Vector3 lastHitPoint;
 
-    private Battery hintBattery;
-    private Summon hintTower;
+    private SummonHologram summonHint;
+
+    private HashSet<GameObject> overlapSummons;
+    private bool IsPlacementInvalid => (selectedType == SummonType.Tower && closestBatteryCache == null)
+                                    || (overlapSummons == null || overlapSummons.Count > 0);
 
     private int selectedSlot = 0;
 
     void Awake() {
-        playerInput = new();
-        playerInput.Actions.Enable();
-        playerInput.Actions.Summon.performed += Summon_performed; ;
+        inputSource.OnPlayerInit += InputSource_OnPlayerInit;
+    }
+
+    private void InputSource_OnPlayerInit() {
+        inputSource.OnSummonPerformed += InputSource_OnSummonPerformed;
+        inputSource.OnSummonSelect += InputSource_OnSummonSelect;
+        manaSource.OnManaCollapse += Player_OnManaCollapse;
+    }
+
+    private void Player_OnManaCollapse() {
+        foreach (ArtificialBattery battery in summonedBatteries) {
+            battery.Collapse();
+        } summonedBatteries.Clear();
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            SetSelectionType(selectedType == SelectionType.Battery ? SelectionType.None : SelectionType.Battery);
-        } else if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 0);
-        } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            SetSelectionType(selectedType == SelectionType.Tower ? SelectionType.None : SelectionType.Tower, 1);
-        }
-
         if (selectedType != 0) {
-            if (prevMousePos != Input.mousePosition) {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                IEnumerable<RaycastHit> hitInfo;
-                if ((hitInfo = Physics.RaycastAll(ray)).Count() > 0) {
-                    hintBatteries = hitInfo.Select((info) => info.collider.GetComponent<Battery>())
-                                           .Where((item) => item != null);
-                    hitInfo = hitInfo.Where((info) => !info.collider.isTrigger);
-                    if (hitInfo.Count() > 0) {
-                        switch (selectedType) {
-                            case SelectionType.Battery:
-                                if (hintBattery) {
-                                    hintBattery.transform.position = hitInfo.First().point;
-                                } else {
-                                    hintBattery = Instantiate(batteryData.prefab);
-                                    hintBattery.transform.position = hitInfo.First().point;
-                                    hintBattery.ToggleHologram(true);
-                                } lastHitPoint = hitInfo.First().point;
-                                break;
-                            case SelectionType.Tower:
-                                if (hintTower) {
-                                    hintTower.transform.position = hitInfo.First().point;
-                                } else {
-                                    hintTower = Instantiate(towerBlueprints[selectedSlot].prefab);
-                                    hintTower.transform.position = hitInfo.First().point;
-                                    hintTower.ToggleHologram(true);
-                                } lastHitPoint = hitInfo.First().point;
-                                hintTower.ToggleHologramRed(hintBatteries.Count() <= 0);
-                                break;
-                        }
-                    }
-                } else DestroyHints();
-            }
-            prevMousePos = Input.mousePosition;
+            if (prevMousePos != inputSource.CursorPosition) RaycastSummon();
+            prevMousePos = inputSource.CursorPosition;
         }
     }
 
-    private void SetSelectionType(SelectionType selectionType, int index = 0) {
-        DestroyHints();
-        prevMousePos = Vector3.zero;
+    private void RaycastSummon() {
+        Ray ray = inputSource.OutputCamera.ScreenPointToRay(inputSource.CursorPosition);
+
+        IEnumerable<RaycastHit> objectsHit;
+        if (Physics.Raycast(ray, out RaycastHit groundHit, Mathf.Infinity, LayerUtils.GroundLayerMask)
+            && Mathf.Max(groundHit.normal.x, groundHit.normal.y, groundHit.normal.z) == groundHit.normal.y) {
+
+            switch (selectedType) {
+                case SummonType.Battery:
+                    UpdateHint(batteryData.prefabHologram, groundHit.point);
+                    break;
+                case SummonType.Tower:
+                    if ((objectsHit = Physics.RaycastAll(ray, Mathf.Infinity, LayerUtils.SummonHintLayerMask)).Count() > 0) {
+                        foreach (RaycastHit hitInfo in objectsHit) {
+                            if (hitInfo.collider.TryGetComponent(out BatteryArea batteryArea) && batteryArea.IsActive) {
+                                IBattery battery = batteryArea.Battery;
+                                float distance = Vector3.Distance(groundHit.point, battery.Position);
+                                if (closestBatteryCache == null || distance < closestBatteryCache.distance) {
+                                    closestBatteryCache = new() { battery = battery, distance = distance };
+                                }
+                            }
+                        }
+                    } else closestBatteryCache = null;
+
+                    UpdateHint(towerBlueprints[selectedSlot].prefabHologram, groundHit.point);
+                    break;
+            }
+
+            if (selectedType != 0 && summonHint) {
+                Collider[] colliders = Physics.OverlapSphere(summonHint.transform.position, overlapRadius,
+                                                             LayerUtils.SummonHintLayerMask);
+                overlapSummons = new();
+                foreach (Collider collider in colliders) {
+                    if (collider.TryGetComponent(out Summon summon)
+                        && Vector3.Distance(summon.transform.position, groundHit.point) < overlapRadius) {
+                        overlapSummons.Add(summon.gameObject);
+                    }
+                }
+
+                summonHint.ToggleHologramRed(IsPlacementInvalid);
+            }
+        } else DestroyHint();
+    }
+
+    private void UpdateHint(SummonHologram summonPrefab, Vector3 groundPoint) {
+        if (summonHint) {
+            summonHint.transform.position = groundPoint;
+        } else {
+            summonHint = Instantiate(summonPrefab);
+            summonHint.transform.position = groundPoint;
+        } lastHitPoint = groundPoint;
+    }
+
+    private void SetSelectionType(SummonType selectionType, int index = 0) {
+        DestroyHint();
+        StartCoroutine(DelayCast());
+
         selectedType = selectionType;
         phSelector.SetSelectedImage(selectionType, index);
         selectedSlot = index;
 
         switch (selectedType) {
-            case SelectionType.None:
-            case SelectionType.Battery:
-                foreach (Battery battery in summonedBatteries) {
+            case SummonType.None:
+            case SummonType.Battery:
+                OnBatterySelected?.Invoke(batteryData);
+                foreach (ArtificialBattery battery in summonedBatteries) {
                     battery.ToggleArea(false);
-                }
-                break;
-            case SelectionType.Tower:
-                foreach (Battery battery in summonedBatteries) {
+                } break;
+            case SummonType.Tower:
+                OnTowerSelected?.Invoke(towerBlueprints[index]);
+                foreach (ArtificialBattery battery in summonedBatteries) {
                     battery.ToggleArea(true);
-                }
-                break;
+                } break;
         }
     }
 
-    private void DestroyHints() {
-        if (hintBattery) Destroy(hintBattery.gameObject);
-        if (hintTower) Destroy(hintTower.gameObject);
+    private IEnumerator DelayCast() {
+        yield return new WaitForEndOfFrame();
+        RaycastSummon();
     }
 
-    private void Summon_performed(UnityEngine.InputSystem.InputAction.CallbackContext context) {
-        if (context.performed && selectedType != 0) {
+    private void DestroyHint() {
+        if (summonHint) Destroy(summonHint.gameObject);
+        overlapSummons = new();
+    }
+
+    private void InputSource_OnSummonPerformed() {
+        if (selectedType != 0 && summonHint != null
+            && !IsPlacementInvalid) {
             switch (selectedType) {
-                case SelectionType.Battery:
-                    Battery battery = Instantiate(batteryData.prefab, lastHitPoint, Quaternion.identity);
+                case SummonType.Battery:
+                    ArtificialBattery battery = Instantiate(batteryData.prefabSummon, lastHitPoint, Quaternion.identity);
+
                     summonedBatteries.Add(battery);
                     battery.DoSpawnAnim();
-                    SetSelectionType(SelectionType.None);
+
+                    battery.Init(summoner, manaSource);
+                    manaSource.Drain(batteryCost);
+
+                    SetSelectionType(SummonType.None);
                     break;
-                case SelectionType.Tower:
-                    if (hintBatteries.Count() > 0) {
-                        Summon tower = Instantiate(towerBlueprints[selectedSlot].prefab, lastHitPoint, Quaternion.identity);
+                case SummonType.Tower:
+                    if (closestBatteryCache != null
+                        && closestBatteryCache.battery != null
+                        && closestBatteryCache.battery.IsActive) {
+                        Summon tower = Instantiate(towerBlueprints[selectedSlot].prefabSummon, lastHitPoint, Quaternion.identity);
+
+                        IBattery targetBattery = closestBatteryCache.battery;
+                        ManaSource batterySource = targetBattery.ManaSource;
+
+                        targetBattery.LinkTower(tower);
                         tower.DoSpawnAnim();
-                        SetSelectionType(SelectionType.None);
-                        tower.Init();
-                    }
-                    break;
+
+                        tower.Init(summoner, batterySource);
+                        batterySource.Drain(towerCost);
+
+                        SetSelectionType(SummonType.None);
+                    } break;
             }
+        }
+    }
+
+    private void InputSource_OnSummonSelect(SummonType selectionType, int slotNum) {
+        switch (selectionType) {
+            case SummonType.None:
+                break;
+            case SummonType.Battery:
+                SetSelectionType(selectedType == SummonType.Battery ? SummonType.None : SummonType.Battery);
+                break;
+            case SummonType.Tower:
+                SetSelectionType(selectedType == SummonType.Tower ? SummonType.None : SummonType.Tower, slotNum - 1);
+                break; 
         }
     }
 }

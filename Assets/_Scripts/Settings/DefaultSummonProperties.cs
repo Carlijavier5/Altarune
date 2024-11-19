@@ -1,8 +1,6 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DefaultSummonProperties : ScriptableObject {
-    public Material fadeMaterial;
     public AnimationCurve growthCurveXZ, growthCurveY;
+    public float growSpeed;
 }
-#endif

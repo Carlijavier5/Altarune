@@ -10,7 +10,7 @@ public class TimeMagicCircleController : MonoBehaviour
     #region Properties
 
     [Header("Components")]
-    [SerializeField] Renderer renderer;
+    [SerializeField] new Renderer renderer;
 
     [Space] [Header("Animation Settings")]
     [SerializeField] float radius = 7f;
@@ -45,13 +45,15 @@ public class TimeMagicCircleController : MonoBehaviour
             return mpb;
         }
     }
-    
+
+    private float maxRadius;
+
     #endregion
     
     #region Mono
-    void Start()
+    void Awake()
     {
-        
+        maxRadius = radius;
     }
 
     void Update()
@@ -125,6 +127,12 @@ public class TimeMagicCircleController : MonoBehaviour
         }
 
         StartCoroutine(OnStateTransition());
+    }
+
+    public void SetRadius(float radius)
+    {
+        this.radius = radius;
+        UpdateCircleRadius();
     }
 
     public IEnumerator OnStateTransition()
