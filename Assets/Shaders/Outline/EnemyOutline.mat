@@ -7,13 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Outline
-  m_Shader: {fileID: -6465566751694194690, guid: 9c92a8711b3c17a47a21c7e27f8346ff,
+  m_Name: EnemyOutline
+  m_Shader: {fileID: -6465566751694194690, guid: a3697291d2f4bba4d8554e05c6521bf0,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _OVERLAY
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -25,14 +24,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AddAdditionalLights_2f33006b9b3749679ad94edb9d722155_Posterization_1666173476_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 9875244e50551a243847681c9acbf432, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_ef062a48e8414bbbbebda964d62d442f_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 9875244e50551a243847681c9acbf432, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -47,11 +38,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Color_Threshold: 0.1
-    - _Normal_Threshold: 0.001
-    - _OVERLAY: 1
-    - _Outline_Size: 0
-    - _Size: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Size: 0.06
     m_Colors:
-    - _Outline_Color: {r: 0.08679241, g: 0.07254535, b: 0.07254535, a: 0}
+    - _Color: {r: 0.82641506, g: 0.34928337, b: 0.2728728, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &654205699071587796
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
