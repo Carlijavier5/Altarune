@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +18,6 @@ public class TowerSelectionMenu : MonoBehaviour
         HashSet<TowerData> towerHash = new HashSet<TowerData>();
         for(int i = 0;i < equippedTowers.transform.childCount;i++) {
             if(equippedTowers.transform.GetChild(i).childCount == 1){
-                Debug.Log(equippedTowers.transform.GetChild(i).GetChild(0).GetComponent<DraggableIcons>().towerData.name);
                 towerHash.Add(equippedTowers.transform.GetChild(i).GetChild(0).GetComponent<DraggableIcons>().towerData);
             }
         }
