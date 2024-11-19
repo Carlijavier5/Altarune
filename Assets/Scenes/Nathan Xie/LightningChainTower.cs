@@ -33,7 +33,7 @@ public class LightningChainTower : Summon
             LightningChainBall projectile = Instantiate(ball, transform.position + Vector3.up, Quaternion.identity);
             projectile.OnTimeOut += RemoveBall;
             balls.Enqueue(projectile);
-            projectile.Launch(transform.position, summoner.transform.position);
+            projectile.Launch(transform.position, Summoner.transform.position);
         }
     }
     private void RemoveBall(LightningChainBall ball){

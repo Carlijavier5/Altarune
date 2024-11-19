@@ -7,14 +7,15 @@ public abstract class Summon : BaseObject {
     [SerializeField] private DefaultSummonProperties settings;
     [SerializeField] protected float manaDepletion = 1f;
 
+    public Entity Summoner { get; protected set; }
+
     protected ManaSource manaSource;
-    protected Entity summoner;
     protected bool active;
 
     public virtual void Init(Entity summoner,
                              ManaSource manaSource) {
-        this.summoner = summoner;
         this.manaSource = manaSource;
+        Summoner = summoner;
         active = true;
     }
 
