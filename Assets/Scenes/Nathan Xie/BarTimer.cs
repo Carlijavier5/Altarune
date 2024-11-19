@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class BarTimer : MonoBehaviour
 {
-    public event System.Action timerEnd;
+    public event System.Action OnTimerEnd;
+
     [SerializeField] private float fadeInTime;
     [SerializeField] private BaseObject attatchedObject;
     [SerializeField] private Image topLayer;
     [SerializeField] private Image backgroundLayer;
     [SerializeField] private CanvasGroup canvasGroup;
+
     private float maxTime;
     private float currentTime;
     private float currentFadeTime;
@@ -17,12 +19,10 @@ public class BarTimer : MonoBehaviour
     void Start(){
         init = false;
         canvasGroup.alpha = 0;
-        canvasGroup.interactable = false;
     }
     public void StartTimer(float inputTime){
         maxTime = inputTime;
         currentTime = maxTime;
-        canvasGroup.interactable = true;
         canvasGroup.alpha = 0.5f;
         transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         topLayer.fillAmount = 1;
@@ -61,22 +61,12 @@ public class BarTimer : MonoBehaviour
                 Fade();
             } else if (currentTime <= 0) {
                 FadeOut();
-            } 
-            else {
+            } else {
                 UpdateTime();
                 UpdateTopLayer();
             }
-            lockRotation();
         }
     }
-
-    private void lockRotation(){
-            Camera camera = Camera.main;
-            Vector3 layerRotation = Quaternion.LookRotation(camera.transform.position).eulerAngles;
-            //layerRotation.y = layerRotation.z = 0;
-            topLayer.transform.rotation = Quaternion.Euler(layerRotation);
-            backgroundLayer.transform.rotation = Quaternion.Euler(layerRotation);
-        }
 
     private void UpdateTime(){
         if(currentTime > 0) {
@@ -90,7 +80,7 @@ public class BarTimer : MonoBehaviour
     private void UpdateTopLayer(){
         topLayer.fillAmount = currentTime / maxTime;
         if(topLayer.fillAmount <= 0) {
-            timerEnd?.Invoke();
+            OnTimerEnd?.Invoke();
         }
     }
 }
