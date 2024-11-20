@@ -7,6 +7,7 @@ public abstract partial class BaseObject {
 
     public event System.Action<int, ElementType, EventResponse> OnTryDamage;
     public event System.Action<EventResponse<int>> OnTryRequestHealth;
+    public event System.Action<EventResponse<int>> OnTryRequestMaxHealth;
     public event System.Action<bool, EventResponse> OnTryToggleIFrame;
 
     public event System.Action<int> OnDamageReceived;
@@ -23,6 +24,19 @@ public abstract partial class BaseObject {
         get {
             EventResponse<int> response = new();
             OnTryRequestHealth?.Invoke(response);
+            return response.received ? response.objectReference : -1;
+        }
+    }
+
+    /// <summary>
+    /// Object max health; <br/>
+    /// • Returns the current max health if damageable and alive; <br/>
+    /// • Returns -1 if not damageable;
+    /// </summary>
+    public int MaxHealth {
+        get {
+            EventResponse<int> response = new();
+            OnTryRequestMaxHealth?.Invoke(response);
             return response.received ? response.objectReference : -1;
         }
     }

@@ -10,9 +10,7 @@ public class SummonController : MonoBehaviour {
     public event System.Action<SummonData[]> OnRosterSetup;
     public event System.Action<SummonType, SummonData> OnSummonSelected;
     public event System.Action<Ray> OnRaycastUpdate;
-
     public event System.Action<SummonType> OnPointerConfirm;
-    public event System.Action OnManaCollapse;
 
     [SerializeField] private PlayerController inputSource;
     [SerializeField] private Entity summoner;
