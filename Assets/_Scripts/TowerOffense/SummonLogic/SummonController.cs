@@ -9,6 +9,7 @@ public class SummonController : MonoBehaviour {
 
     public event System.Action<TowerData> OnTowerSelected;
     public event System.Action<BatteryData> OnBatterySelected;
+    public event System.Action OnDeselect;
 
     [SerializeField] private PlayerController inputSource;
     [SerializeField] private Entity summoner;
@@ -124,6 +125,10 @@ public class SummonController : MonoBehaviour {
         selectedType = selectionType;
         phSelector.SetSelectedImage(selectionType, index);
         selectedSlot = index;
+
+        if (selectedType == SummonType.None) {
+            OnDeselect?.Invoke();
+        }
 
         switch (selectedType) {
             case SummonType.None:
