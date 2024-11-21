@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2094599693846396471}
+  - component: {fileID: 4939134497291584044}
   - component: {fileID: 3578616757432967094}
   - component: {fileID: 312935587106290561}
   - component: {fileID: 5151315861577118517}
-  - component: {fileID: 4939134497291584044}
   m_Layer: 6
   m_Name: JarOfEndlessSnakes
   m_TagString: Untagged
@@ -35,6 +35,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4939134497291584044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7045098648570108618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd990b03b67ff4c489c215fc3c7992bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectBody: {fileID: 2094599693846396471}
+  settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
+  maxSnakes: 3
+  summonCooldown: 5
+  snakePrefab: {fileID: 1570203959472234346, guid: 35407e7e41c565742a346da62c01916f,
+    type: 3}
 --- !u!33 &3578616757432967094
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -106,21 +125,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4939134497291584044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7045098648570108618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd990b03b67ff4c489c215fc3c7992bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
-  manaDepletion: 1
-  maxSnakes: 3
-  summonCooldown: 5
-  snakePrefab: {fileID: 1570203959472234346, guid: 35407e7e41c565742a346da62c01916f,
-    type: 3}

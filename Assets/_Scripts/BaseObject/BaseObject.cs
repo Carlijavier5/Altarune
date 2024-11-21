@@ -10,6 +10,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public abstract partial class BaseObject : MonoBehaviour {
 
+    [SerializeField] private Transform objectBody;
+
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
@@ -30,7 +32,7 @@ public abstract partial class BaseObject : MonoBehaviour {
     private readonly Dictionary<Renderer, Material[]> materialDict = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
-        renderers = GetComponentsInChildren<Renderer>(true);
+        renderers = objectBody.GetComponentsInChildren<Renderer>(true);
         if (updateMaterials) {
             foreach (Renderer renderer in renderers) {
                 materialDict[renderer] = renderer.sharedMaterials;

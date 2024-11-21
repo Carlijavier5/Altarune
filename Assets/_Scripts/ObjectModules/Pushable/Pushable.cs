@@ -123,7 +123,7 @@ public class Pushable : ObjectModule {
         }
     }
 
-    public override void EDITOR_ONLY_AttachModule() { 
+    public override void EDITOR_ONLY_AttachModule() {
         if (ccModule == null) TryGetComponent(out ccModule);
     }
     #endif
