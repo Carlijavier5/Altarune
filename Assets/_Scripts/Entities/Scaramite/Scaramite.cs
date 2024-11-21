@@ -81,7 +81,7 @@ public partial class Scaramite : Entity {
 
     private void DealDamage(BaseObject contact) {
         if (Time.time < damageCDEndTime) return;
-        contact.TryDamage(1);
+        contact.TryDamage(damageAmount);
         damageCDEndTime = Time.time + damageCD;
 
         stateMachine.SetState(new Scaramite_Knockback(this, contact));
