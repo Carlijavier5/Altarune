@@ -5,8 +5,14 @@ using UnityEngine;
 public class TowerWheel : MonoBehaviour
 {
     [SerializeField] private SummonController summonController;
+    
+    private Animator animator;
 
     private bool didSelect = true;
+
+    private void Awake() {
+        animator = GetComponent<Animator>();
+    }
 
     private void OnEnable() {
         if (summonController != null) {
@@ -26,7 +32,7 @@ public class TowerWheel : MonoBehaviour
 
     private void HandleTowerSelected(TowerData towerData) {
         if (didSelect) {
-            Debug.Log(towerData.name);
+            animator.SetBool("isSelect", true);
         }
 
         didSelect = true;
@@ -34,15 +40,14 @@ public class TowerWheel : MonoBehaviour
 
     private void HandleBatterySelected(BatteryData batteryData) {
         if (didSelect) {
-            Debug.Log(batteryData.name);
+            animator.SetBool("isSelect", true);
         }
 
         didSelect = true;
     }
 
     private void HandleDeselect() {
-        Debug.Log("none");
-
+        animator.SetBool("isSelect", false);
         didSelect = false;
     }
 }
