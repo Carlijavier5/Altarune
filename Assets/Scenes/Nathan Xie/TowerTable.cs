@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +16,6 @@ public class TowerTable : MonoBehaviour
     private void CheckInput(){
         if(activateInput) {
             if(towerMenu.interactable && (Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.Escape))) {
-                Debug.Log("Pressed M");
                 HashSet<TowerData> towerHash = towerSelectionMenu.getTowerSelection();
                 if(towerMenu.interactable && towerHash.Count != 0) {
                     towerMenu.interactable = false;

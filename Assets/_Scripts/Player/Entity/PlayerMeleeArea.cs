@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlayerMeleeArea : MonoBehaviour {
     
@@ -15,14 +16,14 @@ public class PlayerMeleeArea : MonoBehaviour {
                                    pushStrength, pushDuration;
 
     [SerializeField] private Collider areaCollider;
-    [SerializeField] private ParticleSystem areaParticles;
+    [SerializeField] private VisualEffect areaParticles;
 
     private float timer;
 
     public void DoMelee(Player playerSource, float attackDuration) {
         this.playerSource = playerSource;
         timer = attackDuration;
-        areaParticles.Play();
+        areaParticles.Reinit();
 
         enabled = true;
         areaCollider.enabled = true;

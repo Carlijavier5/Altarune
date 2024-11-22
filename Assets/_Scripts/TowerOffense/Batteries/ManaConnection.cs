@@ -23,8 +23,8 @@ public class ManaConnection : MonoBehaviour {
     }
 
     public void Init(Transform origin, Transform tail) {
-        this.tail = tail;
         this.origin = origin;
+        this.tail = tail;
         isActive = true;
         Connect();
     }
@@ -64,7 +64,6 @@ public class ManaConnection : MonoBehaviour {
             lrTPos = Vector3.Lerp(tailPoint, midPoint, lerpVal);
             lrOrigin.SetPosition(1, lrOPos);
             lrTail.SetPosition(1, lrTPos);
-            lerpVal += Time.deltaTime;
             yield return null;
         }
     }
@@ -88,7 +87,6 @@ public class ManaConnection : MonoBehaviour {
             lrTPos = Vector3.Lerp(tailPoint, midPoint, lerpVal);
             lrOrigin.SetPosition(0, lrOPos);
             lrTail.SetPosition(0, lrTPos);
-
             yield return null;
         }
 
