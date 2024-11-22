@@ -1448,6 +1448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5854525286493433039}
+  - component: {fileID: 4823272387358015442}
   - component: {fileID: 3283117818711094964}
   - component: {fileID: 4059036865672459204}
   - component: {fileID: 2363184003669750460}
@@ -1478,6 +1479,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &4823272387358015442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5554181525506035459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096f02567a400ec4ab1d9fffe02a6790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summonController: {fileID: 0}
+  animator: {fileID: 5119273483111850154}
 --- !u!223 &3283117818711094964
 Canvas:
   m_ObjectHideFlags: 0
@@ -2414,6 +2429,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7574468478640286857}
+  - component: {fileID: 5119273483111850154}
   m_Layer: 5
   m_Name: GlobalAnchor
   m_TagString: Untagged
@@ -2439,9 +2455,30 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: -0.1205, y: -0.216}
   m_AnchorMax: {x: 0.191, y: 0.342}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -400, y: -400}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &5119273483111850154
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7927730764909389780}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 37292f8e3b6746649a2e3f8ef7cfc620, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8072566298322202247
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,49 +5,34 @@ using UnityEngine;
 public class TowerWheel : MonoBehaviour
 {
     [SerializeField] private SummonController summonController;
-    
-    private Animator animator;
+    [SerializeField] private Animator animator;
 
-    private bool didSelect = true;
-
-    private void Awake() {
-        animator = GetComponent<Animator>();
+    private void Start() {
+        summonController.OnSummonSelected += HandleSummonSelected;
     }
 
     private void OnEnable() {
         if (summonController != null) {
-            summonController.OnTowerSelected += HandleTowerSelected;
-            summonController.OnBatterySelected += HandleBatterySelected;
-            summonController.OnDeselect += HandleDeselect;
+            summonController.OnSummonSelected += HandleSummonSelected;
         }
     }
 
     private void OnDisable() {
         if (summonController != null) {
-            summonController.OnTowerSelected -= HandleTowerSelected;
-            summonController.OnBatterySelected -= HandleBatterySelected;
-            summonController.OnDeselect -= HandleDeselect;
+            summonController.OnSummonSelected -= HandleSummonSelected;
         }
     }
 
-    private void HandleTowerSelected(TowerData towerData) {
-        if (didSelect) {
-            animator.SetBool("isSelect", true);
+    private void HandleSummonSelected(SummonType type, SummonData data) {
+        if (!data) {
+            Hide();
+            return;
         }
 
-        didSelect = true;
+        animator.SetBool("isSelect", true);
     }
 
-    private void HandleBatterySelected(BatteryData batteryData) {
-        if (didSelect) {
-            animator.SetBool("isSelect", true);
-        }
-
-        didSelect = true;
-    }
-
-    private void HandleDeselect() {
+    private void Hide() {
         animator.SetBool("isSelect", false);
-        didSelect = false;
     }
 }
