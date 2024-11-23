@@ -10,9 +10,20 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public abstract partial class BaseObject : MonoBehaviour {
 
+    [SerializeField] private Transform objectBody;
+
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
+    }
+
+    public bool IsFaction(EntityFaction exceptionFaction) {
+        Entity entity = this as Entity;
+        return entity && exceptionFaction == entity.Faction;
+    }
+
+    public bool IsFactions(EntityFaction[] exceptionFactions) {
+        return exceptionFactions.Any((faction) => IsFaction(faction));
     }
 
     #region || Material Swap Utilities ||
@@ -21,7 +32,7 @@ public abstract partial class BaseObject : MonoBehaviour {
     private readonly Dictionary<Renderer, Material[]> materialDict = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
-        renderers = GetComponentsInChildren<Renderer>(true);
+        renderers = objectBody.GetComponentsInChildren<Renderer>(true);
         if (updateMaterials) {
             foreach (Renderer renderer in renderers) {
                 materialDict[renderer] = renderer.sharedMaterials;

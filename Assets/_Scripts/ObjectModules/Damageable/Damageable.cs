@@ -6,11 +6,15 @@ public enum ElementType { Physical, Fire, Ice, Shock, Poison }
 
 public class Damageable : ObjectModule {
 
+    public event System.Action OnModuleInit;
+
     [SerializeField] protected HealthAttributes defaultHPAttributes;
     [SerializeField] protected IFrameProperties iFrameProperties;
 
     public int Health => runtimeHP != null ? runtimeHP.Health
                                            : -1;
+    public int MaxHealth => runtimeHP != null ? runtimeHP.MaxHealth
+                                              : -1;
 
     protected RuntimeHealthAttributes runtimeHP;
 
@@ -21,11 +25,14 @@ public class Damageable : ObjectModule {
         baseObject.UpdateRendererRefs();
         baseObject.OnTryDamage += BaseObject_OnTryDamage;
         baseObject.OnTryRequestHealth += BaseObject_OnTryRequestHealth;
+        baseObject.OnTryRequestMaxHealth += BaseObject_OnTryRequestMaxHealth;
         baseObject.OnTryToggleIFrame += BaseObject_OnTryToggleIFrame;
 
         IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeHP = defaultHPAttributes.RuntimeClone(effectSource);
+
+        OnModuleInit?.Invoke();
     }
 
     private void BaseObject_OnTryToggleIFrame(bool on, EventResponse response) {
@@ -36,6 +43,11 @@ public class Damageable : ObjectModule {
     private void BaseObject_OnTryRequestHealth(EventResponse<int> response) {
         response.received = true;
         response.objectReference = Health;
+    }
+
+    private void BaseObject_OnTryRequestMaxHealth(EventResponse<int> response) {
+        response.received = true;
+        response.objectReference = MaxHealth;
     }
 
     /// <summary>

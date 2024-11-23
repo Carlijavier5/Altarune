@@ -4,11 +4,34 @@ using UnityEngine;
 
 public class AggroRange : MonoBehaviour {
 
+    private enum SortCriteria { Closest, Furthest }
+
     public event System.Action<Entity> OnAggroEnter;
     public event System.Action<Entity> OnAggroExit;
 
     [SerializeField] private EntityFaction[] sensitiveFactions;
     public HashSet<Entity> AggroTargets { get; private set; } = new();
+
+    public Entity ClosestTarget => FindTarget(SortCriteria.Closest);
+    public Entity FurthestTarget => FindTarget(SortCriteria.Furthest);
+
+    private Entity FindTarget(SortCriteria criteria) {
+        if (AggroTargets.Count == 0) return null;
+        Entity optimalTarget = AggroTargets.First();
+        float optimalDistance = Vector3.Distance(optimalTarget.transform.position,
+                                                 transform.position);
+        foreach (Entity target in AggroTargets) {
+            float newDistance = Vector3.Distance(target.transform.position,
+                                                 transform.position);
+            if (criteria switch { SortCriteria.Furthest => newDistance > optimalDistance,
+                                                      _ => newDistance < optimalDistance }) {
+                optimalTarget = target;
+                optimalDistance = newDistance;
+            }
+        }
+
+        return optimalTarget;
+    }
 
     void OnTriggerEnter(Collider other) {
         if (!transform.IsChildOf(other.transform)
@@ -40,4 +63,6 @@ public class AggroRange : MonoBehaviour {
             OnAggroExit?.Invoke(entity);
         }
     }
+
+    public void Disable() => gameObject.SetActive(false);
 }
