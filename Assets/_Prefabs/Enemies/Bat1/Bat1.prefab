@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1094155803880743870}
   - component: {fileID: 7872855913572422703}
   - component: {fileID: 2522689908939379712}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bat1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6255159190852428577}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef18de87750d53c49823c5d41f1c3f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectBody: {fileID: 7473144206271575091}
   faction: 2
   rb: {fileID: 1094155803880743870}
   move_speed: 300
@@ -140,6 +141,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bat_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 178718122870284758, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 462302603923814639, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 662380452311202668, guid: c69b903e397d4e64396db22beae609db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -148,7 +159,7 @@ PrefabInstance:
     - target: {fileID: 662380452311202668, guid: c69b903e397d4e64396db22beae609db,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 662380452311202668, guid: c69b903e397d4e64396db22beae609db,
         type: 3}
@@ -189,6 +200,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2443119231736177275, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512803891418260511, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6024473364742890031, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032553012005928774, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8039174836357224382, guid: c69b903e397d4e64396db22beae609db,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

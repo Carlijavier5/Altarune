@@ -5,6 +5,8 @@ using UnityEngine;
 public class RuntimeHealthAttributes : HealthAttributes {
 
     private readonly HealthAttributes healthAttributes;
+
+    public int MaxHealth { get; private set; }
     public int Health => health;
 
     private IEnumerable<StatusEffect> effectSource;
@@ -12,6 +14,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
     public RuntimeHealthAttributes(HealthAttributes defaultAttributes, DefaultHealthAttributeCurves curves,
                                    IEnumerable<StatusEffect> effectSource) : base(curves) {
         healthAttributes = defaultAttributes;
+        MaxHealth = defaultAttributes.health;
         health = defaultAttributes.health;
         this.effectSource = effectSource;
     }

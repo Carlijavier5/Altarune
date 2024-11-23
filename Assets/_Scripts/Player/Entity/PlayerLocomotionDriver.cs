@@ -23,10 +23,10 @@ public partial class Player {
             bool isMoving = inputVector.magnitude > 0;
 
             if (isMoving) {
-                MoveSpeed = Mathf.MoveTowards(MoveSpeed, lp.maxSpeed, lp.linearAcceleration * Time.deltaTime);
+                MoveSpeed = Mathf.MoveTowards(MoveSpeed, lp.maxSpeed, lp.linearAcceleration * player.FixedDeltaTime);
                 MoveDir = inputVector;
             } else {
-                MoveSpeed = Mathf.MoveTowards(MoveSpeed, 0, lp.linearDrag * Time.deltaTime);
+                MoveSpeed = Mathf.MoveTowards(MoveSpeed, 0, lp.linearDrag * player.FixedDeltaTime);
             }
 
             Vector3 moveVector = alignmentMult * MoveSpeed * MoveDir;
@@ -36,7 +36,7 @@ public partial class Player {
         public void ResolveRotation() {
             Quaternion targetRotation = Quaternion.LookRotation(MoveDir, Vector3.up);
             Controller.transform.rotation = Quaternion.RotateTowards(Controller.transform.rotation, 
-                                                                     targetRotation, lp.angularSpeed * Time.deltaTime);
+                                                                     targetRotation, lp.angularSpeed * player.FixedDeltaTime);
             alignmentMult = Mathf.Clamp(1 - Quaternion.Angle(Controller.transform.rotation, targetRotation) / 180, 0, 1);
         }
 
