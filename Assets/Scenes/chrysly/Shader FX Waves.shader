@@ -208,7 +208,7 @@
                 AddAdditionalLights_float(smoothness, objectPos, surfaceNormal, viewDir, alignAtten, mainSpecular, gradientCol, diffuse, specular, mainColor);
                 
                 
-                return float4(mainColor * _Color * diffuse, 1.);
+                return float4(_Color * diffuse);
             }
             
             ENDHLSL
