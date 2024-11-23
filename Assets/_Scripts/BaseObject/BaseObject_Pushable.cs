@@ -16,6 +16,7 @@ public abstract partial class BaseObject {
     /// </summary>
     /// <returns> True if the object was pushed, false otherwise; </returns>
     public bool TryPush(Vector3 direction, float strength) {
+        direction.y = 0;
         EventResponse response = new();
         OnTryFramePush?.Invoke(direction.normalized * strength, response);
         return response.received;
@@ -28,6 +29,7 @@ public abstract partial class BaseObject {
     /// <returns> True if the object was pushed, false otherwise; </returns>
     public bool TryLongPush(Vector3 direction, float strength,
                             float duration, out PushActionCore actionCore) {
+        direction.y = 0;
         EventResponse<PushActionCore> response = new();
         OnTryLongPush?.Invoke(direction.normalized * strength, duration, response);
         actionCore = response.objectReference;

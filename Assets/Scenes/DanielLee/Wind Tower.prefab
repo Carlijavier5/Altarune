@@ -53,6 +53,10 @@ MonoBehaviour:
   _attackCooldown: 3
   _pushDuration: 0.15
   _pushStrength: 30
+  _pullSpeed: 2
+  _rotateSpeed: 5
+  _pullTimer: 4
+  _pullMode: 0
 --- !u!1 &7992262352186023911
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,4 +203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6867adad2c671c428073d8becebfda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pullRadius: 1.75
+  pushRadius: 1.5
   _stunMultiplier: 2
