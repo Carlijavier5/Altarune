@@ -20,7 +20,7 @@ namespace GolemSavage {
             private float speed;
             private float stoppingDistance;
 
-            private Coroutine meteorCoroutine;
+            private bool startMeteorStrike = false;
 
             public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
@@ -39,8 +39,10 @@ namespace GolemSavage {
                 stoppingDistance = 1.5f;
                 health = golemSavage.health;
 
-                // Initializes a Coroutine used for the meteor attack
-                meteorCoroutine = golemSavage.StartCoroutine(MeteorCoroutine());
+                if (startMeteorStrike == false) {
+                    golemSavage.stateMachine.SetState(new GolemSavage_MeteorStrike());
+                    startMeteorStrike = true;
+                }
             }
 
             public override void Update(GolemSavageStateInput input) {
@@ -83,14 +85,6 @@ namespace GolemSavage {
                 golemSavage.transform.rotation = Quaternion.Slerp(golemSavage.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
             }
 
-            // Method that randomly (5 - 10 seconds) calls the SpinCoroutine method
-            IEnumerator MeteorCoroutine() {
-                while(true) {
-                    yield return new WaitForSeconds(Random.Range(5, 10));
-                    golemSavage.stateMachine.SetState(new GolemSavage_MeteorStrike());
-                }
-            }
-
             // Method to try to damage non-hostile factions
             public void OnTriggerEnter(Collider other) {
                 if (other.TryGetComponent(out Entity entity)
@@ -101,10 +95,7 @@ namespace GolemSavage {
 
             public override void Exit(GolemSavageStateInput input) {
                 // Stop the Coroutine
-                if (meteorCoroutine != null) {
-                    golemSavage.StopCoroutine(meteorCoroutine);
-                    meteorCoroutine = null;
-                }
+
             }
         }
     }

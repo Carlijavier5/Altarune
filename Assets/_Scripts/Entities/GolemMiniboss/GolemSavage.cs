@@ -9,7 +9,6 @@ namespace GolemSavage {
         private Transform player;
         private Damageable damageable;
         [SerializeField] private GameObject minionPrefab;
-        [SerializeField] private GameObject meteorPrefab;
 
         // Initializing default values for movement
         [SerializeField] private float speed = 2.5f;
@@ -53,6 +52,7 @@ namespace GolemSavage {
 
                 // Initializing variables with Phase files
                 phaseOneState = new GolemSavage_PhaseOne();
+                phaseThreeState = new GolemSavage_PhaseThree();
 
                 // Initializing the state machine and setting initial phase
                 stateMachine = new StateMachine<GolemSavageStateInput>();

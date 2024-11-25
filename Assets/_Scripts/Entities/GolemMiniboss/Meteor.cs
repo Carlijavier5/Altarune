@@ -7,9 +7,11 @@ namespace GolemSavage {
     public class Meteor : Entity {
         // Initializing vertical travel variables
         private float groundRiseSpeed;
-        private float maxFlightHeight = 80f;
+        private float maxFlightHeight = 3f;
         private float flightAcceleration = 15f;
         private float flightDeceleration = 10f;
+
+        private bool riseFirst = false;
 
         // Initializing coroutines
         private Coroutine riseFromGround;
@@ -21,11 +23,20 @@ namespace GolemSavage {
 
         void Start() {
             SetMeteorSize();
+        }
+
+        public void InitializeMeteor(bool riseFirst) {
+            this.riseFirst = riseFirst;
 
             // Random ground appearance speeds
             groundRiseSpeed = Random.Range(0.2f, 0.3f);
 
-            riseFromGround = StartCoroutine(RiseFromGroundCoroutine());
+            if (riseFirst) {
+                riseFromGround = StartCoroutine(RiseFromGroundCoroutine());
+            } else {
+                SetMeteorPosition();
+                fall = StartCoroutine(FallCoroutine());
+            }
         }
 
         private void SetMeteorSize() {
@@ -124,9 +135,9 @@ namespace GolemSavage {
 
         public void Exit() {
             // Stop the Coroutines
-            StopCoroutine(riseFromGround);
-            StopCoroutine(fly);
-            StopCoroutine(fall);
+            if (riseFromGround != null) StopCoroutine(riseFromGround);
+            if (fly != null) StopCoroutine(fly);
+            if (fall != null) StopCoroutine(fall);
         }
     }
 }

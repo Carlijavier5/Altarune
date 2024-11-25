@@ -145,7 +145,7 @@ namespace GolemSavage {
 
             private void CheckStateTransition() {
                 if (health <= 40) {
-                    golemSavage.stateMachine.SetState(new GolemSavage_PhaseThree());
+                    golemSavage.stateMachine.SetState(golemSavage.phaseThreeState);
                 }
             }
 
