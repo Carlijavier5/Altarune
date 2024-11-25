@@ -9,10 +9,10 @@ public class RuntimeHealthAttributes : HealthAttributes {
     public int MaxHealth { get; private set; }
     public int Health => health;
 
-    private IEnumerable<StatusEffect> effectSource;
+    private IEnumerable<EntityEffect> effectSource;
 
     public RuntimeHealthAttributes(HealthAttributes defaultAttributes, DefaultHealthAttributeCurves curves,
-                                   IEnumerable<StatusEffect> effectSource) : base(curves) {
+                                   IEnumerable<EntityEffect> effectSource) : base(curves) {
         healthAttributes = defaultAttributes;
         MaxHealth = defaultAttributes.health;
         health = defaultAttributes.health;
@@ -52,7 +52,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
         if (effectSource == null) return;
 
         HealthAttributeModifiers composite = new();
-        foreach (StatusEffect statusEffect in effectSource) {
+        foreach (EntityEffect statusEffect in effectSource) {
             if (statusEffect.HealthModifiers != null) {
                 composite.Compose(statusEffect.HealthModifiers);
             }

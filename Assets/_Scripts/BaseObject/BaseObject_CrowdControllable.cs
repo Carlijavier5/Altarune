@@ -95,11 +95,11 @@ public abstract partial class BaseObject {
     /// Staggers are exclusive to the CrowdControllable Module;
     /// Implement the local timescale if you want your object to be staggerable;
 
-    public event System.Action<float, EventResponse> OnTryStagger;
+    public event System.Action<float, bool, EventResponse> OnTryStagger;
 
-    public bool TryStagger(float duration) {
+    public bool TryStagger(float duration, bool timeStop = false) {
         EventResponse response = new();
-        OnTryStagger?.Invoke(duration, response);
+        OnTryStagger?.Invoke(duration, timeStop, response);
         return response.received;
     }
 }

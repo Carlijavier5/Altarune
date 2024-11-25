@@ -22,4 +22,11 @@ public static class SpatialUtils {
     private static Quaternion Multiply(this Quaternion input, float scalar) {
         return new Quaternion(input.x * scalar, input.y * scalar, input.z * scalar, input.w * scalar);
     }
+
+    public static Vector2 RandomPointInRing(float minRadius, float maxRadius) {
+        float theta = Random.Range(0.0f, 2.0f * Mathf.PI);
+        float w = Random.Range(0.0f, 1.0f);
+        float r = Mathf.Sqrt((1.0f - w) * minRadius * minRadius + w * maxRadius * maxRadius);
+        return new Vector2(r * Mathf.Cos(theta), r * Mathf.Sin(theta));
+    }
 }

@@ -10,6 +10,7 @@ public class CCAttributes {
     [Range(0, 1)] public float rootResistance;
     [Range(0, 1)] public float slowResistance;
 
+    public float StaggerTime => ccSettings.staggerTime;
     public float CCUpdateFrequency => ccSettings.ccUpdateFrequency;
 
     public CCAttributes(DefaultCrowdControlSettings ccSettings) {
@@ -17,5 +18,5 @@ public class CCAttributes {
     }
 
     public CCAttributes Clone() => MemberwiseClone() as CCAttributes;
-    public RuntimeCCAttributes RuntimeClone(IEnumerable<StatusEffect> effectSource) => new(this, ccSettings, effectSource);
+    public RuntimeCCAttributes RuntimeClone(IEnumerable<EntityEffect> effectSource) => new(this, ccSettings, effectSource);
 }
