@@ -9,8 +9,13 @@ public class TowerWheel : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform bigWheel;
     [SerializeField] private Transform smallWheel;
+    [SerializeField] private Sprite defaultBg;
+    [SerializeField] private Sprite selectBg;
 
-    private Dictionary<SummonData, int> summonAngleDict = new();
+    private int currentSelectionIndex = 0;
+
+    private readonly Dictionary<SummonData, int> summonAngleDict = new();
+    private readonly Dictionary<SummonData, int> summonIndexDict = new();
 
     private void Start() {
         summonController.OnSummonSelected += HandleSummonSelected;
@@ -36,7 +41,7 @@ public class TowerWheel : MonoBehaviour
             return;
         }
 
-        summonAngleDict = new Dictionary<SummonData, int>();
+        summonAngleDict.Clear();
 
         int i = 0;
         foreach (SummonData d in data) {
@@ -50,23 +55,43 @@ public class TowerWheel : MonoBehaviour
             i++;
         }
 
-        int j = 0;
+        summonIndexDict.Clear();
+
+        i = 0;
+        foreach (SummonData d in data) {
+            if (summonIndexDict.ContainsKey(d)) {
+                summonIndexDict.Remove(d);
+                summonIndexDict.Add(d, i);
+                continue;
+            }
+
+            summonIndexDict.Add(d, i);
+            i++;
+        }
+
+        i = 0;
         foreach (Transform t in bigWheel.transform) {
-            if (!data[j]) {
+            if (!data[i]) {
                 break;
             }
-            t.GetChild(0).GetComponent<Image>().sprite = data[j].icon;
-            j++;
+            t.GetChild(0).GetComponent<Image>().sprite = data[i].icon;
+            i++;
         }
     }
 
     private Coroutine rotateWheelCoroutine;
 
     private void HandleSummonSelected(SummonType type, SummonData data) {
+        bigWheel.GetChild(currentSelectionIndex).GetComponent<Image>().sprite = defaultBg;
+
         if (type == SummonType.None) {
             Hide();
             return;
         }
+
+        summonIndexDict.TryGetValue(data, out currentSelectionIndex);
+
+        bigWheel.GetChild(currentSelectionIndex).GetComponent<Image>().sprite = selectBg;
 
         if (summonAngleDict.TryGetValue(data, out int targetRotation)) {
             if (rotateWheelCoroutine != null) {
