@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ public class TowerWheel : MonoBehaviour
     [SerializeField] private SummonController summonController;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform bigWheel;
+    [SerializeField] private Transform smallWheel;
 
     private Dictionary<SummonData, int> summonAngleDict = new();
 
@@ -58,17 +60,61 @@ public class TowerWheel : MonoBehaviour
         }
     }
 
+    private Coroutine rotateWheelCoroutine;
+
     private void HandleSummonSelected(SummonType type, SummonData data) {
         if (type == SummonType.None) {
             Hide();
             return;
         }
 
-        if (summonAngleDict.TryGetValue(data, out int rot)) {
-            bigWheel.eulerAngles = new Vector3(bigWheel.rotation.x, bigWheel.rotation.y, rot);
+        if (summonAngleDict.TryGetValue(data, out int targetRotation)) {
+            if (rotateWheelCoroutine != null) {
+                StopCoroutine(rotateWheelCoroutine);
+            }
+            rotateWheelCoroutine = StartCoroutine(RotateWheelToAngle(targetRotation));
         }
 
         animator.SetBool("isSelect", true);
+    }
+
+    private IEnumerator RotateWheelToAngle(float targetAngle) {
+        float duration = 1f;
+        float elapsedTime = 0f;
+        float startAngle = bigWheel.localEulerAngles.z;
+
+        if (Mathf.Abs(targetAngle - startAngle) > 180f) {
+            if (targetAngle > startAngle) {
+                startAngle += 360f;
+            }
+            else {
+                targetAngle += 360f;
+            }
+        }
+
+        while (elapsedTime < duration) {
+            elapsedTime += Time.deltaTime;
+            float currentAngle = Mathf.Lerp(startAngle, targetAngle, elapsedTime / duration);
+            bigWheel.localEulerAngles = new Vector3(bigWheel.localEulerAngles.x, bigWheel.localEulerAngles.y, currentAngle);
+            smallWheel.localEulerAngles = new Vector3(smallWheel.localEulerAngles.x, smallWheel.localEulerAngles.y, -currentAngle);
+            foreach (Transform child in bigWheel) {
+                child.localEulerAngles = -bigWheel.localEulerAngles;
+            }
+            yield return null;
+        }
+
+        bigWheel.localEulerAngles = new Vector3(bigWheel.localEulerAngles.x, bigWheel.localEulerAngles.y, targetAngle);
+        smallWheel.localEulerAngles = new Vector3(smallWheel.localEulerAngles.x, smallWheel.localEulerAngles.y, -targetAngle);
+        foreach (Transform child in bigWheel) {
+            child.localEulerAngles = -bigWheel.localEulerAngles;
+        }
+        rotateWheelCoroutine = null;
+    }
+
+    void LateUpdate() {
+        foreach (Transform child in bigWheel) {
+            child.localEulerAngles = -bigWheel.localEulerAngles;
+        }
     }
 
     private void Hide() {
