@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 2123962462585985610}
   - component: {fileID: 7814385665984251756}
   - component: {fileID: 967039339384289034}
-  - component: {fileID: 5101089548631900100}
+  - component: {fileID: 3860940297194206072}
   m_Layer: 0
   m_Name: Sphere (1)
   m_TagString: Untagged
@@ -341,7 +341,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5101089548631900100
+--- !u!114 &3860940297194206072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -353,15 +353,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70061732ed7254b9ebc80ebc6a59f6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
+  active: 0
   playerPosition: {fileID: 0}
-  towerPosition: {fileID: 6081701484228846484}
+  towerPosition: {fileID: 0}
   player: {fileID: 0}
-  tower: {fileID: 6839029646082164391}
-  radius: 2.4
-  maxDistance: 3
+  tower: {fileID: 0}
+  radius: 0
+  maxDistance: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 40
+    m_Bits: 0
 --- !u!1 &6839029646082164391
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +374,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6081701484228846484}
+  - component: {fileID: 4801423844857236387}
+  - component: {fileID: 3002109288948341699}
   m_Layer: 0
   m_Name: Switcharoo
   m_TagString: Untagged
@@ -396,6 +401,53 @@ Transform:
   - {fileID: 3274226862983283079}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4801423844857236387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839029646082164391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70061732ed7254b9ebc80ebc6a59f6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  manaDepletion: 1
+  active: 0
+  playerPosition: {fileID: 0}
+  towerPosition: {fileID: 6081701484228846484}
+  player: {fileID: 0}
+  tower: {fileID: 0}
+  radius: 0
+  maxDistance: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &3002109288948341699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839029646082164391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab4305337dc99c439cb3d9968f403ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 4801423844857236387}
+  defaultDriver:
+    motionMode: 0
+    transform: {fileID: 6081701484228846484}
+    rigidbody: {fileID: 0}
+    controller: {fileID: 0}
+    navMeshAgent: {fileID: 0}
+  pushableModule: {fileID: 0}
+  teleportableProperties:
+    settings: {fileID: 11400000, guid: 19cdb989acdb9444387ad6f23f4ac034, type: 2}
+    rootTransform: {fileID: 6081701484228846484}
 --- !u!1 &7005465491406121100
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +568,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5101089548631900100}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SwitchTowerAndPlayer, Assembly-CSharp
         m_MethodName: OnMouseUpAsButton
         m_Mode: 1
