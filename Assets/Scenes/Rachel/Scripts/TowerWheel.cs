@@ -45,6 +45,10 @@ public class TowerWheel : MonoBehaviour
 
         int i = 0;
         foreach (SummonData d in data) {
+            if (i < 8) {
+                bigWheel.GetChild(i).gameObject.SetActive(true);
+            }
+
             if (summonAngleDict.ContainsKey(d)) {
                 summonAngleDict.Remove(d);
                 summonAngleDict.Add(d, 45 * (i - 1));
@@ -53,6 +57,10 @@ public class TowerWheel : MonoBehaviour
 
             summonAngleDict.Add(d, 45 * (i - 1));
             i++;
+        }
+
+        for (int j = i; j < 8; j++) {
+            bigWheel.GetChild(j).gameObject.SetActive(false);
         }
 
         summonIndexDict.Clear();
@@ -71,7 +79,7 @@ public class TowerWheel : MonoBehaviour
 
         i = 0;
         foreach (Transform t in bigWheel.transform) {
-            if (!data[i]) {
+            if (i >= data.Length) {
                 break;
             }
             t.GetChild(0).GetComponent<Image>().sprite = data[i].icon;
@@ -134,12 +142,6 @@ public class TowerWheel : MonoBehaviour
             child.localEulerAngles = -bigWheel.localEulerAngles;
         }
         rotateWheelCoroutine = null;
-    }
-
-    void LateUpdate() {
-        foreach (Transform child in bigWheel) {
-            child.localEulerAngles = -bigWheel.localEulerAngles;
-        }
     }
 
     private void Hide() {
