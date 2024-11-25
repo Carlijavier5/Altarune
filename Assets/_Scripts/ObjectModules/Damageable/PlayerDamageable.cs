@@ -27,7 +27,7 @@ public class PlayerDamageable : Damageable {
 
     protected override IEnumerator ISimulateIFrame() {
         localIFrameOn = true;
-        baseObject.SetMaterial(iFrameProperties.settings.flashMaterial);
+        baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
         Time.timeScale = 0.6f;
         yield return new WaitForSeconds(iFrameProperties.duration / 2);
         Time.timeScale = 1f;

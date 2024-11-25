@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ElementType { Physical, Fire, Ice, Shock, Poison }
+public enum ElementType { Physical, Siphon, Fire, Ice, Shock, Poison }
 
 public class Damageable : ObjectModule {
 
@@ -24,16 +24,43 @@ public class Damageable : ObjectModule {
     void Awake() {
         baseObject.UpdateRendererRefs();
         baseObject.OnTryDamage += BaseObject_OnTryDamage;
+        baseObject.OnTryHeal += BaseObject_OnTryHeal;
         baseObject.OnTryRequestHealth += BaseObject_OnTryRequestHealth;
         baseObject.OnTryRequestMaxHealth += BaseObject_OnTryRequestMaxHealth;
         baseObject.OnTryToggleIFrame += BaseObject_OnTryToggleIFrame;
 
-        IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
+        IEnumerable<EntityEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeHP = defaultHPAttributes.RuntimeClone(effectSource);
 
         OnModuleInit?.Invoke();
     }
+
+    protected virtual void BaseObject_OnTryDamage(int amount, ElementType element,
+                                                  EventResponse response) {
+        if (!IFrameOn) {
+            response.received = true;
+
+            int processedAmount = runtimeHP.DoDamage(amount);
+            if (processedAmount > 0) {
+                baseObject.PropagateDamage(processedAmount);
+                StartCoroutine(ISimulateIFrame());
+
+                if (runtimeHP.Health <= 0) {
+                    baseObject.Perish();
+                    ToggleIFrame(true);
+                }
+            }
+        } else baseObject.PropagateDamage(0);
+    }
+
+    protected virtual void BaseObject_OnTryHeal(int amount, EventResponse response) {
+        response.received = true;
+
+        int processedAmount = runtimeHP.DoHeal(amount);
+        baseObject.PropagateHeal(processedAmount);
+    }
+
 
     private void BaseObject_OnTryToggleIFrame(bool on, EventResponse response) {
         response.received = true;
@@ -58,27 +85,9 @@ public class Damageable : ObjectModule {
         externalIFrameOn = on;
     }
 
-    protected virtual void BaseObject_OnTryDamage(int amount, ElementType element,
-                                                  EventResponse response) {
-        if (!IFrameOn) {
-            response.received = true;
-
-            int processedAmount = runtimeHP.DoDamage(amount);
-            if (processedAmount > 0) {
-                baseObject.PropagateDamage(processedAmount);
-                StartCoroutine(ISimulateIFrame());
-
-                if (runtimeHP.Health <= 0) {
-                    baseObject.Perish();
-                    ToggleIFrame(true);
-                }
-            }
-        }
-    }
-
     protected virtual IEnumerator ISimulateIFrame() {
         localIFrameOn = true;
-        baseObject.SetMaterial(iFrameProperties.settings.flashMaterial);
+        baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
         yield return new WaitForSeconds(iFrameProperties.duration);
         baseObject.ResetMaterials();
         localIFrameOn = false;
