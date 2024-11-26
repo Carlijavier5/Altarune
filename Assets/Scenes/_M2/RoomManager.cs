@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Cinemachine;
 
-public class PHGameManager : MonoBehaviour {
+public class RoomManager : MonoBehaviour {
 
-    private static PHGameManager instance;
-    public static PHGameManager Instance => instance;
+    private static RoomManager instance;
+    public static RoomManager Instance => instance;
 
-    [SerializeField] private PlayerController playerController;
     [SerializeField] private Player player;
     [SerializeField] private RoomControl[] rooms;
 
@@ -23,8 +21,9 @@ public class PHGameManager : MonoBehaviour {
             Destroy(gameObject);
         } else instance = this;
 
-        foreach (RoomControl room in rooms) room.Init(player);
-        ChangeRoom(1, true);
+        foreach (RoomControl room in rooms) {
+            room.Init(player);
+        } MoveToRoom(1, true);
     }
 
     void Update() {
@@ -52,47 +51,42 @@ public class PHGameManager : MonoBehaviour {
 
         roomIndex--;
 
-        if (RoomTransitionLoader.Instance != null) RoomTransitionLoader.Instance.FadeOut(immediateFade);
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(1f);
-        Time.timeScale = 1;
+        /// Fade Out
+        if (RoomTransitionLoader.Instance != null) {
+            RoomTransitionLoader.Instance.FadeOut(immediateFade);
+        } 
+        TimeScaleManager.Instance.AddTimeScaleShift(0, 1);
+        yield return new WaitForSecondsRealtime(1);
 
+        /// Activate Current Room / Deactivate All Others
         for (int i = 0; i < rooms.Length; i++) {
             rooms[i].gameObject.SetActive(i == roomIndex);
         }
 
+        /// Activate Current Room Camera / Deactivate Old Camera
         if (currentRoom) currentRoom.VirtualCamera.Priority = 0;
-
         RoomControl room = rooms[roomIndex];
         currentRoom = room;
-
         room.VirtualCamera.Priority = 10;
 
+        /// Teleport Player to Current Room
         Transform spawnPoint = room.SpawnPoint;
         player.TryTeleport(spawnPoint.position);
 
         yield return new WaitForSecondsRealtime(1);
-        Time.timeScale = 0;
-        if (RoomTransitionLoader.Instance != null) RoomTransitionLoader.Instance.FadeIn();
-        yield return new WaitForSecondsRealtime(1f);
-        Time.timeScale = 1;
+
+        /// Fade In
+        TimeScaleManager.Instance.AddTimeScaleShift(0, 1);
+        if (RoomTransitionLoader.Instance != null) {
+            RoomTransitionLoader.Instance.FadeIn();
+        }
     }
 
-    public void ChangeRoom(int roomIndex, bool immediateFade = false) {
+    public void MoveToRoom(int roomIndex, bool immediateFade = false) {
         StartCoroutine(IChangeRoom(roomIndex, immediateFade));
     }
 
-    public void ForceCompleteRoom() {
+    private void ForceCompleteRoom() {
         currentRoom.ForceCompletion();
-    }
-
-    public void DoGameOver() {
-        StartCoroutine(RestartScene());
-    }
-
-    private IEnumerator RestartScene() {
-        RoomTransitionLoader.Instance.FadeOut();
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

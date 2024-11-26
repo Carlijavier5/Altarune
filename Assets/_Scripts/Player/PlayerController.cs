@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour {
     public event System.Action OnSkillStarted;
     public event System.Action OnSkillCast;
 
+    [SerializeField] private Transform cameraTarget;
+    public Transform CameraTarget => cameraTarget;
+
     private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
 

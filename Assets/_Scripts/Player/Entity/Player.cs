@@ -7,17 +7,16 @@ public partial class Player : Entity {
 
     private readonly StateMachine<Player_Input> stateMachine = new();
 
-    [SerializeField] private CharacterController controller;
     [SerializeField] private PlayerController inputSource;
+    [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
-    [SerializeField] private HealthUIManager healthUIManager;
 
     [SerializeField] private ManaSource manaSource;
-    [SerializeField] private float manaGain;
+    [SerializeField] private float manaGain, maxMana;
     [SerializeField] private ManaUIManager manaUIManager;
-    [SerializeField] private float maxMana;
 
     public ManaSource ManaSource => manaSource;
+    public PlayerController InputSource => inputSource;
 
     private Vector3 InputVector => inputSource.InputVector;
 
@@ -34,13 +33,8 @@ public partial class Player : Entity {
         Player_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Normal());
 
-        OnDamageReceived += Player_OnDamageReceived;
         inputSource.OnDodgePerformed += InputSource_OnDodgePerformed;
         inputSource.OnMeleePerformed += InputSource_OnMeleePerformed;
-    }
-
-    private void Player_OnDamageReceived(int _) {
-        healthUIManager.UpdateHealth(Health);
     }
 
     private void InputSource_OnMeleePerformed() {

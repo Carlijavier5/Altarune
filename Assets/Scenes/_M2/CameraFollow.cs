@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class PHCameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour {
 
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
-    public void AssignPlayer(Player player) {
-        virtualCamera.Follow = player.transform;
+    public void AssignPlayer(PlayerController player) {
+        virtualCamera.Follow = player.CameraTarget;
     }
 }
