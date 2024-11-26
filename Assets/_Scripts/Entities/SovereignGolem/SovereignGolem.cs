@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum SovereignPhase { Macro1, Macro2, Macro3, Macro4 };
+public enum SovereignPhase { None, Macro1, Macro2, Macro3, Macro4 };
 
 public partial class SovereignGolem : Entity {
 
@@ -8,71 +8,31 @@ public partial class SovereignGolem : Entity {
     private readonly StateMachine<Sovereign_Input> macroMachine = new();
 
     void Awake() {
-        
+        staticLaserMaster.OnAttackEnd += PhaseMaster_OnAttackEnd;
+        swipingLaserMaster.OnAttackEnd += PhaseMaster_OnAttackEnd;
+        palmSlamMaster.OnAttackEnd += PhaseMaster_OnAttackEnd;
+        ///macroMachine.Init();
+    }
+
+    public void Animator_OnSlamLanding(LeftOrRight leftOrRight) {
+        palmSlamMaster.TrySlam(leftOrRight);
+    }
+
+    private void PhaseMaster_OnAttackEnd() {
+        if (macroMachine.StateInput == null) return;
+        macroMachine.StateInput.microMachine
+        .SetState(new State_Idle(macroMachine.StateInput.CurrentPhase));
     }
 }
 
 public partial class SovereignGolem {
-    public class Sovereign_Input : StateInput {
+    public class State_Idle : State<Sovereign_Input> {
 
-        public readonly StateMachine<Sovereign_Input> macroMachine;
-        public StateMachine<Sovereign_Input> microMachine;
-        public SovereignGolem sovereign;
+        private readonly SovereignPhase phase;
 
-        public Sovereign_Input(StateMachine<Sovereign_Input> macroMachine,
-                               SovereignGolem sovereign) {
-            this.macroMachine = macroMachine;
-            this.sovereign = sovereign;
+        public State_Idle(SovereignPhase phase) {
+            this.phase = phase;
         }
-
-        public void InflateMacro(StateMachine<Sovereign_Input> microMachine) {
-            this.microMachine = microMachine;
-        }
-    }
-}
-
-public partial class SovereignGolem {
-    public class Sovereign_Macro1 : State<Sovereign_Input> {
-
-        private readonly StateMachine<Sovereign_Input> stateMachine = new();
-
-        public override void Enter(Sovereign_Input input) {
-            input.InflateMacro(stateMachine);
-            //stateMachine.SetState();
-        }
-
-        public override void Update(Sovereign_Input input) {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Exit(Sovereign_Input input) {
-            throw new System.NotImplementedException();
-        }
-    }
-}
-
-public partial class SovereignGolem {
-    public class Sovereign_Macro2 : State<Sovereign_Input> {
-
-        private readonly StateMachine<Sovereign_Input> stateMachine = new();
-
-        public override void Enter(Sovereign_Input input) {
-            input.InflateMacro(stateMachine);
-            //stateMachine.SetState();
-        }
-
-        public override void Update(Sovereign_Input input) {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Exit(Sovereign_Input input) {
-            throw new System.NotImplementedException();
-        }
-    }
-}
-
-public partial class SovereignGolem {
-    public class Sovereign_Idle : State<Sovereign_Input> {
 
         public override void Enter(Sovereign_Input input) {
 
@@ -88,47 +48,78 @@ public partial class SovereignGolem {
     }
 }
 
-public class SovereignMacroProperties {
-    [Header("General Variables")]
-    public Vector2 idleWaitRange;
-    [Header("Crystal Properties")]
-    public int crystalAmount;
-    public Vector2 crystalSpawnWaitRange;
-    [Header("Spawner Properties")]
-    public int maxSpawnerAmount;
-    public Vector2 spawnerWaitRange;
-    public bool doesContinousRespawn;
-    public EntitySpawner[] spawnerRoster;
-}
-
 public partial class SovereignGolem {
 
-    [Header("Swiping Las")]
+    [Header("Swiping Laser")]
     [SerializeField] private SovereignSwipingLaserMaster swipingLaserMaster;
 
-    public class Sovereign_SwipingLaserAttack : State<Sovereign_Input> {
+    public class State_SwipingLaser : State<Sovereign_Input> {
 
-        private StateMachine<Sovereign_Input> microMachine;
+        private readonly SovereignPhase phase;
+
+        public State_SwipingLaser(SovereignPhase phase) {
+            this.phase = phase;
+        }
 
         public override void Enter(Sovereign_Input input) {
             SovereignGolem sg = input.sovereign;
-            //sg.
-            //sg.swipingLaserMaster.OnAttackEnd += SwipingLaserMaster_OnAttackEnd;
-            microMachine = input.microMachine;
-
+            sg.swipingLaserMaster.EnterPhase(phase);
+            sg.swipingLaserMaster.DoAttack();
         }
 
         public override void Update(Sovereign_Input input) { }
 
-        public override void Exit(Sovereign_Input input) {
-            SovereignGolem sg = input.sovereign;
-            /*foreach (SovereignSwipingLaserController controller in sg.laserControllers) {
-                controller.OnSwipeEnd -= Controller_OnSwipeEnd;
-            }*/
+        public override void Exit(Sovereign_Input input) { }
+    }
+}
+
+public partial class SovereignGolem {
+
+    [Header("Static Laser")]
+    [SerializeField] private SovereignStaticLaserMaster staticLaserMaster;
+
+    public class State_StaticLaser : State<Sovereign_Input> {
+
+        private readonly SovereignPhase phase;
+
+        public State_StaticLaser(SovereignPhase phase) {
+            this.phase = phase;
         }
 
-        private void SwipingLaserMaster_OnAttackEnd() {
-            throw new System.NotImplementedException();
+        public override void Enter(Sovereign_Input input) {
+            SovereignGolem sg = input.sovereign;
+            sg.staticLaserMaster.EnterPhase(phase);
+            sg.staticLaserMaster.DoAttack();
         }
+
+        public override void Update(Sovereign_Input input) { }
+
+        public override void Exit(Sovereign_Input input) { }
+    }
+}
+
+public partial class SovereignGolem {
+
+    [Header("Paw Slam")]
+    [SerializeField] private PawSlamMaster palmSlamMaster;
+
+    public class State_PawSlam : State<Sovereign_Input> {
+
+        private readonly SovereignPhase phase;
+
+        public State_PawSlam(SovereignPhase phase) {
+            this.phase = phase;
+        }
+
+        public override void Enter(Sovereign_Input input) {
+            SovereignGolem sg = input.sovereign;
+            sg.palmSlamMaster.EnterPhase(phase);
+            sg.palmSlamMaster.DoAttack();
+            // Broadcast SFX
+        }
+
+        public override void Update(Sovereign_Input input) { }
+
+        public override void Exit(Sovereign_Input input) { }
     }
 }

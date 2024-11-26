@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 
     public event System.Action OnSkillPerformed;
 
-    [SerializeField] private CinemachineBrain cameraBrain;
+    private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
 
     public Vector3 InputVector {
@@ -37,8 +37,6 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private bool init;
-
     public Camera OutputCamera => cameraBrain ? cameraBrain.OutputCamera
                                               : Camera.main;
 
@@ -57,13 +55,7 @@ public class PlayerController : MonoBehaviour {
 
         playerInput.Actions.ActivateSkill.performed += Skill_Performed;
 
-        /// Replace after actual initialization;
-        if (cameraBrain && !init) Init(cameraBrain);
-    }
-
-    public void Init(CinemachineBrain cameraBrain) {
-        init = true;
-        this.cameraBrain = cameraBrain;
+        Camera.main.TryGetComponent(out cameraBrain);
         StartCoroutine(ISyncInitialization());
     }
 

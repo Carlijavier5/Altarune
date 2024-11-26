@@ -31,8 +31,8 @@ public class PlayerDamageable : Damageable {
         Time.timeScale = 0.6f;
         yield return new WaitForSeconds(iFrameProperties.duration / 2);
         Time.timeScale = 1f;
-        baseObject.ResetMaterials();
         yield return new WaitForSeconds(iFrameProperties.duration / 2);
+        baseObject.ResetMaterials();
         localIFrameOn = false;
     }
 }
