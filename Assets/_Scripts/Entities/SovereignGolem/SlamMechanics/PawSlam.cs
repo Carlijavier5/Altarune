@@ -7,34 +7,13 @@ public class PawSlam : MonoBehaviour {
     public event System.Action<PawSlam> OnSmashEnd;
 
     [SerializeField] private int damageAmount;
-    [SerializeField] private float hitCooldown, maxSize;
+    [SerializeField] private float maxSize;
     [SerializeField] private SovereignSlamEpicenter outerEpicenter,
                                                     innerEpicenter;
     [SerializeField] private AnimationCurve growthCurve;
 
-    private readonly Stack<Entity> terminateStack = new();
-    private readonly Dictionary<Entity, float> contactMap = new();
-
     private void Awake() {
         outerEpicenter.OnEntityEnter += OuterEpicenter_OnEntityEnter;
-        innerEpicenter.OnEntityExit += InnerEpicenter_OnEntityExit;
-    }
-
-    void Update() {
-        try {
-            foreach (KeyValuePair<Entity, float> kvp in contactMap) {
-                contactMap[kvp.Key] -= Time.deltaTime;
-                if (kvp.Value <= 0) terminateStack.Push(kvp.Key);
-            }
-        } catch { }
-
-        while (terminateStack.TryPop(out Entity entity)) {
-            if (outerEpicenter.contactSet.Contains(entity)
-                && !innerEpicenter.contactSet.Contains(entity)) {
-                entity.TryDamage(damageAmount);
-                contactMap.Remove(entity);
-            } else contactMap.Remove(entity);
-        }
     }
 
     public void DoSlam(Vector3 source, float duration) {
@@ -45,6 +24,7 @@ public class PawSlam : MonoBehaviour {
 
     private IEnumerator IDoSlam(float duration) {
         yield return new WaitForEndOfFrame();
+        ClearContacts();
 
         float lerpVal, scaleVal, timer = 0;
         while (timer < duration) {
@@ -59,18 +39,18 @@ public class PawSlam : MonoBehaviour {
     }
 
     private void OuterEpicenter_OnEntityEnter(Entity entity) {
-        if (!contactMap.ContainsKey(entity)
-            && !innerEpicenter.contactSet.Contains(entity)) {
+        StartCoroutine(IContactCheck(entity));
+    }
+
+    private IEnumerator IContactCheck(Entity entity) {
+        yield return new WaitForFixedUpdate();
+        if (!innerEpicenter.contactSet.Contains(entity)) {
             entity.TryDamage(damageAmount);
-            contactMap[entity] = hitCooldown;
         }
     }
 
-    private void InnerEpicenter_OnEntityExit(Entity entity) {
-        if (!contactMap.ContainsKey(entity)
-            && outerEpicenter.contactSet.Contains(entity)) {
-            entity.TryDamage(damageAmount);
-            contactMap[entity] = hitCooldown;
-        }
+    private void ClearContacts() {
+        outerEpicenter.Clear();
+        innerEpicenter.Clear();
     }
 }

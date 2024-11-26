@@ -11,6 +11,7 @@ public class SovereignSlamInnerEpicenter : SovereignSlamEpicenter {
     }
 
     void FixedUpdate() {
-        innerCollider.radius = outerCollider.radius - thickness;
+        innerCollider.radius = (outerCollider.radius * outerCollider.transform.lossyScale.x
+                                - thickness) / outerCollider.transform.lossyScale.x;
     }
 }
