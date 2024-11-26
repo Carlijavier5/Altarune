@@ -7,8 +7,6 @@ public class TowerSniper : Summon {
     [SerializeField] private TowerProjectile projectilePrefab;
     [SerializeField] private Transform launchPoint;
     [SerializeField] private float attackInterval;
-    
-    private bool init;
 
     //private float angle;
     private float attackTick = 0.2f;
@@ -17,18 +15,9 @@ public class TowerSniper : Summon {
     // SortedSet<Entity> targets = new SortedSet<Entity>(
     //     Comparer<Entity>.Create((a, b) => a.GetComponent<Damageable>().Health.CompareTo(b.GetComponent<Damageable>().Health)));
     List<Entity> targets = new List<Entity>();
-    protected override void Awake() {
-        base.Awake();
-        //angle = 0;
-    }
-
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
-    }
 
     protected override void Update() {
-        if (!init) return;
+        if (!active) return;
         base.Update();
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {

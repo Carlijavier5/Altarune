@@ -145,6 +145,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Activate Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""c5799cb3-9bd4-40bf-8c19-e1c41eb5e945"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -257,6 +266,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Select Summon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0219fde-fcdd-4ed2-b8ef-52c229f1089f"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=8)"",
+                    ""groups"": """",
+                    ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -272,6 +292,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Actions_MeleeAttack = m_Actions.FindAction("Melee Attack", throwIfNotFound: true);
         m_Actions_Summon = m_Actions.FindAction("Summon", throwIfNotFound: true);
         m_Actions_SelectSummon = m_Actions.FindAction("Select Summon", throwIfNotFound: true);
+        m_Actions_ActivateSkill = m_Actions.FindAction("Activate Skill", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -390,6 +411,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Actions_MeleeAttack;
     private readonly InputAction m_Actions_Summon;
     private readonly InputAction m_Actions_SelectSummon;
+    private readonly InputAction m_Actions_ActivateSkill;
     public struct ActionsActions
     {
         private @PlayerInput m_Wrapper;
@@ -397,6 +419,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @MeleeAttack => m_Wrapper.m_Actions_MeleeAttack;
         public InputAction @Summon => m_Wrapper.m_Actions_Summon;
         public InputAction @SelectSummon => m_Wrapper.m_Actions_SelectSummon;
+        public InputAction @ActivateSkill => m_Wrapper.m_Actions_ActivateSkill;
         public InputActionMap Get() { return m_Wrapper.m_Actions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -415,6 +438,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SelectSummon.started += instance.OnSelectSummon;
             @SelectSummon.performed += instance.OnSelectSummon;
             @SelectSummon.canceled += instance.OnSelectSummon;
+            @ActivateSkill.started += instance.OnActivateSkill;
+            @ActivateSkill.performed += instance.OnActivateSkill;
+            @ActivateSkill.canceled += instance.OnActivateSkill;
         }
 
         private void UnregisterCallbacks(IActionsActions instance)
@@ -428,6 +454,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SelectSummon.started -= instance.OnSelectSummon;
             @SelectSummon.performed -= instance.OnSelectSummon;
             @SelectSummon.canceled -= instance.OnSelectSummon;
+            @ActivateSkill.started -= instance.OnActivateSkill;
+            @ActivateSkill.performed -= instance.OnActivateSkill;
+            @ActivateSkill.canceled -= instance.OnActivateSkill;
         }
 
         public void RemoveCallbacks(IActionsActions instance)
@@ -455,5 +484,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnMeleeAttack(InputAction.CallbackContext context);
         void OnSummon(InputAction.CallbackContext context);
         void OnSelectSummon(InputAction.CallbackContext context);
+        void OnActivateSkill(InputAction.CallbackContext context);
     }
 }

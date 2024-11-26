@@ -86,14 +86,20 @@ public abstract partial class BaseObject {
     /// </summary>
     public float DeltaTime => Time.deltaTime * status.timeScale;
 
+    /// <summary>
+    /// Utilize this value instead of <b>Time.fixedDeltaTime</b>
+    /// where the object's local time scale is relevant;
+    /// </summary>
+    public float FixedDeltaTime => Time.fixedDeltaTime * status.timeScale;
+
     /// Staggers are exclusive to the CrowdControllable Module;
     /// Implement the local timescale if you want your object to be staggerable;
 
-    public event System.Action<float, EventResponse> OnTryStagger;
+    public event System.Action<float, bool, EventResponse> OnTryStagger;
 
-    public bool TryStagger(float duration) {
+    public bool TryStagger(float duration, bool timeStop = false) {
         EventResponse response = new();
-        OnTryStagger?.Invoke(duration, response);
+        OnTryStagger?.Invoke(duration, timeStop, response);
         return response.received;
     }
 }

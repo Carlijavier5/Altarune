@@ -12,7 +12,7 @@ public partial class Armadillo : Entity {
 
     public override void Update(Armadillo armadillo) {
       armadillo.CalmDown();
-      timeRemaining -= Time.deltaTime * armadillo.TimeScale;
+      timeRemaining -= armadillo.DeltaTime;
 
 
       if (armadillo.inAggroRange) {
