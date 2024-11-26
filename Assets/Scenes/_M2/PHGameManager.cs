@@ -9,7 +9,6 @@ public class PHGameManager : MonoBehaviour {
     private static PHGameManager instance;
     public static PHGameManager Instance => instance;
 
-    [SerializeField] private CinemachineBrain cameraBrain;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Player player;
     [SerializeField] private RoomControl[] rooms;
@@ -24,7 +23,6 @@ public class PHGameManager : MonoBehaviour {
             Destroy(gameObject);
         } else instance = this;
 
-        playerController.Init(cameraBrain);
         foreach (RoomControl room in rooms) room.Init(player);
         ChangeRoom(1, true);
     }
