@@ -23,12 +23,20 @@ namespace GolemSavage {
 
             // Creating minion logic
             private bool finishedDuplication = false;
-            private int numMinions;
-            private Vector3[] minionSpawnLocations = new Vector3[6];
+            private int numMinions = 3;
 
-            // Creating the minion prefab and array
-            private GameObject minionPrefab;
-            private GameObject[] minions;
+            // Creating the minion prefab
+            private GameObject fireMinionPrefab;
+            private GameObject waterMinionPrefab;
+            private GameObject windMinionPrefab;
+
+            // Creating minion game objects
+            private GameObject fireMinion;
+            private GameObject waterMinion;
+            private GameObject windMinion;
+
+            // Minion spawn locations array
+            private Vector3[] minionSpawnLocations;
 
             public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
@@ -37,8 +45,12 @@ namespace GolemSavage {
                 // Initializes objects with values from the enemy
                 player = golemSavage.player;
                 navigation = golemSavage.navigation;
-                minionPrefab = golemSavage.minionPrefab;
                 damageable = golemSavage.damageable;
+
+                // Initializes minion prefabs
+                fireMinionPrefab = golemSavage.fireMinionPrefab;
+                waterMinionPrefab = golemSavage.waterMinionPrefab;
+                windMinionPrefab = golemSavage.windMinionPrefab;
 
                 // Pushable implementation
                 golemSavage.MotionDriver.Set(navigation);
@@ -57,12 +69,9 @@ namespace GolemSavage {
 
                 // Initializes the minion spawn locations
                 minionSpawnLocations = new Vector3[] {
-                    new Vector3(1.5f, 0f, 0f),
-                    new Vector3(-1.5f, 0f, 0f),
-                    new Vector3(-1.5f, 0f, 1.5f),
-                    new Vector3(1.5f, 0f, 1.5f),
-                    new Vector3(-1.5f, 0f, -1.5f),
-                    new Vector3(1.5f, 0f, -1.5f)
+                    new Vector3(3f, 0f, 0f),
+                    new Vector3(-3f, 0f, 0f),
+                    new Vector3(0f, 0f, -3f) 
                 };
 
                 // Makes the enemy move to the center of the map
@@ -84,45 +93,62 @@ namespace GolemSavage {
 
             // Method to initialize the minions
             private void InitializeMinions() {
-                // Spawns between 4 and 6 minions
-                numMinions = Random.Range(4, 6);
-                minions = new GameObject[numMinions];
+                // Instantiates minions
+                fireMinion = Object.Instantiate(fireMinionPrefab, minionSpawnLocations[0], Quaternion.identity);
+                waterMinion = Object.Instantiate(waterMinionPrefab, minionSpawnLocations[1], Quaternion.identity);
+                windMinion = Object.Instantiate(windMinionPrefab, minionSpawnLocations[2], Quaternion.identity);
 
-                // Minions are spawned at (0, 0, 0), but hidden
-                for (int i = 0; i < numMinions; i++) {
-                    minions[i] = Object.Instantiate(minionPrefab, minionSpawnLocations[i], Quaternion.identity);
-                    minions[i].SetActive(false);
-                }
+                // Deactivates minions when spawning
+                fireMinion.SetActive(false);
+                waterMinion.SetActive(false);
+                windMinion.SetActive(false);
             }
 
             IEnumerator DuplicateMinion(Vector3 enemyPos) {
+                FireMinion fireMinionController = fireMinion.GetComponent<FireMinion>();
+                if (fireMinionController != null) {
+                    fireMinionController.SetPlayer(player);
+                    fireMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                } else {
+                    Debug.LogError("FireMinion component is missing on the fire minion prefab.");
+                }
+
+                WaterMinion waterMinionController = waterMinion.GetComponent<WaterMinion>();
+                if (waterMinionController != null) {
+                    waterMinionController.SetPlayer(player);
+                    waterMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                } else {
+                    Debug.LogError("WaterMinion component is missing on the water minion prefab.");
+                }
+
+                WindMinion windMinionController = windMinion.GetComponent<WindMinion>();
+                if (windMinionController != null) {
+                    windMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                } else {
+                    Debug.LogError("WindMinion component is missing on the wind minion prefab.");
+                }
+
                 // Waits for 1/2 a second between spawns
                 yield return new WaitForSeconds(0.5f);
 
-                // Stores all minions.  After they all spawn, they attack
-                List<GameObject> activateMinions = new List<GameObject>();
+                fireMinion.SetActive(true);
+                fireMinionController.SetPlayer(player);
+                fireMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                yield return new WaitForSeconds(1f);
 
-                foreach (GameObject minion in minions) {
-                    // Makes the minions visible
-                    minion.SetActive(true);                    
-                    
-                    // Adds the minions to the list
-                    activateMinions.Add(minion);
+                waterMinion.SetActive(true);
+                waterMinionController.SetPlayer(player);
+                waterMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                yield return new WaitForSeconds(1f);
 
-                    // Sets the player in the minion controller (can't set via GUI for prefabs)
-                    Minion minionController = minion.GetComponent<Minion>();
-                    minionController.SetPlayer(player);
-
-                    // Adds the on death listener
-                    minionController.onMinionDeath.AddListener(HandleMinionDeath);
- 
-                    yield return new WaitForSeconds(1f);
-                }
+                windMinion.SetActive(true);
+                windMinionController.onMinionDeath.AddListener(HandleMinionDeath);
+                yield return new WaitForSeconds(1f);
 
                 // Activates every minion
-                foreach(GameObject minion in activateMinions) {
-                    minion.GetComponent<Minion>().Activate();
-                }
+                fireMinionController.Activate();
+                waterMinionController.Activate();
+                windMinionController.Activate();
 
                 // Allows the enemy to look at the player again
                 finishedDuplication = true;

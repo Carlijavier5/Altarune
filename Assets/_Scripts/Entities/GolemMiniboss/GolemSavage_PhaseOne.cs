@@ -97,12 +97,12 @@ namespace GolemSavage {
                     yield return new WaitForSeconds(Random.Range(5, 10));
 
                     // Selects an attack (1, 2)
-                    attackSelector = Random.Range(1, 2);
+                    attackSelector = Random.Range(2, 3);
 
                     if (attackSelector == 1) {
                         golemSavage.stateMachine.SetState(new GolemSavage_Tornado());
                     } else if (attackSelector == 2) {
-                        golemSavage.stateMachine.SetState(new GolemSavage_GroundSlam());
+                        golemSavage.stateMachine.SetState(new GolemSavage_GroundSlam(10, 50));
                     }
                 }
             }

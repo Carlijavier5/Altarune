@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace GolemSavage {
-    public class Minion : Entity {
+    public class FireMinion : Entity {
         // Creating the NavMeshAgent, Player, and Damageable
         private UnityEngine.AI.NavMeshAgent navigation;
         private Transform player;

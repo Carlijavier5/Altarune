@@ -23,9 +23,22 @@ namespace GolemSavage {
             [SerializeField] float fallAcceleration = 25f;
             [SerializeField] float maxFallSpeed = 100f;
 
+            private GameObject innerShockwave;
+            private GameObject outerShockwave;
+            private float innerRadius = 0f;
+            private float outerRadius = 5f;
+            private float shockwaveExpandSpeed = 10f;
+            private float maxRadius;
+
             // Coroutines
             private Coroutine rise;
             private Coroutine fall;
+            private Coroutine triggerShockwave;
+
+            public GolemSavage_GroundSlam(float shockwaveSpeed, float maxRadius) {
+                this.shockwaveExpandSpeed = shockwaveSpeed;
+                this.maxRadius = maxRadius;
+            }
 
             public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
@@ -41,6 +54,9 @@ namespace GolemSavage {
 
                 // Disables navigation
                 navigation.enabled = false;
+
+                innerShockwave = golemSavage.transform.Find("InnerShockwave").gameObject;
+                outerShockwave = golemSavage.transform.Find("OuterShockwave").gameObject;
 
                 // Starts the rise Coroutine
                 rise = golemSavage.StartCoroutine(RiseCoroutine());
@@ -71,7 +87,33 @@ namespace GolemSavage {
                     golemSavage.transform.position -= Vector3.up * currentFallSpeed * Time.deltaTime;
                     yield return null;
                 }
-                finishSlam = true;
+                triggerShockwave = golemSavage.StartCoroutine(TriggerShockwave());
+            }
+
+            private IEnumerator TriggerShockwave() {
+                innerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
+                outerShockwave.transform.localScale = new Vector3(5f, 5f, 5f);
+
+                CircleCollider2D innerCollider = innerShockwave.GetComponent<CircleCollider2D>();
+                CircleCollider2D outerCollider = outerShockwave.GetComponent<CircleCollider2D>();
+
+                while (innerRadius < maxRadius - 5 || outerRadius < maxRadius) {
+                    innerRadius += shockwaveExpandSpeed * Time.deltaTime;
+                    outerRadius += shockwaveExpandSpeed * Time.deltaTime;
+
+                    innerShockwave.transform.localScale = new Vector3(innerRadius, innerRadius, 1f);
+                    outerShockwave.transform.localScale = new Vector3(outerRadius, outerRadius, 1f);
+
+                    innerCollider.radius = innerRadius;
+                    outerCollider.radius = outerRadius;
+
+                    yield return null;
+                }
+                innerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
+                outerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
+
+                innerCollider.radius = 0f;
+                outerCollider.radius = 0f;
             }
 
             public override void Update(GolemSavageStateInput input) {
@@ -117,6 +159,7 @@ namespace GolemSavage {
                 // Disables all coroutines
                 golemSavage.StopCoroutine(rise);
                 golemSavage.StopCoroutine(fall);
+                golemSavage.StopCoroutine(triggerShockwave);
             }
         }
     }

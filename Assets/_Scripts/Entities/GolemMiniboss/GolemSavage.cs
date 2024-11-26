@@ -4,11 +4,13 @@ using UnityEngine.AI;
 
 namespace GolemSavage {
     public partial class GolemSavage : Entity {
-        // Creating the NavMeshAgent, Player, Damageable, and the minionPrefab
+        // Creating the NavMeshAgent, Player, Damageable, and the minionPrefabs
         private NavMeshAgent navigation;
         private Transform player;
         private Damageable damageable;
-        [SerializeField] private GameObject minionPrefab;
+        [SerializeField] private GameObject fireMinionPrefab;
+        [SerializeField] private GameObject waterMinionPrefab;
+        [SerializeField] private GameObject windMinionPrefab;
 
         // Initializing default values for movement
         [SerializeField] private float speed = 2.5f;
