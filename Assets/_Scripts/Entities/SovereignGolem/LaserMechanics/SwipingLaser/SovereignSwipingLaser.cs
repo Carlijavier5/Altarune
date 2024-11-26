@@ -13,6 +13,7 @@ public class SovereignSwipingLaser : SovereignLaser {
 
     public void DoTurnPath(Quaternion sourceRotation,
                            Quaternion targetRotation, float swipeTime) {
+        ClearContacts();
         gameObject.SetActive(true);
         StopAllCoroutines();
         StartCoroutine(ITurnPath(sourceRotation, targetRotation, swipeTime));
@@ -36,6 +37,7 @@ public class SovereignSwipingLaser : SovereignLaser {
 
         vfxPrefab.SetActive(false);
         attackCollider.enabled = false;
+        ClearContacts();
 
         OnSwipeEnd?.Invoke();
         gameObject.SetActive(false);

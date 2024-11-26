@@ -7,6 +7,7 @@ public class SovereignStaticLaser : SovereignLaser {
 
     [Header("Static Laser Values")]
     [SerializeField] private SovereignLaserWarning warning;
+    [SerializeField] private Collider attackCollider;
     [SerializeField] private GameObject vfxPrefab;
 
     public void Activate(float warningTime, float duration) {
@@ -17,12 +18,14 @@ public class SovereignStaticLaser : SovereignLaser {
     }
 
     private void DoLaserAttack(float duration) {
+        ClearContacts();
         StopAllCoroutines();
         StartCoroutine(IDoLaserAttack(duration));
     }
 
     private IEnumerator IDoLaserAttack(float duration) {
         vfxPrefab.SetActive(true);
+        attackCollider.enabled = true;
 
         float timer = 0;
         while (timer < duration) {
@@ -31,6 +34,8 @@ public class SovereignStaticLaser : SovereignLaser {
         }
         OnLaserEnd?.Invoke(this);
 
+        attackCollider.enabled = false;
+        ClearContacts();
         vfxPrefab.SetActive(false);
     }
 }
