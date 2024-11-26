@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerDamageable : Damageable {
 
     [SerializeField] private int doubleDamageThreshold;
+    [SerializeField] private float timeScaleShiftDuration;
+    [SerializeField] private AnimationCurve timeScaleShiftCurve;
 
     protected override void BaseObject_OnTryDamage(int amount, ElementType element, EventResponse response) {
         if (!IFrameOn) {
@@ -28,10 +30,9 @@ public class PlayerDamageable : Damageable {
     protected override IEnumerator ISimulateIFrame() {
         localIFrameOn = true;
         baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
-        Time.timeScale = 0.6f;
-        yield return new WaitForSeconds(iFrameProperties.duration / 2);
-        Time.timeScale = 1f;
-        yield return new WaitForSeconds(iFrameProperties.duration / 2);
+        TimeScaleManager.Instance.AddTimeScaleShift(0, timeScaleShiftDuration,
+                                                    timeScaleShiftCurve);
+        yield return new WaitForSeconds(iFrameProperties.duration);
         baseObject.ResetMaterials();
         localIFrameOn = false;
     }
