@@ -13,14 +13,12 @@ namespace GolemSavage {
             
             // Creating normal variables
             private float health;
-            private float speed;
-            private float stoppingDistance;
 
             private MeteorSpawner meteorSpawner;
 
             // Meteor Strike components
             [SerializeField] private float hoverSpeed = 0.8f;
-            [SerializeField] private float hoverTime = 3f;
+            [SerializeField] private float hoverTime = 2f;
             [SerializeField] private float hoverHeight = 4f;
             [SerializeField] private float fallSpeed = 10f;
             bool finishState = false;
@@ -39,8 +37,6 @@ namespace GolemSavage {
 
                 // Initializes variables with values from the enemy
                 health = golemSavage.health;
-                speed = 5f;
-                stoppingDistance = golemSavage.stoppingDistance;
 
                 // Makes the enemy invulnerable
                 damageable.ToggleIFrame(true);
@@ -68,8 +64,9 @@ namespace GolemSavage {
                     yield return null;
                 }
                 
-                finishState = true;
+                yield return new WaitForSeconds(0.2f);
                 damageable.ToggleIFrame(false);
+                finishState = true;
             }
 
             public void LookTowardsPlayer() {

@@ -20,6 +20,7 @@ namespace GolemSavage {
         // Creating minion death components
         private bool setActive = false;
         public UnityEvent onMinionDeath;
+        public UnityEvent windMinionEvent;
 
         public void Start() {
             // Initializes the base objects
@@ -41,7 +42,7 @@ namespace GolemSavage {
 
         // Activates the minion object, making it visible and setting the speed
         public void Activate() {
-            speed = Random.Range(2f, 5f);
+            speed = 10f;
             navigation.speed = speed;
             gameObject.SetActive(true);
             setActive = true;
@@ -50,6 +51,25 @@ namespace GolemSavage {
         protected override void Update() {
             // Updates health
             health = damageable.Health;
+            MoveRandomly();
+        }
+
+        public void ChooseDirection() {
+            Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            randomDirection.Normalize();
+
+            Vector3 destination = transform.position + randomDirection * 4f;
+
+            navigation.SetDestination(destination);
+        }
+
+        public void MoveRandomly() {
+            ChooseDirection();
+            
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, navigation.destination - transform.position, out hit, 4f)) {
+            ChooseDirection();
+            }
         }
 
         // Method to try to damage non-hostile factions

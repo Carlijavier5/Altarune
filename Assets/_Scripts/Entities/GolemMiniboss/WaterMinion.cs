@@ -47,7 +47,7 @@ namespace GolemSavage {
 
         // Activates the minion object, making it visible and setting the speed
         public void Activate() {
-            speed = Random.Range(2f, 5f);
+            speed = 5f;
             navigation.speed = speed;
             gameObject.SetActive(true);
             setActive = true;

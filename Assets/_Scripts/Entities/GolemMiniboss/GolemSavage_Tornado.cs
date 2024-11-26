@@ -36,6 +36,12 @@ namespace GolemSavage {
             [SerializeField] private float rayCastDistance = 1f;
             private Vector3 moveDirection;
 
+            private int phase;
+
+            public GolemSavage_Tornado(int phase) {
+                this.phase = phase;
+            }
+
             public override void Enter(GolemSavageStateInput input) {
                 // Initializes the enemy using the StateInput
                 golemSavage = input.GolemSavage;
@@ -66,10 +72,19 @@ namespace GolemSavage {
 
             // Switches to the next state depending on whether timer is up
             private void CheckStateTransition() {
-                if (finishTornado) {
-                    damageable.ToggleIFrame(false);
-                    golemSavage.stateMachine.SetState(new GolemSavage_PhaseOne());
+                if (phase == 1) {
+                    if (finishTornado) {
+                        damageable.ToggleIFrame(false);
+                        golemSavage.stateMachine.SetState(new GolemSavage_PhaseOne());
+                    }
+                } else if (phase == 3) {
+                    if (finishTornado) {
+                        damageable.ToggleIFrame(false);
+                        golemSavage.stateMachine.SetState(golemSavage.phaseThreeState);
+                    }
                 }
+
+                
             }
 
             // Method that starts the spin logic
@@ -190,10 +205,10 @@ namespace GolemSavage {
             // Method called when exiting the state
             public override void Exit(GolemSavageStateInput input) {
                 // Stop the Coroutines
-                golemSavage.StopCoroutine(startSpin);
-                golemSavage.StopCoroutine(startMove);
-                golemSavage.StopCoroutine(endSpin);
-                golemSavage.StopCoroutine(endMove);
+                if (startSpin != null) golemSavage.StopCoroutine(startSpin);
+                if (startMove != null) golemSavage.StopCoroutine(startMove);
+                if (endSpin != null) golemSavage.StopCoroutine(endSpin);
+                if (endMove != null) golemSavage.StopCoroutine(endMove);
 
                 // Makes the enemy vulnerable to damage again
                 damageable.ToggleIFrame(false);

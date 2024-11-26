@@ -6,9 +6,9 @@ using UnityEngine.Events;
 namespace GolemSavage {    
     public class Meteor : Entity {
         // Initializing vertical travel variables
-        private float groundRiseSpeed = 0.5f;
-        private float maxFlightHeight = 5.5f;
-        private float flightAcceleration = 7f;
+        private float groundRiseSpeed;
+        private float maxFlightHeight = 80f;
+        private float flightAcceleration = 15f;
         private float flightDeceleration = 7f;
 
         private bool riseFirst = false;
@@ -26,6 +26,9 @@ namespace GolemSavage {
 
         void Start() {
             SetMeteorSize();
+
+            // Random ground appearance speeds
+            groundRiseSpeed = Random.Range(0.2f, 0.3f);
         }
 
         public void InitializeMeteor(bool riseFirst) {
@@ -92,56 +95,10 @@ namespace GolemSavage {
                 // Increments the current velocity, and increases the height
                 currentVelocity += flightAcceleration * Time.deltaTime;
                 transform.position += Vector3.up * currentVelocity * Time.deltaTime;
-
                 yield return null;
             }
 
-            // Randomizes the positions of the meteors when falling
-            moveInwards = StartCoroutine(MoveInwards());
-        }
-
-        private IEnumerator MoveInwards() {
-            float initialRadius = 8f;
-
-            // Duration of animation
-            float duration = 5f;
-            float timeElapsed = 0f;
-
-            Vector3 currentPosition = transform.position;
-            float inwardsAcceleration = 2f; 
-
-            while (timeElapsed < duration) {
-                float progress = timeElapsed / duration;
-
-                // Decreasing the radius
-                float currentRadius = Mathf.Lerp(initialRadius, 1f, progress);
-
-                // Calculating the new angle and positions
-                float angle = Mathf.Atan2(currentPosition.z, currentPosition.x);
-                float positionX = Mathf.Cos(angle) * currentRadius;
-                float positionZ = Mathf.Sin(angle) * currentRadius;
-
-                transform.position = new Vector3(positionX, currentPosition.y, positionZ);
-                inwardsAcceleration = Mathf.Lerp(1f, 5f, progress);
-
-                timeElapsed += Time.deltaTime * inwardsAcceleration;
-
-                yield return null;
-            }
-            shootUp = StartCoroutine(ShootUp());
-        }
-
-        private IEnumerator ShootUp() {
-            float currentVelocity = 30f;
-
-            yield return new WaitForSeconds(0.5f);
-            while (transform.position.y < 100f) {
-                // Increments the current velocity, and increases the height
-                currentVelocity += flightAcceleration * Time.deltaTime;
-                transform.position += Vector3.up * currentVelocity * Time.deltaTime;
-
-                yield return null;
-            }
+            // Destroys the meteors when they reach the top
             Perish();
         }
 
@@ -161,7 +118,7 @@ namespace GolemSavage {
 
                 // Scales the shadow based on the y position
                 float scaleFactor = Mathf.Lerp(0.5f, 2f, (100f - transform.position.y) / 100f);
-                shadowTransform.localScale = new Vector3(scaleFactor, 1f, scaleFactor);
+                shadowTransform.localScale = new Vector3(scaleFactor / 2, scaleFactor / 2, scaleFactor / 2);
                 
                 yield return null;
             }

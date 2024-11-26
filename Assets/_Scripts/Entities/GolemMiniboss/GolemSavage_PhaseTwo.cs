@@ -106,27 +106,8 @@ namespace GolemSavage {
 
             IEnumerator DuplicateMinion(Vector3 enemyPos) {
                 FireMinion fireMinionController = fireMinion.GetComponent<FireMinion>();
-                if (fireMinionController != null) {
-                    fireMinionController.SetPlayer(player);
-                    fireMinionController.onMinionDeath.AddListener(HandleMinionDeath);
-                } else {
-                    Debug.LogError("FireMinion component is missing on the fire minion prefab.");
-                }
-
                 WaterMinion waterMinionController = waterMinion.GetComponent<WaterMinion>();
-                if (waterMinionController != null) {
-                    waterMinionController.SetPlayer(player);
-                    waterMinionController.onMinionDeath.AddListener(HandleMinionDeath);
-                } else {
-                    Debug.LogError("WaterMinion component is missing on the water minion prefab.");
-                }
-
                 WindMinion windMinionController = windMinion.GetComponent<WindMinion>();
-                if (windMinionController != null) {
-                    windMinionController.onMinionDeath.AddListener(HandleMinionDeath);
-                } else {
-                    Debug.LogError("WindMinion component is missing on the wind minion prefab.");
-                }
 
                 // Waits for 1/2 a second between spawns
                 yield return new WaitForSeconds(0.5f);

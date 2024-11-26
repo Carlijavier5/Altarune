@@ -35,9 +35,12 @@ namespace GolemSavage {
             private Coroutine fall;
             private Coroutine triggerShockwave;
 
-            public GolemSavage_GroundSlam(float shockwaveSpeed, float maxRadius) {
+            private int phase;
+
+            public GolemSavage_GroundSlam(float shockwaveSpeed, float maxRadius, int phase) {
                 this.shockwaveExpandSpeed = shockwaveSpeed;
                 this.maxRadius = maxRadius;
+                this.phase = phase;
             }
 
             public override void Enter(GolemSavageStateInput input) {
@@ -94,8 +97,7 @@ namespace GolemSavage {
                 innerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
                 outerShockwave.transform.localScale = new Vector3(5f, 5f, 5f);
 
-                CircleCollider2D innerCollider = innerShockwave.GetComponent<CircleCollider2D>();
-                CircleCollider2D outerCollider = outerShockwave.GetComponent<CircleCollider2D>();
+                SphereCollider outerCollider = outerShockwave.GetComponent<SphereCollider>();
 
                 while (innerRadius < maxRadius - 5 || outerRadius < maxRadius) {
                     innerRadius += shockwaveExpandSpeed * Time.deltaTime;
@@ -104,16 +106,14 @@ namespace GolemSavage {
                     innerShockwave.transform.localScale = new Vector3(innerRadius, innerRadius, 1f);
                     outerShockwave.transform.localScale = new Vector3(outerRadius, outerRadius, 1f);
 
-                    innerCollider.radius = innerRadius;
-                    outerCollider.radius = outerRadius;
+                    outerCollider.radius = outerRadius / 110f;
 
                     yield return null;
                 }
                 innerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
                 outerShockwave.transform.localScale = new Vector3(0f, 0f, 0f);
-
-                innerCollider.radius = 0f;
                 outerCollider.radius = 0f;
+                finishSlam = true;
             }
 
             public override void Update(GolemSavageStateInput input) {
@@ -140,7 +140,11 @@ namespace GolemSavage {
             // Switches to the next state depending on the health
             private void CheckStateTransition() {
                 if (health <= 50 || finishSlam) {
-                    golemSavage.stateMachine.SetState(new GolemSavage_PhaseOne());
+                    if (phase == 1) {
+                        golemSavage.stateMachine.SetState(new GolemSavage_PhaseOne());
+                    } else if (phase == 3) {
+                        golemSavage.stateMachine.SetState(golemSavage.phaseThreeState);
+                    }
                 }
             }
 
@@ -157,9 +161,9 @@ namespace GolemSavage {
                 navigation.enabled = true;
 
                 // Disables all coroutines
-                golemSavage.StopCoroutine(rise);
-                golemSavage.StopCoroutine(fall);
-                golemSavage.StopCoroutine(triggerShockwave);
+                if (rise != null) golemSavage.StopCoroutine(rise);
+                if (fall != null) golemSavage.StopCoroutine(fall);
+                if (triggerShockwave != null) golemSavage.StopCoroutine(triggerShockwave);
             }
         }
     }

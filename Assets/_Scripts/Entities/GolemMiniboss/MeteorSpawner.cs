@@ -38,27 +38,24 @@ namespace GolemSavage {
             float positionY = -1f;
 
             Vector3[] spawnVectors = new Vector3[numMeteor];
-            float angleIncrement = 360f / numMeteor;
-
             for (int i = 0; i < numMeteor; i++) {
-                // Randomly generate the spawn location vectors
-                float angle = i * angleIncrement * Mathf.Deg2Rad;
-                float positionX = Mathf.Cos(angle) * radius;
-                float positionZ = Mathf.Sin(angle) * radius;
-                spawnVectors[i] = new Vector3(positionX, positionY, positionZ);
-
-                // Instantiates the meteors below the ground
-                GameObject meteor = Instantiate(meteorPrefab, spawnVectors[i], Quaternion.identity);
-
-                // Adds the on destruction listener
-                Meteor meteorController = meteor.GetComponent<Meteor>();
-                meteorController.InitializeMeteor(true);
+                    // Randomly generate the spawn location vectors
+                    float positionX = Random.Range(minX, maxX);
+                    float positionZ = Random.Range(minZ, maxZ);
+                    spawnVectors[i] = new Vector3(positionX, positionY, positionZ);
+                    
+                    // Instantiates the meteors below the ground
+                    GameObject meteor = Instantiate(meteorPrefab, spawnVectors[i], Quaternion.identity);
+                    
+                    // Adds the on destruction listener
+                    Meteor meteorController = meteor.GetComponent<Meteor>();
+                    meteorController.InitializeMeteor(true);
             }
         }
 
         private IEnumerator MeteorFall() {
             while (true) {
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(.7f);
                 SpawnFallingMeteors();
             }
         }

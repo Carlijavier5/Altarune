@@ -100,9 +100,9 @@ namespace GolemSavage {
                     attackSelector = Random.Range(2, 3);
 
                     if (attackSelector == 1) {
-                        golemSavage.stateMachine.SetState(new GolemSavage_Tornado());
+                        golemSavage.stateMachine.SetState(new GolemSavage_Tornado(1));
                     } else if (attackSelector == 2) {
-                        golemSavage.stateMachine.SetState(new GolemSavage_GroundSlam(10, 50));
+                        golemSavage.stateMachine.SetState(new GolemSavage_GroundSlam(10, 50, 1));
                     }
                 }
             }
