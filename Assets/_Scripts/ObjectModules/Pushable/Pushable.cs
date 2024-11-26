@@ -48,7 +48,7 @@ public class Pushable : ObjectModule {
                 break;
         }
 
-        IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
+        IEnumerable<EntityEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeProperties = pushableProperties.RuntimeClone(effectSource);
     }

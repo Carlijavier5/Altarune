@@ -6,9 +6,11 @@ using UnityEngine;
 public abstract partial class BaseObject {
 
     public event System.Action<int, ElementType, EventResponse> OnTryDamage;
+    public event System.Action<int, EventResponse> OnTryHeal;
+    public event System.Action<bool, EventResponse> OnTryToggleIFrame;
+
     public event System.Action<EventResponse<int>> OnTryRequestHealth;
     public event System.Action<EventResponse<int>> OnTryRequestMaxHealth;
-    public event System.Action<bool, EventResponse> OnTryToggleIFrame;
 
     public event System.Action<int> OnDamageReceived;
     public event System.Action<int> OnHealingReceived;
@@ -62,6 +64,16 @@ public abstract partial class BaseObject {
     public bool TryDamage(int amount, ElementType element = ElementType.Physical) {
         EventResponse eRes = new();
         OnTryDamage?.Invoke(amount, element, new());
+        return eRes.received;
+    }
+
+    /// <summary>
+    /// Heal method, attempts to heal the object;
+    /// </summary>
+    /// <returns> True if the object is damageable; </returns>
+    public bool TryHeal(int amount) {
+        EventResponse eRes = new();
+        OnTryHeal?.Invoke(amount, new());
         return eRes.received;
     }
 
