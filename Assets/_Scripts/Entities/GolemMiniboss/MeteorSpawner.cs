@@ -11,7 +11,8 @@ namespace GolemSavage {
         private GameObject[] meteors;
 
         // Initializing vertical travel variables
-        [SerializeField] private int numMeteor = 10;
+        [SerializeField] private int numMeteor = 15;
+        [SerializeField] private float radius = 8f;
 
         // Initializing coroutines
         private Coroutine meteorRise;
@@ -23,7 +24,7 @@ namespace GolemSavage {
 
         private IEnumerator MeteorRiseAnimation() {
             SpawnAnimationMeteors();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(6f);
 
             meteorFall = StartCoroutine(MeteorFall());
         }
@@ -37,10 +38,13 @@ namespace GolemSavage {
             float positionY = -1f;
 
             Vector3[] spawnVectors = new Vector3[numMeteor];
+            float angleIncrement = 360f / numMeteor;
+
             for (int i = 0; i < numMeteor; i++) {
                 // Randomly generate the spawn location vectors
-                float positionX = Random.Range(minX, maxX);
-                float positionZ = Random.Range(minZ, maxZ);
+                float angle = i * angleIncrement * Mathf.Deg2Rad;
+                float positionX = Mathf.Cos(angle) * radius;
+                float positionZ = Mathf.Sin(angle) * radius;
                 spawnVectors[i] = new Vector3(positionX, positionY, positionZ);
 
                 // Instantiates the meteors below the ground
@@ -54,7 +58,7 @@ namespace GolemSavage {
 
         private IEnumerator MeteorFall() {
             while (true) {
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(1f);
                 SpawnFallingMeteors();
             }
         }

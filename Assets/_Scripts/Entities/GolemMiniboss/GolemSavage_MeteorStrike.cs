@@ -20,10 +20,10 @@ namespace GolemSavage {
 
             // Meteor Strike components
             [SerializeField] private float hoverSpeed = 0.8f;
-            [SerializeField] private float hoverTime = 1f;
+            [SerializeField] private float hoverTime = 3f;
             [SerializeField] private float hoverHeight = 4f;
             [SerializeField] private float fallSpeed = 10f;
-            bool canMove = false;
+            bool finishState = false;
 
             private Coroutine hover;
             private Coroutine fall;
@@ -68,22 +68,26 @@ namespace GolemSavage {
                     yield return null;
                 }
                 
-                yield return new WaitForSeconds(1f);
-                canMove = true;
+                finishState = true;
                 damageable.ToggleIFrame(false);
+            }
+
+            public void LookTowardsPlayer() {
+                // Determines how the enemy should rotate towards the player
+                Vector3 directionToPlayer = (player.position - golemSavage.transform.position).normalized;
+                Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
+                // Rotates the enemy towards the player (uses slerp)
+                golemSavage.transform.rotation = Quaternion.Slerp(golemSavage.transform.rotation, rotateToPlayer, 2f * Time.deltaTime);
             }
 
             public override void Update(GolemSavageStateInput input) {
                 health = golemSavage.health;
+                LookTowardsPlayer();
 
-                if (canMove) {
-                    SwitchState();
+                if (finishState) {
+                    navigation.enabled = true;
+                    golemSavage.stateMachine.SetState(golemSavage.phaseThreeState);
                 }
-            }
-
-            // Switches to the next state
-            private void SwitchState() {
-                golemSavage.stateMachine.SetState(golemSavage.phaseThreeState);
             }
 
             // Method to try to damage non-hostile factions
