@@ -18,6 +18,10 @@ public partial class SovereignGolem : Entity {
         palmSlamMaster.TrySlam(leftOrRight);
     }
 
+    public void Animator_OnCollapsionLanding() {
+        collapsionSlamMaster.TryCollapsion();
+    }
+
     private void PhaseMaster_OnAttackEnd() {
         if (macroMachine.StateInput == null) return;
         macroMachine.StateInput.microMachine
@@ -115,6 +119,25 @@ public partial class SovereignGolem {
             SovereignGolem sg = input.sovereign;
             sg.palmSlamMaster.EnterPhase(phase);
             sg.palmSlamMaster.DoAttack();
+            // Broadcast SFX
+        }
+
+        public override void Update(Sovereign_Input input) { }
+
+        public override void Exit(Sovereign_Input input) { }
+    }
+}
+
+public partial class SovereignGolem {
+
+    [Header("Collapsion Slam")]
+    [SerializeField] private CollapsionSlamMaster collapsionSlamMaster;
+
+    public class State_CollapsionSlam : State<Sovereign_Input> {
+
+        public override void Enter(Sovereign_Input input) {
+            SovereignGolem sg = input.sovereign;
+            sg.collapsionSlamMaster.DoAttack();
             // Broadcast SFX
         }
 

@@ -25,6 +25,12 @@ public abstract class SovereignLaser : MonoBehaviour {
         }
     }
 
+    protected void ClearContacts() {
+        terminateStack.Clear();
+        contactMap.Clear();
+        contactSet.Clear();
+    }
+
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Entity entity)) {
             contactSet.Add(entity);

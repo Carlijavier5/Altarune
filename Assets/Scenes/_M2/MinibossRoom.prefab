@@ -498,7 +498,6 @@ Transform:
   - {fileID: 5557795873392427062}
   - {fileID: 8807971182169599158}
   - {fileID: 3042588589272988285}
-  - {fileID: 3523428704237727117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3628448567194231239
@@ -534,7 +533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentEnemies:
-  - {fileID: 4833849831993927475}
+  - {fileID: 0}
 --- !u!1 &6450097452763369883
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,92 +818,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1317463316521923206
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 6366583856810589051}
-    m_Modifications:
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.1361239
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 3.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3019376536560387505, guid: 4da58901a428eff4db493b0a1f31b033,
-        type: 3}
-      propertyPath: m_Name
-      value: StoneGolem
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4da58901a428eff4db493b0a1f31b033, type: 3}
---- !u!4 &3523428704237727117 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2498699938228379403, guid: 4da58901a428eff4db493b0a1f31b033,
-    type: 3}
-  m_PrefabInstance: {fileID: 1317463316521923206}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4833849831993927475 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5863081057010701749, guid: 4da58901a428eff4db493b0a1f31b033,
-    type: 3}
-  m_PrefabInstance: {fileID: 1317463316521923206}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ee6fe9a7c52854c82fe97bf4aa0b15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &4448430524529974203
 PrefabInstance:
   m_ObjectHideFlags: 0

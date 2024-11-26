@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StunStatusEffect : StatusEffect
+public class StunStatusEffect : EntityEffect
 {
     [SerializeField] private float duration;
 
@@ -12,9 +12,7 @@ public class StunStatusEffect : StatusEffect
         CCEffects = new() { root = new() { duration = duration } };
     }
 
-    public override void Terminate(Entity entity) {
-        
-    }
+    public override void Terminate(Entity entity) { }
 
     public override bool Update(Entity entity) {
         duration -= Time.deltaTime;
