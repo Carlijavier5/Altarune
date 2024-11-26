@@ -5,10 +5,10 @@ using UnityEngine;
 public class RuntimeCCAttributes : CCAttributes {
 
     private readonly CCAttributes ccAttributes;
-    private IEnumerable<StatusEffect> effectSource;
+    private IEnumerable<EntityEffect> effectSource;
 
     public RuntimeCCAttributes(CCAttributes defaultAttributes, DefaultCrowdControlSettings settings,
-                               IEnumerable<StatusEffect> effectSource) : base(settings) {
+                               IEnumerable<EntityEffect> effectSource) : base(settings) {
         ccAttributes = defaultAttributes;
         this.effectSource = effectSource;
     }
@@ -37,7 +37,7 @@ public class RuntimeCCAttributes : CCAttributes {
         if (effectSource == null) return;
 
         CCAttributeModifiers composite = new();
-        foreach (StatusEffect statusEffect in effectSource) {
+        foreach (EntityEffect statusEffect in effectSource) {
             if (statusEffect.HealthModifiers != null) {
                 composite.Compose(statusEffect.CCModifiers);
             }

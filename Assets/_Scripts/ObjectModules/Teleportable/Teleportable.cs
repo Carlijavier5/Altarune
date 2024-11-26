@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class Teleportable : ObjectModule {
+
+    private const string HOLO_THRESHOLD_KEY = "_Teleport_Threshold";
 
     [HideInInspector] [SerializeField] private MotionDriver defaultDriver = new();
     [HideInInspector] [SerializeField] private Pushable pushableModule;
@@ -11,6 +14,7 @@ public class Teleportable : ObjectModule {
     [SerializeField] private TeleportableProperties teleportableProperties;
     private TeleportableProperties TProps => teleportableProperties;
 
+    private VisualEffect teleportVFX;
     private Vector3 fallbackScale;
     private float timer;
 
@@ -36,6 +40,8 @@ public class Teleportable : ObjectModule {
                     break;
             }
         }
+
+        teleportVFX = Instantiate(TProps.settings.teleportEffect, TProps.rootTransform);
     }
 
     private void BaseObject_OnTryTeleport(Vector3 desiredPosition, EventResponse<Vector3> response) {
@@ -55,14 +61,20 @@ public class Teleportable : ObjectModule {
     }
 
     private IEnumerator ITeleport(Vector3 targetPosition) {
-        baseObject.SetMaterial(TProps.settings.material);
+        teleportVFX.Play();
+        teleportVFX.Reinit();
+        baseObject.TryStagger(TProps.settings.duration * 2);
+        baseObject.ApplyMaterial(TProps.settings.material);
         Vector3 originalScale = TProps.rootTransform.localScale;
 
+        float lerpVal;
         while (timer < TProps.settings.duration) {
             timer = Mathf.MoveTowards(timer, TProps.settings.duration, Time.deltaTime);
+            lerpVal = timer / TProps.settings.duration;
             if (baseObject.MotionDriver.MotionMode != MotionMode.NavMesh) {
-                UpdateRootScale(timer / TProps.settings.duration, originalScale);
+                UpdateRootScale(lerpVal, originalScale);
             }
+            baseObject.UpdatePropertyBlock((mpb) => { mpb.SetFloat(HOLO_THRESHOLD_KEY, 1 - lerpVal); });
             yield return null;
         }
 
@@ -93,7 +105,7 @@ public class Teleportable : ObjectModule {
             yield return null;
         }
 
-        baseObject.ResetMaterials();
+        baseObject.RemoveMaterial(TProps.settings.material);
     }
 
     void OnDisable() {
@@ -117,7 +129,7 @@ public class Teleportable : ObjectModule {
         base.Reset();
         defaultDriver.Set(transform);
         if (CJUtils.AssetUtils.TryRetrieveAsset(out DefaultTeleportableSettings settings)) {
-            teleportableProperties = new(settings, transform);
+            teleportableProperties = new(settings, baseObject.ObjectBody);
         }
     }
 

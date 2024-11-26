@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum StunType { Concussion, Freeze }
@@ -8,7 +9,7 @@ public class CrowdControllable : ObjectModule {
     [SerializeField] private CCAttributes ccAttributes;
     private RuntimeCCAttributes runtimeProperties;
 
-    private IEnumerable<StatusEffect> effectSource;
+    private IEnumerable<EntityEffect> effectSource;
     private float updateTimer;
 
     private float slowMult = 1;
@@ -35,7 +36,7 @@ public class CrowdControllable : ObjectModule {
             updateTimer += Time.deltaTime;
             if (updateTimer >= runtimeProperties.CCUpdateFrequency) {
                 CCDataComposer dataComposer = new();
-                foreach (StatusEffect statusEffect in effectSource) {
+                foreach (EntityEffect statusEffect in effectSource) {
                     if (statusEffect.CCEffects != null) {
                         statusEffect.CCEffects.Update(updateTimer);
                         dataComposer.Compose(statusEffect.CCEffects);
@@ -54,12 +55,14 @@ public class CrowdControllable : ObjectModule {
         baseObject.TimeScale = slowMult * staggerMult;
     }
 
-    private void BaseObject_OnTryStagger(float duration, EventResponse response) {
+    private void BaseObject_OnTryStagger(float duration, bool timeStop,
+                                         EventResponse response) {
+        if (timeStop) StartCoroutine(IStaggerFrame());
         staggerTimer = Mathf.Max(staggerTimer, duration);
         response.received = true;
     }
 
-    private void Entity_OnEffectApplied(StatusEffect statusEffect) {
+    private void Entity_OnEffectApplied(EntityEffect statusEffect) {
         runtimeProperties.ApplyAttributes(statusEffect.CCEffects, ccEffectCount);
     }
 
@@ -88,6 +91,17 @@ public class CrowdControllable : ObjectModule {
 
             if (hasStun || hasRoot) ccCount++;
         }
+    }
+
+    // Needs refactoring with a global manager!
+    private IEnumerator IStaggerFrame() {
+        Time.timeScale = 0;
+        float timeStopTimer = ccAttributes.StaggerTime;
+        while (timeStopTimer > 0) {
+            timeStopTimer -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+        Time.timeScale = 1;
     }
 
     #if UNITY_EDITOR

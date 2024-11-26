@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TemporalDistortionEffect : StatusEffect {
+public class TemporalDistortionEffect : EntityEffect {
 
     private readonly float strength, maxDuration;
     private float effectDuration;

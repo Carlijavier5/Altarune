@@ -21,7 +21,7 @@ public class SummonInteractor : MonoBehaviour {
 
     private void InputSource_OnRaycastUpdate(Ray ray) {
         if (Physics.Raycast(ray, out RaycastHit unitHit, LayerUtils.MAX_RCD, LayerUtils.BaseObjectLayerMask)) {
-
+            
         }
     }
 

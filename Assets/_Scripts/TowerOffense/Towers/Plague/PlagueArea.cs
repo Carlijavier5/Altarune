@@ -28,7 +28,7 @@ public class PlagueArea : MonoBehaviour {
 
     private void InfectEnemy(Collider enemy) {
         Entity entity = enemy.GetComponent<Entity>();
-        entity.ApplyEffects(new[] {plagueEffect.Clone() });
+        entity.ApplyEffects(new[] { plagueEffect.Clone() as EntityEffect });
     }
 
     private IEnumerator ExpandArea() {
@@ -59,7 +59,7 @@ public class PlagueArea : MonoBehaviour {
 }
 
 [System.Serializable]
-public class PlagueStatusEffect : StatusEffect {
+public class PlagueStatusEffect : EntityEffect {
 
     [SerializeField] private HealthAttributeModifiers attMods;
     [SerializeField] private EnemyPlagueArea enemyPlagueArea;
@@ -75,7 +75,7 @@ public class PlagueStatusEffect : StatusEffect {
 
     public override void Apply(Entity entity, bool isNew) {
         if (isNew) {
-            entity.SetMaterial(material);
+            entity.ApplyMaterial(material);
             HealthModifiers = attMods;
         } else {
             durationTimer = 0;

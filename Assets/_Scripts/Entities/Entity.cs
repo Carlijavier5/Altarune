@@ -8,13 +8,13 @@ public abstract class Entity : BaseObject {
     [SerializeField] protected EntityFaction faction;
     public EntityFaction Faction => faction;
 
-    public event System.Action<StatusEffect> OnEffectApplied;
+    public event System.Action<EntityEffect> OnEffectApplied;
 
-    public HashSet<StatusEffect> StatusEffects { get; private set; } = new();
-    private readonly Stack<StatusEffect> terminateStack = new();
+    public HashSet<EntityEffect> StatusEffects { get; private set; } = new();
+    private readonly Stack<EntityEffect> terminateStack = new();
 
     protected virtual void Update() {
-        foreach (StatusEffect statusEffect in StatusEffects) {
+        foreach (EntityEffect statusEffect in StatusEffects) {
             if (statusEffect.Update(this)) {
                 statusEffect.Terminate(this);
                 terminateStack.Push(statusEffect);
@@ -22,13 +22,13 @@ public abstract class Entity : BaseObject {
             if (Perished) break;
         }
 
-        while (terminateStack.TryPop(out StatusEffect deprecatedEffect)) {
+        while (terminateStack.TryPop(out EntityEffect deprecatedEffect)) {
             StatusEffects.Remove(deprecatedEffect);
         }
     }
 
-    public void ApplyEffects(StatusEffect[] incomingEffects) {
-        foreach (StatusEffect statusEffect in incomingEffects) {
+    public void ApplyEffects(EntityEffect[] incomingEffects) {
+        foreach (EntityEffect statusEffect in incomingEffects) {
             bool isNew = StatusEffects.Add(statusEffect);
             statusEffect.Apply(this, isNew);
             OnEffectApplied?.Invoke(statusEffect);
@@ -38,7 +38,7 @@ public abstract class Entity : BaseObject {
 
     public override void Perish() {
         base.Perish();
-        foreach (StatusEffect statusEffect in StatusEffects) {
+        foreach (EntityEffect statusEffect in StatusEffects) {
             statusEffect.Terminate(this);
         } StatusEffects.Clear();
     }
