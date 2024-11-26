@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class EntranceRune : MonoBehaviour {
 
-    public System.Action OnRuneCollapsed;
-
     [SerializeField] private Renderer runeRenderer;
     [SerializeField] private float fadeTime;
     [SerializeField] private ParticleSystem empParticles;
-
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.E)) {
-            CollapseRune();
-        }
-    }
 
     public void CollapseRune() {
         StartCoroutine(ICollapseRune());
@@ -35,6 +27,5 @@ public class EntranceRune : MonoBehaviour {
             runeRenderer.SetPropertyBlock(mpb);
             yield return null;
         }
-        OnRuneCollapsed?.Invoke();
     }
 }

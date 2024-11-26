@@ -7,6 +7,7 @@ public class SovereignSpawnMaster : SovereignPhaseMaster<SpawnerProperties> {
     public event System.Action OnSpawnPerish;
 
     [SerializeField] private SpawnPlatform[] platforms;
+    [SerializeField] private float phaseEnterDelay;
 
     private readonly HashSet<SpawnPlatform> activePlatforms = new();
     private float respawnTimer;
@@ -44,7 +45,8 @@ public class SovereignSpawnMaster : SovereignPhaseMaster<SpawnerProperties> {
 
     public override void EnterPhase(SovereignPhase phase) {
         base.EnterPhase(phase);
-        StartSpawnTimer();
+        isRespawnPending = true;
+        respawnTimer = phaseEnterDelay;
     }
 
     private void SpawnEntity() {
@@ -62,11 +64,11 @@ public class SovereignSpawnMaster : SovereignPhaseMaster<SpawnerProperties> {
 
     private void SpawnPlatform_OnSpawnPerish(SpawnPlatform platform) {
         activePlatforms.Remove(platform);
-        if (respawnTimer <= 0) StartSpawnTimer();
+        if (respawnTimer <= 0) DoSpawnTimer();
         OnSpawnPerish?.Invoke();
     }
 
-    private void StartSpawnTimer() {
+    private void DoSpawnTimer() {
         isRespawnPending = true;
         respawnTimer = Random.Range(activeConfig.spawnWaitRange.x,
                                     activeConfig.spawnWaitRange.y);
