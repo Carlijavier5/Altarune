@@ -8,7 +8,7 @@ public class SummonHandler : MonoBehaviour {
     [SerializeField] private SummonController inputSource;
     [SerializeField] private SummonData[] summonBlueprints;
 
-    [SerializeField] private float overlapRadius;
+    [SerializeField] private float summonCD, overlapRadius;
 
     private ManaSource ManaSource => inputSource.ManaSource;
 
@@ -29,6 +29,8 @@ public class SummonHandler : MonoBehaviour {
     private HashSet<GameObject> overlapSummons;
     private bool IsPlacementInvalid => (selectedData is TowerData && closestBatteryCache == null)
                                     || (overlapSummons == null || overlapSummons.Count > 0);
+
+    private float cdTime;
 
     void Awake() {
         inputSource.OnSummonSelected += SummonController_OnSummonSelected;
@@ -62,7 +64,7 @@ public class SummonHandler : MonoBehaviour {
     }
 
     private void InputSource_OnRaycastUpdate(Ray cursorRay) {
-        if (selectedData != null
+        if (Time.time > cdTime && selectedData != null
             && Physics.Raycast(cursorRay, out RaycastHit groundHit, LayerUtils.MAX_RCD, LayerUtils.GroundLayerMask)
             && Mathf.Max(groundHit.normal.x, groundHit.normal.y, groundHit.normal.z) == groundHit.normal.y) {
 
@@ -102,13 +104,14 @@ public class SummonHandler : MonoBehaviour {
     private void InputSource_OnPointerConfirm(SummonType selectedType) {
         if (hologramHint != null
             && !IsPlacementInvalid) {
+            cdTime = Time.time + summonCD;
             switch (selectedType) {
                 case SummonType.Battery:
                     BatteryData batteryData = selectedData as BatteryData;
                     ArtificialBattery battery = Instantiate(batteryData.prefabSummon, lastHitPoint, Quaternion.identity);
 
                     summonedBatteries.Add(battery);
-                    battery.DoSpawnAnim();
+                    battery.DoSpawn();
 
                     battery.Init(inputSource.Summoner, ManaSource);
                     ManaSource.Drain(batteryData.summonCost);
@@ -126,7 +129,7 @@ public class SummonHandler : MonoBehaviour {
                         ManaSource batterySource = targetBattery.ManaSource;
 
                         targetBattery.LinkTower(tower);
-                        tower.DoSpawnAnim();
+                        tower.DoSpawn();
 
                         tower.Init(inputSource.Summoner, batterySource);
                         batterySource.Drain(towerData.summonCost);

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 480738612726503693}
   - component: {fileID: 2071284977901322361}
   - component: {fileID: 4000385502306080453}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: TowerTemporal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 882350abfb552aa40af0fbd61cbeb639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectBody: {fileID: 7556908497527970706}
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
   manaDepletion: 1
   tempoArea: {fileID: 3854210471545412715}
@@ -91,7 +92,7 @@ GameObject:
   - component: {fileID: 3119185115722530197}
   - component: {fileID: 956554392252297444}
   - component: {fileID: 3581860619558387703}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +260,7 @@ PrefabInstance:
     - target: {fileID: 338589957654778189, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 733690374833735340, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -269,17 +270,17 @@ PrefabInstance:
     - target: {fileID: 733690374833735340, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 964788329891072409, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1558305315775097045, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3824930183838418803, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -299,7 +300,7 @@ PrefabInstance:
     - target: {fileID: 3854556058880008929, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3854556058880008929, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -324,22 +325,38 @@ PrefabInstance:
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.4091393
+<<<<<<< Updated upstream
+      value: 0.7038933
+=======
+      value: 0.29752624
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.4091393
+<<<<<<< Updated upstream
+      value: 0.7038933
+=======
+      value: 0.29752624
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5767192
+<<<<<<< Updated upstream
+      value: 0.06733724
+=======
+      value: 0.64146566
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.5767192
+<<<<<<< Updated upstream
+      value: -0.06733724
+=======
+      value: -0.64146566
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 5180139356232831829, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -369,12 +386,12 @@ PrefabInstance:
     - target: {fileID: 5436505273900770955, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6112418497661215212, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6281837184978766065, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -394,12 +411,12 @@ PrefabInstance:
     - target: {fileID: 8224527978940955160, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8285719673852142776, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8285719673852142776, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
@@ -409,7 +426,7 @@ PrefabInstance:
     - target: {fileID: 9095456869032197101, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -512,7 +529,7 @@ PrefabInstance:
     - target: {fileID: 7653475595995059636, guid: ad5cafe34014d614c81cd439a9f905ab,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

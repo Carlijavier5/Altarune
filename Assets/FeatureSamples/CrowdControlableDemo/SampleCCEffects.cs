@@ -5,7 +5,7 @@ namespace FeatureSamples {
     /// The following effects showcase how to modify the CCEffects
     /// parameter in the StatusEffects class to produce stuns, roots, and slows!
 
-    public class SampleStunEffect : StatusEffect {
+    public class SampleStunEffect : EntityEffect {
 
         private float effectDuration;
 
@@ -34,7 +34,7 @@ namespace FeatureSamples {
     /// <summary>
     /// 
     /// </summary>
-    public class SampleRootEffect : StatusEffect {
+    public class SampleRootEffect : EntityEffect {
 
         private float effectDuration;
 
@@ -60,7 +60,7 @@ namespace FeatureSamples {
         public override void Terminate(Entity entity) { }
     }
 
-    public class SampleSlowEffect : StatusEffect {
+    public class SampleSlowEffect : EntityEffect {
 
         private readonly float effectDuration;
         private float timer;

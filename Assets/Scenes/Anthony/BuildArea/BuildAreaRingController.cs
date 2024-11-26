@@ -36,7 +36,7 @@ public class BuildAreaRingController : MonoBehaviour
             return 1f;
         }
 
-        return collider.radius;
+        return collider.radius * collider.transform.lossyScale.x;
     }
 
     #endregion

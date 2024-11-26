@@ -60,7 +60,7 @@ public class TowerTemporal : Summon {
         if (baseObject is Entity) {
             Entity entity = baseObject as Entity;
             entity.ApplyEffects(new[] { effect });
-        } else if (baseObject is Tower) {
+        } else if (baseObject is Summon) {
             // Apply effect to towers;
         }
     }

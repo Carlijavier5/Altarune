@@ -10,6 +10,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public abstract partial class BaseObject : MonoBehaviour {
 
+    [SerializeField] protected Transform objectBody;
+    public Transform ObjectBody => objectBody;
+
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
         for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
@@ -27,20 +30,22 @@ public abstract partial class BaseObject : MonoBehaviour {
     #region || Material Swap Utilities ||
 
     private Renderer[] renderers;
-    private readonly Dictionary<Renderer, Material[]> materialDict = new();
+    private readonly LinkedList<Material> materialStack = new();
+    private readonly Dictionary<Renderer, Material[]> baseMaterialMap = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
-        renderers = GetComponentsInChildren<Renderer>(true);
+        renderers = objectBody.GetComponentsInChildren<Renderer>(true);
         if (updateMaterials) {
             foreach (Renderer renderer in renderers) {
-                materialDict[renderer] = renderer.sharedMaterials;
+                baseMaterialMap[renderer] = renderer.sharedMaterials;
             }
         }
     } 
 
     public void ResetMaterials() {
+        materialStack.Clear();
         try {
-            foreach (KeyValuePair<Renderer, Material[]> kvp in materialDict) {
+            foreach (KeyValuePair<Renderer, Material[]> kvp in baseMaterialMap) {
                 kvp.Key.sharedMaterials = kvp.Value;
             }
         } catch {
@@ -48,7 +53,28 @@ public abstract partial class BaseObject : MonoBehaviour {
         }
     }
 
-    public void SetMaterial(Material material) {
+    public void ApplyMaterial(Material material) {
+        materialStack.Remove(material);
+        materialStack.AddLast(material);
+        SetMaterial(material);
+    }
+
+    public void UpdatePropertyBlock(System.Action<MaterialPropertyBlock> modAction) {
+        MaterialPropertyBlock mpb = new();
+        try {
+            foreach (KeyValuePair<Renderer, Material[]> kvp in baseMaterialMap) {
+                Renderer renderer = kvp.Key;
+                renderer.GetPropertyBlock(mpb);
+                modAction?.Invoke(mpb);
+                renderer.SetPropertyBlock(mpb);
+            }
+        } catch {
+            Debug.LogError("NRE: Invalid material reference cache");
+        }
+    }
+
+    private void SetMaterial(Material material) {
+        if (renderers == null) UpdateRendererRefs(true);
         try {
             foreach (Renderer renderer in renderers) {
                 renderer.sharedMaterials = new Material[renderer.sharedMaterials.Length]
@@ -56,6 +82,18 @@ public abstract partial class BaseObject : MonoBehaviour {
             }
         } catch {
             Debug.LogError("NRE: Invalid material reference cache");
+        }
+    }
+
+    public void RemoveMaterial(Material material) {
+        if (materialStack.Count == 0) return;
+        if (materialStack.Last.Value == material) {
+            materialStack.RemoveLast();
+            if (materialStack.Count == 0) ResetMaterials();
+            else SetMaterial(materialStack.Last.Value);
+        } else {
+            LinkedListNode<Material> node = materialStack.FindLast(material);
+            materialStack.Remove(node);
         }
     }
 

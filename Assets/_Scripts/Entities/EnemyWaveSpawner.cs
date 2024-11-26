@@ -61,7 +61,7 @@ public class EnemyWaveSpawner : Entity {
                 foreach (Collider col in colls) {
                     Entity entity = col.gameObject.GetComponent<Entity>();
                     // ignore spawn collisions with the spawner itself; use spawnradius instead.
-                    if (!col.isTrigger && entity != null && entity.GetType() != typeof(EnemySpawner)) {
+                    if (!col.isTrigger && entity != null && entity.GetType() != typeof(EntitySpawner)) {
                         // if failed to place enemy, don't reset timer
                         _nextSpawnTime = Time.time + 0.1f;
                         return;

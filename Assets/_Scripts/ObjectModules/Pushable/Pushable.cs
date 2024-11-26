@@ -48,7 +48,7 @@ public class Pushable : ObjectModule {
                 break;
         }
 
-        IEnumerable<StatusEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
+        IEnumerable<EntityEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
         runtimeProperties = pushableProperties.RuntimeClone(effectSource);
     }
@@ -123,7 +123,7 @@ public class Pushable : ObjectModule {
         }
     }
 
-    public override void EDITOR_ONLY_AttachModule() { 
+    public override void EDITOR_ONLY_AttachModule() {
         if (ccModule == null) TryGetComponent(out ccModule);
     }
     #endif
