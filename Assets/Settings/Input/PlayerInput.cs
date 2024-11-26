@@ -152,7 +152,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""id"": ""c5799cb3-9bd4-40bf-8c19-e1c41eb5e945"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -275,6 +275,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": ""Scale(factor=8)"",
                     ""groups"": """",
                     ""action"": ""Select Summon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be886a7f-5557-4a2d-8443-8ed18872b243"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Activate Skill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
