@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FloorDestructor : MonoBehaviour {
 
+    public event System.Action OnFloorCollapsed;
+
     [SerializeField] private Rigidbody[] sections;
     [SerializeField] private float sectionDestroyTime;
     [SerializeField] private AnimationCurve dropIntervalCurve;
@@ -26,5 +28,6 @@ public class FloorDestructor : MonoBehaviour {
             float nextDropTime = dropIntervalCurve.Evaluate(i);
             yield return new WaitForSeconds(nextDropTime);
         }
+        OnFloorCollapsed?.Invoke();
     }
 }
