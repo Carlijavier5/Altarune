@@ -12,7 +12,7 @@ public class CollapsionSlamMaster : MonoBehaviour {
     [SerializeField] private EntranceRune entranceRune;
     [SerializeField] private AreaClearer areaClearer;
     [SerializeField] private FloorDestructor floorDestructor;
-    [SerializeField] private GameObject sandPit;
+    [SerializeField] private GameObject sandPit, collisionPlanes;
     [SerializeField] private float clearDelay, dropDelay;
 
     void Awake() {
@@ -37,11 +37,13 @@ public class CollapsionSlamMaster : MonoBehaviour {
         yield return new WaitForSeconds(clearDelay);
         areaClearer.ClearArea();
         sandPit.SetActive(true);
+        collisionPlanes.SetActive(true);
         yield return new WaitForSeconds(dropDelay);
         floorDestructor.CollapseFloor();
     }
 
     private void FloorDestructor_OnFloorCollapsed() {
         OnCollapsionEnd?.Invoke();
+        collisionPlanes.SetActive(false);
     }
 }
