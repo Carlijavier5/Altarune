@@ -64,7 +64,7 @@ public class TowerSwitcheroo : Summon {
 
     private void CastSphere() {
         if (Physics.SphereCast(transform.position, radius, -transform.up, out enemiesHit, maxDistance, ~layerMask)) {
-            if (enemiesHit.transform.TryGetComponent(out Golem Golem_Idle)) {
+            if (enemiesHit.transform.TryGetComponent(out GolemSentinel Golem_Idle)) {
                 Debug.Log(enemiesHit.collider.gameObject);
             }
         }

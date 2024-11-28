@@ -19,6 +19,12 @@ public class GolemSlither_ZigHitbox : MonoBehaviour
         }
     }
 
+    public void Generate(Vector3 position, Quaternion rotation, float zScale) {
+        transform.position = position;
+        transform.rotation = rotation;
+        transform.localScale = new Vector3(transform.localScale.x, transform.localScale.z);
+    }
+
     public void Detonate() {
         StartCoroutine(IDetonate());
     }

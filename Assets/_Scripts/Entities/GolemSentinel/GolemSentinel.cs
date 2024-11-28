@@ -3,9 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public partial class Golem : Entity {
+public partial class GolemSentinel : Entity {
 
-    private readonly StateMachine<Golem_Input> stateMachine = new();
+    private readonly StateMachine<Sentinel_Input> stateMachine = new();
 
     [Header("General")]
     [SerializeField] private CharacterController controller;
@@ -13,9 +13,6 @@ public partial class Golem : Entity {
     [SerializeField] private AggroRange aggroRange;
     [SerializeField] private Collider attackCollider;
 
-    public float RootMult => CanMove ? 1 : 0;
-
-    private IEnumerable<Rigidbody> rigidbodies;
     private float baseLinearSpeed, baseAngularSpeed;
 
     void Awake() {
@@ -25,10 +22,9 @@ public partial class Golem : Entity {
 
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = navMeshAgent.angularSpeed;
-        rigidbodies = GetComponentsInChildren<Rigidbody>(true).Where((rb) => rb.gameObject != gameObject);
 
         controller.enabled = false;
-        Golem_Input input = new(stateMachine, this);
+        Sentinel_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Idle());
 
         aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
@@ -40,10 +36,10 @@ public partial class Golem : Entity {
     }
 
     private void Golem_OnStunSet(bool isStunned) {
-        State<Golem_Input> newState = isStunned ? new State_Stunned()
+        State<Sentinel_Input> newState = isStunned ? new State_Stunned()
                                                 : new State_Idle();
         stateMachine.SetState(newState);
-        UpdateAggro();
+        if (!isStunned) UpdateAggro();
     }
 
     private void Golem_OnTimeScaleSet(float timeScale) {
@@ -57,7 +53,9 @@ public partial class Golem : Entity {
     private void AggroRange_OnAggroExit(Entity _) => UpdateAggro();
 
     private void UpdateAggro() {
-        if (stateMachine.State is State_Stunned) return;
+        if (stateMachine.State is State_Stunned
+            || stateMachine.State is State_Charging
+            || stateMachine.State is State_Charge) return;
 
         Entity closestTarget = aggroRange.ClosestTarget;
         stateMachine.StateInput.SetTarget(closestTarget);
@@ -85,13 +83,14 @@ public partial class Golem : Entity {
     }
 
     public void Ragdoll() {
+        /*
         foreach (Rigidbody rb in rigidbodies) {
             rb.isKinematic = false;
             Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
             rb.AddForce(force);
             Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
             rb.AddTorque(torque);
-        } DetachModules();
+        }*/ DetachModules();
         enabled = false;
         Destroy(gameObject, 2);
     }
