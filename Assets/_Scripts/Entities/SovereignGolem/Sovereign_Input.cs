@@ -18,7 +18,7 @@
             this.sovereign = sovereign;
         }
 
-        public void InflateMacro(StateMachine<Sovereign_Input> microMachine) {
+        public void InflateMicro(StateMachine<Sovereign_Input> microMachine) {
             this.microMachine = microMachine;
         }
     }

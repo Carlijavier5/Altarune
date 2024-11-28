@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 1392278355}
   - component: {fileID: 1392278354}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: RoomManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -736,8 +736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba018e616480314ea86e927ab4e1f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraBrain: {fileID: 46615050}
-  playerController: {fileID: 1942190075272092866}
   player: {fileID: 1942190075272092865}
   rooms:
   - {fileID: 105165089}
@@ -756,7 +754,7 @@ Transform:
   m_GameObject: {fileID: 1392278353}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0010604, y: -4.5206666, z: 6.005372}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1341,7 +1339,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: a2dfbf0698e9e384c90c5b5cf439f510, type: 3}
 --- !u!114 &1942190075272092865 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2208400701102557967, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+  m_CorrespondingSourceObject: {fileID: 665781236088333302, guid: a2dfbf0698e9e384c90c5b5cf439f510,
     type: 3}
   m_PrefabInstance: {fileID: 1942190075272092864}
   m_PrefabAsset: {fileID: 0}
@@ -1349,18 +1347,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fee0d278b3a37824d99011bb334afa59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1942190075272092866 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8726108569643392650, guid: a2dfbf0698e9e384c90c5b5cf439f510,
-    type: 3}
-  m_PrefabInstance: {fileID: 1942190075272092864}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d195186499cc095499936c11ab2cf7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
