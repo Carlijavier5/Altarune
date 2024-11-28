@@ -56,7 +56,6 @@ public class SovereignSwipingLaserMaster : SovereignPhaseMaster<SwipingLaserProp
         if (laserCounter > 0) DoSwipeLaser();
         else {
             OnAttackEnd?.Invoke();
-            OnAttackEnd = null;
         }
     }
 }

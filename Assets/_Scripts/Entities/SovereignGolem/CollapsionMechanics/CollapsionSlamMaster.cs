@@ -13,6 +13,7 @@ public class CollapsionSlamMaster : MonoBehaviour {
     [SerializeField] private AreaClearer areaClearer;
     [SerializeField] private FloorDestructor floorDestructor;
     [SerializeField] private GameObject sandPit, collisionPlanes;
+    [SerializeField] private SFXOneShot sfxCollapsionSlam;
     [SerializeField] private float clearDelay, dropDelay;
 
     void Awake() {
@@ -30,7 +31,10 @@ public class CollapsionSlamMaster : MonoBehaviour {
         animator.SetTrigger(SLAM_TRIGGER);
     }
 
-    public void TryCollapsion() => StartCoroutine(IDoCollapsion());
+    public void TryCollapsion() {
+        sfxCollapsionSlam.Play();
+        StartCoroutine(IDoCollapsion());
+    }
 
     private IEnumerator IDoCollapsion() {
         entranceRune.CollapseRune();

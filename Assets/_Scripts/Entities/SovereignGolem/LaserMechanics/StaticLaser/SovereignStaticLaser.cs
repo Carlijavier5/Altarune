@@ -26,6 +26,7 @@ public class SovereignStaticLaser : SovereignLaser {
     private IEnumerator IDoLaserAttack(float duration) {
         vfxPrefab.SetActive(true);
         attackCollider.enabled = true;
+        ToggleAudio(true);
 
         float timer = 0;
         while (timer < duration) {
@@ -37,5 +38,6 @@ public class SovereignStaticLaser : SovereignLaser {
         attackCollider.enabled = false;
         ClearContacts();
         vfxPrefab.SetActive(false);
+        ToggleAudio(false);
     }
 }

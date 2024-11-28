@@ -2,10 +2,10 @@
 
 public class SpawnPlatform : MonoBehaviour {
 
-    public event System.Action<SpawnPlatform> OnCrystalShatter;
+    public event System.Action<SpawnPlatform> OnSpawnPerish;
 
     [SerializeField] private PositionRandomizer randomizer;
-    public bool HasCrystal => activeEntity;
+    public bool HasEntity => activeEntity;
 
     private Entity activeEntity;
 
@@ -15,9 +15,13 @@ public class SpawnPlatform : MonoBehaviour {
         randomizer.Toggle(false);
     }
 
+    public void CollapseSpawn() {
+        if (HasEntity) activeEntity.Perish();
+    }
+
     private void ActiveEntity_OnPerish(BaseObject _) {
         activeEntity = null;
         randomizer.Toggle(true);
-        OnCrystalShatter?.Invoke(this);
+        OnSpawnPerish?.Invoke(this);
     }
 }

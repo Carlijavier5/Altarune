@@ -103,7 +103,6 @@ public class SovereignStaticLaserMaster : SovereignPhaseMaster<StaticLaserProper
         activeLasers.Remove(laser);
         if (activeLasers.Count == 0 && waveCounter == 0) {
             OnAttackEnd?.Invoke();
-            OnAttackEnd = null;
         }
     }
 }

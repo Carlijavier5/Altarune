@@ -27,7 +27,3 @@ public class GM : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
-
-public class AudioManager : MonoBehaviour {
-
-}

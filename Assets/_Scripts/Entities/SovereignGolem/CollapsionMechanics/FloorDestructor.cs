@@ -8,9 +8,11 @@ public class FloorDestructor : MonoBehaviour {
 
     [SerializeField] private Rigidbody[] sections;
     [SerializeField] private float sectionDestroyTime;
+    [SerializeField] private SFXOneShot sfxFloorCollapsion;
     [SerializeField] private AnimationCurve dropIntervalCurve;
 
     public void CollapseFloor() {
+        sfxFloorCollapsion.Play();
         StartCoroutine(ICollapseFloor());
     }
 
