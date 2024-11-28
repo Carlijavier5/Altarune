@@ -25,4 +25,11 @@ public class AreaClearer : MonoBehaviour {
 
         navMeshObstacle.gameObject.SetActive(true);
     }
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, clearRadius);
+    }
+    #endif
 }

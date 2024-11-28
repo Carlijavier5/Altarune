@@ -19,9 +19,8 @@ public class PlayerDamageable : Damageable {
                 StartCoroutine(ISimulateIFrame());
 
                 if (runtimeHP.Health <= 0) {
-                    baseObject.Perish();
                     ToggleIFrame(true);
-                    PHGameManager.Instance.DoGameOver();
+                    GM.Instance.DoGameOver();
                 }
             }
         }

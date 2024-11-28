@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HealthUIManager : MonoBehaviour {
-    [SerializeField] private int health = 10;
+
+    [SerializeField] private Player player;
     [SerializeField] private GameObject healthSprite;
     [SerializeField] private float spacing = 2f;
     [SerializeField] private Transform healthGroup;
 
     private GameObject[] healthSprites;
 
-    private int currHealth;
-    // Start is called before the first frame update
     void Awake() {
+        player.InputSource.OnPlayerInit += InputSource_OnPlayerInit;
+        player.OnDamageReceived += Player_OnDamageReceived;
+    }
+
+    private void InputSource_OnPlayerInit() {
+        int health = player.Health;
         healthSprites = new GameObject[health];
-        currHealth = health;
         for (int i = 0; i < health; i++) {
             healthSprites[i] = Instantiate(healthSprite, new Vector3(i * spacing, 0f, 0f) + healthGroup.position,
                 Quaternion.identity, healthGroup);
@@ -25,10 +28,10 @@ public class HealthUIManager : MonoBehaviour {
     /// <summary>
     /// Updates health visuals. Pass current health.
     /// </summary>
-    /// <param name="currHealth">Current health</param>
-    public void UpdateHealth(int currHealth) {
-        this.currHealth = currHealth;
-        for (int i = 0; i < health; i++) {
+    private void Player_OnDamageReceived(int _) {
+        int currHealth = player.Health;
+        int maxHealth = player.MaxHealth;
+        for (int i = 0; i < maxHealth; i++) {
             if (i >= currHealth) {
                 healthSprites[i].SetActive(false);
             }

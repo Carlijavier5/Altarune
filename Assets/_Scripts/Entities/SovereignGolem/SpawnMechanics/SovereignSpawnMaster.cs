@@ -15,25 +15,12 @@ public class SovereignSpawnMaster : SovereignPhaseMaster<SpawnerProperties> {
 
     protected override void Awake() {
         base.Awake();
-        foreach (SpawnPlatform crystalPlatform in platforms) {
-            crystalPlatform.OnCrystalShatter += SpawnPlatform_OnSpawnPerish;
+        foreach (SpawnPlatform spawnPlatform in platforms) {
+            spawnPlatform.OnSpawnPerish += SpawnPlatform_OnSpawnPerish;
         }
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.B)) {
-            EnterPhase(SovereignPhase.Macro1);
-        }
-        if (Input.GetKeyDown(KeyCode.N)) {
-            EnterPhase(SovereignPhase.Macro2);
-        }
-        if (Input.GetKeyDown(KeyCode.M)) {
-            EnterPhase(SovereignPhase.Macro3);
-        }
-        if (Input.GetKeyDown(KeyCode.K)) {
-            EnterPhase(SovereignPhase.Macro4);
-        }
-
         if (isRespawnPending) {
             respawnTimer -= Time.deltaTime;
             if (respawnTimer <= 0) {
@@ -49,9 +36,15 @@ public class SovereignSpawnMaster : SovereignPhaseMaster<SpawnerProperties> {
         respawnTimer = phaseEnterDelay;
     }
 
+    public void CollapseSpawns() {
+        foreach (SpawnPlatform platform in platforms) {
+            platform.CollapseSpawn();
+        } isRespawnPending = false;
+    }
+
     private void SpawnEntity() {
         List<SpawnPlatform> validPlatforms = platforms
-                                             .Where((cp) => !cp.HasCrystal).ToList();
+                                             .Where((cp) => !cp.HasEntity).ToList();
         int spawnAmount = activeConfig.maxSpawns - activePlatforms.Count;
         for (int i = 0; i < spawnAmount; i++) {
             int selectedPlatform = Random.Range(0, validPlatforms.Count);
