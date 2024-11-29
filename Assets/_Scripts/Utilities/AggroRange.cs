@@ -14,6 +14,7 @@ public class AggroRange : MonoBehaviour {
 
     public Entity ClosestTarget => FindTarget(SortCriteria.Closest);
     public Entity FurthestTarget => FindTarget(SortCriteria.Furthest);
+    public bool HasTarget => AggroTargets.Count > 0;
 
     private Entity FindTarget(SortCriteria criteria) {
         if (AggroTargets.Count == 0) return null;

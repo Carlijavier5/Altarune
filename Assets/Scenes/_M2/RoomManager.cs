@@ -55,7 +55,7 @@ public class RoomManager : MonoBehaviour {
         if (RoomTransitionLoader.Instance != null) {
             RoomTransitionLoader.Instance.FadeOut(immediateFade);
         } 
-        TimeScaleManager.Instance.AddTimeScaleShift(0, 1);
+        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
         yield return new WaitForSecondsRealtime(1);
 
         /// Activate Current Room / Deactivate All Others
@@ -76,7 +76,7 @@ public class RoomManager : MonoBehaviour {
         yield return new WaitForSecondsRealtime(1);
 
         /// Fade In
-        TimeScaleManager.Instance.AddTimeScaleShift(0, 1);
+        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
         if (RoomTransitionLoader.Instance != null) {
             RoomTransitionLoader.Instance.FadeIn();
         }

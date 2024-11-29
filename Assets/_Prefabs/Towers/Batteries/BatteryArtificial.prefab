@@ -279,6 +279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8261878352563687149}
   - component: {fileID: 7444131317523042129}
+  - component: {fileID: 4373383054759055113}
   - component: {fileID: 4599444933127425051}
   m_Layer: 8
   m_Name: BatteryArtificial
@@ -324,6 +325,31 @@ MonoBehaviour:
   manaConnectionPrefab: {fileID: 3675905743181266567, guid: 32f72b3a1c0ded342a98f3af9cd3a05e,
     type: 3}
   areaIndicator: {fileID: 8188600795943318727}
+--- !u!114 &4373383054759055113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5849095967782946194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f600c5941852404797ee6ec4a0a93aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 7444131317523042129}
+  defaultHPAttributes:
+    curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
+    health: 10
+    defense: 0
+    fireRes: 0
+    iceRes: 0
+    shockRes: 0
+    poisonRes: 0
+    healModifier: 0
+  iFrameProperties:
+    settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
+    duration: 0.2
 --- !u!136 &4599444933127425051
 CapsuleCollider:
   m_ObjectHideFlags: 0
