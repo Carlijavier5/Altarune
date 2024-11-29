@@ -2,85 +2,65 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public partial class GolemSlither {
-    public class State_ZigZag : State<Slither_Input> {
 
-        private NavMeshAgent agent;
+    [Header("Zig Attack")]
+    [SerializeField] private SlitherZig slitherZig;
+    [SerializeField] private int zigDamage;
+    [SerializeField] private float zigChargeTime, zigChargeWait;
+
+    public class State_ZigAnticipate : State<Slither_Input> {
 
         public override void Enter(Slither_Input input) {
-            agent = input.golemSlither.navMeshAgent;
-
-            agent.enabled = false;
-            input.golemSlither.controller.enabled = true;
-
-            ZigZag(input);
+            GolemSlither gs = input.golemSlither;
+            gs.navMeshAgent.ResetPath();
+            gs.slitherZig.DoZig(gs.transform.position,
+                                input.aggroTarget.transform.position);
         }
 
         public override void Update(Slither_Input input) { }
 
-        public override void Exit(Slither_Input input) {
-            input.golemSlither.controller.enabled = false;
-            agent.enabled = true;
-        }
-
-        private void ZigZag(Slither_Input input) {
-            if (input.golemSlither.controller) {
-                Vector3 golemSlitherPosition = input.golemSlither.controller.transform.position;
-                Vector3 targetPosition = input.aggroTarget.transform.position;
-
-                Vector3 distanceToTargetExtended = (targetPosition - golemSlitherPosition) * 1.3f;
-
-                Vector3 distance1 = golemSlitherPosition + distanceToTargetExtended / 3.0f;
-                Vector3 distance2 = golemSlitherPosition + (2.0f * distanceToTargetExtended / 3.0f);
-                Vector3 distance3 = golemSlitherPosition + (3.0f * distanceToTargetExtended / 3.0f);
-
-                Vector3 offset1 = new(distanceToTargetExtended.z / 3.0f, 0, -distanceToTargetExtended.x / 3.0f);
-                Vector3 offset2 = new(-distanceToTargetExtended.z / 3.0f, 0, distanceToTargetExtended.x / 3.0f);
-                Vector3 offset3 = new(distanceToTargetExtended.z / 3.0f, 0, -distanceToTargetExtended.x / 3.0f);
-
-                Vector3 position1 = distance1 + offset1;
-                Vector3 position2 = distance2 + offset2;
-                Vector3 position3 = distance3 + offset3;
-
-                input.golemSlither.Zig(position1, position2, position3);
-            }
-        }
+        public override void Exit(Slither_Input input) { }
     }
 
-    private class State_ChargingZigZag : State<Slither_Input> {
+    private class State_ZigCharge : State<Slither_Input> {
 
-        private NavMeshAgent _agent;
-        private float chargeTimer;
-        private readonly float chargeTime = 0.75f;
-        private readonly float chargeAmplitude = 0.2f;
-        private Vector3 positionAnchor;
+        GolemSlither gs;
+        private float timer;
+        private int segmentIndex;
 
         public override void Enter(Slither_Input input) {
-            _agent = input.golemSlither.navMeshAgent;
-            positionAnchor = input.golemSlither.transform.position;
-
-            input.golemSlither.shouldChange = false;
-            _agent.ResetPath();
+            gs = input.golemSlither;
+            gs.navMeshAgent.enabled = false;
+            segmentIndex = 0;
+            SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
+            segment.DoDamage(gs.zigDamage);
         }
 
         public override void Update(Slither_Input input) {
-            Transform t = input.golemSlither.transform;
-            Quaternion targetRotation = Quaternion.LookRotation(input.golemSlither.player.transform.position - t.position, Vector3.up);
-            t.rotation = Quaternion.RotateTowards(t.rotation, targetRotation, input.golemSlither.DeltaTime * _agent.angularSpeed);
-
-            chargeTimer = Mathf.MoveTowards(chargeTimer, chargeTime, Time.deltaTime * input.golemSlither.TimeScale);
-            float chargePercent = chargeTimer / chargeTime;
-            t.position = new Vector3(positionAnchor.x + Random.Range(-chargeAmplitude,
-                                                        chargeAmplitude) * chargePercent,
-                                     positionAnchor.y,
-                                     positionAnchor.z + Random.Range(-chargeAmplitude,
-                                                        chargeAmplitude) * chargePercent);
-            if (chargePercent >= 1) {
-                input.stateMachine.SetState(new State_ZigZag());
+            if (segmentIndex < gs.slitherZig.segments.Length) {
+                if (timer < gs.zigChargeTime) {
+                    timer = Mathf.MoveTowards(timer, gs.zigChargeTime, Time.deltaTime);
+                    float lerpVal = timer / gs.zigChargeTime;
+                    SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
+                    gs.transform.position = Vector3.Lerp(segment.start, segment.end, lerpVal);
+                } else if (timer < gs.zigChargeTime + gs.zigChargeWait) {
+                    timer += Time.deltaTime;
+                } else {
+                    timer = 0;
+                    segmentIndex++;
+                    if (segmentIndex >= gs.slitherZig.segments.Length) {
+                        input.stateMachine.SetState(new State_Follow());
+                    } else {
+                        SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
+                        segment.DoDamage(gs.zigDamage);
+                    }
+                }
             }
         }
 
         public override void Exit(Slither_Input input) {
-            input.golemSlither.shouldChange = true;
+            input.golemSlither.navMeshAgent.enabled = true;
+            input.golemSlither.slitherZig.CancelZig();
         }
     }
 }

@@ -29,7 +29,7 @@ public class PlayerDamageable : Damageable {
     protected override IEnumerator ISimulateIFrame() {
         localIFrameOn = true;
         baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
-        TimeScaleManager.Instance.AddTimeScaleShift(0, timeScaleShiftDuration,
+        GM.TimeScaleManager.AddTimeScaleShift(0, timeScaleShiftDuration,
                                                     timeScaleShiftCurve);
         yield return new WaitForSeconds(iFrameProperties.duration);
         baseObject.ResetMaterials();

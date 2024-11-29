@@ -14,6 +14,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private DialogueManager dialogueManager;
     public static DialogueManager DialogueManager => instance.dialogueManager;
 
+    [SerializeField] private TimeScaleManager timeScaleManager;
+    public static TimeScaleManager TimeScaleManager => instance.timeScaleManager;
+
     void Awake() {
         if (instance) {
             Destroy(gameObject);

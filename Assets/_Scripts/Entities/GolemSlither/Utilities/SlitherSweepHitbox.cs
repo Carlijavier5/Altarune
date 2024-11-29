@@ -4,18 +4,32 @@ using UnityEngine;
 
 public class SlitherSweepHitbox : MonoBehaviour {
 
+    private const string COLOR_PARAM = "_Color";
+
     public event System.Action OnAnticipationEnd;
 
     [SerializeField] private Collider attackCollider;
+    [SerializeField] private Renderer decal;
+    [SerializeField] private float fadeTime;
+    private float timer;
+
     public bool Active => attackCollider.enabled;
 
     private readonly HashSet<Entity> contactSet = new();
+
     private float xScaleTarget;
 
     private void Awake() {
         xScaleTarget = transform.localScale.x;
         transform.localScale = new Vector3(0, transform.localScale.y,
                                            transform.localScale.z);
+
+        Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
+        color.a = 0;
+        MaterialPropertyBlock mpb = new();
+        decal.GetPropertyBlock(mpb);
+        mpb.SetColor(COLOR_PARAM, color);
+        decal.SetPropertyBlock(mpb);
     }
 
     public void DoAnticipation(Entity caster, float duration) {
@@ -36,7 +50,7 @@ public class SlitherSweepHitbox : MonoBehaviour {
         attackCollider.enabled = false;
         foreach (Entity entity in contactSet) {
             entity.TryDamage(damageAmount);
-        }
+        } StartCoroutine(IDoFade(false));
         contactSet.Clear();
     }
 
@@ -55,20 +69,20 @@ public class SlitherSweepHitbox : MonoBehaviour {
     }
 
     private IEnumerator IDoFade(bool on) {
-        yield return null;
-    }
 
-    private void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
-            && !entity.IsFaction(EntityFaction.Hostile)) {
-            contactSet.Add(entity);
-        }
-    }
+        float lerpVal, target = on ? fadeTime : 0;
+        Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
 
-    private void OnTriggerExit(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
-            && !entity.IsFaction(EntityFaction.Hostile)) {
-            contactSet.Remove(entity);
+        MaterialPropertyBlock mpb = new();
+        decal.GetPropertyBlock(mpb);
+
+        while (Mathf.Abs(target - timer) > 0) {
+            timer = Mathf.MoveTowards(timer, target, Time.deltaTime);
+            lerpVal = timer / fadeTime;
+            color.a = Mathf.Lerp(0, 1, lerpVal);
+            mpb.SetColor(COLOR_PARAM, color);
+            decal.SetPropertyBlock(mpb);
+            yield return null;
         }
     }
 }

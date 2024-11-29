@@ -39,6 +39,7 @@ public partial class GolemSentinel {
         public override void Enter(Sentinel_Input input) {
             GolemSentinel golem = input.golem;
 
+            golem.BaseLinearSpeed = golem.roamSpeed;
             Vector2 distanceRange = golem.roamDistanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 

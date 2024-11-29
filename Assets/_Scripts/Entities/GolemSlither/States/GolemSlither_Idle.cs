@@ -14,7 +14,6 @@ public partial class GolemSlither {
         private float waitTimer, waitDuration;
 
         public override void Enter(Slither_Input input) {
-            input.golemSlither.MotionDriver.Set(input.golemSlither.navMeshAgent);
             Vector2 waitRange = input.golemSlither.roamWaitTimeRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
         }
@@ -37,14 +36,15 @@ public partial class GolemSlither {
         public override void Enter(Slither_Input input) {
             GolemSlither gs = input.golemSlither;
 
+            gs.BaseLinearSpeed = gs.roamSpeed;
             Vector2 distanceRange = gs.roamDistanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 
             if (PathfindingUtils.FindRandomRoamingPoint(gs.transform.position, distance,
                                                         10, out targetLocation)) {
-                input.stateMachine.SetState(new State_Idle());
-            } else {
                 gs.navMeshAgent.SetDestination(targetLocation);
+            } else {
+                input.stateMachine.SetState(new State_Idle());
             }
         }
 
@@ -53,7 +53,7 @@ public partial class GolemSlither {
             timer += gs.DeltaTime;
             if (gs.navMeshAgent.remainingDistance <= gs.navMeshAgent.stoppingDistance
                 || timer >= gs.maxRoamDuration) {
-                input.stateMachine.SetState(new State_Idle());
+                input.golemSlither.UpdateAggro();
                 input.golemSlither.navMeshAgent.ResetPath();
             }
         }

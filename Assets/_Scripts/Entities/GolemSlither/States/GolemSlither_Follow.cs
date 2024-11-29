@@ -15,6 +15,8 @@ public partial class GolemSlither
 
         public override void Enter(Slither_Input input) {
             GolemSlither gs = input.golemSlither;
+
+            gs.BaseLinearSpeed = gs.followSpeed;
             agent = gs.navMeshAgent;
             timer = Random.Range(gs.attackWaitRange.x, gs.attackWaitRange.y);
         }
@@ -29,7 +31,7 @@ public partial class GolemSlither
                 timer = Mathf.MoveTowards(timer, 0, input.golemSlither.DeltaTime);
                 if (agent.remainingDistance < input.golemSlither.attackDistance
                         && timer <= 0) {
-                    input.golemSlither.TryAttack();
+                    TryAttack(input);
                     timer = Random.Range(input.golemSlither.attackWaitRange.x,
                                          input.golemSlither.attackWaitRange.y);
                 }
@@ -38,6 +40,18 @@ public partial class GolemSlither
 
         public override void Exit(Slither_Input input) {
             agent.ResetPath();
+        }
+
+        private void TryAttack(Slither_Input input) {
+            GolemSlither gs = input.golemSlither;
+            SlitherAttack attackType = (SlitherAttack) Random.Range(0, 2);
+            if ((attackType == SlitherAttack.Sweep || !gs.slitherZig.IsAvailable)
+                    && gs.slitherSweep.IsAvailable) {
+                input.stateMachine.SetState(new State_Chase());
+            } else if ((attackType == SlitherAttack.Zig || !gs.slitherSweep.IsAvailable)
+                        && gs.slitherZig.IsAvailable) {
+                input.stateMachine.SetState(new State_ZigAnticipate());
+            }
         }
     }
 }

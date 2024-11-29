@@ -13,7 +13,18 @@ public partial class GolemSentinel : Entity {
     [SerializeField] private AggroRange aggroRange;
     [SerializeField] private Collider attackCollider;
 
-    private float baseLinearSpeed, baseAngularSpeed;
+    private float baseLinearSpeed;
+    private float BaseLinearSpeed {
+        get => baseLinearSpeed;
+        set {
+            baseLinearSpeed = value;
+            navMeshAgent.speed = baseLinearSpeed
+                               * status.timeScale
+                               * RootMult;
+        }
+    }
+
+    private float baseAngularSpeed;
 
     void Awake() {
         OnTimeScaleSet += Golem_OnTimeScaleSet;
@@ -32,7 +43,7 @@ public partial class GolemSentinel : Entity {
     }
 
     private void Golem_OnRootSet(bool canMove) {
-        navMeshAgent.speed = baseLinearSpeed * status.timeScale * RootMult;
+        navMeshAgent.speed = BaseLinearSpeed * status.timeScale * RootMult;
     }
 
     private void Golem_OnStunSet(bool isStunned) {
@@ -44,7 +55,7 @@ public partial class GolemSentinel : Entity {
 
     private void Golem_OnTimeScaleSet(float timeScale) {
         animator.speed = timeScale;
-        navMeshAgent.speed = baseLinearSpeed * timeScale * RootMult;
+        navMeshAgent.speed = BaseLinearSpeed * timeScale * RootMult;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
 
