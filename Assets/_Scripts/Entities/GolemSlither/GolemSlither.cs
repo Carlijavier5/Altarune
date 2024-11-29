@@ -1,0 +1,144 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public partial class GolemSlither : Entity {
+
+    private enum SlitherAttack { Sweep = 0, Zig = 1 }
+
+    [Header("Setup")]
+    [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private AggroRange sweepRange, aggroRange,
+                                        deAggroRange;
+
+    private readonly StateMachine<Slither_Input> stateMachine = new();
+
+    private float baseLinearSpeed;
+    private float BaseLinearSpeed {
+        get => baseLinearSpeed;
+        set {
+            baseLinearSpeed = value;
+            navMeshAgent.speed = baseLinearSpeed
+                               * status.timeScale
+                               * RootMult;
+        }
+    }
+
+    private float baseAngularSpeed;
+
+    private Entity player;
+
+    private void Awake() {
+        transform.SetParent(null);
+
+        OnTimeScaleSet += GolemSlither_OnTimeScaleSet;
+        OnRootSet += GolemSlither_OnRootSet;
+        OnStunSet += GolemSlither_OnStunSet;
+
+        aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
+        deAggroRange.OnAggroExit += DeAggroRange_OnAggroExit;
+
+        sweepRange.OnAggroEnter += SweepRange_OnAggroEnter;
+        slitherSweep.OnCooldownEnd += TrySweep;
+        slitherSweep.OnSweepEnd += SlitherSweep_OnSweepEnd;
+        slitherZig.OnWarningComplete += SlitherZig_OnWarningComplete;
+
+        baseLinearSpeed = navMeshAgent.speed;
+        baseAngularSpeed = navMeshAgent.angularSpeed;
+
+        player = FindAnyObjectByType<Player>();
+
+        Slither_Input input = new(stateMachine, this);
+        stateMachine.Init(input, new State_Idle());
+    }
+
+    protected override void Update() {
+        base.Update();
+        stateMachine.Update();
+    }
+
+    private void UpdateAggro() {
+        Entity currentTarget = stateMachine.StateInput.aggroTarget;
+        if (!currentTarget || !deAggroRange.AggroTargets.Contains(currentTarget)) {
+            if (aggroRange.HasTarget) {
+                Entity closestTarget = aggroRange.ClosestTarget;
+                stateMachine.StateInput.SetAggroTarget(closestTarget);
+                stateMachine.SetState(new State_Follow());
+            } else {
+                stateMachine.SetState(new State_Idle()); 
+            }
+        }
+    }
+
+    private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();
+    private void DeAggroRange_OnAggroExit(Entity entity) {
+        if (entity == stateMachine.StateInput.aggroTarget) {
+            stateMachine.StateInput.SetAggroTarget(null);
+        } UpdateAggro();
+    }
+
+    private void SweepRange_OnAggroEnter(Entity _) => TrySweep();
+    private void TrySweep() {
+        if ((stateMachine.State is State_Idle
+            || stateMachine.State is State_Chase
+            || stateMachine.State is State_Follow)
+                && sweepRange.HasTarget) {
+            Entity target = sweepRange.ClosestTarget;
+            stateMachine.StateInput.SetAggroTarget(target);
+            stateMachine.SetState(new State_Sweep());
+        }
+    }
+
+    private void SlitherSweep_OnSweepEnd() {
+        if (stateMachine.State is State_Sweep) {
+            stateMachine.SetState(new State_Follow());
+        }
+    }
+
+    private void SlitherZig_OnWarningComplete() {
+        stateMachine.SetState(new State_ZigCharge());
+    }
+
+    private void GolemSlither_OnTimeScaleSet(float timeScale) {
+        navMeshAgent.speed = BaseLinearSpeed * timeScale;
+        navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
+    }
+
+    private void GolemSlither_OnStunSet(bool isStunned) {
+        if (isStunned) stateMachine.SetState(new State_Stun());
+        else UpdateAggro();
+    }
+
+    private void GolemSlither_OnRootSet(bool canMove) {
+        if (!canMove) {
+            slitherSweep.CancelSweep();
+            if (stateMachine.State is State_ZigAnticipate) {
+                slitherZig.CancelZig();
+            }
+        }
+    }
+
+    public void Ragdoll() {
+        DetachModules();
+        /// Disable ranges;
+        Destroy(gameObject, 2);
+    }
+
+    public override void Perish() {
+        base.Perish();
+        Ragdoll();
+    }
+}
+
+public partial class GolemSlither {
+
+    public class State_Stun : State<Slither_Input> {
+
+        public override void Enter(Slither_Input input) { }
+
+        public override void Update(Slither_Input input) { }
+
+        public override void Exit(Slither_Input input) { }
+    }
+}

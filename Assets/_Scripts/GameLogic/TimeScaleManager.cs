@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class TimeScaleManager : MonoBehaviour {
 
-    private static TimeScaleManager instance;
-    public static TimeScaleManager Instance => instance;
-
     private readonly LinkedList<TimeScaleCore> coreList = new();
     private readonly Stack<TimeScaleCore> terminateStack = new();
 
-    void Awake() {
-        if (instance) {
-            Destroy(gameObject);
-        } else instance = this;
+    private float globalTimeScale = 1;
+    public float GlobalTimeScale {
+        get => globalTimeScale;
+        set {
+            globalTimeScale = Mathf.Clamp(value, 0, 2);
+        }
     }
 
     void Update() {
-        float timeScale = 1;
+        float timeScale = globalTimeScale;
         foreach (TimeScaleCore core in coreList) {
             if (core.Update()) terminateStack.Push(core);
             timeScale *= core.timeScale;
