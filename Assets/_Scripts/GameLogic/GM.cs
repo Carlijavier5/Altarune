@@ -11,6 +11,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private AudioManager audioManager;
     public static AudioManager AudioManager => instance.audioManager;
 
+    [SerializeField] private DialogueManager dialogueManager;
+    public static DialogueManager DialogueManager => instance.dialogueManager;
+
     void Awake() {
         if (instance) {
             Destroy(gameObject);
