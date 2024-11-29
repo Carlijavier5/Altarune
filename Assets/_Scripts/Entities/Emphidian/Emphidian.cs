@@ -1,68 +1,67 @@
 using System.Collections;
 using UnityEngine;
 
-public class SnakeBehavior : Entity {
-    [SerializeField] private float _timeBetweenMove = 0.03f;
-    [SerializeField] private float _speed = 2.0f;
-    [SerializeField] private float _wiggleAmplitude = 0.5f; // Controls the wiggle intensity
-    [SerializeField] private float _wiggleFrequency = 2.0f; // Controls how fast the wiggle occurs
-    [SerializeField] private GameObject _projectilePrefab;
-    [SerializeField] private Transform _shootPoint; // Gun barrel
-    [SerializeField] private float _shootInterval = 3.7f; // Time between shots
-    [SerializeField] private float _projectileSpeed = 5.0f; // Speed of the projectile
-    [SerializeField] private int _damage = 1; // Damage dealt by the projectile
-    [SerializeField] private float _stopDuration = 1.0f; // Time the snake stops to shoot
-    [SerializeField] private float _playerBias = 1.0f;
+public class Emphidian : Entity {
 
-    private float _moveTimer = 0f;
-    private float _shootTimer = 0f;
-    private Collider _collider;
-    private Rigidbody _rb;
+    [SerializeField] private float timeBetweenMove = 0.03f;
+    [SerializeField] private float speed = 2.0f;
+    [SerializeField] private float wiggleAmplitude = 0.5f; // Controls the wiggle intensity
+    [SerializeField] private float wiggleFrequency = 2.0f; // Controls how fast the wiggle occurs
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform shootPoint; // Gun barrel
+    [SerializeField] private float shootInterval = 3.7f; // Time between shots
+    [SerializeField] private float projectileSpeed = 5.0f; // Speed of the projectile
+    [SerializeField] private int damage = 1; // Damage dealt by the projectile
+    [SerializeField] private float stopDuration = 1.0f; // Time the snake stops to shoot
+    [SerializeField] private float playerBias = 1.0f;
+
+    private float moveTimer = 0f;
+    private float shootTimer = 0f;
+    private Collider coll;
     private Vector3 destination;
-    private bool _isShooting = false;
-    private Player _player;
+    private bool isShooting = false;
+    private Player player;
 
-    void Start() {
-        _collider = GetComponent<Collider>();
-        _rb = GetComponent<Rigidbody>();
-        _player = FindObjectOfType<Player>();
+    void Awake() {
+        coll = GetComponent<Collider>();
+        player = FindObjectOfType<Player>();
         destination = GetDestination();
     }
 
     protected override void Update() {
         base.Update();
 
-        if (_isShooting) return; // Stop when shooting
+        if (isShooting) return; // Stop when shooting
 
         Move();
 
-        _shootTimer += Time.deltaTime;
-        if (_shootTimer >= _shootInterval) {
+        shootTimer += Time.deltaTime;
+        if (shootTimer >= shootInterval) {
             StartShooting(); // Begin shooting immediately
-            _shootTimer = 0f;
+            shootTimer = 0f;
         }
     }
 
     private void StartShooting() {
-        _isShooting = true; // Stop moving
+        isShooting = true; // Stop moving
         ShootProjectile(); // Shoot immediately
         StartCoroutine(ResumeMovementAfterShoot());
     }
 
     private IEnumerator ResumeMovementAfterShoot() {
-        yield return new WaitForSeconds(_stopDuration); // PAUSE!
-        _isShooting = false; // RESUME!
+        yield return new WaitForSeconds(stopDuration); // PAUSE!
+        isShooting = false; // RESUME!
     }
 
     private void ShootProjectile() {
 
         // Rotate snake to face the player before shooting
-        Vector3 directionToPlayer = (_player.transform.position - transform.position).normalized;
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
         transform.rotation = lookRotation;
 
         // Spawn bullet
-        GameObject projectile = Instantiate(_projectilePrefab, _shootPoint.position, _shootPoint.rotation);
+        GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
 
         if (projectile == null) {
             Debug.LogError("Failed to instantiate projectile.");
@@ -72,7 +71,7 @@ public class SnakeBehavior : Entity {
         // Set bullet velocity toward the player
         Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
         if (projectileRb != null) {
-            projectileRb.velocity = directionToPlayer * _projectileSpeed;
+            projectileRb.velocity = directionToPlayer * projectileSpeed;
         }
 
 
@@ -88,15 +87,15 @@ public class SnakeBehavior : Entity {
     }
 
     private Vector3 GetDestination() {
-        Bounds bounds = _collider.bounds;
+        Bounds bounds = coll.bounds;
         Vector3 randomPosition = new Vector3();
 
         randomPosition.x = Random.Range(bounds.min.x, bounds.max.x);
         randomPosition.z = Random.Range(bounds.min.z, bounds.max.z);
 
         // 78% bias to player
-        if (_player != null) {
-            Vector3 playerPosition = _player.transform.position;
+        if (player != null) {
+            Vector3 playerPosition = player.transform.position;
             randomPosition = Vector3.Lerp(randomPosition, playerPosition, 0.78f); 
         }
 
@@ -106,24 +105,24 @@ public class SnakeBehavior : Entity {
     private void Move() {
         Vector3 direction = RotateSnake();
 
-        float wiggleOffset = Mathf.Sin(Time.time * _wiggleFrequency) * _wiggleAmplitude; // A*sin(wt) wiggle pattern
+        float wiggleOffset = Mathf.Sin(Time.time * wiggleFrequency) * wiggleAmplitude; // A*sin(wt) wiggle pattern
         Vector3 wiggleDirection = new Vector3(-direction.z, 0, direction.x) * wiggleOffset; // Perpendicular to main direction
-        transform.position = transform.position + (direction + wiggleDirection) * _speed * Time.deltaTime;
+        transform.position = transform.position + (direction + wiggleDirection) * speed * Time.deltaTime;
 
         if (Vector3.Distance(destination, transform.position) < 0.1f) {
-            _moveTimer += Time.deltaTime;
+            moveTimer += Time.deltaTime;
         }
 
-        if (_moveTimer >= _timeBetweenMove) {
+        if (moveTimer >= timeBetweenMove) {
             destination = GetDestination(); // Get new destination
-            _moveTimer = 0f;
+            moveTimer = 0f;
         }
     }
 
     private Vector3 RotateSnake() {
         Vector3 direction = (destination - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _speed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * speed);
         return direction;
     }
 }
