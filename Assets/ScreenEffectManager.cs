@@ -11,6 +11,7 @@ public class ScreenEffectManager : MonoBehaviour
     [Header("Hit Effect")] [SerializeField]
     private Material hitMaterial;
     [SerializeField] private float hitRadius = 2.1f;
+    [SerializeField] private float hitDelay = 0.0f;
     [SerializeField] private float hitDuration = 0.3f;
     
     // ------------------------ LOCAL MEMBERS -------------------------------
@@ -38,12 +39,9 @@ public class ScreenEffectManager : MonoBehaviour
         effectRunning = true;
         elapsedTime = 0f;
 
-        hitMaterial.DOFloat(hitRadius, "_Radius", hitDuration);
-        yield return new WaitForSeconds(hitDuration);
+        hitMaterial.DOFloat(hitRadius, "_Radius", hitDelay);
+        yield return new WaitForSeconds(hitDelay);
         hitMaterial.DOFloat(10f, "_Radius", hitDuration);
         effectRunning = false;
-    }
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) HitEffect();
     }
 }

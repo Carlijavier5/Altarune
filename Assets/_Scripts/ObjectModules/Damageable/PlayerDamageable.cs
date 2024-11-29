@@ -16,8 +16,13 @@ public class PlayerDamageable : Damageable {
                 int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
                 runtimeHP.DoDamage(processedAmount);
                 baseObject.PropagateDamage(processedAmount);
+                
                 StartCoroutine(ISimulateIFrame());
-
+                //ScreenSpaceEffect
+                ScreenEffectManager.Instance.HitEffect();
+                //Camera shake
+                CameraShake.Instance.DoCameraShake();
+                
                 if (runtimeHP.Health <= 0) {
                     ToggleIFrame(true);
                     GM.Instance.DoGameOver();
