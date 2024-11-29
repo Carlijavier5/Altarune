@@ -16,8 +16,6 @@ public class SummonController : MonoBehaviour {
     [SerializeField] private Entity summoner;
     [SerializeField] private ManaSource manaSource;
 
-    [SerializeField] private PHSelector phSelector;
-
     [SerializeField] private TowerData[] towerBlueprints;
     [SerializeField] private BatteryData batteryData;
 
@@ -25,6 +23,7 @@ public class SummonController : MonoBehaviour {
     public ManaSource ManaSource => manaSource;
 
     private SummonType selectedType;
+    private int selectedIndex;
     private Vector2 prevMousePos;
 
     void Awake() {
@@ -54,7 +53,10 @@ public class SummonController : MonoBehaviour {
                 SetSelectionType(selectedType == SummonType.Battery ? SummonType.None : SummonType.Battery);
                 break;
             case SummonType.Tower:
-                SetSelectionType(selectedType == SummonType.Tower ? SummonType.None : SummonType.Tower, slotNum - 1);
+                int index = slotNum - 1;
+                SetSelectionType(selectedType == SummonType.Tower
+                                 && index == selectedIndex
+                                 ? SummonType.None : SummonType.Tower, index);
                 break; 
         }
     }
@@ -69,12 +71,12 @@ public class SummonController : MonoBehaviour {
     private void SetSelectionType(SummonType selectionType, int index = 0) {
         StartCoroutine(DelayCast());
         selectedType = selectionType;
+        selectedIndex = selectedType == SummonType.None ? -1 : index;
 
         SummonData summonData = selectedType == SummonType.Battery ? batteryData
                               : selectedType == SummonType.Tower ? towerBlueprints[index]
                               : null;
         OnSummonSelected?.Invoke(selectedType, summonData);
-        phSelector.SetSelectedImage(selectionType, index);
     }
 
     private IEnumerator DelayCast() {
