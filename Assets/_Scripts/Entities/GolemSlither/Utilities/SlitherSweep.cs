@@ -11,6 +11,8 @@ public class SlitherSweep : MonoBehaviour {
     [SerializeField] private int damageAmount;
     [SerializeField] private float sweepDuration = 0.3f,
                                    sweepCooldown, interruptStunDuration;
+    public bool Available => timer <= 0 && !hitbox.Active;
+    private float timer;
 
     void Awake() {
         hitbox.OnAnticipationEnd += Hitbox_OnAnctipationEnd;
@@ -26,25 +28,28 @@ public class SlitherSweep : MonoBehaviour {
 
     public void DoSweep(Entity caster, Quaternion lookRotation) {
         StopAllCoroutines();
+        StartCoroutine(IDoCooldown(caster));
         ArrangeHitbox(caster, lookRotation);
         castRangeEnforcer.Toggle(true);
         hitbox.DoAnticipation(caster, sweepDuration);
     }
 
+    public void CancelSweep() => hitbox.CancelSweep();
+
     private void ArrangeHitbox(Entity caster, Quaternion lookRotation) {
-        transform.position = caster.transform.position;
-        transform.rotation = lookRotation;
+        transform.SetPositionAndRotation(caster.transform.position, lookRotation);
     }
 
     private void Hitbox_OnAnctipationEnd() {
         castRangeEnforcer.Toggle(false);
         hitbox.DoDamage(damageAmount);
-        StopAllCoroutines();
-        StartCoroutine(IDoCooldown());
     }
 
-    private IEnumerator IDoCooldown() {
-        yield return new WaitForSeconds(sweepCooldown);
-        OnCooldownEnd?.Invoke();
+    private IEnumerator IDoCooldown(Entity caster) {
+        timer = sweepCooldown;
+        while (timer > 0) {
+            timer -= caster.DeltaTime;
+            yield return null;
+        } OnCooldownEnd?.Invoke();
     }
 }

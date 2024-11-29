@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public partial class GolemSlither : Entity
-{
-    private readonly StateMachine<Slither_Input> stateMachine = new();
+public partial class GolemSlither : Entity {
+
+    private enum SlitherAttack { Sweep = 0, ZigZag = 1 }
 
     [Header("Setup")]
     [SerializeField] private NavMeshAgent navMeshAgent;
@@ -15,21 +14,18 @@ public partial class GolemSlither : Entity
     [SerializeField] private CharacterController controller;
     [SerializeField] private Transform zigZagPoint;
 
-    private float baseLinearSpeed, baseAngularSpeed;
-
     [Header("Attacks")]
     [SerializeField] private SlitherSweep slitherSweep;
     [SerializeField] private GolemSlither_ZigHitbox zigHitbox1, zigHitbox2,
                                                     zigHitbox3;
 
     [Header("Attributes")]
-    [SerializeField] private float chaseDistance = 5f;
-    [SerializeField] private float sweepDistance = 2.5f;
-    [SerializeField] private float sweepDuration = 1.5f;
-    [SerializeField] private float followSpeed = 0.75f;
     [SerializeField] private float chaseSpeed = 3f;
     [SerializeField] private float sweepCooldownTime = 1f;
     [SerializeField] private float zigCooldownTime = 1f;
+
+    private readonly StateMachine<Slither_Input> stateMachine = new();
+    private float baseLinearSpeed, baseAngularSpeed;
 
     private Entity player;
 
@@ -55,18 +51,51 @@ public partial class GolemSlither : Entity
         stateMachine.Init(input, new State_Idle());
     }
 
+    protected override void Update() {
+        base.Update();
+        stateMachine.Update();
+    }
+
+    private void TryAttack() {
+        if (stateMachine.StateInput.aggroTarget) {
+            SlitherAttack attackType = (SlitherAttack) Random.Range(0, 2);
+            if (attackType == SlitherAttack.Sweep
+                && slitherSweep.Available) {
+                Vector3 dir = stateMachine.StateInput.aggroTarget.transform.position
+                            - transform.position;
+                Quaternion lookRotation = Quaternion.LookRotation(dir, Vector3.up);
+                slitherSweep.DoSweep(this, lookRotation);
+            } else if (attackType == SlitherAttack.ZigZag
+                       && (false)) {
+                /// Do Zig Zag here
+            }
+        } else {
+            UpdateAggro();
+        }
+    }
+
+    private void UpdateAggro() {
+        
+    }
+
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();
     private void DeAggroRange_OnAggroExit(Entity _) => UpdateAggro();
 
     private void SweepRange_OnAggroEnter(Entity _) => TrySweep();
     private void TrySweep() {
-        if (stateMachine.State is State_Idle
+        if ((stateMachine.State is State_Idle
             || stateMachine.State is State_Chase
+            || stateMachine.State is State_Follow)
                 && sweepRange.HasTarget) {
             Entity target = sweepRange.ClosestTarget;
             stateMachine.StateInput.SetAggroTarget(target);
             stateMachine.SetState(new State_Sweep());
         }
+    }
+
+    private void GolemSlither_OnTimeScaleSet(float timeScale) {
+        navMeshAgent.speed = baseLinearSpeed * timeScale;
+        navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
     }
 
     private void GolemSlither_OnStunSet(bool isStunned) {
@@ -78,20 +107,6 @@ public partial class GolemSlither : Entity
         if (!canMove) {
             /// Cancel Sweep or Zig Zag
         }
-    }
-
-    protected override void Update() {
-        base.Update();
-        stateMachine.Update();
-    }
-
-    private void GolemSlither_OnTimeScaleSet(float timeScale) {
-        navMeshAgent.speed = baseLinearSpeed * timeScale;
-        navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
-    }
-
-    private void UpdateAggro() {
-        
     }
 
     #region Behavior

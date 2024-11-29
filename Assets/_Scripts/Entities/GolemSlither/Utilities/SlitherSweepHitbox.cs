@@ -7,6 +7,7 @@ public class SlitherSweepHitbox : MonoBehaviour {
     public event System.Action OnAnticipationEnd;
 
     [SerializeField] private Collider attackCollider;
+    public bool Active => attackCollider.enabled;
 
     private readonly HashSet<Entity> contactSet = new();
     private float xScaleTarget;
