@@ -63,7 +63,7 @@ public abstract partial class BaseObject {
     /// <returns> True if the object is damageable; </returns>
     public bool TryDamage(int amount, ElementType element = ElementType.Physical) {
         EventResponse eRes = new();
-        OnTryDamage?.Invoke(amount, element, new());
+        OnTryDamage?.Invoke(amount, element, eRes);
         return eRes.received;
     }
 

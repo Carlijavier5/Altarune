@@ -6,13 +6,25 @@ using UnityEngine.AI;
 public partial class GolemSlither : Entity {
 
     private enum SlitherAttack { Sweep = 0, Zig = 1 }
+    private const string WALK_SPEED_PARAM = "WalkSpeed";
 
     [Header("Setup")]
+    [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange sweepRange, aggroRange,
                                         deAggroRange;
 
     private readonly StateMachine<Slither_Input> stateMachine = new();
+
+    private float baseAnimatorSpeed;
+    public float BaseAnimatorSpeed {
+        get => baseAnimatorSpeed;
+        set {
+            baseAnimatorSpeed = value;
+            animator.speed = baseAnimatorSpeed
+                           * status.timeScale;
+        }
+    }
 
     private float baseLinearSpeed;
     private float BaseLinearSpeed {
@@ -26,8 +38,7 @@ public partial class GolemSlither : Entity {
     }
 
     private float baseAngularSpeed;
-
-    private Entity player;
+    private int speedParam;
 
     private void Awake() {
         transform.SetParent(null);
@@ -44,10 +55,11 @@ public partial class GolemSlither : Entity {
         slitherSweep.OnSweepEnd += SlitherSweep_OnSweepEnd;
         slitherZig.OnWarningComplete += SlitherZig_OnWarningComplete;
 
+        baseAnimatorSpeed = animator.speed;
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = navMeshAgent.angularSpeed;
 
-        player = FindAnyObjectByType<Player>();
+        speedParam = Animator.StringToHash(WALK_SPEED_PARAM);
 
         Slither_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Idle());
@@ -56,6 +68,8 @@ public partial class GolemSlither : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
+        animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
+                                      / Mathf.Max(1, baseLinearSpeed));
     }
 
     private void UpdateAggro() {
@@ -101,6 +115,7 @@ public partial class GolemSlither : Entity {
     }
 
     private void GolemSlither_OnTimeScaleSet(float timeScale) {
+        animator.speed = baseAnimatorSpeed * timeScale;
         navMeshAgent.speed = BaseLinearSpeed * timeScale;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale;
     }
@@ -119,15 +134,16 @@ public partial class GolemSlither : Entity {
         }
     }
 
-    public void Ragdoll() {
-        DetachModules();
-        /// Disable ranges;
-        Destroy(gameObject, 2);
-    }
-
     public override void Perish() {
         base.Perish();
-        Ragdoll();
+        DetachModules();
+        enabled = false;
+
+        aggroRange.Disable();
+        deAggroRange.Disable();
+        sweepRange.Disable();
+
+        Destroy(gameObject, 2);
     }
 }
 
@@ -135,10 +151,12 @@ public partial class GolemSlither {
 
     public class State_Stun : State<Slither_Input> {
 
-        public override void Enter(Slither_Input input) { }
+        public override void Enter(Slither_Input _) { }
 
-        public override void Update(Slither_Input input) { }
+        public override void Update(Slither_Input _) { }
 
-        public override void Exit(Slither_Input input) { }
+        public override void Exit(Slither_Input input) {
+            input.SetAggroTarget(null);
+        }
     }
 }

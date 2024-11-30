@@ -30,8 +30,6 @@ public partial class SovereignGolem {
             }
         }
 
-        public override void Exit(Sovereign_Input input) {
-            input.microMachine.SetState(new State_CollapsionSlam());
-        }
+        public override void Exit(Sovereign_Input input) { }
     }
 }

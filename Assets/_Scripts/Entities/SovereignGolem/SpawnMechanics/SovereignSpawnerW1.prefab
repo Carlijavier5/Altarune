@@ -54,9 +54,13 @@ MonoBehaviour:
   spawnGroups:
   - entityPrefab: {fileID: 5593935329474835780, guid: 69d8123096bdf8a42aae69d784314c45,
       type: 3}
-    spawnCount: 3
+    spawnCount: 1
     needsNavMesh: 1
-  maxEnemiesAtOnce: 2
+  - entityPrefab: {fileID: 670351108798461099, guid: fbe79cdc26e288c43a4557cede831997,
+      type: 3}
+    spawnCount: 1
+    needsNavMesh: 1
+  maxEnemiesAtOnce: 3
   spawnDelayRange: {x: 1, y: 2}
   spawnRadius: {x: 1, y: 2}
 --- !u!114 &6039221916975107870

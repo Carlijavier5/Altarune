@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public partial class GolemSlither
-{
+public partial class GolemSlither {
+
     [Header("Follow State")]
     [SerializeField] private float attackDistance = 5f;
     [SerializeField] private float followSpeed;
@@ -19,14 +19,13 @@ public partial class GolemSlither
             gs.BaseLinearSpeed = gs.followSpeed;
             agent = gs.navMeshAgent;
             timer = Random.Range(gs.attackWaitRange.x, gs.attackWaitRange.y);
+            gs.animator.SetTrigger(IDLE_PARAM);
         }
 
         public override void Update(Slither_Input input) {
             if (input.aggroTarget) {
                 agent.SetDestination(input.aggroTarget.transform.position);
-                agent.speed = input.golemSlither.followSpeed
-                            * input.golemSlither.RootMult
-                            * input.golemSlither.TimeScale;
+                input.golemSlither.BaseLinearSpeed = input.golemSlither.followSpeed;
 
                 timer = Mathf.MoveTowards(timer, 0, input.golemSlither.DeltaTime);
                 if (agent.remainingDistance < input.golemSlither.attackDistance
@@ -38,7 +37,7 @@ public partial class GolemSlither
             } else input.golemSlither.UpdateAggro();
         }
 
-        public override void Exit(Slither_Input input) {
+        public override void Exit(Slither_Input _) {
             agent.ResetPath();
         }
 

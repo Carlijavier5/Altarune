@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public partial class GolemSlither {
 
     [Header("Sweep Attack")]
-    [SerializeField] private SlitherSweep slitherSweep;
+    [SerializeField] private GolemSweep slitherSweep;
     [SerializeField] private float chaseDuration, chaseSpeed = 3f;
 
     public class State_Chase : State<Slither_Input> {
@@ -55,9 +55,11 @@ public partial class GolemSlither {
         public override void Update(Slither_Input input) {
             Transform t = input.golemSlither.transform;
             t.rotation = Quaternion.RotateTowards(t.rotation, lookRotation, 
-                input.golemSlither.DeltaTime * input.golemSlither.navMeshAgent.angularSpeed * 20);
+                input.golemSlither.DeltaTime * input.golemSlither.navMeshAgent.angularSpeed * 5);
         }
 
-        public override void Exit(Slither_Input input) { }
+        public override void Exit(Slither_Input input) {
+            input.golemSlither.animator.speed = input.golemSlither.TimeScale;
+        }
     }
 }

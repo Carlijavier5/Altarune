@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlitherSweepHitbox : MonoBehaviour {
+public class GolemSweepHitbox : MonoBehaviour {
 
     private const string COLOR_PARAM = "_Color";
 
@@ -15,7 +15,7 @@ public class SlitherSweepHitbox : MonoBehaviour {
 
     public bool Active => attackCollider.enabled;
 
-    private readonly HashSet<Entity> contactSet = new();
+    private readonly HashSet<BaseObject> contactSet = new();
 
     private float xScaleTarget;
 
@@ -48,7 +48,7 @@ public class SlitherSweepHitbox : MonoBehaviour {
 
     public void DoDamage(int damageAmount) {
         attackCollider.enabled = false;
-        foreach (Entity entity in contactSet) {
+        foreach (BaseObject entity in contactSet) {
             entity.TryDamage(damageAmount);
         } StartCoroutine(IDoFade(false));
         contactSet.Clear();
@@ -83,6 +83,19 @@ public class SlitherSweepHitbox : MonoBehaviour {
             mpb.SetColor(COLOR_PARAM, color);
             decal.SetPropertyBlock(mpb);
             yield return null;
+        }
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out BaseObject baseObject)
+                && !baseObject.IsFaction(EntityFaction.Hostile)) {
+            contactSet.Add(baseObject);
+        }
+    }
+
+    void OnTriggerExit(Collider other) {
+        if (other.TryGetComponent(out BaseObject baseObject)) {
+            contactSet.Remove(baseObject);
         }
     }
 }

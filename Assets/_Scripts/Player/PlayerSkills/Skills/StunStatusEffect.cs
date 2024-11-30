@@ -9,7 +9,7 @@ public class StunStatusEffect : EntityEffect
     public StunStatusEffect(float duration) { this.duration = duration; }
 
     public override void Apply(Entity entity, bool isNew) {
-        CCEffects = new() { root = new() { duration = duration } };
+        CCEffects = new() { stun = new() { duration = duration } };
     }
 
     public override void Terminate(Entity entity) { }

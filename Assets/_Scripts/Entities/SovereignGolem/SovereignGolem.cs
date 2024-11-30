@@ -91,7 +91,7 @@ public partial class SovereignGolem : Entity {
     private void PhaseMaster_OnAttackEnd() {
         if (macroMachine.StateInput == null
             || microMachine.State is State_Idle
-            || microMachine.State is State_CollapsionSlam) return;
+            || microMachine.State is State_Roar) return;
         macroMachine.StateInput.microMachine
         .SetState(new State_Idle(macroMachine.StateInput.CurrentPhase));
     }
@@ -154,7 +154,11 @@ public partial class SovereignGolem {
             if (timer > input.sovereign.roarClip.length) {
                 SovereignGolem sg = input.sovereign;
                 sg.DoMacroTransition();
-                input.microMachine.SetState(new State_Idle(sg.stagingPhase));
+                if (input.macroMachine.State is MacroState_Macro3) {
+                    input.microMachine.SetState(new State_CollapsionSlam());
+                } else {
+                    input.microMachine.SetState(new State_Idle(sg.stagingPhase));
+                }
             }
         }
 

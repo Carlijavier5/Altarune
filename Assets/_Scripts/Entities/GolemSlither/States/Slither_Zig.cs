@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 public partial class GolemSlither {
 
+    private const string ZIG_PARAM = "Zig";
+
     [Header("Zig Attack")]
     [SerializeField] private SlitherZig slitherZig;
     [SerializeField] private int zigDamage;
@@ -15,6 +17,7 @@ public partial class GolemSlither {
             gs.navMeshAgent.ResetPath();
             gs.slitherZig.DoZig(gs.transform.position,
                                 input.aggroTarget.transform.position);
+            gs.animator.SetTrigger(ZIG_PARAM);
         }
 
         public override void Update(Slither_Input input) { }
@@ -24,7 +27,7 @@ public partial class GolemSlither {
 
     private class State_ZigCharge : State<Slither_Input> {
 
-        GolemSlither gs;
+        private GolemSlither gs;
         private float timer;
         private int segmentIndex;
 
@@ -32,8 +35,7 @@ public partial class GolemSlither {
             gs = input.golemSlither;
             gs.navMeshAgent.enabled = false;
             segmentIndex = 0;
-            SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
-            segment.DoDamage(gs.zigDamage);
+            DoSegment(input);
         }
 
         public override void Update(Slither_Input input) {
@@ -51,8 +53,7 @@ public partial class GolemSlither {
                     if (segmentIndex >= gs.slitherZig.segments.Length) {
                         input.stateMachine.SetState(new State_Follow());
                     } else {
-                        SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
-                        segment.DoDamage(gs.zigDamage);
+                        DoSegment(input);
                     }
                 }
             }
@@ -61,6 +62,14 @@ public partial class GolemSlither {
         public override void Exit(Slither_Input input) {
             input.golemSlither.navMeshAgent.enabled = true;
             input.golemSlither.slitherZig.CancelZig();
+        }
+
+        private void DoSegment(Slither_Input input) {
+            SlitherZigSegment segment = gs.slitherZig.segments[segmentIndex];
+            Vector3 lookDir = segment.end - segment.start;
+            lookDir.y = 0;
+            input.golemSlither.transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
+            segment.DoDamage(gs.zigDamage);
         }
     }
 }
