@@ -2,6 +2,8 @@ using UnityEngine;
 
 public partial class GolemSlither {
 
+    private const string IDLE_PARAM = "Idle";
+
     [Header("Idle/Roam State")]
 
     [SerializeField] private Vector2 roamWaitTimeRange;
@@ -16,6 +18,7 @@ public partial class GolemSlither {
         public override void Enter(Slither_Input input) {
             Vector2 waitRange = input.golemSlither.roamWaitTimeRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
+            input.golemSlither.animator.SetTrigger(IDLE_PARAM);
         }
 
         public override void Update(Slither_Input input) {

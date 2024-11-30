@@ -1,17 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-public class SlitherSweep : MonoBehaviour {
+public class GolemSweep : MonoBehaviour {
 
     public event System.Action OnSweepEnd;
     public event System.Action OnCooldownEnd;
 
-    [SerializeField] private Animator animator;
-    [SerializeField] private SlitherSweepHitbox hitbox;
+    [SerializeField] private GolemSweepAnimatorLink animatorLink;
+    [SerializeField] private GolemSweepHitbox hitbox;
     [SerializeField] private CastRangeEnforcer castRangeEnforcer;
     [SerializeField] private int damageAmount;
-    [SerializeField] private float sweepDuration = 0.3f, afterSweepWaitTime,
+    [SerializeField] private float sweepDuration = 0.3f,
                                    sweepCooldown, interruptStunDuration;
+
     public bool IsAvailable => cooldownTimer <= 0 && !hitbox.Active;
     private float cooldownTimer;
 
@@ -34,6 +35,7 @@ public class SlitherSweep : MonoBehaviour {
         ArrangeHitbox(caster, lookRotation);
         castRangeEnforcer.Toggle(true);
         hitbox.DoAnticipation(caster, sweepDuration);
+        animatorLink.DoAnticipation(sweepDuration);
     }
 
     public void CancelSweep() {
@@ -46,15 +48,16 @@ public class SlitherSweep : MonoBehaviour {
     }
 
     private void Hitbox_OnAnctipationEnd() {
+        animatorLink.CommitSweep();
         castRangeEnforcer.Toggle(false);
         hitbox.DoDamage(damageAmount);
         StartCoroutine(IAfterSweepWait());
     }
 
     private IEnumerator IAfterSweepWait() {
-        float timer = afterSweepWaitTime;
+        float timer = animatorLink.CommitLength;
         while (timer > 0) {
-            timer -= Time.deltaTime * animator.speed;
+            timer -= animatorLink.DeltaTime;
             yield return null;
         }
         OnSweepEnd?.Invoke();

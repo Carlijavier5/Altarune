@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1121205360485235418}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: AggroRanges
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -474,6 +474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectBody: {fileID: 3105420530875414870}
   faction: 2
+  animator: {fileID: 5428307828905930855}
   navMeshAgent: {fileID: 1817735493404407486}
   sweepRange: {fileID: 7071099045130805930}
   aggroRange: {fileID: 584424703339441196}
@@ -594,7 +595,7 @@ Animator:
   m_GameObject: {fileID: 7375848958937239948}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1b651f567873e8b479f3c7318ed9ad59, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1497,6 +1498,11 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 5428307828905930855}
+    - target: {fileID: 4138643088562485369, guid: f6fb3a8837c810540b0b4e95d9d3f66b,
+        type: 3}
+      propertyPath: animatorLink
+      value: 
+      objectReference: {fileID: 6036070420519262620}
     - target: {fileID: 4791884437091127048, guid: f6fb3a8837c810540b0b4e95d9d3f66b,
         type: 3}
       propertyPath: m_Name
@@ -1510,7 +1516,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4791884437091127048, guid: f6fb3a8837c810540b0b4e95d9d3f66b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6036070420519262620}
   m_SourcePrefab: {fileID: 100100000, guid: f6fb3a8837c810540b0b4e95d9d3f66b, type: 3}
 --- !u!114 &258431224927109350 stripped
 MonoBehaviour:
@@ -1518,7 +1528,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 4249507035764373663}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8681103500216121239}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58ebaf6c5cc36c84c841dbe6625bae14, type: 3}
@@ -1530,6 +1540,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4249507035764373663}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8681103500216121239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4791884437091127048, guid: f6fb3a8837c810540b0b4e95d9d3f66b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4249507035764373663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6036070420519262620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8681103500216121239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3900ac245bfa2942befce25f8a65742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5428307828905930855}
+  anticipationClip: {fileID: 7400000, guid: 88cd612ed01e1d940911fecae00f3a56, type: 2}
+  commitClip: {fileID: 7400000, guid: e58dced3e2840c04fafe2f6795054bf0, type: 2}
+  golem: {fileID: 4951742556363160001}
 --- !u!1001 &5497644631735336139
 PrefabInstance:
   m_ObjectHideFlags: 0

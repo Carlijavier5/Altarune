@@ -4,6 +4,8 @@ using UnityEngine;
 
 public partial class GolemSentinel {
 
+    private const string IDLE_PARAM = "Idle";
+
     [Header("Idle/Roam State")]
 
     [SerializeField] private Vector2 roamWaitTimeRange;
@@ -19,6 +21,7 @@ public partial class GolemSentinel {
             input.golem.MotionDriver.Set(input.golem.navMeshAgent);
             Vector2 waitRange = input.golem.roamWaitTimeRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
+            input.golem.animator.SetTrigger(IDLE_PARAM);
         }
 
         public override void Update(Sentinel_Input input) {
@@ -45,9 +48,9 @@ public partial class GolemSentinel {
 
             if (PathfindingUtils.FindRandomRoamingPoint(golem.transform.position, distance, 
                                                         10, out targetLocation)) {
-                input.stateMachine.SetState(new State_Idle());
-            } else {
                 golem.navMeshAgent.SetDestination(targetLocation);
+            } else {
+                input.stateMachine.SetState(new State_Idle());
             }
         }
 
