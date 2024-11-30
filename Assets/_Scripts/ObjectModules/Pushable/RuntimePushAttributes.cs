@@ -5,10 +5,10 @@ using UnityEngine;
 public class RuntimePushAttributes : PushableAttributes {
 
     private readonly PushableAttributes pushAttributes;
-    private IEnumerable<StatusEffect> effectSource;
+    private IEnumerable<EntityEffect> effectSource;
 
     public RuntimePushAttributes(PushableAttributes defaultAttributes, DefaultEaseCurves curves,
-                               IEnumerable<StatusEffect> effectSource) : base(curves) {
+                               IEnumerable<EntityEffect> effectSource) : base(curves) {
         pushAttributes = defaultAttributes;
         this.effectSource = effectSource;
     }
@@ -22,7 +22,7 @@ public class RuntimePushAttributes : PushableAttributes {
         if (effectSource == null) return;
 
         CCAttributeModifiers composite = new();
-        foreach (StatusEffect statusEffect in effectSource) {
+        foreach (EntityEffect statusEffect in effectSource) {
             if (statusEffect.CCModifiers != null) {
                 composite.Compose(statusEffect.CCModifiers);
             }

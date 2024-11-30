@@ -1,80 +1,68 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
-public abstract class Summon : BaseObject {
+public abstract partial class Summon : BaseObject {
+
+    //private const string HOLO_THRESHOLD_KEY = "_Teleport_Threshold";
 
     [SerializeField] private DefaultSummonProperties settings;
     [SerializeField] protected float manaDepletion = 1f;
 
-    private readonly Dictionary<Renderer, Material[]> matDict = new();
-    private Player player;
-    public bool active;
+    //private VisualEffect hologramVFX;
 
-    protected virtual void Awake() {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-        foreach (Renderer renderer in renderers) {
-            matDict[renderer] = renderer.sharedMaterials;
-        }
-    }
+    public Entity Summoner { get; protected set; }
 
-    public virtual void Init(Player player) {
-        this.player = player;
+    protected ManaSource manaSource;
+    protected bool active;
+
+    public virtual void Init(Entity summoner,
+                             ManaSource manaSource) {
+        this.manaSource = manaSource;
+        Summoner = summoner;
         active = true;
     }
 
     public virtual void Collapse() {
         active = false;
-        StartCoroutine(AnimateObjectDespawn());
+        StopAllCoroutines();
+        StartCoroutine(ISummonMaterialize(false));
     }
 
     protected virtual void Update() {
-        if (active) player.ManaSource -= Time.deltaTime * manaDepletion;
+        if (active) manaSource.Drain(Time.deltaTime * manaDepletion);
     }
 
-    public void DoSpawnAnim() => StartCoroutine(AnimateObjectSpawn());
+    public void DoSpawn() {
+        objectBody.localScale = Vector3.zero;
+        StartCoroutine(ISummonMaterialize(true));
+    }
 
-    private IEnumerator AnimateObjectSpawn() {
-        Transform t = transform;
-        t.localScale = Vector3.zero;
+    private IEnumerator ISummonMaterialize(bool spawn) {
+        float target = spawn ? settings.growTime : 0;
+        Transform t = objectBody;
 
-        float lerpVal = 0;
-        while (lerpVal < 1) {
-            lerpVal = Mathf.MoveTowards(lerpVal, 1, Time.deltaTime * settings.growSpeed);
+        /*
+        if (!hologramVFX) {
+            hologramVFX = Instantiate(settings.hologramVFX, transform);
+        } hologramVFX.Play();
+        ApplyMaterial(settings.hologramMaterial);
+        */
+
+        float lerpVal, growTimer = settings.growTime - target;
+        while (Mathf.Abs(growTimer - target) > Mathf.Epsilon) {
+            growTimer = Mathf.MoveTowards(growTimer, target, Time.deltaTime);
+            lerpVal = growTimer / settings.growTime;
             t.localScale = new Vector3(settings.growthCurveXZ.Evaluate(lerpVal),
                                        settings.growthCurveY.Evaluate(lerpVal),
                                        settings.growthCurveXZ.Evaluate(lerpVal));
+            //UpdatePropertyBlock((mpb) => { mpb.SetFloat(HOLO_THRESHOLD_KEY, 1 - lerpVal); });
             yield return null;
         }
-    }
 
-    private IEnumerator AnimateObjectDespawn() {
-        Transform t = transform;
-        t.localScale = Vector3.zero;
-
-        float lerpVal = 1;
-        while (lerpVal > 0) {
-            lerpVal = Mathf.MoveTowards(lerpVal, 0, Time.deltaTime * settings.growSpeed);
-            t.localScale = new Vector3(settings.growthCurveXZ.Evaluate(lerpVal),
-                                       settings.growthCurveY.Evaluate(lerpVal),
-                                       settings.growthCurveXZ.Evaluate(lerpVal));
-            yield return null;
-        }
-        Destroy(gameObject, 0.2f);
-    }
-
-    public void ToggleHologram(bool on) {
-        // foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-        //     kvp.Key.sharedMaterials = on ? new Material[] { settings.fadeMaterial } : kvp.Value;
-        // }
-    }
-
-    public void ToggleHologramRed(bool doRed) {
-        foreach (KeyValuePair<Renderer, Material[]> kvp in matDict) {
-            MaterialPropertyBlock mpb = new();
-            if (doRed) mpb.SetColor("_BaseColor", Color.red);
-            kvp.Key.SetPropertyBlock(mpb);
-        }
+        if (spawn) { }/*RemoveMaterial(settings.hologramMaterial);*/
+        else Destroy(gameObject, 0.2f);
     }
 
     #if UNITY_EDITOR

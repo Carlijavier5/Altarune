@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class RollStatusEffect : StatusEffect {
+public class RollStatusEffect : EntityEffect {
   [SerializeField]
   private float defenseAddMod;
 

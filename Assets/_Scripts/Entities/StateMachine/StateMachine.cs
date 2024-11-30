@@ -18,4 +18,8 @@ public class StateMachine<T> where T : StateInput {
     public void Update() {
         if (State != null) State.Update(StateInput);
     }
+
+    public void FixedUpdate() {
+        if (State != null) State.FixedUpdate(StateInput);
+    }
 }

@@ -32,10 +32,12 @@ public class TowerProjectile : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
-            && !(baseObject is Entity
-                 && (baseObject as Entity).Faction == EntityFaction.Friendly)) {
-            if (baseObject.TryDamage(4)) End();
-        } else if (!other.isTrigger && other.gameObject.layer != 4) {
+            && !baseObject.IsFaction(EntityFaction.Friendly)) {
+            if (baseObject.TryDamage(4)) {
+                End();
+            }
+        } else if (!other.isTrigger
+                   && (other.gameObject.layer & LayerUtils.GroundLayerMask) > 0) {
             End();
         }
     }

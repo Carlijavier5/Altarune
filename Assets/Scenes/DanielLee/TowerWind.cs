@@ -9,31 +9,67 @@ public class TowerWind : Summon
     [SerializeField] private SampleWindEffect sampleWindEffect;
     [SerializeField] private WindArea windArea;
     [SerializeField] private float _attackCooldown;
+
     [SerializeField] private float _pushDuration;
     [SerializeField] private float _pushStrength;
-  
-    private bool init = false;
-    private float timer = 0;
 
-    public override void Init(Player player) {
-        base.Init(player);
-        init = true;
+    [SerializeField] private float _pullSpeed;
+    [SerializeField] private float _rotateSpeed;
+    [SerializeField] private float _pullTimer;
+    [SerializeField] private bool _pullMode = false;
+
+    private float timer = 0;
+    private bool running = false;
+    private float timeRemaining;
+
+    private void Start() {
+        timeRemaining = _pullTimer;
     }
 
-    protected override void Update(){
-        if (!init) return;
+
+    protected override void Update() {
+        if (!active) return;
         base.Update();
-        if (timer < _attackCooldown) {
-            timer += Time.deltaTime;
-            return;
-        }
-        if (!windArea.GetRunning()) return;
+        windArea.changeRadius(_pullMode);
+       //Debug.Log(timer);
+
+        if (!_pullMode) {
+
+            if (timer < _attackCooldown) {
+                    timer += Time.deltaTime;
+                    return;
+            }
+
+            if (!windArea.GetRunning()) return;
             Instantiate(sampleWindEffect, transform.position, transform.rotation);
             windArea.PushNearby(_pushStrength, _pushDuration);
-            timer = 0;
-    }
 
- }
+
+        }
+        else {
+
+            if (timer < _attackCooldown * 1.5) {
+                if (!running) {
+                    timer += Time.deltaTime;
+                    return;
+                }
+            }
+
+            running = true;
+
+            if (timeRemaining > 0) {
+                timeRemaining -= Time.deltaTime;
+                windArea.PullNearby(_pullSpeed, _rotateSpeed, _pullTimer);
+                //Debug.Log("pulling");
+                return;
+            }
+            running = false;
+            timeRemaining = _pullTimer;
+            //Debug.Log("finished");
+        }
+        timer = 0;
+    }
+}
     
 
 

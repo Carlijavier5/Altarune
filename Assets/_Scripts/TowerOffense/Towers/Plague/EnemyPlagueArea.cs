@@ -32,7 +32,7 @@ public class EnemyPlagueArea : MonoBehaviour {
 
     private void InfectEnemy(Collider enemy) {
         Entity entity = enemy.GetComponent<Entity>();
-        entity.ApplyEffects(new[] {plagueEffect.Clone() });
+        entity.ApplyEffects(new[] { plagueEffect.Clone() as EntityEffect });
     }
 
     private IEnumerator ExpandArea() {

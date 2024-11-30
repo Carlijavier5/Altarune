@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af43cb4d11bfa345bb173e73bb038df, type: 3}
   m_Name: DefaultSummonProperties
   m_EditorClassIdentifier: 
-  fadeMaterial: {fileID: -876546973899608171, guid: a276c71eb26089946b5d58011401a310,
+  hologramMaterial: {fileID: 2100000, guid: 7a6bb0b33cf5ba24aa73123c9efb4120, type: 2}
+  hologramVFX: {fileID: 7905459708634322220, guid: bd71eab2bb741774c8197660838ab910,
     type: 3}
   growthCurveXZ:
     serializedVersion: 2
@@ -27,14 +28,32 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.1646215
-      value: 0.8758009
-      inSlope: 1.1709342
-      outSlope: 1.1709342
+      time: 0.25
+      value: 0.6
+      inSlope: 5.739599
+      outSlope: 5.739599
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.16666782
+      outWeight: 0.13333559
+    - serializedVersion: 3
+      time: 0.50416666
+      value: 1.15
+      inSlope: 0.019662175
+      outSlope: 0.019662175
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.76546407
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75416666
+      value: 0.95
+      inSlope: -0.0014546395
+      outSlope: -0.0014546395
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.12992807
+      outWeight: 1
     - serializedVersion: 3
       time: 1
       value: 1
@@ -60,23 +79,32 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.29253945
-      value: 0.6713417
-      inSlope: -1.1218423
-      outSlope: -1.1218423
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
-      outWeight: 0.40528244
-    - serializedVersion: 3
-      time: 0.5827094
-      value: 0.40304768
-      inSlope: 2.5438144
-      outSlope: 2.5438144
+      time: 0.3
+      value: 0.7
+      inSlope: 0.0038576613
+      outSlope: 0.0038576613
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.11133078
+      outWeight: 0.7354613
+    - serializedVersion: 3
+      time: 0.55
+      value: 0.325
+      inSlope: -0.008086221
+      outSlope: -0.008086221
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.8
+      value: 1.1
+      inSlope: -0.0031886294
+      outSlope: -0.0031886294
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
     - serializedVersion: 3
       time: 1
       value: 1
@@ -89,4 +117,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  growSpeed: 3
+  growTime: 0.35

@@ -13,7 +13,13 @@ public class PlayerController : MonoBehaviour {
     public event System.Action OnSummonPerformed;
     public event System.Action<SummonType, int> OnSummonSelect;
 
-    [SerializeField] private CinemachineBrain cameraBrain;
+    public event System.Action OnSkillStarted;
+    public event System.Action OnSkillCast;
+
+    [SerializeField] private Transform cameraTarget;
+    public Transform CameraTarget => cameraTarget;
+
+    private CinemachineBrain cameraBrain;
     private PlayerInput playerInput;
 
     public Vector3 InputVector {
@@ -35,8 +41,6 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private bool init;
-
     public Camera OutputCamera => cameraBrain ? cameraBrain.OutputCamera
                                               : Camera.main;
 
@@ -53,13 +57,10 @@ public class PlayerController : MonoBehaviour {
         playerInput.Actions.Summon.performed += Summon_Performed;
         playerInput.Actions.SelectSummon.performed += SelectSummon_performed;
 
-        /// Replace after actual initialization;
-        if (cameraBrain && !init) Init(cameraBrain);
-    }
+        playerInput.Actions.ActivateSkill.started += Skill_Started;
+        playerInput.Actions.ActivateSkill.canceled += Skill_Cast;
 
-    public void Init(CinemachineBrain cameraBrain) {
-        init = true;
-        this.cameraBrain = cameraBrain;
+        Camera.main.TryGetComponent(out cameraBrain);
         StartCoroutine(ISyncInitialization());
     }
 
@@ -86,5 +87,13 @@ public class PlayerController : MonoBehaviour {
             if (value == -1) OnSummonSelect?.Invoke(SummonType.Battery, 0);
             else if (value > 0) OnSummonSelect?.Invoke(SummonType.Tower, value);
         }
+    }
+
+    private void Skill_Started(InputAction.CallbackContext context) {
+        if (context.started) OnSkillStarted?.Invoke();
+    }
+
+    private void Skill_Cast(InputAction.CallbackContext context) {
+        if (context.canceled) OnSkillCast?.Invoke();
     }
 }

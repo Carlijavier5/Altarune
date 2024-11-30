@@ -12,5 +12,5 @@ public class PushableAttributes {
     }
 
     public PushableAttributes Clone() => MemberwiseClone() as PushableAttributes;
-    public RuntimePushAttributes RuntimeClone(IEnumerable<StatusEffect> effectSource = null) => new(this, easeCurves, effectSource);
+    public RuntimePushAttributes RuntimeClone(IEnumerable<EntityEffect> effectSource = null) => new(this, easeCurves, effectSource);
 }
