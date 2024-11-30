@@ -5,12 +5,14 @@ using UnityEngine.AI;
 
 public partial class GolemSentinel : Entity {
 
+    private const string WALK_SPEED_PARAM = "WalkSpeed";
+
     private readonly StateMachine<Sentinel_Input> stateMachine = new();
 
     [Header("General")]
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private AggroRange aggroRange, deAggroRange;
     [SerializeField] private Collider attackCollider;
 
     private float baseLinearSpeed;
@@ -39,7 +41,7 @@ public partial class GolemSentinel : Entity {
         stateMachine.Init(input, new State_Idle());
 
         aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
-        aggroRange.OnAggroExit += AggroRange_OnAggroExit;
+        deAggroRange.OnAggroExit += DeAggroRange_OnAggroExit;
     }
 
     private void Golem_OnRootSet(bool canMove) {
@@ -61,7 +63,7 @@ public partial class GolemSentinel : Entity {
 
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();
 
-    private void AggroRange_OnAggroExit(Entity _) => UpdateAggro();
+    private void DeAggroRange_OnAggroExit(Entity _) => UpdateAggro();
 
     private void UpdateAggro() {
         if (stateMachine.State is State_Stunned
@@ -93,21 +95,11 @@ public partial class GolemSentinel : Entity {
         }
     }
 
-    public void Ragdoll() {
-        /*
-        foreach (Rigidbody rb in rigidbodies) {
-            rb.isKinematic = false;
-            Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
-            rb.AddForce(force);
-            Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
-            rb.AddTorque(torque);
-        }*/ DetachModules();
-        enabled = false;
-        Destroy(gameObject, 2);
-    }
-
     public override void Perish() {
         base.Perish();
-        Ragdoll();
+        DetachModules();
+        enabled = false;
+        aggroRange.Disable();
+        Destroy(gameObject, 2);
     }
 }
