@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Scaramite_Input : StateInput {
 
     public StateMachine<Scaramite_Input> stateMachine;

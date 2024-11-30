@@ -26,7 +26,6 @@ public partial class Scaramite {
             sm.driver.SetMaxSpeed(input.scaramite.roamSpeed);
             destination = sm.transform.position;
             moveTime = Random.Range(sm.moveTimeRange.x, sm.moveTimeRange.y);
-            timer = 0f;
         }
 
         public override void Update(Scaramite_Input input) {
