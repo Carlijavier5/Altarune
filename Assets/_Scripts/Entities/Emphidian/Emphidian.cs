@@ -53,7 +53,8 @@ public partial class Emphidian : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
-        animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude);
+        animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
+                                      / Mathf.Max(1, baseLinearSpeed));
     }
 
     private Vector3 GetRoamDestination() {
