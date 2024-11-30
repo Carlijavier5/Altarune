@@ -35,7 +35,9 @@ public partial class Scaramite {
             }
 
             Vector3 moveVector = alignmentMult * MoveSpeed * MoveDir;
-            if (scaramite.CanMove) Controller.Move(moveVector * scaramite.FixedDeltaTime);
+            if (scaramite.CanMove) Controller.Move(scaramite.RootMult 
+                                                   * scaramite.FixedDeltaTime
+                                                   * moveVector);
         }
 
         public void SetMaxSpeed(float maxSpeed) => this.maxSpeed = maxSpeed; 

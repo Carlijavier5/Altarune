@@ -8,7 +8,6 @@ using UnityEngine.VFX;
 
 public class LabCinematicManager : MonoBehaviour {
     [SerializeField] private CinemachineVirtualCamera cinematicCamera;
-    [SerializeField] private CameraShake cameraShake;
     [SerializeField] private float cameraShakeIntensity = 2f;
     [SerializeField] private Vector3 initOffset;
     [SerializeField] private VisualEffect rippleEffect;
@@ -73,7 +72,7 @@ public class LabCinematicManager : MonoBehaviour {
         Debug.Log("running cinematic");
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
-        cameraShake.DoCameraShake(cameraShakeIntensity, roomTime);
+        CameraShake.Instance.DoCameraShake(cameraShakeIntensity, roomTime);
         yield return new WaitForSeconds(1f);
         room.DOMove(roomPos, roomTime);
         StartCoroutine(AsyncFalls());

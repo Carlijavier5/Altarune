@@ -100,8 +100,9 @@ public class Pushable : ObjectModule {
                     pastImpulseQueue.Enqueue(direction);
                 } break;
             case MotionMode.Controller:
-                driver.Controller.Move(direction * Time.fixedDeltaTime);
-                break;
+                if (driver.Controller.enabled) {
+                    driver.Controller.Move(direction * Time.fixedDeltaTime);
+                } break;
             case MotionMode.NavMesh:
                 if (driver.NavMeshAgent.isActiveAndEnabled) {
                     driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);

@@ -39,9 +39,9 @@ public class GrappleTower : Summon
 
             //find the nearest gameobject with a golem component (note: this should be broadened to include all monsters/enemies that are movable)
             float greatestDist = 0;
-            Golem furthestGolem = null;
+            GolemSentinel furthestGolem = null;
             foreach (GameObject go in objectsInRange) {
-                if (go.TryGetComponent<Golem>(out furthestGolem)) {
+                if (go.TryGetComponent<GolemSentinel>(out furthestGolem)) {
                     if (furthestGolem == null || getDistance(transform.position, go.transform.position) > greatestDist) {
                         greatestDist = getDistance(transform.position, go.transform.position);
                     }
