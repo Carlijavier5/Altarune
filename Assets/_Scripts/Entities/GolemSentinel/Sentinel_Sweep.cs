@@ -29,7 +29,7 @@ public partial class GolemSentinel {
         public override void Update(Sentinel_Input input) {
             Transform t = input.golem.transform;
             t.rotation = Quaternion.RotateTowards(t.rotation, lookRotation,
-                input.golem.DeltaTime * input.golem.navMeshAgent.angularSpeed * 20);
+                input.golem.DeltaTime * input.golem.navMeshAgent.angularSpeed * 5);
         }
 
         public override void Exit(Sentinel_Input input) {

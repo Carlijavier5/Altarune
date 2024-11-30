@@ -8,6 +8,8 @@ public abstract partial class BaseObject {
     public event System.Action<Vector3, EventResponse> OnTryFramePush;
     public event System.Action<Vector3, float, EventResponse<PushActionCore>> OnTryLongPush;
 
+    public event System.Action OnLongPush;
+
     public MotionDriver MotionDriver { get; private set; } = new();
 
     /// <summary>
@@ -33,6 +35,7 @@ public abstract partial class BaseObject {
         EventResponse<PushActionCore> response = new();
         OnTryLongPush?.Invoke(direction.normalized * strength, duration, response);
         actionCore = response.objectReference;
+        if (response.received) OnLongPush?.Invoke();
         return response.received;
     }
 
