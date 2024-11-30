@@ -27,8 +27,6 @@ public partial class GolemSlither : Entity {
 
     private float baseAngularSpeed;
 
-    private Entity player;
-
     private void Awake() {
         transform.SetParent(null);
 
@@ -46,8 +44,6 @@ public partial class GolemSlither : Entity {
 
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = navMeshAgent.angularSpeed;
-
-        player = FindAnyObjectByType<Player>();
 
         Slither_Input input = new(stateMachine, this);
         stateMachine.Init(input, new State_Idle());
@@ -119,15 +115,16 @@ public partial class GolemSlither : Entity {
         }
     }
 
-    public void Ragdoll() {
-        DetachModules();
-        /// Disable ranges;
-        Destroy(gameObject, 2);
-    }
-
     public override void Perish() {
         base.Perish();
-        Ragdoll();
+        DetachModules();
+        enabled = false;
+
+        aggroRange.Disable();
+        deAggroRange.Disable();
+        sweepRange.Disable();
+
+        Destroy(gameObject, 2);
     }
 }
 
@@ -135,10 +132,12 @@ public partial class GolemSlither {
 
     public class State_Stun : State<Slither_Input> {
 
-        public override void Enter(Slither_Input input) { }
+        public override void Enter(Slither_Input _) { }
 
-        public override void Update(Slither_Input input) { }
+        public override void Update(Slither_Input _) { }
 
-        public override void Exit(Slither_Input input) { }
+        public override void Exit(Slither_Input input) {
+            input.SetAggroTarget(null);
+        }
     }
 }
