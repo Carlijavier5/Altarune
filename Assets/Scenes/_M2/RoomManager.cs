@@ -15,6 +15,10 @@ public class RoomManager : MonoBehaviour {
     [SerializeField] private AudioClip track1, track2;
 
     private RoomControl currentRoom;
+    
+    //Event Delegates
+    public delegate void RoomTransition();
+    public event RoomTransition RoomStateTransition;
 
     void Awake() {
         if (instance) {
