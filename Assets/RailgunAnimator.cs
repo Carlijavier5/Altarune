@@ -18,6 +18,9 @@ public class RailgunAnimator : MonoBehaviour {
     [SerializeField] private VisualEffect railEffect;
     [SerializeField] private VisualEffect gatlingEffect;
 
+    [SerializeField] private VisualEffect railBeam;
+    [SerializeField] private ParticleSystem railLightning;
+
     private bool _railgunActive = false;
 
     private void Awake() {
@@ -26,6 +29,8 @@ public class RailgunAnimator : MonoBehaviour {
         railgunModel.gameObject.SetActive(false);
         railEffect.Stop();
         gatlingEffect.Stop();
+        railBeam.Stop();
+        railLightning.Stop();
     }
 
     private void Update() {
@@ -33,6 +38,10 @@ public class RailgunAnimator : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.R)) {
                 if (!_railgunActive) StartCoroutine(RailgunActivate());
                 else StartCoroutine(RailgunDeactivate());
+            }
+
+            if (_railgunActive && Input.GetKeyDown(KeyCode.L)) {
+                FireRailgunBeam();
             }
         }
     }
@@ -70,5 +79,12 @@ public class RailgunAnimator : MonoBehaviour {
         railgunModel.gameObject.SetActive(false);
         _railgunActive = false;
         yield return null;
+    }
+
+    public void FireRailgunBeam() {
+        if (_railgunActive) {
+            railBeam.Reinit();
+            railLightning.Play();
+        }
     }
 }
