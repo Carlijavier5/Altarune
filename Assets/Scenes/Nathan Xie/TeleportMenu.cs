@@ -5,47 +5,45 @@ using UnityEngine.UI;
 
 public class TeleportMenu : MonoBehaviour
 {
-    [SerializeField] private String[] nexusConnections;
-    [SerializeField] private Button buttonPrefab;
+    [SerializeField] private string[] nexusConnections;
+    [SerializeField] private NexusButton buttonPrefab;
     [SerializeField] private TextMeshProUGUI emptyString;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform anchor;
-    private Button[] nexusButtons;
+    private NexusButton[] nexusButtons;
     // Start is called before the first frame update
-    void Start()
-    {
-        nexusButtons = new Button[nexusConnections.Length];
-        RectTransform rectTransform = buttonPrefab.GetComponent<RectTransform>();
+    void Start() {
+        nexusButtons = new NexusButton[nexusConnections.Length];
+        RectTransform rectTransform = buttonPrefab.GetRectTransform();
         float maxHeight = rectTransform.rect.height * 1.3f * (nexusConnections.Length - 1) + 1.5f;
         for (int i = 0;i < nexusConnections.Length;i++){
             nexusButtons[i] = Instantiate(buttonPrefab);
             nexusButtons[i].transform.SetParent(anchor.transform);
             Vector3 position = new Vector3(0f, 0f, 0f);
             position.x = rectTransform.rect.width / 2f;
-            position.y = rectTransform.rect.height * 1.3f * ((nexusConnections.Length - 1) - i) + 1.5f;
-            nexusButtons[i].GetComponent<NexusButton>().SetStart(new Vector3(0f, maxHeight, 0f));
-            nexusButtons[i].transform.GetComponentInChildren<TextMeshProUGUI>().text = nexusConnections[i];
-            nexusButtons[i].GetComponent<NexusButton>().SetDestination(position);
-            Button button = nexusButtons[i];
-            nexusButtons[i].onClick.AddListener(() => ButtonClick(button));
+            position.y = rectTransform.rect.height * 1.3f * (nexusConnections.Length - 1 - i) + 1.5f;
+            nexusButtons[i].SetStart(new Vector3(0f, maxHeight, 0f));
+            nexusButtons[i].setText(nexusConnections[i]);
+            nexusButtons[i].SetDestination(position);
+            NexusButton button = nexusButtons[i];
+            nexusButtons[i].getButton().onClick.AddListener(() => ButtonClick(button));
         }
         if (nexusButtons.Length == 0) {
             emptyString.alpha = 1;
         }
     }
-    private void ButtonClick(Button buttonPressed){
-        Debug.Log(buttonPressed.GetComponentInChildren<TextMeshProUGUI>().text + " has been pressed");
+    private void ButtonClick(NexusButton buttonPressed){
+        Debug.Log(buttonPressed.getText() + " has been pressed");
     }
 
     private void StartButtonMovement(){
         for (int i = 0;i < nexusButtons.Length;i++) {
-            nexusButtons[i].GetComponent<NexusButton>().StartMovement();
+            nexusButtons[i].StartMovement();
         }
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update(){
         ShowButton();
     }
 
