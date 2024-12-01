@@ -47,12 +47,12 @@ public class RailgunAnimator : MonoBehaviour {
     }
 
     private IEnumerator RailgunActivate() {
-        railEffect.Stop();
         gatlingBody.gameObject.SetActive(false);
         railgunBody.rotation = gatlingBody.rotation;
         railgunModel.position = gatlingBody.position;
         railgunModel.gameObject.SetActive(true);
-        
+        railBeam.Stop();
+        railEffect.Stop();
         //Gatling Retract
         gatlingPivot.DOScaleX(0f, 0.3f).SetEase(Ease.InBack);
         yield return new WaitForSeconds(0.2f);
