@@ -22,7 +22,10 @@ public class TowerWind : Summon
     private bool running = false;
     private float timeRemaining;
 
+    private WindTowerEffectController _controller;
+
     private void Start() {
+        _controller = GetComponentInChildren<WindTowerEffectController>();
         timeRemaining = _pullTimer;
     }
 
@@ -41,7 +44,8 @@ public class TowerWind : Summon
             }
 
             if (!windArea.GetRunning()) return;
-            Instantiate(sampleWindEffect, transform.position, transform.rotation);
+            _controller.Activate(WindTowerEffectController.WindMode.Out);
+            //Instantiate(sampleWindEffect, transform.position, transform.rotation);
             windArea.PushNearby(_pushStrength, _pushDuration);
 
 
@@ -59,6 +63,7 @@ public class TowerWind : Summon
 
             if (timeRemaining > 0) {
                 timeRemaining -= Time.deltaTime;
+                _controller.Activate(WindTowerEffectController.WindMode.In);
                 windArea.PullNearby(_pullSpeed, _rotateSpeed, _pullTimer);
                 //Debug.Log("pulling");
                 return;
