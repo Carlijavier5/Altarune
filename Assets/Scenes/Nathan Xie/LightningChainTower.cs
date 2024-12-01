@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,12 @@ public class LightningChainTower : Summon
     private float attackTick = -0.2f;
     private Queue<LightningChainBall> balls = new Queue<LightningChainBall>();
 
+    private LightningChainTowerAnimator _animator;
+
+    private void Awake() {
+        _animator = GetComponent<LightningChainTowerAnimator>();
+    }
+
     protected override void Update() {
         Fire();
         base.Update();
@@ -20,6 +27,7 @@ public class LightningChainTower : Summon
         if (attackTick >= attackInterval && balls.Count < 2 && aggro.AggroTargets.Count != 0) {
             Vector3 closestVector = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             foreach(Entity i in aggro.AggroTargets) {
+                _animator.FireAnim();
                 Vector3 currVector = i.transform.position - this.transform.position;
                 if(currVector.magnitude <= closestVector.magnitude) {
                     closestVector = currVector;
