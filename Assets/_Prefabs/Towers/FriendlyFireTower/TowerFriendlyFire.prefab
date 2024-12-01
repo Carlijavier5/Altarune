@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5998572692886333712}
   - component: {fileID: 1159066866404483492}
   - component: {fileID: 5281733240387534701}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: FriendlyFireTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6669376ac93dd604c91d6a4b367d1f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectBody: {fileID: 0}
   settings: {fileID: 0}
   manaDepletion: 1
   projectilePrefab: {fileID: -1851510530935339561, guid: e9e6fa4e379444d43b5412c2c6cdf56e,
@@ -136,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6643676460652944311}
   - component: {fileID: -3792120354263521299}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: TowerFriendlyFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6669376ac93dd604c91d6a4b367d1f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectBody: {fileID: 5366443601382239398}
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
   manaDepletion: 1
   projectilePrefab: {fileID: -1851510530935339561, guid: e9e6fa4e379444d43b5412c2c6cdf56e,
@@ -196,7 +198,7 @@ PrefabInstance:
     - target: {fileID: 2020385305260358967, guid: 9e399320993ddcd42b56f7ff27c6019f,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2888123081506049845, guid: 9e399320993ddcd42b56f7ff27c6019f,
         type: 3}

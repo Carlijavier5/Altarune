@@ -19,5 +19,5 @@ public class HealthAttributes {
     }
 
     public HealthAttributes Clone() => MemberwiseClone() as HealthAttributes;
-    public RuntimeHealthAttributes RuntimeClone(IEnumerable<StatusEffect> effectSource = null) => new(this, curves, effectSource);
+    public RuntimeHealthAttributes RuntimeClone(IEnumerable<EntityEffect> effectSource = null) => new(this, curves, effectSource);
 }

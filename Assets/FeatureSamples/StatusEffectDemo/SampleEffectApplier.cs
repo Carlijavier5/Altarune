@@ -12,7 +12,7 @@ namespace FeatureSamples {
             /// On contact with an entity apply the effect;
             if (other.TryGetComponent(out Entity entity)) {
 
-                entity.ApplyEffects(new[] { sampleEffect.Clone() });
+                entity.ApplyEffects(new[] { sampleEffect.Clone() as EntityEffect });
 
                 /// ApplyEffects takes in an array, the code above, 'new[] { demoEffect.Clone() }'
                 /// is just a explicit declaration of an array with a single element;
@@ -33,7 +33,7 @@ namespace FeatureSamples {
     /// Note that this setup is exclusive to Altarune;
     /// </summary>
     [System.Serializable]
-    public class SampleStatusEffect : StatusEffect {
+    public class SampleStatusEffect : EntityEffect {
 
         /// <summary> Exposed modifiers in the inspectors, for ease of customization; </summary>
         [SerializeField] private HealthAttributeModifiers sampleModifiers;
@@ -49,7 +49,7 @@ namespace FeatureSamples {
         /// <param name="isNew"> Whether the effect is new or was already applied; </param>
         public override void Apply(Entity entity, bool isNew) {
             if (isNew) {
-                entity.SetMaterial(material);   /// Changes the material of the target entity (see BaseObject.cs);
+                entity.ApplyMaterial(material);   /// Changes the material of the target entity (see BaseObject.cs);
                 HealthModifiers = sampleModifiers;  /// Apply modifiers for the effect when the effect is initialized (see StatusEffect.cs);
             } else {
                 timer = 0;                      /// Reset the effect timer when the effect is reapplied;
