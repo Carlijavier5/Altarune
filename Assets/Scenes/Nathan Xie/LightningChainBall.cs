@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class LightningChainBall : MonoBehaviour
@@ -34,7 +36,15 @@ public class LightningChainBall : MonoBehaviour
     private float fallTimer; //The amount of time spent falling
     private Boolean active = false; //whether the ball is active and should be updating
 
-    
+    private RotateObject rotator;
+    private float rotatorSpeed;
+
+
+    private void Awake() {
+        rotator = GetComponentInChildren<RotateObject>();
+        rotatorSpeed = rotator.speed;
+    }
+
     // The ball goes through __ stages. It start unactivated and activates after some time. After activating, it begins looking for elgibible connection targets
     //If it finds a target and the connection is mutual, the ball rises into the air
     //After rising into the air, the ball begins sparking by flashing the connector in the air
@@ -48,6 +58,13 @@ public class LightningChainBall : MonoBehaviour
             Rise();
             Fall();
             CheckSparkingStatus();
+        }
+
+        if (transform.position.y > 0.2f) {
+            rotator.speed = rotatorSpeed;
+        }
+        else {
+            rotator.speed = 0f;
         }
     }
     public void End(){
@@ -101,6 +118,7 @@ public class LightningChainBall : MonoBehaviour
                         sparkActivated = false;
                         dominant = false;
                         connectedBall.OnTimeOut += DeadPartner;
+                        StartCoroutine(CogSpin(0.1f, true));
                     } else {
                         //Relationship is not mutual, this ball will repeat this method
                         mutualPartner = false;
@@ -172,6 +190,7 @@ public class LightningChainBall : MonoBehaviour
     private void Fall() {
         if(fallTimer >= 0.0001f && fallTimer <= riseTime){
             fallTimer += Time.deltaTime;
+            rotator.speed = 0;
             transform.position = Vector3.Lerp(risePosition, floorPosition, fallTimer / riseTime);
         }
     }
@@ -225,6 +244,12 @@ public class LightningChainBall : MonoBehaviour
         endVector = end;
         risePosition = end + new Vector3(0, 1, 0);
         floorPosition = end;
+    }
+    
+    //Ball animator
+    private IEnumerator CogSpin(float time, bool enable) {
+        yield return new WaitForSeconds(time);
+        rotator.speed = enable ? rotatorSpeed : 0;
     }
     /// <summary>
     /// Handles the parabolic motion of the ball
