@@ -10,6 +10,7 @@ public class PawSlam : MonoBehaviour {
     [SerializeField] private float maxSize;
     [SerializeField] private SovereignSlamEpicenter outerEpicenter,
                                                     innerEpicenter;
+    [SerializeField] private SFXOneShot sfxPawSlam;
     [SerializeField] private AnimationCurve growthCurve;
 
     private void Awake() {
@@ -25,6 +26,7 @@ public class PawSlam : MonoBehaviour {
     private IEnumerator IDoSlam(float duration) {
         yield return new WaitForEndOfFrame();
         ClearContacts();
+        sfxPawSlam.Play();
 
         float lerpVal, scaleVal, timer = 0;
         while (timer < duration) {

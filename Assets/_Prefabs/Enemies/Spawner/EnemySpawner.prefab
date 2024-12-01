@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5495407504541312262}
-  - component: {fileID: 6167104067104938483}
-  - component: {fileID: 4086204595270897913}
+  - component: {fileID: 4579254346292724296}
+  - component: {fileID: -6180880615270901528}
   - component: {fileID: 4539987704146070119}
   - component: {fileID: 6527065781600593816}
   m_Layer: 9
@@ -38,7 +38,7 @@ Transform:
   - {fileID: 8195959262784544356}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6167104067104938483
+--- !u!114 &4579254346292724296
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,19 +47,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1982801520623496011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b996441f8f74768469aad99f51c59ba7, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d60c378dbba5034e8399c18d3ac332d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objectBody: {fileID: 8195959262784544356}
   faction: 2
-  enemyPrefab: {fileID: 670351108798461099, guid: fbe79cdc26e288c43a4557cede831997,
-    type: 3}
-  totalEnemyCount: 10
-  maxEnemiesAtOnce: 5
-  spawnDelay: 2
-  spawnDistance: 3
-  aggroRange: {fileID: 3548616369836336266}
---- !u!114 &4086204595270897913
+  summonProperties: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
+  spawnGroups:
+  - entityPrefab: {fileID: 7466325785813828294, guid: 28fb330cd176c9c4a987add7576eb3af,
+      type: 3}
+    spawnCount: 4
+    needsNavMesh: 0
+  maxEnemiesAtOnce: 2
+  spawnDelayRange: {x: 1, y: 2}
+  spawnRadius: {x: 2, y: 4}
+--- !u!114 &-6180880615270901528
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,10 +73,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f600c5941852404797ee6ec4a0a93aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseObject: {fileID: 6167104067104938483}
+  baseObject: {fileID: 4579254346292724296}
   defaultHPAttributes:
     curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
-    health: 10
+    health: 12
     defense: 0
     fireRes: 0
     iceRes: 0

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5859308958610765523}
   - component: {fileID: 5017782903278584050}
   - component: {fileID: 5423854253377507330}
+  - component: {fileID: -2645350207302232577}
   m_Layer: 0
   m_Name: SovereignSpawnerW2
   m_TagString: Untagged
@@ -59,10 +60,6 @@ MonoBehaviour:
       type: 3}
     spawnCount: 2
     needsNavMesh: 1
-  - entityPrefab: {fileID: 7217854052161433768, guid: 28656c3e903ffe64d9c96667fe22d393,
-      type: 3}
-    spawnCount: 2
-    needsNavMesh: 1
   maxEnemiesAtOnce: 3
   spawnDelayRange: {x: 1, y: 2}
   spawnRadius: {x: 1, y: 2}
@@ -106,7 +103,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -114,6 +111,33 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &-2645350207302232577
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756432686509045283}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &7579714801201002667
 PrefabInstance:
   m_ObjectHideFlags: 0

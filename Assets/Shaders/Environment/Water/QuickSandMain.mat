@@ -37,6 +37,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Reflection:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Sky_Cubemap:
         m_Texture: {fileID: 8900000, guid: 6fa3f446deee84c52aec507bd0aca28c, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -57,6 +61,7 @@ Material:
     m_Floats:
     - _Depth: 0.26
     - _DepthFalloff: 1.73
+    - _DoReflect: 0
     - _FadeEnd: 4.57
     - _FadeStart: 0.02
     - _Foam_Cutout: 2.3

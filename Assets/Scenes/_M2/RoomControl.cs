@@ -6,7 +6,7 @@ public class RoomControl : MonoBehaviour {
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     public CinemachineVirtualCamera VirtualCamera => virtualCamera;
 
-    [SerializeField] private PHCameraFollow followTarget;
+    [SerializeField] private CameraFollow followTarget;
 
     [SerializeField] private Transform spawnPoint;
     public Transform SpawnPoint => spawnPoint;
@@ -25,7 +25,9 @@ public class RoomControl : MonoBehaviour {
     }
 
     public void Init(Player player) {
-        if (followTarget) followTarget.AssignPlayer(player);
+        if (followTarget) {
+            followTarget.AssignPlayer(player.InputSource);
+        }
     }
 
     public void ForceCompletion() => listener.CompleteRoom();
