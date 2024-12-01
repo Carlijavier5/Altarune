@@ -67,6 +67,8 @@ public abstract partial class BaseObject {
         }
     }
 
+    public float RootMult => CanMove ? 1 : 0;
+
     protected event System.Action<bool> OnGroundedSet;
     
     public bool IsGrounded {

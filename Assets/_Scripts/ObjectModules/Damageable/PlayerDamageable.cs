@@ -16,12 +16,16 @@ public class PlayerDamageable : Damageable {
                 int processedAmount = amount > doubleDamageThreshold ? 2 : 1;
                 runtimeHP.DoDamage(processedAmount);
                 baseObject.PropagateDamage(processedAmount);
+                
                 StartCoroutine(ISimulateIFrame());
-
+                //ScreenSpaceEffect
+                ScreenEffectManager.Instance.HitEffect();
+                //Camera shake
+                CameraShake.Instance.DoCameraShake();
+                
                 if (runtimeHP.Health <= 0) {
-                    baseObject.Perish();
                     ToggleIFrame(true);
-                    PHGameManager.Instance.DoGameOver();
+                    GM.Instance.DoGameOver();
                 }
             }
         }
@@ -30,7 +34,7 @@ public class PlayerDamageable : Damageable {
     protected override IEnumerator ISimulateIFrame() {
         localIFrameOn = true;
         baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
-        TimeScaleManager.Instance.AddTimeScaleShift(0, timeScaleShiftDuration,
+        GM.TimeScaleManager.AddTimeScaleShift(0, timeScaleShiftDuration,
                                                     timeScaleShiftCurve);
         yield return new WaitForSeconds(iFrameProperties.duration);
         baseObject.ResetMaterials();
