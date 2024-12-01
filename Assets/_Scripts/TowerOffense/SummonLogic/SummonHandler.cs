@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SummonHandler : MonoBehaviour {
 
+    public event System.Action<SummonData> OnSummonSuccess;
+
     [SerializeField] private SummonController inputSource;
     [SerializeField] private SummonData[] summonBlueprints;
 
@@ -103,7 +105,7 @@ public class SummonHandler : MonoBehaviour {
 
     private void InputSource_OnPointerConfirm(SummonType selectedType) {
         if (hologramHint != null
-            && !IsPlacementInvalid) {
+                && !IsPlacementInvalid) {
             cdTime = Time.time + summonCD;
             switch (selectedType) {
                 case SummonType.Battery:
@@ -117,11 +119,12 @@ public class SummonHandler : MonoBehaviour {
                     ManaSource.Drain(batteryData.summonCost);
 
                     inputSource.ClearSelection();
+                    OnSummonSuccess?.Invoke(batteryData);
                     break;
                 case SummonType.Tower:
                     if (closestBatteryCache != null
                         && closestBatteryCache.battery != null
-                        && closestBatteryCache.battery.IsActive) {
+                            && closestBatteryCache.battery.IsActive) {
                         TowerData towerData = selectedData as TowerData;
                         Summon tower = Instantiate(towerData.prefabSummon, lastHitPoint, Quaternion.identity);
 
@@ -135,6 +138,7 @@ public class SummonHandler : MonoBehaviour {
                         batterySource.Drain(towerData.summonCost);
 
                         inputSource.ClearSelection();
+                        OnSummonSuccess?.Invoke(towerData);
                     } break;
             }
         }
