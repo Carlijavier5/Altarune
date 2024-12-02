@@ -40,9 +40,9 @@ public partial class GolemSentinel : Entity {
     private int speedParam;
 
     void Awake() {
-        OnTimeScaleSet += Golem_OnTimeScaleSet;
-        OnRootSet += Golem_OnRootSet;
-        OnStunSet += Golem_OnStunSet;
+        OnTimeScaleSet += GolemSentinel_OnTimeScaleSet;
+        OnRootSet += GolemSentinel_OnRootSet;
+        OnStunSet += GolemSentinel_OnStunSet;
 
         sentinelSweep.OnSweepEnd += SentinelSweep_OnSweepEnd;
 
@@ -65,6 +65,10 @@ public partial class GolemSentinel : Entity {
         stateMachine.Update();
         animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
                                       / Mathf.Max(1, baseLinearSpeed));
+    }
+
+    void FixedUpdate() {
+        stateMachine.FixedUpdate();
     }
 
     private void ClearContacts() {
@@ -101,19 +105,19 @@ public partial class GolemSentinel : Entity {
         }
     }
 
-    private void Golem_OnRootSet(bool canMove) {
+    private void GolemSentinel_OnRootSet(bool canMove) {
         navMeshAgent.speed = BaseLinearSpeed * status.timeScale * RootMult;
         if (stateMachine.State is State_Sweep) sentinelSweep.CancelSweep();
     }
 
-    private void Golem_OnStunSet(bool isStunned) {
+    private void GolemSentinel_OnStunSet(bool isStunned) {
         State<Sentinel_Input> newState = isStunned ? new State_Stun()
                                                    : new State_Idle();
         stateMachine.SetState(newState);
         if (!isStunned) UpdateAggro();
     }
 
-    private void Golem_OnTimeScaleSet(float timeScale) {
+    private void GolemSentinel_OnTimeScaleSet(float timeScale) {
         animator.speed = baseAnimatorSpeed * timeScale;
         navMeshAgent.speed = BaseLinearSpeed * timeScale * RootMult;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;

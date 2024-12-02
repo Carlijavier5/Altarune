@@ -72,7 +72,7 @@ public class LabCinematicManager : MonoBehaviour {
         Debug.Log("running cinematic");
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
-        CameraShake.Instance.DoCameraShake(cameraShakeIntensity, roomTime);
+        GM.CameraShakeManager.DoCameraShake(cameraShakeIntensity, roomTime);
         yield return new WaitForSeconds(1f);
         room.DOMove(roomPos, roomTime);
         StartCoroutine(AsyncFalls());

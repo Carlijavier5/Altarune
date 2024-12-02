@@ -27,12 +27,8 @@ public class EntitySpawner : Entity {
             int groupIndex = Random.Range(0, spawnGroups.Count);
             EntityGroup group = spawnGroups[groupIndex];
 
-            Vector2 dir = SpatialUtils.RandomPointInRing(spawnRadius.x, spawnRadius.y);
-            Vector3 spawnPos = transform.position + new Vector3(dir.x, 0, dir.y);
-            if (group.needsNavMesh && NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 
-                                                             spawnRadius.y, NavMesh.AllAreas)) {
-                spawnPos = hit.position;
-            }
+            Vector3 spawnPos = SpatialUtils.RandomPointInXZRing(transform.position, spawnRadius,
+                                                                group.needsNavMesh);
 
             Entity entity = Instantiate(group.entityPrefab, spawnPos, Quaternion.identity);
             linkedEnemies.Add(entity);

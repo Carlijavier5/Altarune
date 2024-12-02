@@ -1,8 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public static class SpatialUtils {
+
+    public static Vector3 RandomPointInXZRing(Vector3 source, Vector2 spawnRadius,
+                                              bool needsNavMesh = false) {
+        Vector2 dir = RandomPointInRing(spawnRadius.x, spawnRadius.y);
+        Vector3 spawnPos = source + new Vector3(dir.x, 0, dir.y);
+        if (needsNavMesh && NavMesh.SamplePosition(spawnPos, out NavMeshHit hit,
+                                                   spawnRadius.y, NavMesh.AllAreas)) {
+            spawnPos = hit.position;
+        }
+        return spawnPos;
+    }
 
     public static float WrapAngle360(float inputAngle) {
         return (inputAngle + 360) % 360;

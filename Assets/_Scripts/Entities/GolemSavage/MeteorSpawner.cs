@@ -1,91 +1,70 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace GolemSavage {    
-    public class MeteorSpawner : MonoBehaviour {
-        // Creating the meteor prefab and array
-        private GolemSavage golemSavage;
-        [SerializeField] private GameObject meteorPrefab;
-        private GameObject[] meteors;
+public class MeteorSpawner : MonoBehaviour {
 
-        // Initializing vertical travel variables
-        [SerializeField] private int numMeteor = 15;
-        [SerializeField] private float radius = 8f;
+    [SerializeField] private Meteor[] meteors;
+    [SerializeField] private Vector2 fieldDimensionsX,
+                                     fieldDimensionsZ,
+                                     meteorSizeRange;
 
-        // Initializing coroutines
-        private Coroutine meteorRise;
-        private Coroutine meteorFall;
-
-        public void StartMeteorSpawning() {
-            meteorRise = StartCoroutine(MeteorRiseAnimation());
-        }
-
-        private IEnumerator MeteorRiseAnimation() {
-            SpawnAnimationMeteors();
-            yield return new WaitForSeconds(6f);
-
-            meteorFall = StartCoroutine(MeteorFall());
-        }
-
-        public void SpawnAnimationMeteors() {
-            // Possible location bounds for spawning
-            float minX = -10f;
-            float maxX = 10f;
-            float minZ = -10f;
-            float maxZ = 10f;
-            float positionY = -1f;
-
-            Vector3[] spawnVectors = new Vector3[numMeteor];
-            for (int i = 0; i < numMeteor; i++) {
-                    // Randomly generate the spawn location vectors
-                    float positionX = Random.Range(minX, maxX);
-                    float positionZ = Random.Range(minZ, maxZ);
-                    spawnVectors[i] = new Vector3(positionX, positionY, positionZ);
-                    
-                    // Instantiates the meteors below the ground
-                    GameObject meteor = Instantiate(meteorPrefab, spawnVectors[i], Quaternion.identity);
-                    
-                    // Adds the on destruction listener
-                    Meteor meteorController = meteor.GetComponent<Meteor>();
-                    meteorController.InitializeMeteor(true);
-            }
-        }
-
-        private IEnumerator MeteorFall() {
-            while (true) {
-                yield return new WaitForSeconds(.7f);
-                SpawnFallingMeteors();
-            }
-        }
-
-        public void SpawnFallingMeteors() {
-            // Possible location bounds for spawning
-            float minX = -10f;
-            float maxX = 10f;
-            float minZ = -10f;
-            float maxZ = 10f;
-            float positionY = 80f;
-
-            // Randomly generate the spawn location vectors
-            float positionX = Random.Range(minX, maxX);
-            float positionZ = Random.Range(minZ, maxZ);
-            Vector3 spawnLocation = new Vector3(positionX, positionY, positionZ);
-
-            // Instantiates the meteors below the ground
-            GameObject meteor = Instantiate(meteorPrefab, spawnLocation, Quaternion.identity);
-
-            // Adds the on destruction listener
-            Meteor meteorController = meteor.GetComponent<Meteor>();
-            meteorController.InitializeMeteor(false);
-        }
-
-        public void Exit() {
-            // Stop the Coroutines
-            if (meteorRise != null) StopCoroutine(meteorRise);
-            if (meteorFall != null) StopCoroutine(meteorFall);
+    private Vector3 RandomSpawnPosition {
+        get {
+            float positionX = Random.Range(fieldDimensionsX.x,
+                               fieldDimensionsX.y),
+                  positionZ = Random.Range(fieldDimensionsZ.x,
+                                           fieldDimensionsZ.y);
+            return new Vector3(positionX, 0, positionZ);
         }
     }
-}
 
+    private Vector3 RandomSize {
+        get {
+            return Random.Range(meteorSizeRange.x,
+                                meteorSizeRange.y) * Vector3.one;
+        }
+    }
+
+    void Awake() {
+        transform.SetParent(null);
+    }
+
+    public void DoMeteorHurl(int amount, float intervalTime,
+                             float riseDuration, float fallDuration) {
+        StartCoroutine(IDoMeteorHurl(amount, intervalTime,
+                                     riseDuration, fallDuration));
+    }
+
+    private IEnumerator IDoMeteorHurl(int amount, float intervalTime,
+                                      float riseDuration, float fallDuration) {
+        amount = Mathf.Clamp(amount, 1, meteors.Length);
+        float duration = riseDuration / amount;
+        for (int i = 0; i < amount; i++) {
+            meteors[i].DoRise(RandomSpawnPosition, RandomSize, duration);
+            yield return new WaitForSeconds(intervalTime);
+        }
+
+        float leftOverTime = riseDuration - duration - intervalTime * (amount - 1);
+        yield return new WaitForSeconds(Mathf.Max(0, leftOverTime));
+
+        duration = fallDuration / amount;
+        for (int i = 0; i < amount; i++) {
+            meteors[i].DoFall(duration);
+            yield return new WaitForSeconds(intervalTime);
+        }
+    }
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.red;
+        Vector3 center = new((fieldDimensionsX.x + fieldDimensionsX.y) / 2,
+                             transform.position.y,
+                             (fieldDimensionsZ.x + fieldDimensionsZ.y) / 2);
+        Vector3 size = new(fieldDimensionsX.y - fieldDimensionsX.x,
+                           transform.position.y,
+                           fieldDimensionsZ.y - fieldDimensionsZ.x);
+        Gizmos.DrawWireCube(center, size);
+        Gizmos.color = Color.white;
+    }
+    #endif
+}
