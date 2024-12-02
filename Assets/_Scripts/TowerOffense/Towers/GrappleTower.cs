@@ -24,8 +24,7 @@ public class GrappleTower : Summon
         sCollider.radius = range;
     }
 
-    protected override void Update() {
-        base.Update();
+    void Update() {
         //Debug.Log(sCollider.radius);
         if (!active) return;
         grappleTick += Time.deltaTime;

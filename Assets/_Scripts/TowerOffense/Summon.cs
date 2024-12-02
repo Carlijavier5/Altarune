@@ -8,33 +8,36 @@ public abstract partial class Summon : BaseObject {
     public event System.Action<Summon> OnSummonCollapse;
 
     //private const string HOLO_THRESHOLD_KEY = "_Teleport_Threshold";
+    //private VisualEffect hologramVFX;
 
     [SerializeField] private DefaultSummonProperties settings;
-    [SerializeField] protected float manaDepletion = 1f;
-
-    //private VisualEffect hologramVFX;
+    private SummonData data;
 
     public Entity Summoner { get; protected set; }
 
     protected ManaSource manaSource;
     protected bool active;
 
-    public virtual void Init(Entity summoner,
+    public virtual void Init(SummonData data, Entity summoner,
                              ManaSource manaSource) {
         this.manaSource = manaSource;
         Summoner = summoner;
         active = true;
+
+        manaSource.OnManaTax += ManaSource_OnManaTax;
+    }
+
+    private void ManaSource_OnManaTax(EventResponse<float> eRes) {
+        if (active) eRes.objectReference += data.manaDrain;
     }
 
     public virtual void Collapse() {
         active = false;
         OnSummonCollapse?.Invoke(this);
+        manaSource.OnManaTax -= ManaSource_OnManaTax;
+
         StopAllCoroutines();
         StartCoroutine(ISummonMaterialize(false));
-    }
-
-    protected virtual void Update() {
-        if (active) manaSource.Drain(Time.deltaTime * manaDepletion);
     }
 
     public void DoSpawn() {

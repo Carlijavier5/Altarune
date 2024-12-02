@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,19 +22,18 @@ public class LaserTower : Summon {
 	[SerializeField] private LaserTowerAnimator animator;
 
 
-	public override void Init(Entity summoner,
+	public override void Init(SummonData data, Entity summoner,
 						      ManaSource manaSource) {
-		base.Init(summoner, manaSource);
+		base.Init(data, summoner, manaSource);
 		attackRange = Instantiate(attackRangePrefab, gameObject.transform);
 	}
 
-	private void clearAltAttackBeam() {
+	private void ClearAltAttackBeam() {
 		altAttackBeam = null;
 	}
 
-	protected override void Update() {
+	void Update() {
 		if (!active) return;
-		base.Update();
 		checkClosestEnemyTick += Time.deltaTime;
 		if (checkClosestEnemyTick >= checkClosestEnemyInterval) {
 			float range = closestEnemy != null ? Vector3.Distance(gameObject.transform.position, closestEnemy.transform.position) : -1;
@@ -78,10 +73,10 @@ public class LaserTower : Summon {
 
 				if (altAttackTarget != null && altAttackBeam == null && Physics.Raycast(muzzle.transform.position, Quaternion.LookRotation(altAttackTarget.transform.position - gameObject.transform.position) * Vector3.forward, out RaycastHit raycastHit, range < 0 ? Vector3.Distance(altAttackTarget.transform.position, gameObject.transform.position) : range, enemyAndEnvironmentLayerMask, QueryTriggerInteraction.Ignore)) {
 					if (raycastHit.collider.gameObject.layer != 6) {
-						UnityEngine.Object laserProjectile = Instantiate(altTowerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
+						var laserProjectile = Instantiate(altTowerProjectile, muzzle.transform.position, Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
 						animator.PlayLaser(Quaternion.LookRotation(closestEnemy.transform.position - gameObject.transform.position));
 						altAttackBeam = laserProjectile.GetComponent<AltLaserTowerBeam>();
-						altAttackBeam.giveData(altAttackRange < 0 ? 5f : altAttackRange, altAttackTarget, this.clearAltAttackBeam);
+						altAttackBeam.giveData(altAttackRange < 0 ? 5f : altAttackRange, altAttackTarget, this.ClearAltAttackBeam);
 						attackTick = 0;
 					} else {
 						altAttackTarget = null;

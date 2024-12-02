@@ -16,17 +16,16 @@ public class TowerTemporal : Summon {
         magicCircleController.SetRadius(0);
     }
 
-    public override void Init(Entity summoner,
+    public override void Init(SummonData data, Entity summoner,
                               ManaSource manaSource) {
-        base.Init(summoner, manaSource);
+        base.Init(data, summoner, manaSource);
         StartCoroutine(IDevelopTempoArea());
     }
 
-    protected override void Update() {
+    void Update() {
         if (active) {
             float lerp = 0.2f + Mathf.Abs(Mathf.PingPong(Time.time, 0.8f));
             hourglassController.SetFill(lerp);
-            base.Update();
         }
     }
 

@@ -14,16 +14,15 @@ public class FriendlyFireTower : Summon{
     private float attackTick = -0.2f;
 
     // Update is called once per frame
-    protected override void Update(){
+    void Update(){
         Target();
-        base.Update();
     }
     /// <summary>
     /// Calculates the closest entity within it's aggro range and launches a FriendlyFireBigProjectile toward the entity with a random spread
     /// </summary>
     private void Target(){
-        Vector3 closestVector = new Vector3(float.MaxValue, float.MaxValue, Int32.MaxValue);
         if (!active) return;
+        Vector3 closestVector = new (float.MaxValue, float.MaxValue, int.MaxValue);
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval && aggroRange.AggroTargets.Count != 0) {
             foreach(Entity i in aggroRange.AggroTargets){

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ManaSource : MonoBehaviour {
 
+    public event System.Action<EventResponse<float>> OnManaTax;
     public event System.Action<float> OnManaFill;
     public event System.Action<float> OnManaDrain;
 
@@ -18,6 +19,10 @@ public class ManaSource : MonoBehaviour {
             mana = Mathf.Clamp(value, 0, MaxMana);
             if (mana <= 0) OnManaCollapse?.Invoke();
         }
+    }
+
+    void Update() {
+        
     }
 
     public void Init(float maxMana) {

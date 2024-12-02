@@ -30,9 +30,8 @@ public class TowerWind : Summon
     }
 
 
-    protected override void Update() {
+    void Update() {
         if (!active) return;
-        base.Update();
         windArea.changeRadius(_pullMode);
        //Debug.Log(timer);
 

@@ -5,29 +5,18 @@ using UnityEngine;
 public class TowerPlague : Summon {
 
     [SerializeField] private PlagueArea plagueArea;
-    [SerializeField] private Transform launchPoint;
+    [SerializeField] private float launchInterval;
+    private float timer;
 
-    [SerializeField] bool debug;
+    void Awake() {
+        plagueArea.EntityID = GetInstanceID();
+    }
 
-    void Start() {
-        if (debug) {
-            Init(null, null);
+    void Update() {
+        timer -= Time.deltaTime;
+        if (timer <= 0) {
+            timer = launchInterval;
+            plagueArea.DoWave();
         }
-    }
-
-
-    public override void Init(Entity summoner,
-                              ManaSource manaSource) {
-        base.Init(summoner, manaSource);
-        SpawnPlagueArea();
-    }
-
-    protected override void Update() {
-        if (!active) return;
-        base.Update();
-    }
-
-    private void SpawnPlagueArea() {
-        Instantiate(plagueArea, launchPoint.transform.position, Quaternion.identity);
     }
 }
