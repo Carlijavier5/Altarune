@@ -62,7 +62,6 @@ MonoBehaviour:
   navMeshAgent: {fileID: 2061940386180743951}
   aggroRange: {fileID: 730809488153375877}
   contactCollider: {fileID: 8996241635340701831}
-  rb: {fileID: 4549279284236352000}
   phaseConfigurations:
   - savagePhase: 0
     health: 20
@@ -74,8 +73,8 @@ MonoBehaviour:
     maxSpinSpeedDelay: 1.5
     slamDuration: 4
     meteorAmount: 6
-    meteorRiseInterval: 0.25
-    meteorRiseDuration: 4
+    meteorRiseInterval: 0.1
+    meteorRiseDuration: 3
     meteorFallDuration: 4
   - savagePhase: 1
     health: 3
@@ -87,22 +86,22 @@ MonoBehaviour:
     maxSpinSpeedDelay: 1
     slamDuration: 3
     meteorAmount: 10
-    meteorRiseInterval: 0.5
+    meteorRiseInterval: 0.1
     meteorRiseDuration: 3
     meteorFallDuration: 3
   - savagePhase: 2
-    health: 100
+    health: 20
     attackTimeRange: {x: 4, y: 5}
     roamSpeed: 3
     spinDuration: 10
-    maxSpinSpeed: 25
+    maxSpinSpeed: 20
     stopDuration: 1
     maxSpinSpeedDelay: 1
     slamDuration: 3
     meteorAmount: 10
-    meteorRiseInterval: 0.5
+    meteorRiseInterval: 0.1
     meteorRiseDuration: 3
-    meteorFallDuration: 3
+    meteorFallDuration: 4
   ascensionTime: 1
   earthTornado: {fileID: 5197653901016788999}
   roamWaitTimeRange: {x: 0.75, y: 1.5}
@@ -119,15 +118,15 @@ MonoBehaviour:
   farawaySpawnPoint: {fileID: 0}
   maxSiftlings: 3
   siftlingSpawnInterval: 5
-  siftlingSpawnRadius: {x: 2, y: 4}
+  siftlingSpawnRadius: {x: 3, y: 4}
   meteorSpawner: {fileID: 8203161463770108809}
   meteorHurlClip: {fileID: -6302078430049090649, guid: fc43d3a5742abfe459e5a25e67e77652,
     type: 3}
   slamWave: {fileID: 3378579050770889479}
-  slamClip: {fileID: -6302078430049090649, guid: fc43d3a5742abfe459e5a25e67e77652,
+  slamClip: {fileID: -5475469411390039387, guid: 9b4bd64f3b6a22347ae8a7f6ff04f6dc,
     type: 3}
   spinEffector: {fileID: 4623783209977697232}
-  spinStartClip: {fileID: -6480163930337036035, guid: addf0ea719e6f984984ff7b9d3162d69,
+  spinStartClip: {fileID: -446704061028401351, guid: 9b4bd64f3b6a22347ae8a7f6ff04f6dc,
     type: 3}
   spinRaycastDistance: 3
 --- !u!114 &6691771237556475830
@@ -145,7 +144,7 @@ MonoBehaviour:
   baseObject: {fileID: 6244932826840053502}
   defaultHPAttributes:
     curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
-    health: 10
+    health: 20
     defense: 0
     fireRes: 0
     iceRes: 0
@@ -1786,12 +1785,12 @@ PrefabInstance:
     - target: {fileID: 3752800964855504580, guid: b06d540d696547b468147d599cbed41b,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.4134035
+      value: -0.68397206
       objectReference: {fileID: 0}
     - target: {fileID: 3752800964855504580, guid: b06d540d696547b468147d599cbed41b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.91054803
+      value: -0.7295082
       objectReference: {fileID: 0}
     - target: {fileID: 3752800964855504580, guid: b06d540d696547b468147d599cbed41b,
         type: 3}

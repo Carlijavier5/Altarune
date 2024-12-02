@@ -9,6 +9,7 @@ public partial class GolemSiftling {
 
     [SerializeField] private AnimationClip ascendClip;
     [SerializeField] private Material ascendMaterial;
+    [SerializeField] private Renderer crystalRenderer;
 
     private class State_Ascend : State<Siftling_Input> {
 

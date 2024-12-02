@@ -63,6 +63,7 @@ MonoBehaviour:
   - type: 0
     health: 6
     tornado: {fileID: 0}
+    crystalMaterial: {fileID: 0}
     animationSpeed: 1
     roamSpeed: 2
     distanceRange: {x: 3, y: 5}
@@ -70,6 +71,7 @@ MonoBehaviour:
   - type: 1
     health: 8
     tornado: {fileID: 8443481580891199604}
+    crystalMaterial: {fileID: 2100000, guid: ab043a5b473a62e4c8340472a62d09ee, type: 2}
     animationSpeed: 0.5
     roamSpeed: 1.5
     distanceRange: {x: 2, y: 4}
@@ -77,6 +79,7 @@ MonoBehaviour:
   - type: 2
     health: 6
     tornado: {fileID: 7507778274205572769}
+    crystalMaterial: {fileID: 2100000, guid: 0658159da590ffb4e98d3782b77068f3, type: 2}
     animationSpeed: 1
     roamSpeed: 10
     distanceRange: {x: 6, y: 8}
@@ -84,6 +87,7 @@ MonoBehaviour:
   - type: 3
     health: 8
     tornado: {fileID: 974194110561703870}
+    crystalMaterial: {fileID: 2100000, guid: 6be3a9767beca824190ddc0a22606345, type: 2}
     animationSpeed: 0.9
     roamSpeed: 2.5
     distanceRange: {x: 4, y: 6}
@@ -91,6 +95,7 @@ MonoBehaviour:
   navMeshAgent: {fileID: 8338844980996685279}
   ascendClip: {fileID: 7400000, guid: 8271bf62214fe9d45aad31a02f6c6617, type: 2}
   ascendMaterial: {fileID: 2100000, guid: f62fc34a74651b6409dac2704d3e52a7, type: 2}
+  crystalRenderer: {fileID: 6506209769099317350}
   maxRoamDuration: 5
   roamWallBuffer: 2
 --- !u!114 &2317311903481447917
@@ -1201,6 +1206,12 @@ PrefabInstance:
 --- !u!4 &3967437734545854806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4879861495725671043, guid: bf71cb6e708e2dd4fa50135f19721d8d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8410449994339046357}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6506209769099317350 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3385960238922630067, guid: bf71cb6e708e2dd4fa50135f19721d8d,
     type: 3}
   m_PrefabInstance: {fileID: 8410449994339046357}
   m_PrefabAsset: {fileID: 0}

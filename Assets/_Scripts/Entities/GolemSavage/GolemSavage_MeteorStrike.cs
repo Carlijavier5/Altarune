@@ -20,11 +20,6 @@ public partial class GolemSavage {
         public override void Enter(Savage_Input input) {
             input.savage.navMeshAgent.ResetPath();
             input.savage.navMeshAgent.enabled = false;
-            SavagePhaseConfiguration config = input.savage.activeConfig;
-            input.savage.meteorSpawner.DoMeteorHurl(config.meteorAmount,
-                                                    config.meteorRiseInterval,
-                                                    config.meteorRiseDuration,
-                                                    config.meteorFallDuration);
             input.savage.animator.SetTrigger(METEOR_HURL_PARAM);
             timer = input.savage.meteorHurlClip.length;
         }
