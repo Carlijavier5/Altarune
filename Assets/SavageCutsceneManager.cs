@@ -18,7 +18,7 @@ public class SavageCutsceneManager : MonoBehaviour {
     [SerializeField] private float wireDelay = 1.5f;
     [SerializeField] private float layerShiftTime;
 
-    [SerializeField] private List<Rigidbody> wireConnectors;
+    //[SerializeField] private List<Rigidbody> wireConnectors;
     [SerializeField] private ParticleSystem dust;
     [SerializeField] private ParticleSystem bigDust;
 
@@ -50,7 +50,7 @@ public class SavageCutsceneManager : MonoBehaviour {
 
     private IEnumerator Cutscene() {
         GM.CameraShakeManager.DoCameraShake(10, 3f);
-        dust.Play();
+        //dust.Play();
         foreach (Transform sands in sand) {
             sands.DOScaleY(100f, 0.5f);
         }
@@ -59,9 +59,9 @@ public class SavageCutsceneManager : MonoBehaviour {
         yield return new WaitForSeconds(spinDelay);
         cutsceneAnimator.SetTrigger(SPIN_START_PARAM);
         yield return new WaitForSeconds(wireDelay);
-        foreach (Rigidbody rigidbody in wireConnectors) {
-            rigidbody.useGravity = true;
-        }
+        // foreach (Rigidbody rigidbody in wireConnectors) {
+        //     rigidbody.useGravity = true;
+        // }
 
         yield return new WaitForSeconds(0.8f);
         StartCoroutine(UI());
@@ -71,9 +71,9 @@ public class SavageCutsceneManager : MonoBehaviour {
         yield return new WaitForSeconds(2.5f);
         Time.timeScale = 1f;
         vCam.m_Priority = 0;
-        foreach (Rigidbody rigidbody in wireConnectors) {
-            rigidbody.useGravity = false;
-        }
+        // foreach (Rigidbody rigidbody in wireConnectors) {
+        //     rigidbody.useGravity = false;
+        // }
         DOTween.To(() => light.intensity, x => light.intensity = x, 0, 2f);
         DOTween.To(() => mainLight.intensity, x => mainLight.intensity = x, 0.15f, 2f);
         yield return new WaitForSeconds(1f);
