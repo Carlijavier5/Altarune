@@ -17,7 +17,6 @@ public partial class GolemSavage : Entity {
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange;
     [SerializeField] private Collider contactCollider;
-    [SerializeField] private Rigidbody rb;
 
     [SerializeField] private SavagePhaseConfiguration[] phaseConfigurations;
 
@@ -115,6 +114,13 @@ public partial class GolemSavage : Entity {
         slamWave.DoSlam(transform.position, activeConfig.slamDuration);
     }
 
+    public void Animator_OnMeteorPunch() {
+        meteorSpawner.DoMeteorHurl(activeConfig.meteorAmount,
+                                   activeConfig.meteorRiseInterval,
+                                   activeConfig.meteorRiseDuration,
+                                   activeConfig.meteorFallDuration);
+    }
+
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
                 && !baseObject.IsFaction(EntityFaction.Hostile)) {
@@ -157,17 +163,7 @@ public partial class GolemSavage : Entity {
         microMachine.SetState(new State_Perish());
         DetachModules();
         enabled = false;
-        Ragdoll();
         Destroy(gameObject, 2);
-    }
-
-    public void Ragdoll() {
-        rb.useGravity = true;
-        rb.isKinematic = false;
-        Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
-        rb.AddForce(force);
-        Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
-        rb.AddTorque(torque);
     }
 
     #if UNITY_EDITOR

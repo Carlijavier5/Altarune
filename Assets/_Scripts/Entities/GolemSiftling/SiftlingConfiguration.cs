@@ -7,6 +7,7 @@ public class SiftlingConfiguration {
     public SiftlingType type;
     public int health;
     public SiftlingTornado tornado;
+    public Material crystalMaterial;
     [Header("Roam Properties")]
     public float animationSpeed;
     public float roamSpeed;
