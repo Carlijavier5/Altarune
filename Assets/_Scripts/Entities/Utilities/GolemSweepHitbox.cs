@@ -48,8 +48,8 @@ public class GolemSweepHitbox : MonoBehaviour {
 
     public void DoDamage(int damageAmount) {
         attackCollider.enabled = false;
-        foreach (BaseObject entity in contactSet) {
-            entity.TryDamage(damageAmount);
+        foreach (BaseObject baseObject in contactSet) {
+            baseObject.TryDamage(damageAmount);
         } StartCoroutine(IDoFade(false));
         contactSet.Clear();
     }

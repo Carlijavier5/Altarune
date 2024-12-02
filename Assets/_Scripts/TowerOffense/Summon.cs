@@ -5,6 +5,8 @@ using UnityEngine.VFX;
 
 public abstract partial class Summon : BaseObject {
 
+    public event System.Action<Summon> OnSummonCollapse;
+
     //private const string HOLO_THRESHOLD_KEY = "_Teleport_Threshold";
 
     [SerializeField] private DefaultSummonProperties settings;
@@ -26,6 +28,7 @@ public abstract partial class Summon : BaseObject {
 
     public virtual void Collapse() {
         active = false;
+        OnSummonCollapse?.Invoke(this);
         StopAllCoroutines();
         StartCoroutine(ISummonMaterialize(false));
     }

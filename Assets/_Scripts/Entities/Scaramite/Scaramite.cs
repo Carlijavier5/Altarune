@@ -65,7 +65,7 @@ public partial class Scaramite : Entity {
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
-            && !baseObject.IsFaction(Faction)) {
+                && !baseObject.IsFaction(Faction)) {
             DealDamage(baseObject);
         }
     }
