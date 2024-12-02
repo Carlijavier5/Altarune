@@ -8,7 +8,7 @@ public partial class GolemSavage {
     [Header("Slam")]
     [SerializeField] private PawSlam slamWave;
     [SerializeField] private AnimationClip slamClip;
-
+    
     private class State_Slam : State<Savage_Input> {
 
         private readonly SavagePhase phase;

@@ -12,6 +12,8 @@ public class PawSlam : MonoBehaviour {
                                                     innerEpicenter;
     [SerializeField] private SFXOneShot sfxPawSlam;
     [SerializeField] private AnimationCurve growthCurve;
+    
+    [SerializeField] private ParticleSystem smoke;
 
     private void Awake() {
         transform.SetParent(null);
@@ -28,6 +30,9 @@ public class PawSlam : MonoBehaviour {
         yield return new WaitForEndOfFrame();
         ClearContacts();
         sfxPawSlam.Play();
+        smoke.transform.position = transform.position + new Vector3(0f, 1f, 0f);
+        smoke.Play();
+        GM.CameraShakeManager.DoCameraShake(10f, 1f);
 
         float lerpVal, scaleVal, timer = 0;
         while (timer < duration) {
