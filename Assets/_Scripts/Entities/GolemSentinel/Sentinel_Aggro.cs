@@ -6,6 +6,7 @@ public partial class GolemSentinel {
                          CHARGE_COMMIT_PARAM = "ChargeCommit";
 
     [Header("Aggro/Charge State")]
+    [SerializeField] private LoopingSystemController chargeShieldController;
     [SerializeField] private int damageAmount;
     [SerializeField] private Vector2 aggroWaitTimeRange;
     [SerializeField] private float chargeAmplitude, chargeTime,
@@ -63,17 +64,19 @@ public partial class GolemSentinel {
         public override void Enter(Sentinel_Input input) {
             base.Enter(input);
             input.golem.animator.SetTrigger(CHARGE_START_PARAM);
+            input.golem.chargeShieldController.Enable();
         }
 
         public override void Update(Sentinel_Input input) {
             base.Update(input);
             chargeTimer = Mathf.MoveTowards(chargeTimer, input.golem.chargeTime, input.golem.DeltaTime);
             float lerpVal = chargeTimer / input.golem.chargeTime;
-            /// Add charge VFX;
             if (lerpVal >= 1) input.stateMachine.SetState(new State_Charge());
         }
 
-        public override void Exit(Sentinel_Input input) { }
+        public override void Exit(Sentinel_Input input) {
+            input.golem.chargeShieldController.Disable();
+        }
     }
 
     private class State_Charge : State<Sentinel_Input> {
@@ -81,17 +84,21 @@ public partial class GolemSentinel {
         private float chargeTimer;
 
         public override void Enter(Sentinel_Input input) {
+            input.golem.chargeShieldController.Enable();
             input.golem.controller.enabled = true;
             input.golem.navMeshAgent.enabled = false;
             input.golem.MotionDriver.Set(input.golem.controller);
             input.golem.animator.SetTrigger(CHARGE_COMMIT_PARAM);
         }
 
-        public override void Update(Sentinel_Input input) {
+        public override void Update(Sentinel_Input input) { }
+
+        public override void FixedUpdate(Sentinel_Input input) {
             GolemSentinel golem = input.golem;
-            chargeTimer += golem.DeltaTime;
+            chargeTimer += golem.FixedDeltaTime;
             if (golem.CanMove) {
-                golem.controller.Move(golem.chargeSpeed * golem.DeltaTime * golem.transform.forward);
+                golem.controller.Move(golem.FixedDeltaTime * golem.chargeSpeed
+                                      * golem.transform.forward);
             }
 
             if (chargeTimer >= golem.chargeDuration) {
@@ -101,6 +108,7 @@ public partial class GolemSentinel {
 
         public override void Exit(Sentinel_Input input) {
             input.golem.ClearContacts();
+            input.golem.chargeShieldController.Disable();
             input.golem.controller.enabled = false;
             input.golem.navMeshAgent.enabled = true;
             input.golem.MotionDriver.Set(input.golem.navMeshAgent);

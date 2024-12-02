@@ -48,6 +48,11 @@ public class RuntimeHealthAttributes : HealthAttributes {
         return processedAmount;
     }
 
+    public void UpdateMaxHealth(int maxHealth) {
+        MaxHealth = maxHealth;
+        health = maxHealth;
+    }
+
     private void UpdateAttributes() {
         if (effectSource == null) return;
 

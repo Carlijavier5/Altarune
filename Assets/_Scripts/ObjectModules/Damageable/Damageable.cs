@@ -21,13 +21,14 @@ public class Damageable : ObjectModule {
     protected bool localIFrameOn, externalIFrameOn;
     protected bool IFrameOn => localIFrameOn || externalIFrameOn;
 
-    void Awake() {
+    protected virtual void Awake() {
         baseObject.UpdateRendererRefs();
         baseObject.OnTryDamage += BaseObject_OnTryDamage;
         baseObject.OnTryHeal += BaseObject_OnTryHeal;
         baseObject.OnTryRequestHealth += BaseObject_OnTryRequestHealth;
         baseObject.OnTryRequestMaxHealth += BaseObject_OnTryRequestMaxHealth;
         baseObject.OnTryToggleIFrame += BaseObject_OnTryToggleIFrame;
+        baseObject.OnTryBypassIFrame += BaseObject_OnTryBypassIFrame;
 
         IEnumerable<EntityEffect> effectSource = baseObject is Entity ? (baseObject as Entity).StatusEffects
                                                                       : null;
@@ -65,6 +66,14 @@ public class Damageable : ObjectModule {
     private void BaseObject_OnTryToggleIFrame(bool on, EventResponse response) {
         response.received = true;
         ToggleIFrame(on);
+    }
+
+    private void BaseObject_OnTryBypassIFrame(int amount) {
+        int processedAmount = runtimeHP.DoDamage(amount);
+        if (processedAmount > 0) {
+            baseObject.PropagateDamage(processedAmount);
+            StartCoroutine(ISimulateIFrame());
+        }
     }
 
     private void BaseObject_OnTryRequestHealth(EventResponse<int> response) {

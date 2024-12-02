@@ -18,10 +18,10 @@ public class PlayerDamageable : Damageable {
                 baseObject.PropagateDamage(processedAmount);
                 
                 StartCoroutine(ISimulateIFrame());
-                //ScreenSpaceEffect
-                ScreenEffectManager.Instance.HitEffect();
-                //Camera shake
-                CameraShake.Instance.DoCameraShake();
+                /// ScreenSpace Effect
+                GM.ScreenEffectManager.HitEffect();
+                /// Camera Shake
+                GM.CameraShakeManager.DoCameraShake();
                 
                 if (runtimeHP.Health <= 0) {
                     ToggleIFrame(true);

@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class ScreenEffectManager : MonoBehaviour
 {
-    private static ScreenEffectManager instance;
-    public static ScreenEffectManager Instance => instance;
-
     [Header("Hit Effect")] [SerializeField]
     private Material hitMaterial;
     [SerializeField] private float hitRadius = 2.1f;
@@ -15,16 +12,10 @@ public class ScreenEffectManager : MonoBehaviour
     [SerializeField] private float hitDuration = 0.3f;
     
     // ------------------------ LOCAL MEMBERS -------------------------------
-    private float elapsedTime = 0f;
     private bool effectRunning;
     // ----------------------------------------------------------------------
     
     void Awake() {
-        //thank u mr. los
-        if (instance) {
-            Destroy(gameObject);
-        } else instance = this;
-        
         hitMaterial.SetFloat("_Radius", 10f);
     }
 
@@ -34,10 +25,8 @@ public class ScreenEffectManager : MonoBehaviour
         }
     }
     
-    private IEnumerator HitEffectAction()
-    {
+    private IEnumerator HitEffectAction() {
         effectRunning = true;
-        elapsedTime = 0f;
 
         hitMaterial.DOFloat(hitRadius, "_Radius", hitDelay);
         yield return new WaitForSeconds(hitDelay);

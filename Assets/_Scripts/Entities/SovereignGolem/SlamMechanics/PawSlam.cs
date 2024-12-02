@@ -14,6 +14,7 @@ public class PawSlam : MonoBehaviour {
     [SerializeField] private AnimationCurve growthCurve;
 
     private void Awake() {
+        transform.SetParent(null);
         outerEpicenter.OnEntityEnter += OuterEpicenter_OnEntityEnter;
     }
 

@@ -12,6 +12,7 @@ public class EmphidianProjectile : MonoBehaviour {
     void Awake() {
         StartCoroutine(ILifetime());
         StartCoroutine(IToggle(true));
+        Debug.Log("a bullet was born");
     }
 
     void FixedUpdate() {
@@ -29,6 +30,7 @@ public class EmphidianProjectile : MonoBehaviour {
             }
         } else if (!other.isTrigger
                    && (other.gameObject.layer & LayerUtils.GroundLayerMask) > 0) {
+            Debug.Log("hello dude");
             StopAllCoroutines();
             StartCoroutine(IToggle(false));
         }

@@ -93,7 +93,7 @@ public abstract partial class BaseObject : MonoBehaviour {
             else SetMaterial(materialStack.Last.Value);
         } else {
             LinkedListNode<Material> node = materialStack.FindLast(material);
-            materialStack.Remove(node);
+            if (node != null) materialStack.Remove(node);
         }
     }
 

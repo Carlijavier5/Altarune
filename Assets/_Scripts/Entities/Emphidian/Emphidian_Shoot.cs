@@ -15,6 +15,7 @@ public partial class Emphidian {
 
     public class State_Shoot : State<Emphidian_Input> {
 
+        private Quaternion lookRotation;
         private float timer;
 
         public override void Enter(Emphidian_Input input) {
@@ -23,6 +24,7 @@ public partial class Emphidian {
             if (input.aggroTarget) {
                 emp.lockedShootDirection = input.aggroTarget.transform.position
                                          - emp.transform.position;
+                lookRotation = Quaternion.LookRotation(emp.lockedShootDirection, Vector3.up);
                 emp.animator.SetTrigger(SHOOT_PARAM);
             } else input.stateMachine.SetState(new State_Roam());
             timer = emp.shootClip.length;
@@ -30,6 +32,13 @@ public partial class Emphidian {
 
         public override void Update(Emphidian_Input input) {
             timer -= input.emphidian.DeltaTime;
+
+            input.emphidian.transform.rotation = Quaternion.RotateTowards(
+                input.emphidian.transform.rotation, lookRotation,
+                input.emphidian.navMeshAgent.angularSpeed 
+                * input.emphidian.DeltaTime * 5
+            );
+
             if (timer <= 0) input.stateMachine.SetState(new State_Roam());
         }
 

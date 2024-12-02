@@ -17,6 +17,12 @@ public class GM : MonoBehaviour {
     [SerializeField] private TimeScaleManager timeScaleManager;
     public static TimeScaleManager TimeScaleManager => instance.timeScaleManager;
 
+    [SerializeField] private ScreenEffectManager screenEffectManager;
+    public static ScreenEffectManager ScreenEffectManager => instance.screenEffectManager;
+
+    [SerializeField] private CameraShakeManager cameraShakeManager;
+    public static CameraShakeManager CameraShakeManager => instance.cameraShakeManager;
+
     void Awake() {
         if (instance) {
             Destroy(gameObject);

@@ -1,26 +1,28 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class SavageCutsceneManager : MonoBehaviour {
+
+    private const string SPIN_START_PARAM = "SpinStart";
+
+    public event System.Action OnCutsceneEnd;
+
     [SerializeField] private Animator cutsceneAnimator;
     [SerializeField] private Material savageDecal;
-    [SerializeField] private Light light;
+    [SerializeField] private new Light light;
 
-    [SerializeField] private float initDelay = 1f;
-    [SerializeField] private float textDelay = 3f;
     [SerializeField] private float spinDelay = 2f;
     [SerializeField] private float wireDelay = 1.5f;
+    [SerializeField] private float layerShiftTime;
 
     [SerializeField] private List<Rigidbody> wireConnectors;
     [SerializeField] private ParticleSystem dust;
     [SerializeField] private ParticleSystem bigDust;
 
-    [SerializeField] private CinemachineVirtualCamera camera;
+    [SerializeField] private CinemachineVirtualCamera vCam;
     [SerializeField] private Transform uiTop;
     [SerializeField] private Transform uiBottom;
     [SerializeField] private Light mainLight;
@@ -28,11 +30,7 @@ public class SavageCutsceneManager : MonoBehaviour {
     [SerializeField] private List<Light> fireLights;
     [SerializeField] private List<Transform> sand;
 
-    private CameraShake shake;
-
-    private void Start() {
-        shake = GetComponent<CameraShake>();
-        StartCoroutine(Cutscene());
+    void Awake() {
         uiTop.position += (new Vector3(0f, 400f, 0f));
         uiBottom.position -= (new Vector3(0f, 600f, 0f));
         foreach (Transform fire in fires) {
@@ -46,10 +44,12 @@ public class SavageCutsceneManager : MonoBehaviour {
         }
     }
 
+    public void Activate() {
+        StartCoroutine(Cutscene());
+    }
+
     private IEnumerator Cutscene() {
-        yield return new WaitForSeconds(initDelay);
-        yield return new WaitForSeconds(textDelay);
-        shake.DoCameraShake(10, 3f);
+        GM.CameraShakeManager.DoCameraShake(10, 3f);
         dust.Play();
         foreach (Transform sands in sand) {
             sands.DOScaleY(100f, 0.5f);
@@ -57,7 +57,7 @@ public class SavageCutsceneManager : MonoBehaviour {
         StartCoroutine(Decal());
         DOTween.To(() => light.intensity, x => light.intensity = x, 100, 2f);
         yield return new WaitForSeconds(spinDelay);
-        cutsceneAnimator.SetTrigger("Spin");
+        cutsceneAnimator.SetTrigger(SPIN_START_PARAM);
         yield return new WaitForSeconds(wireDelay);
         foreach (Rigidbody rigidbody in wireConnectors) {
             rigidbody.useGravity = true;
@@ -65,12 +65,12 @@ public class SavageCutsceneManager : MonoBehaviour {
 
         yield return new WaitForSeconds(0.8f);
         StartCoroutine(UI());
-        camera.m_Priority = 100;
+        vCam.m_Priority = 100;
         bigDust.Play();
         Time.timeScale = 0.5f;
         yield return new WaitForSeconds(2.5f);
         Time.timeScale = 1f;
-        camera.m_Priority = 0;
+        vCam.m_Priority = 0;
         foreach (Rigidbody rigidbody in wireConnectors) {
             rigidbody.useGravity = false;
         }
@@ -83,6 +83,16 @@ public class SavageCutsceneManager : MonoBehaviour {
         foreach (Light fire in fireLights) {
             DOTween.To(() => fire.intensity, x => fire.intensity = x, 2.26f, 0.5f).SetEase(Ease.OutBack);
         }
+        yield return new WaitForSeconds(1f);
+        float lerpVal, timer = 0;
+        while (timer < layerShiftTime) {
+            timer = Mathf.MoveTowards(timer, layerShiftTime, Time.unscaledDeltaTime);
+            lerpVal = timer / layerShiftTime;
+            cutsceneAnimator.SetLayerWeight(0, 1 - lerpVal);
+            cutsceneAnimator.SetLayerWeight(1, lerpVal);
+            yield return null;
+        }
+        OnCutsceneEnd?.Invoke();
     }
     
     private IEnumerator Decal() {
@@ -99,5 +109,9 @@ public class SavageCutsceneManager : MonoBehaviour {
         yield return new WaitForSeconds(2.5f);
         uiTop.DOMoveY(uiTop.position .y + 400f, 1.5f);
         uiBottom.DOMoveY(uiBottom.position.y - 600f, 1.5f);
+    }
+
+    void OnDisable() {
+        savageDecal.SetFloat("_Lerp", 0f);
     }
 }

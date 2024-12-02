@@ -7,7 +7,9 @@ public abstract partial class BaseObject {
 
     public event System.Action<int, ElementType, EventResponse> OnTryDamage;
     public event System.Action<int, EventResponse> OnTryHeal;
+
     public event System.Action<bool, EventResponse> OnTryToggleIFrame;
+    public event System.Action<int> OnTryBypassIFrame;
 
     public event System.Action<EventResponse<int>> OnTryRequestHealth;
     public event System.Action<EventResponse<int>> OnTryRequestMaxHealth;
@@ -65,6 +67,10 @@ public abstract partial class BaseObject {
         EventResponse eRes = new();
         OnTryDamage?.Invoke(amount, element, eRes);
         return eRes.received;
+    }
+
+    public void TryBypassIFrame(int damageAmount) {
+        OnTryBypassIFrame?.Invoke(damageAmount);
     }
 
     /// <summary>

@@ -71,9 +71,7 @@ public class Teleportable : ObjectModule {
         while (timer < TProps.settings.duration) {
             timer = Mathf.MoveTowards(timer, TProps.settings.duration, Time.deltaTime);
             lerpVal = timer / TProps.settings.duration;
-            if (baseObject.MotionDriver.MotionMode != MotionMode.NavMesh) {
-                UpdateRootScale(lerpVal, originalScale);
-            }
+            UpdateRootScale(lerpVal, originalScale);
             baseObject.UpdatePropertyBlock((mpb) => { mpb.SetFloat(HOLO_THRESHOLD_KEY, 1 - lerpVal); });
             yield return null;
         }
