@@ -88,9 +88,9 @@ public partial class Armadillo : Entity {
         SetState(newState);
     }
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)
-            && entity.Faction != EntityFaction.Hostile) {
-            entity.TryDamage(4);
+        if (other.TryGetComponent(out BaseObject baseObject)
+                && !baseObject.IsFaction(EntityFaction.Hostile)) {
+            baseObject.TryDamage(4);
         }
     }
     private void Armadillo_OnRootSet(bool rooted) {

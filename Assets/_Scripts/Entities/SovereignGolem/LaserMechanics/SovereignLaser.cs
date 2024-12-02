@@ -11,23 +11,23 @@ public abstract class SovereignLaser : MonoBehaviour {
     [SerializeField] private SFXOneShot sfxLaserTrigger;
     [SerializeField] private SFXLoop sfxLaserLoop;
 
-    private readonly Stack<Entity> terminateStack = new();
-    private readonly Dictionary<Entity, float> contactMap = new();
-    private readonly HashSet<Entity> contactSet = new();
+    private readonly Stack<BaseObject> terminateStack = new();
+    private readonly Dictionary<BaseObject, float> contactMap = new();
+    private readonly HashSet<BaseObject> contactSet = new();
 
     protected virtual void Update() {
         try {
-            foreach (KeyValuePair<Entity, float> kvp in contactMap) {
+            foreach (KeyValuePair<BaseObject, float> kvp in contactMap) {
                 contactMap[kvp.Key] -= Time.deltaTime;
                 if (kvp.Value <= 0) terminateStack.Push(kvp.Key);
             }
         } catch { }
 
-        while (terminateStack.TryPop(out Entity entity)) {
-            if (contactSet.Contains(entity)) {
-                entity.TryDamage(damageAmount);
-                contactMap[entity] = hitCooldown;
-            } else contactMap.Remove(entity);
+        while (terminateStack.TryPop(out BaseObject baseObject)) {
+            if (contactSet.Contains(baseObject)) {
+                baseObject.TryDamage(damageAmount);
+                contactMap[baseObject] = hitCooldown;
+            } else contactMap.Remove(baseObject);
         }
     }
 
@@ -38,11 +38,11 @@ public abstract class SovereignLaser : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)) {
-            contactSet.Add(entity);
-            if (!contactMap.ContainsKey(entity)) {
-                entity.TryDamage(damageAmount);
-                contactMap[entity] = hitCooldown;
+        if (other.TryGetComponent(out BaseObject baseObject)) {
+            contactSet.Add(baseObject);
+            if (!contactMap.ContainsKey(baseObject)) {
+                baseObject.TryDamage(damageAmount);
+                contactMap[baseObject] = hitCooldown;
             }
         }
     }

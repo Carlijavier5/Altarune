@@ -10,8 +10,6 @@ public class TornadoSkill : BasePlayerSkill
 
     private List<BaseObject> affectedObjects = new List<BaseObject>();
 
-    private GameObject tornadoVFX;
-    private float scaleDuration = 1.5f;
     [SerializeField] private AnimationCurve scaleCurve;
 
     public override void SpawnSkill(PlayerSkillData data, Vector3 playerPos, Vector3 targetPos, ISkillSpawn spawnBehavior, ISkillMovement moveBehavior) {

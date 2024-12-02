@@ -86,7 +86,6 @@ public class ManaBar : MonoBehaviour
 
     public bool PrepareSpell(float manaCost)
     {
-        string spellName = "RandomSpell";
         float spellCost = 5f;
 
         // Check if the spell can be cast

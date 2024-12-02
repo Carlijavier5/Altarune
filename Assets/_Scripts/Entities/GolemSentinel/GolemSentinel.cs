@@ -125,11 +125,9 @@ public partial class GolemSentinel : Entity {
 
     void OnTriggerEnter(Collider other) {
         if (stateMachine.State is not State_Charge) return;
-        if (other.TryGetComponent(out BaseObject baseObject)) {
-            Entity entity = baseObject as Entity;
-            if (entity == null || entity.Faction != EntityFaction.Hostile) {
-                baseObject.TryDamage(damageAmount);
-            }
+        if (other.TryGetComponent(out BaseObject baseObject)
+                && !baseObject.IsFaction(EntityFaction.Hostile)) {
+            baseObject.TryDamage(damageAmount);
         }
     }
 

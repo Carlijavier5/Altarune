@@ -7,9 +7,7 @@ public partial class Emphidian {
     [Header("Roam Variables")]
     [SerializeField] private Vector2 moveTimeRange = new(3f, 4.5f);
     [SerializeField] private Vector2 roamDistanceRange;
-    [SerializeField]
-    private float roamSpeed = 3.5f,
-                                   stoppingDistance = 0.1f,
+    [SerializeField] private float stoppingDistance = 0.1f,
                                    wiggleAmplitude = 0.5f,
                                    wiggleFrequency = 2.0f,
                                    maxWiggleDistance;

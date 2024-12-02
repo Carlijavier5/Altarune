@@ -15,9 +15,8 @@ public class TowerFurnace : Summon {
         angle = Random.Range(0, 360);
     }
 
-    protected override void Update() {
+    void Update() {
         if (!active) return;
-        base.Update();
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {
             TowerProjectile projectile = Instantiate(projectilePrefab, launchPoint.transform.position, Quaternion.identity);

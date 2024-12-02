@@ -23,6 +23,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private CameraShakeManager cameraShakeManager;
     public static CameraShakeManager CameraShakeManager => instance.cameraShakeManager;
 
+    [SerializeField] private InventoryManager inventoryManager;
+    public static InventoryManager InventoryManager => instance.inventoryManager;
+
     void Awake() {
         if (instance) {
             Destroy(gameObject);

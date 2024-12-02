@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class SovereignSlamEpicenter : MonoBehaviour {
 
-    public event System.Action<Entity> OnEntityEnter;
+    public event System.Action<BaseObject> OnObjectEnter;
 
-    public readonly HashSet<Entity> contactSet = new();
+    public readonly HashSet<BaseObject> contactSet = new();
 
     public void Clear() => contactSet.Clear();
 
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity)) {
-            contactSet.Add(entity);
-            OnEntityEnter?.Invoke(entity);
+        if (other.TryGetComponent(out BaseObject baseObject)) {
+            contactSet.Add(baseObject);
+            OnObjectEnter?.Invoke(baseObject);
         }
     }
 }

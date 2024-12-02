@@ -7,8 +7,8 @@ using UnityEngine;
 public class ManaShieldController : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] new Renderer renderer;
-    [SerializeField] ParticleSystem particleSystem;
+    [SerializeField] private new Renderer renderer;
+    [SerializeField] private new ParticleSystem particleSystem;
     
     MaterialPropertyBlock mpb;
     public MaterialPropertyBlock Mpb

@@ -8,9 +8,9 @@ public class BuildAreaRingController : MonoBehaviour
 {
     #region Properties
 
-    [SerializeField] float thickness = 0.2f;
+    [SerializeField] private float thickness = 0.2f;
     
-    [SerializeField] SphereCollider collider;
+    [SerializeField] private new SphereCollider collider;
 
     MaterialPropertyBlock mpb;
     public MaterialPropertyBlock Mpb
@@ -23,7 +23,7 @@ public class BuildAreaRingController : MonoBehaviour
         }
     }
 
-    Renderer renderer;
+    private new Renderer renderer;
 
     #endregion
     

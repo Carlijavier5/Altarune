@@ -32,8 +32,9 @@ public class TowerProjectile : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
-            && !baseObject.IsFaction(EntityFaction.Friendly)) {
-            if (baseObject.TryDamage(4)) {
+                && !baseObject.IsFaction(EntityFaction.Friendly)) {
+            int amount = baseObject is Summon ? 1 : damage;
+            if (baseObject.TryDamage(amount)) {
                 End();
             }
         } else if (!other.isTrigger
