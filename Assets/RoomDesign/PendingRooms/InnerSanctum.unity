@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589245, b: 0.2978263, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276843, g: 0.21589185, b: 0.2978243, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -31467,7 +31467,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &712673281
 Transform:
   m_ObjectHideFlags: 0
@@ -37904,12 +37904,6 @@ PrefabInstance:
 --- !u!4 &857229816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4514495980491229899, guid: 49d3d0a49645ace4c96d8310f288dc82,
-    type: 3}
-  m_PrefabInstance: {fileID: 1673753907}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &857229817 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 5982053617140101520, guid: 49d3d0a49645ace4c96d8310f288dc82,
     type: 3}
   m_PrefabInstance: {fileID: 1673753907}
   m_PrefabAsset: {fileID: 0}
@@ -48735,7 +48729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1079541246
 Transform:
   m_ObjectHideFlags: 0
@@ -59285,7 +59279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1322752511
 Transform:
   m_ObjectHideFlags: 0
@@ -74678,12 +74672,12 @@ PrefabInstance:
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.022902267
+      value: 0.1034136
       objectReference: {fileID: 0}
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.99973774
+      value: -0.9946385
       objectReference: {fileID: 0}
     - target: {fileID: 7487774881586822766, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
@@ -79238,12 +79232,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1673753907}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &1779962058 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 5059222784010083805, guid: 49d3d0a49645ace4c96d8310f288dc82,
-    type: 3}
-  m_PrefabInstance: {fileID: 1673753907}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1780176011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81781,12 +81769,6 @@ Transform:
 --- !u!4 &1840436863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2317465858896802417, guid: 49d3d0a49645ace4c96d8310f288dc82,
-    type: 3}
-  m_PrefabInstance: {fileID: 1673753907}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &1840436864 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6549495716403449028, guid: 49d3d0a49645ace4c96d8310f288dc82,
     type: 3}
   m_PrefabInstance: {fileID: 1673753907}
   m_PrefabAsset: {fileID: 0}
@@ -94157,10 +94139,6 @@ MonoBehaviour:
   spinDelay: 1
   wireDelay: 1.5
   layerShiftTime: 0.5
-  wireConnectors:
-  - {fileID: 857229817}
-  - {fileID: 1779962058}
-  - {fileID: 1840436864}
   dust: {fileID: 934143296}
   bigDust: {fileID: 1175145469}
   vCam: {fileID: 2117874871}
