@@ -47,7 +47,7 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadSceneAsync(Scene scene) {
         yield return null;
 
-        loadingAsyncOperation = SceneManager.LoadSceneAsync(scene.ToString());
+        loadingAsyncOperation = SceneManager.LoadSceneAsync("FallDemoMain");
 
         while (!loadingAsyncOperation.isDone) {
             yield return null;

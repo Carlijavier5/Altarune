@@ -64,6 +64,16 @@ public class PlayerController : MonoBehaviour {
         StartCoroutine(ISyncInitialization());
     }
 
+    public void Activate() {
+        playerInput.Movement.Enable();
+        playerInput.Actions.Enable();
+    }
+
+    public void Deactivate() {
+        playerInput.Movement.Disable();
+        playerInput.Actions.Disable();
+    }
+
     private IEnumerator ISyncInitialization() {
         yield return new WaitForEndOfFrame();
         OnPlayerInit?.Invoke();
