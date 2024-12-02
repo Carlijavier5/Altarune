@@ -21,10 +21,11 @@ public abstract partial class Summon : BaseObject {
     public virtual void Init(SummonData data, Entity summoner,
                              ManaSource manaSource) {
         this.manaSource = manaSource;
-        Summoner = summoner;
-        active = true;
+        this.data = data;
 
+        Summoner = summoner;
         manaSource.OnManaTax += ManaSource_OnManaTax;
+        active = true;
     }
 
     private void ManaSource_OnManaTax(EventResponse<float> eRes) {
