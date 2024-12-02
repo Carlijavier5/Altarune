@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 9198060520243390452}
   - component: {fileID: 266655845187942533}
   - component: {fileID: 274459792137900501}
+  - component: {fileID: 2665220465063398285}
   - component: {fileID: 4679951402164244908}
   m_Layer: 9
   m_Name: Emphidian
@@ -59,7 +60,6 @@ MonoBehaviour:
   rb: {fileID: 4679951402164244908}
   moveTimeRange: {x: 3, y: 4.5}
   roamDistanceRange: {x: 4, y: 6}
-  roamSpeed: 3.5
   stoppingDistance: 0.1
   wiggleAmplitude: 0.25
   wiggleFrequency: 10
@@ -205,6 +205,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &2665220465063398285
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4492090696645829125}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4679951402164244908
 Rigidbody:
   m_ObjectHideFlags: 0
