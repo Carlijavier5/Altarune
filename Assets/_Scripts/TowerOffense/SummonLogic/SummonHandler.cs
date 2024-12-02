@@ -113,6 +113,7 @@ public class SummonHandler : MonoBehaviour {
                     ArtificialBattery battery = Instantiate(batteryData.prefabSummon, lastHitPoint, Quaternion.identity);
 
                     summonedBatteries.Add(battery);
+                    battery.OnSummonCollapse += Battery_OnSummonCollapse;
                     battery.DoSpawn();
 
                     battery.Init(inputSource.Summoner, ManaSource);
@@ -147,7 +148,13 @@ public class SummonHandler : MonoBehaviour {
     private void ManaSource_OnManaCollapse() {
         foreach (ArtificialBattery battery in summonedBatteries) {
             battery.Collapse();
-        } summonedBatteries.Clear();
+        }
+    }
+
+    private void Battery_OnSummonCollapse(Summon summon) {
+        ArtificialBattery battery = summon as ArtificialBattery;
+        summonedBatteries.Remove(battery);
+        summon.OnSummonCollapse -= Battery_OnSummonCollapse;
     }
 
     private void UpdateHint(Vector3 groundPoint) {

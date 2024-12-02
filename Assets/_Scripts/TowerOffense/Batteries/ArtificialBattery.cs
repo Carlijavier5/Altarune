@@ -31,4 +31,9 @@ public class ArtificialBattery : Summon, IBattery {
     public void ToggleArea(bool on) {
         areaIndicator.SetActive(on);
     }
+
+    public override void Perish() {
+        base.Perish();
+        Collapse();
+    }
 }
