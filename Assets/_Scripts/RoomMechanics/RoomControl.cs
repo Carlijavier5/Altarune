@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Rendering;
 
 public enum RoomTag { Lab, F1, F2, F3, C1, F4, C2, F5, F6, F7, C3, F8 }
 
 public class RoomControl : MonoBehaviour {
 
     [SerializeField] private RoomTag roomTag;
+
+    [SerializeField] private Volume volume;
 
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     public CinemachineVirtualCamera VirtualCamera => virtualCamera;
@@ -26,6 +29,12 @@ public class RoomControl : MonoBehaviour {
         listener.OnRoomCleared += Listener_OnRoomCleared;
         foreach (SpawnPoint spawnPoint in spawnPoints) {
             spawnPointMap[spawnPoint.originTag] = spawnPoint.spawnTransform;
+        }
+    }
+
+    public void SwitchVolume() {
+        if (volume) {
+            volume.sharedProfile = volume.profile;
         }
     }
 
