@@ -65,10 +65,14 @@ public class LabCinematicManager : MonoBehaviour {
         stairbarrier.position -= initOffset;
         
         Debug.Log("hi");
+    }
+
+    public void RunCinematicAction() {
         StartCoroutine(RunCinematic());
     }
 
     private IEnumerator RunCinematic() {
+        cinematicCamera.m_Priority = 100;
         Debug.Log("running cinematic");
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
