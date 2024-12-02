@@ -124,6 +124,10 @@ public partial class GolemSiftling : Entity {
 
     public void Animator_OnDescent() {
         RemoveMaterial(ascendMaterial);
+        if (activeConfig.crystalMaterial) {
+            crystalRenderer.sharedMaterial = activeConfig.crystalMaterial;
+            UpdateRendererRefs(true);
+        }
         stateMachine.SetState(new State_Idle());
     }
 
