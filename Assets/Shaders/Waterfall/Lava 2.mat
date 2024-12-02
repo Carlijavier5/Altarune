@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sand
-  m_Shader: {fileID: -6465566751694194690, guid: 2b3394302b9d63347ba4aa8b4480657d,
+  m_Name: Lava 2
+  m_Shader: {fileID: -6465566751694194690, guid: 7dadadc7a1121664494b3ae2d37dd125,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,10 +24,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _SampleTexture2D_6e72788c112e4d5fac62b383298c0eba_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: be305a5f11f9578488d7708378e4fa39, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -42,14 +38,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Caustics_Power: 1.4
+    - _Clip_Threshold: 0
+    - _Height: 0.03
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Sand: 0
     m_Colors:
-    - _Color: {r: 0.7584905, g: 0.60471845, b: 0.39355633, a: 0}
-    - _Tiling: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _Caustics_Color: {r: 6.883181, g: 1.4050767, b: 0.108112596, a: 0}
+    - _Caustics_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Scroll_Vector: {r: 0, g: 0, b: 0, a: 0}
+    - _Water_Bottom_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Water_Color: {r: 0.3509434, g: 0.027091695, b: 0.0099323, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1613636904578942864
+--- !u!114 &5411822710391467967
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
