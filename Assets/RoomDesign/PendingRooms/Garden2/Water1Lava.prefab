@@ -599,10 +599,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3189040642659051158}
+  - component: {fileID: 2279212752900868863}
   - component: {fileID: 8744166030316753718}
   - component: {fileID: 3426632740747363939}
   - component: {fileID: 2499995722284120926}
-  - component: {fileID: 7472519149079306584}
   m_Layer: 6
   m_Name: Water1Lava
   m_TagString: Untagged
@@ -630,6 +630,18 @@ Transform:
   - {fileID: 6817814388246068899}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -46.953}
+--- !u!114 &2279212752900868863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753836515303968711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2beef891ebf57b649aea9dabbf261533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &8744166030316753718
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -702,15 +714,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -462981019419857548, guid: 15024de8d8b128440a9e853c22cd0e07, type: 3}
---- !u!114 &7472519149079306584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6753836515303968711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c912dcf5bc259b45af7d5eedf46690b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -10,6 +10,8 @@ public class ManaSource : MonoBehaviour {
 
     public event System.Action OnManaCollapse;
 
+    private bool active;
+
     public float MaxMana { get; private set; }
 
     private float mana;
@@ -22,12 +24,18 @@ public class ManaSource : MonoBehaviour {
     }
 
     void Update() {
-        
+        if (active) {
+            EventResponse<float> eRes = new();
+            OnManaTax?.Invoke(eRes);
+            float manaDrain = eRes.objectReference;
+            Debug.Log(manaDrain);
+        }
     }
 
     public void Init(float maxMana) {
         MaxMana = maxMana;
         Mana = MaxMana;
+        active = true;
     }
 
     public void Drain(float amount) {
@@ -41,4 +49,9 @@ public class ManaSource : MonoBehaviour {
         Mana += absAmount;
         OnManaFill?.Invoke(absAmount);
     }
+}
+
+public class ManaCell {
+
+
 }
