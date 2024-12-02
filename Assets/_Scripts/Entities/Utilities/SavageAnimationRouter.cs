@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SavageGolemAnimationRouter : MonoBehaviour {
+public class SavageAnimationRouter : MonoBehaviour {
 
     [SerializeField] private GolemSavage savage;
 
@@ -12,5 +12,9 @@ public class SavageGolemAnimationRouter : MonoBehaviour {
 
     public void Animator_OnSlamHit() {
         savage.Animator_OnSlamHit();
+    }
+
+    public void Animator_OnMeteorPunch() {
+        savage.Animator_OnMeteorPunch();
     }
 }
