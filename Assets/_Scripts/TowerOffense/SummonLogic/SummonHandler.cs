@@ -116,7 +116,7 @@ public class SummonHandler : MonoBehaviour {
                     battery.OnSummonCollapse += Battery_OnSummonCollapse;
                     battery.DoSpawn();
 
-                    battery.Init(inputSource.Summoner, ManaSource);
+                    battery.Init(batteryData, inputSource.Summoner, ManaSource);
                     ManaSource.Drain(batteryData.summonCost);
 
                     inputSource.ClearSelection();
@@ -135,7 +135,7 @@ public class SummonHandler : MonoBehaviour {
                         targetBattery.LinkTower(tower);
                         tower.DoSpawn();
 
-                        tower.Init(inputSource.Summoner, batterySource);
+                        tower.Init(towerData, inputSource.Summoner, batterySource);
                         batterySource.Drain(towerData.summonCost);
 
                         inputSource.ClearSelection();

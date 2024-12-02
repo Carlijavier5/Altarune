@@ -5,73 +5,68 @@ using UnityEngine;
 public class PlagueArea : MonoBehaviour {
 
     [SerializeField] private PlagueStatusEffect plagueEffect;
-    [SerializeField] private float growSpeed;
-    [SerializeField] private float timeScale;
-    [SerializeField] private float plagueInterval;
-    [SerializeField] private float fadeDuration;
-    [SerializeField] private float range;
-    private Vector3 targetScale;
-    private Renderer rend;
+    [SerializeField] private ParticleSystem parSystem;
+    [SerializeField] private SphereCollider contactCollider;
+    [SerializeField] private float growDuration;
+    [SerializeField] private Vector2 startEndRange;
 
-    void Awake() {
-        rend = GetComponent<Renderer>();
-        targetScale = Vector3.Scale(transform.localScale, new Vector3(range, 1.0f, range));
-        transform.localScale = Vector3.zero;
-        StartCoroutine(ExpandArea());
+    public float EntityID { get; set; }
+
+    public void DoWave() {
+        parSystem.Play();
+        contactCollider.enabled = true;
+        StartCoroutine(IExpandWave());
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out Entity entity) && entity.Faction == EntityFaction.Hostile) {
-            InfectEnemy(other);
+        if (other.GetInstanceID() != EntityID
+            && other.TryGetComponent(out Entity entity)
+                && entity.IsFaction(EntityFaction.Hostile)) {
+            InfectEnemy(entity);
         }
     }
 
-    private void InfectEnemy(Collider enemy) {
-        Entity entity = enemy.GetComponent<Entity>();
+    private void InfectEnemy(Entity entity) {
         entity.ApplyEffects(new[] { plagueEffect.Clone() as EntityEffect });
     }
 
-    private IEnumerator ExpandArea() {
-        while (true) {
-            while (transform.localScale != targetScale) {
-                transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, growSpeed * Time.deltaTime);
-                if (transform.localScale == targetScale) {
-                    StartCoroutine(FadeOut(0f, fadeDuration));
-                }
-                yield return null;
-            }
-            yield return new WaitForSeconds(plagueInterval);
-        }
-    }
-
-    private IEnumerator FadeOut(float targetAlpha, float duration) {
-        float initialAlpha = rend.material.GetFloat("_Alpha");
-        float timeElapsed = 0f;
-
-        while (timeElapsed < duration) {
-            timeElapsed += Time.deltaTime;
-            rend.material.SetFloat("_Alpha", Mathf.Lerp(initialAlpha, targetAlpha, timeElapsed / duration));
+    private IEnumerator IExpandWave() {
+        float lerpVal, timer = 0;
+        while (timer < growDuration) {
+            timer += Time.deltaTime;
+            lerpVal = timer / growDuration;
+            contactCollider.radius = Mathf.Lerp(startEndRange.x,
+                                                startEndRange.y, lerpVal);
             yield return null;
         }
-        transform.localScale = Vector3.zero;
-        rend.material.SetFloat("_Alpha", 0.7f);
+
+        contactCollider.enabled = false;
     }
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmosSelected() {
+        UnityEditor.Handles.color = Color.yellow;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, startEndRange.x);
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, startEndRange.y);
+        UnityEditor.Handles.color = Color.white;
+    }
+    #endif
 }
 
 [System.Serializable]
 public class PlagueStatusEffect : EntityEffect {
 
     [SerializeField] private HealthAttributeModifiers attMods;
-    [SerializeField] private EnemyPlagueArea enemyPlagueArea;
+    [SerializeField] private PlagueArea plagueAreaPrefab;
     [SerializeField] private Material material;
     [SerializeField] private float maxDuration;
     [SerializeField] private int plagueDamage;
-    [SerializeField] private float damageInterval;
-    [SerializeField] private float spreadInterval;
-    private float durationTimer;
-    private float damageTimer;
-    private float spreadTimer;
-    private EnemyPlagueArea plagueArea;
+    [SerializeField] private float damageInterval, spreadInterval;
+
+    private float durationTimer, damageTimer,
+                  spreadTimer;
+    private PlagueArea plagueArea;
 
     public override void Apply(Entity entity, bool isNew) {
         if (isNew) {
@@ -88,23 +83,22 @@ public class PlagueStatusEffect : EntityEffect {
         spreadTimer += Time.deltaTime;
         if (damageTimer >= damageInterval) {
             entity.TryDamage(plagueDamage);
-            damageTimer = 0f;
+            damageTimer = 0;
         }
+
         if (spreadTimer >= spreadInterval) {
-            EnemyPlagueArea plagueArea = entity.GetComponentInChildren<EnemyPlagueArea>(true);
             if (plagueArea == null) {
-                plagueArea = Object.Instantiate(enemyPlagueArea, entity.transform.position, Quaternion.identity);
-                plagueArea.transform.parent = entity.transform;
-                plagueArea.ParentID = entity.GetInstanceID();
-            } else {
-                plagueArea.gameObject.SetActive(true);
+                plagueArea = Object.Instantiate(plagueAreaPrefab, entity.transform.position,
+                                                Quaternion.identity, entity.transform);
+                plagueArea.EntityID = entity.GetInstanceID();
             }
-            spreadTimer = 0f;
+            plagueArea.DoWave();
+            spreadTimer = 0;
         }
         return durationTimer >= maxDuration;
     }
 
     public override void Terminate(Entity entity) {
-        entity.ResetMaterials();
+        entity.RemoveMaterial(material);
     }
 }

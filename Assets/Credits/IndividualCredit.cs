@@ -10,7 +10,8 @@ public class IndividualCredit : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private Image YanImage;
 
-    private string name, role, quote;
+    private new string name;
+    private string role, quote;
     private Sprite image;
 
     public void createIndividualCredit(CreditData creditData){

@@ -15,10 +15,8 @@ public class GatlingAnimator : MonoBehaviour
     private float fireDuration = -1f;
     [SerializeField] private int rounds = 16;
     [SerializeField] private float recoil = 0.3f;
-    [SerializeField] private int vibrato = 40;
 
-    [Tooltip("Full-Auto Parameters")] [SerializeField]
-    private float rotationSpeed = 2.0f;
+    [Tooltip("Full-Auto Parameters")]
     [SerializeField] private bool debugMode;
 
     private Vector3 activePos;

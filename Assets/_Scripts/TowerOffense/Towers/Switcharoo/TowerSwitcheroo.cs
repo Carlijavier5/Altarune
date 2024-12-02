@@ -16,7 +16,7 @@ public class TowerSwitcheroo : Summon {
 
     RaycastHit enemiesHit;
 
-    protected override void Update() {
+    void Update() {
         if (active) {
             OnMouseUpAsButton();
         }

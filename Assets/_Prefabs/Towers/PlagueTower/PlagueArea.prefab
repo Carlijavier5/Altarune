@@ -9,10 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4244811148584400800}
-  - component: {fileID: 556933409661810157}
-  - component: {fileID: 4660999655107845503}
-  - component: {fileID: 1728818624772124526}
   - component: {fileID: 1376637598071585699}
+  - component: {fileID: 1728818624772124526}
   m_Layer: 0
   m_Name: PlagueArea
   m_TagString: Untagged
@@ -29,84 +27,13 @@ Transform:
   m_GameObject: {fileID: 4110348846171222383}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0396245, y: 0.16, z: 0.24}
-  m_LocalScale: {x: 5, y: 0.1, z: 5}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3309382057968511572}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &556933409661810157
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4110348846171222383}
-  m_Mesh: {fileID: -8334073581038260804, guid: 72f1857e99431cc40a0f2739d74e312e, type: 3}
---- !u!23 &4660999655107845503
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4110348846171222383}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a85d8373dea62ee49a9ef0f397d13822, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1728818624772124526
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4110348846171222383}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.6
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!114 &1376637598071585699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +66,7 @@ MonoBehaviour:
       healMod:
         addMod: 0
         multMod: 1
-    enemyPlagueArea: {fileID: 2836948276849753052, guid: f441321cc88b1724d9da1c8853a15363,
+    plagueAreaPrefab: {fileID: 3098361444315761024, guid: 9ab8a1da1e6d1ad448a93003a3038d50,
       type: 3}
     material: {fileID: -876546973899608171, guid: b771cdf93359e8c43b05dec9d26132db,
       type: 3}
@@ -147,11 +74,31 @@ MonoBehaviour:
     plagueDamage: 1
     damageInterval: 1
     spreadInterval: 3
-  growSpeed: 20
-  timeScale: 0.25
-  plagueInterval: 3
-  fadeDuration: 0.5
-  range: 1.5
+  parSystem: {fileID: 5527390509682420866}
+  contactCollider: {fileID: 1728818624772124526}
+  growDuration: 1.8
+  startEndRange: {x: 1, y: 3.5}
+--- !u!135 &1728818624772124526
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4110348846171222383}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4718061310571566730
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,17 +115,17 @@ PrefabInstance:
     - target: {fileID: 7824057334184967390, guid: 33b3b15db80e7a247b6dc9550103b728,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7824057334184967390, guid: 33b3b15db80e7a247b6dc9550103b728,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7824057334184967390, guid: 33b3b15db80e7a247b6dc9550103b728,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7824057334184967390, guid: 33b3b15db80e7a247b6dc9550103b728,
         type: 3}
@@ -238,6 +185,12 @@ PrefabInstance:
 --- !u!4 &3309382057968511572 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7824057334184967390, guid: 33b3b15db80e7a247b6dc9550103b728,
+    type: 3}
+  m_PrefabInstance: {fileID: 4718061310571566730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5527390509682420866 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 994406707006126600, guid: 33b3b15db80e7a247b6dc9550103b728,
     type: 3}
   m_PrefabInstance: {fileID: 4718061310571566730}
   m_PrefabAsset: {fileID: 0}

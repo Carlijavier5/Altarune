@@ -25,9 +25,8 @@ public class TowerSniper : Summon {
         _controller = GetComponentInChildren<SniperProjectileController>();
     }
 
-    protected override void Update() {
+    void Update() {
         if (!active) return;
-        base.Update();
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval) {
             Entity lowestHealthEnemy = GetTarget();

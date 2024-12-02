@@ -40,7 +40,7 @@ public class GatlingGun : Summon {
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
     }
 
-    protected override void Update() {
+    void Update() {
         // Calls SpawnSmallArea on a delay
         if (active && isAggroed && currentBigArea != null &&
            (SmallAreas.Count < maxSmallAreas || NumOfInactive >= 1)) {
@@ -59,7 +59,6 @@ public class GatlingGun : Summon {
                 bigAreaSpawnTimer = 0f;
             }
         }
-        if (active) base.Update();
     }
 
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();

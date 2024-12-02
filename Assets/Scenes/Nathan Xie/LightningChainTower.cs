@@ -17,11 +17,7 @@ public class LightningChainTower : Summon
         _animator = GetComponent<LightningChainTowerAnimator>();
     }
 
-    protected override void Update() {
-        Fire();
-        base.Update();
-    }   
-    private void Fire(){
+    void Update() {
         if (!active) return;
         attackTick += Time.deltaTime;
         if (attackTick >= attackInterval && balls.Count < 2 && aggro.AggroTargets.Count != 0) {
@@ -40,10 +36,12 @@ public class LightningChainTower : Summon
             projectile.Launch(transform.position, Summoner.transform.position);
         }
     }
+
     private void RemoveBall(LightningChainBall ball){
         balls.Dequeue();
         if (attackTick >= attackInterval) attackTick = 0f;
     }
+
     public void OnDestroy(){
         while(balls.Count > 0){
             balls.Peek().End();
