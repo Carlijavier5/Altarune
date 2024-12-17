@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SovereignAnimationRouter : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+public class SovereignAnimationRouter : MonoBehaviour {
+
+    [SerializeField] private SovereignGolem golem;
+
+    public void Animator_OnSlamLanding(LeftOrRight leftOrRight) {
+        golem.Animator_OnSlamLanding(leftOrRight);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void Animator_OnCollapsionLanding() {
+        golem.Animator_OnCollapsionLanding();
     }
 }
