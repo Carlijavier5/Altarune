@@ -1,14 +1,6 @@
 using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// Bat Behavior
-///    Bat will have 2 states: roam, chase
-///    Roam state: Random movements biased towards player with objective to face the player
-///    Chase state: when bat can see the player within its primary box collider, it will lock on to the player and chase
-///    
-/// </summary>
-
 public partial class Scaramite : Entity {
 
     [SerializeField] private AggroRange aggroRange;
@@ -34,13 +26,20 @@ public partial class Scaramite : Entity {
     private void Awake() {
         driver = new(this, linearAcceleration, angularSpeed, linearDrag);
 
+        if (GM.Player) player = GM.Player;
+        else GM.Instance.OnPlayerInit += GM_OnPlayerInit;
+
         aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
         aggroRange.OnAggroExit += AggroRange_OnAggroExit;
 
         OnStunSet += Scaramite_OnStunSet;
 
-        player = FindAnyObjectByType<Player>();
         stateMachine.Init(new Scaramite_Input(stateMachine, this), new Scaramite_Roam());
+    }
+
+    private void GM_OnPlayerInit() {
+        GM.Instance.OnPlayerInit -= GM_OnPlayerInit;
+        player = GM.Player;
     }
 
     private void Scaramite_OnStunSet(bool isStunned) {
@@ -90,39 +89,51 @@ public partial class Scaramite : Entity {
     private Vector3 GetRoamDestination() {
         float distance = Random.Range(minRoamDistance, maxRoamDistance);
 
-        Vector3 playerVector = new Vector3(player.transform.position.x, 0, player.transform.position.z)
-                             - new Vector3(transform.position.x, 0, transform.position.z);
-        float playerAngle = playerVector.XZAngle360();
+        if (player) {
+            Vector3 playerVector = new Vector3(player.transform.position.x, 0, player.transform.position.z)
+                     - new Vector3(transform.position.x, 0, transform.position.z);
+            float playerAngle = playerVector.XZAngle360();
 
-        float biasAngle = (1 - playerBias) * 180;
+            float biasAngle = (1 - playerBias) * 180;
 
-        float lowerBound = playerAngle - biasAngle + 360;
-        float upperBound = playerAngle + biasAngle + 360;
+            float lowerBound = playerAngle - biasAngle + 360;
+            float upperBound = playerAngle + biasAngle + 360;
 
-        Vector2 angleBias = lowerBound < upperBound ? new (lowerBound, upperBound)
-                                                    : new (upperBound, lowerBound);
-
-        bool pathIsValid = PathfindingUtils.FindBiasedRoamingPoint(transform.position, distance,
-                                                                   angleBias, 10, out Vector3 clearPoint);
-        return pathIsValid ? clearPoint : transform.position;
+            Vector2 angleBias = lowerBound < upperBound ? new(lowerBound, upperBound)
+                                                        : new(upperBound, lowerBound);
+            bool pathIsValid = PathfindingUtils.FindBiasedRoamingPoint(transform.position, distance,
+                                                                       angleBias, 10, out Vector3 clearPoint);
+            return pathIsValid ? clearPoint : transform.position;
+        } else {
+            bool pathIsValid = PathfindingUtils.FindRandomRoamingPoint(transform.position, distance,
+                                                                       10, out Vector3 clearPoint);
+            return pathIsValid ? clearPoint : transform.position;
+        }
     }
 
     public void Ragdoll() {
-        DetachModules();
-        enabled = false;
-        aggroRange.Disable();
         rb.constraints = new();
         rb.isKinematic = false;
         rb.useGravity = true;
-        Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
+        Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f,
+                                    Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);
         rb.AddForce(force);
-        Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
+        Vector3 torque = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f),
+                                     Random.Range(-0.5f, 0.5f)) * Random.Range(250, 300);
         rb.AddTorque(torque);
-        Destroy(gameObject, 2);
     }
 
-    public override void Perish() {
-        base.Perish();
-        Ragdoll();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
+        DetachModules();
+
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            enabled = false;
+            aggroRange.Disable();
+            Ragdoll();
+            Destroy(gameObject, 2);
+        }
     }
 }

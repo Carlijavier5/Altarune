@@ -35,19 +35,22 @@ public partial class Player : Entity {
 
         inputSource.OnDodgePerformed += InputSource_OnDodgePerformed;
         inputSource.OnMeleePerformed += InputSource_OnMeleePerformed;
+
+        if (GM.Player) Destroy(inputSource.gameObject);
+        else GM.Player = this;
     }
 
     private void InputSource_OnMeleePerformed() {
         if (stateMachine.State is State_Normal) {
-            stateMachine.SetState(new State_MeleeAttacking());
+            stateMachine.SetState(new State_Melee());
         }
     }
 
     private void InputSource_OnDodgePerformed() {
         if (stateMachine.State is State_Normal
-            || stateMachine.State is State_MeleeAttacking
-            || stateMachine.State is State_Summoning) {
-            stateMachine.SetState(new State_Rolling());
+            || stateMachine.State is State_Melee
+            || stateMachine.State is State_Cast) {
+            stateMachine.SetState(new State_Roll());
         }
     }
 
@@ -55,14 +58,6 @@ public partial class Player : Entity {
         base.Update();
         stateMachine.Update();
         ManaSource.Fill(Time.deltaTime * manaGain);
-
-        if (Input.GetKeyDown(KeyCode.J) && stateMachine.State is State_Normal) {
-            stateMachine.SetState(new State_Summoning());
-        }
-        if (Input.GetKeyDown(KeyCode.K)) {
-            if (stateMachine.State is State_Normal) stateMachine.SetState(new State_Burdened());
-            else if (stateMachine.State is State_Burdened) stateMachine.SetState(new State_Normal());
-        }
     }
 
     void FixedUpdate() {

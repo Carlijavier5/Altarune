@@ -93,6 +93,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: damascus
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: aa4bfe78d6c81b84c9248259c86b3ca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -101,6 +106,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2455790529110405175}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aa4bfe78d6c81b84c9248259c86b3ca5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7619986492006566271}
   m_SourcePrefab: {fileID: 100100000, guid: aa4bfe78d6c81b84c9248259c86b3ca5, type: 3}
 --- !u!1 &1329804233860749972 stripped
 GameObject:
@@ -129,3 +138,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0326522, y: 0.029462509, z: 0.071268655}
   m_Center: {x: 0.006326101, y: 0.002538117, z: 0.023948506}
+--- !u!208 &7619986492006566271
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329804233860749972}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.016, y: 0.015000001, z: 0.036000002}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.006, y: 0.003, z: 0.024}
+  m_TimeToStationary: 0.5

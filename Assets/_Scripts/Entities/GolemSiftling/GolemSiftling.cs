@@ -131,10 +131,15 @@ public partial class GolemSiftling : Entity {
         stateMachine.SetState(new State_Idle());
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate = false) {
+        base.Perish(immediate);
         DetachModules();
-        enabled = false;
-        Destroy(gameObject, 2);
+
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            enabled = false;
+            Destroy(gameObject, 2);
+        }
     }
 }

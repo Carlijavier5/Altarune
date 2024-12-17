@@ -19,7 +19,6 @@ public partial class GolemSavage {
         }
 
         public override void Enter(Savage_Input input) {
-            Debug.Log("Did slam");
             GolemSavage gs = input.savage;
             gs.navMeshAgent.ResetPath();
             gs.navMeshAgent.enabled = false;
@@ -38,22 +37,5 @@ public partial class GolemSavage {
         public override void Exit(Savage_Input input) {
             input.savage.navMeshAgent.enabled = true;
         }
-
-        /*
-        public void LookTowardsPlayer() {
-            // Determines how the enemy should rotate towards the player (ignoring Y)
-            float rotateX = player.position.x - gs.transform.position.x;
-            float rotateZ = player.position.z - gs.transform.position.z;
-            Vector3 directionToPlayer = new Vector3(rotateX, 0f, rotateZ).normalized;
-            Quaternion rotateToPlayer = Quaternion.LookRotation(directionToPlayer);
-
-            // Keeps the enemy's Y direction the same
-            float currentYRotation = gs.transform.rotation.eulerAngles.y;
-            Quaternion targetRotation = Quaternion.Euler(0f, rotateToPlayer.eulerAngles.y, 0f);
-
-            // Rotates the enemy towards the player (uses slerp)
-            gs.transform.rotation = Quaternion.Slerp(gs.transform.rotation, rotateToPlayer, 2f * gs.DeltaTime);
-        }
-        */
     }
 }

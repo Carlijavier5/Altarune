@@ -48,9 +48,12 @@ public class PlayerController : MonoBehaviour {
 
     void Awake() {
         playerInput = new();
-        playerInput.Movement.Enable();
-        playerInput.Actions.Enable();
+        Camera.main.TryGetComponent(out cameraBrain);
+        StartCoroutine(ISyncInitialization());
+    }
 
+    private void OnEnable() {
+        ActivateInput();
         playerInput.Movement.Dodge.performed += Dodge_Performed;
         playerInput.Actions.MeleeAttack.performed += MeleeAttack_Performed;
 
@@ -59,17 +62,26 @@ public class PlayerController : MonoBehaviour {
 
         playerInput.Actions.ActivateSkill.started += Skill_Started;
         playerInput.Actions.ActivateSkill.canceled += Skill_Cast;
-
-        Camera.main.TryGetComponent(out cameraBrain);
-        StartCoroutine(ISyncInitialization());
     }
 
-    public void Activate() {
+    void OnDisable() {
+        DeactivateInput();
+        playerInput.Movement.Dodge.performed -= Dodge_Performed;
+        playerInput.Actions.MeleeAttack.performed -= MeleeAttack_Performed;
+
+        playerInput.Actions.Summon.performed -= Summon_Performed;
+        playerInput.Actions.SelectSummon.performed -= SelectSummon_performed;
+
+        playerInput.Actions.ActivateSkill.started -= Skill_Started;
+        playerInput.Actions.ActivateSkill.canceled -= Skill_Cast;
+    }
+
+    public void ActivateInput() {
         playerInput.Movement.Enable();
         playerInput.Actions.Enable();
     }
 
-    public void Deactivate() {
+    public void DeactivateInput() {
         playerInput.Movement.Disable();
         playerInput.Actions.Disable();
     }

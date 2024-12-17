@@ -16,7 +16,7 @@ public class GrassInstance : MonoBehaviour {
         currentRotation.y = Random.Range(0f, 360f);
         transform.eulerAngles = currentRotation;
 
-        if (!cluster) return;
+        if (!cluster || !grass) return;
         for (int i = 0; i < clusterCount; i++)
         {
             // Generate a random position around the current object

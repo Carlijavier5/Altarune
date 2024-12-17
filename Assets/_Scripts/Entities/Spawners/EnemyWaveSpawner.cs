@@ -81,14 +81,14 @@ public class EnemyWaveSpawner : Entity {
                 enemies.Add(newEnemy);
                 if (waves[currentWave].innerList.Count() <= enemyIndex && currentWave >= waves.Count - 1) {
                     // if it's the last wave and we've run out of enemies, perish
-                    Perish();
+                    Perish(false);
                 }
             } 
         }
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         foreach (Rigidbody rb in rigidbodies) {
             rb.isKinematic = false;
             Vector3 force = new Vector3(Random.Range(-0.15f, 0.15f), 0.85f, Random.Range(-0.15f, 0.15f)) * Random.Range(250, 300);

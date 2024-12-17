@@ -8,7 +8,7 @@ public class RoomExit : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Player _)) {
-            RoomManager.Instance.MoveToRoom(targetRoom);
+            GM.RoomManager.MoveToRoom(targetRoom);
         }
     }
 }
