@@ -36,8 +36,8 @@ public abstract class Entity : BaseObject {
         }
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate = false) {
+        base.Perish(immediate);
         foreach (EntityEffect statusEffect in StatusEffects) {
             statusEffect.Terminate(this);
         } StatusEffects.Clear();

@@ -50,7 +50,7 @@ public abstract partial class BaseObject {
     /// <summary>
     /// Override to implement a death behavior for the object; <br/>
     /// </summary>
-    public virtual void Perish() {
+    public virtual void Perish(bool immediate = false) {
         Perished = true;
         OnPerish?.Invoke(this);
     }

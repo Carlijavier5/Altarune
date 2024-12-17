@@ -101,11 +101,16 @@ public partial class Emphidian : Entity {
         rb.AddTorque(torque);
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         DetachModules();
-        enabled = false;
-        Ragdoll();
-        Destroy(gameObject, 2);
+
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            enabled = false;
+            Ragdoll();
+            Destroy(gameObject, 2);
+        }
     }
 }

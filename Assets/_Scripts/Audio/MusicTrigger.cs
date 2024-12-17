@@ -6,7 +6,7 @@ public class MusicTrigger : MonoBehaviour {
 
     [SerializeField] private AudioClip clip;
 
-    public void Play(float delay) {
+    public void Play(float delay = 0) {
         if (delay <= 0) {
             GM.AudioManager.PlayMusic(clip);
         } else {

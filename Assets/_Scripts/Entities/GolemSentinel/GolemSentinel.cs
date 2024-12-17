@@ -131,11 +131,16 @@ public partial class GolemSentinel : Entity {
         }
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         DetachModules();
-        enabled = false;
-        aggroRange.Disable();
-        Destroy(gameObject, 2);
+
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            enabled = false;
+            aggroRange.Disable();
+            Destroy(gameObject, 2);
+        }
     }
 }

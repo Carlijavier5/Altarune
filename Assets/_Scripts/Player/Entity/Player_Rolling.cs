@@ -6,7 +6,7 @@ public partial class Player {
     [SerializeField] private float dodgeDuration = 0.2f;
     [SerializeField] private LocomotionProperties dodgeLocomotionProperties;
 
-    private class State_Rolling : State<Player_Input> {
+    private class State_Roll : State<Player_Input> {
 
         private float amount;
         private Vector3 dir;

@@ -28,7 +28,6 @@ public class ManaSource : MonoBehaviour {
             EventResponse<float> eRes = new();
             OnManaTax?.Invoke(eRes);
             float manaDrain = eRes.objectReference;
-            Debug.Log(manaDrain);
         }
     }
 

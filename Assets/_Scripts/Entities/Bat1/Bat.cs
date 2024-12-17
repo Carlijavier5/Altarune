@@ -89,13 +89,18 @@ public partial class Bat : Entity {
         ApplyEffects(new[] { new StunStatusEffect(stunDuration) });
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         DetachModules();
-        enabled = false;
-        aggroRange.Disable();
-        Ragdoll();
-        Destroy(gameObject, 2);
+
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            enabled = false;
+            aggroRange.Disable();
+            Ragdoll();
+            Destroy(gameObject, 2);
+        }
     }
 
     private void Ragdoll() {

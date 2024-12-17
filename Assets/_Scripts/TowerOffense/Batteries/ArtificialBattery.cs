@@ -32,7 +32,7 @@ public class ArtificialBattery : Summon, IBattery {
         areaIndicator.SetActive(on);
     }
 
-    public override void Perish() {
+    public override void Perish(bool _) {
         base.Perish();
         Collapse();
     }

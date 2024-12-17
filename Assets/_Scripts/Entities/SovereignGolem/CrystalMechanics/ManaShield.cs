@@ -24,8 +24,8 @@ public class ManaShield : BaseObject {
         gameObject.SetActive(false);
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         controller.ShieldBreak();
     }
 }

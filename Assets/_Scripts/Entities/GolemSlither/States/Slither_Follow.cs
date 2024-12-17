@@ -24,21 +24,23 @@ public partial class GolemSlither {
 
         public override void Update(Slither_Input input) {
             if (input.aggroTarget) {
-                agent.SetDestination(input.aggroTarget.transform.position);
-                input.golemSlither.BaseLinearSpeed = input.golemSlither.followSpeed;
+                if (agent.isActiveAndEnabled && agent.isOnNavMesh) {
+                    agent.SetDestination(input.aggroTarget.transform.position);
+                    input.golemSlither.BaseLinearSpeed = input.golemSlither.followSpeed;
 
-                timer = Mathf.MoveTowards(timer, 0, input.golemSlither.DeltaTime);
-                if (agent.remainingDistance < input.golemSlither.attackDistance
-                        && timer <= 0) {
-                    TryAttack(input);
-                    timer = Random.Range(input.golemSlither.attackWaitRange.x,
-                                         input.golemSlither.attackWaitRange.y);
+                    timer = Mathf.MoveTowards(timer, 0, input.golemSlither.DeltaTime);
+                    if (agent.remainingDistance < input.golemSlither.attackDistance
+                            && timer <= 0) {
+                        TryAttack(input);
+                        timer = Random.Range(input.golemSlither.attackWaitRange.x,
+                                             input.golemSlither.attackWaitRange.y);
+                    }
                 }
             } else input.golemSlither.UpdateAggro();
         }
 
         public override void Exit(Slither_Input _) {
-            agent.ResetPath();
+            if (agent.isOnNavMesh) agent.ResetPath();
         }
 
         private void TryAttack(Slither_Input input) {

@@ -41,7 +41,7 @@ public partial class Scaramite {
             if (Vector3.Distance(destination, sm.transform.position) > sm.stoppingDistance) {
                 Vector3 dir = destination - sm.transform.position;
                 sm.driver.Move(dir);
-            } else {
+            } else if (sm.player) {
                 sm.driver.LookAt(sm.player.transform.position);
             }
 

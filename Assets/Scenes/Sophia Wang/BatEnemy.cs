@@ -102,10 +102,9 @@ public class BatEnemy : Entity
         }
         //damage yan?
     }
-    public override void Perish()
-    {
-        base.Perish();
-        Destroy(gameObject, 1);
-        print("bat ded");
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
+        if (immediate) Destroy(gameObject);
+        else Destroy(gameObject, 1);
     }
 }

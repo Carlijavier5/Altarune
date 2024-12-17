@@ -1,91 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviour {
 
-    private static RoomManager instance;
-    public static RoomManager Instance => instance;
-
-    [SerializeField] private Player player;
     [SerializeField] private RoomIdentifier[] roomIdentifiers;
+    public RoomIdentifier[] RoomIdentifiers => roomIdentifiers;
 
     private RoomControl currentRoom;
-    
-    //Event Delegates
-    public delegate void RoomTransition();
-    public event RoomTransition RoomStateTransition;
+    public RoomControl CurrentRoom {
+        get => currentRoom;
+        set {
+            if (!currentRoom && value) {
+                currentRoom = value;
+                sourceRoomTag = currentRoomTag;
+            } else Debug.LogWarning("Invalid Room Control Assignment");
+        }
+    }
 
-    private readonly Dictionary<RoomTag, RoomControl> roomMap = new();
-    private RoomTag currRoomTag;
+    private readonly Dictionary<RoomTag, int> roomIndexMap = new();
+    private RoomTag sourceRoomTag, currentRoomTag;
+    public RoomTag SourceRoomTag => sourceRoomTag;
 
     void Awake() {
-        if (instance) {
-            Destroy(gameObject);
-        } else instance = this;
-
         foreach (RoomIdentifier roomID in roomIdentifiers) {
-            RoomControl roomControl = roomID.roomControl;
-            roomMap[roomID.roomTag] = roomControl;
-            roomControl.Init(player);
+            int buildIndex = roomID.roomScene.BuildIndex;
+            roomIndexMap[roomID.roomTag] = buildIndex;
         }
+        /// TEMPORARY
+        sourceRoomTag = RoomTag.F1;
+        currentRoomTag = RoomTag.F1;
+    }
 
-        MoveToRoom(RoomTag.F1, true);
+    void Start() {
+        //MoveToRoom(RoomTag.F1);
     }
 
     void Update() {
         if (Input.GetKey(KeyCode.LeftControl)
-            && Input.GetKeyDown(KeyCode.R)) {
+                && Input.GetKeyDown(KeyCode.R)) {
             ForceCompleteRoom();
         }
         if (Input.GetKey(KeyCode.LeftControl)
-            && Input.GetKeyDown(KeyCode.L)) {
-            RoomControl room = roomMap[currRoomTag];
-            Transform spawnPoint = room.SpawnPoint;
-            player.TryTeleport(spawnPoint.position);
+                && Input.GetKeyDown(KeyCode.L)) {
+            Transform spawnPoint = currentRoom.SpawnPoint;
+            GM.Player.TryTeleport(spawnPoint.position);
         }
     }
 
-    private IEnumerator IChangeRoom(RoomTag roomTag, bool immediateFade = false) {
-
-        currRoomTag = roomTag;
-
-        /// Fade Out
-        if (RoomTransitionLoader.Instance != null) {
-            RoomTransitionLoader.Instance.FadeOut(immediateFade);
-        } 
+    public void MoveToRoom(RoomTag roomTag) {
+        currentRoomTag = roomTag;
+        GM.TransitionManager.FadeOut();
         GM.TimeScaleManager.AddTimeScaleShift(0, 1);
-        yield return new WaitForSecondsRealtime(1);
-
-        /// Activate Current Room / Deactivate All Others
-        foreach (KeyValuePair<RoomTag, RoomControl> kvp in roomMap) {
-            RoomTag tag = kvp.Key;
-            RoomControl control = kvp.Value;
-            control.gameObject.SetActive(tag == roomTag);
-        }
-
-        /// Activate Current Room Camera / Deactivate Old Camera
-        if (currentRoom) currentRoom.VirtualCamera.Priority = 0;
-        RoomControl room = roomMap[roomTag];
-        currentRoom = room;
-        room.VirtualCamera.Priority = 10;
-        yield return new WaitForSecondsRealtime(0.5f);
-
-        /// Teleport Player to Current Room
-        Transform spawnPoint = room.SpawnPoint;
-        player.TryTeleport(spawnPoint.position);
-
-        yield return new WaitForSecondsRealtime(1);
-
-        /// Fade In
-        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
-        if (RoomTransitionLoader.Instance != null) {
-            RoomTransitionLoader.Instance.FadeIn();
-        }
+        GM.TransitionManager.OnFadeEnd += TransitionManager_OnFadeEnd;
     }
 
-    public void MoveToRoom(RoomTag roomTag, bool immediateFade = false) {
-        StartCoroutine(IChangeRoom(roomTag, immediateFade));
+    private void TransitionManager_OnFadeEnd() {
+        GM.TransitionManager.OnFadeEnd -= TransitionManager_OnFadeEnd;
+        int targetIndex = roomIndexMap[currentRoomTag];
+        SceneManager.LoadScene(targetIndex, LoadSceneMode.Single);
+    }
+
+    public void FinalizeRoomTransition() {
+        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
+        GM.TransitionManager.FadeIn();
     }
 
     private void ForceCompleteRoom() {
@@ -96,5 +75,5 @@ public class RoomManager : MonoBehaviour {
 [System.Serializable]
 public class RoomIdentifier {
     public RoomTag roomTag;
-    public RoomControl roomControl;
+    public SceneRef roomScene;
 }
