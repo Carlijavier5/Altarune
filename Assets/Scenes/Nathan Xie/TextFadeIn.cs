@@ -13,7 +13,6 @@ public class TextFadeIn : MonoBehaviour
 
     private void updateText(){
         if(activateText) {
-            Debug.Log("I'm trying to change the color " + this.textField.text + " " + textField.alpha);
             textField.alpha = (float) Math.Log(8f / Vector3.Magnitude(playerObject.transform.position - transform.position));
 
         }
