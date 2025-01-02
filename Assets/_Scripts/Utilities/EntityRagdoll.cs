@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(RBVelocityLimiter))]
 
-
 /*
  here's a package with the ragdolling mechanic we have so far.
 we have some changes in the works in the entities that will be using the ragdoll mechanic, 
@@ -21,6 +20,7 @@ the objects using this will be using sphere colliders for physical collisions.
 if possible, i'd use the limiter component instead of editing the rigidbody's velocity 
 directly as there are a few mechanics in the game that edit that value asynchronously 
 */
+
 public class EntityRagdoll : MonoBehaviour {
     
     // This variable references Rigibody component attached to the entity.
@@ -42,12 +42,11 @@ public class EntityRagdoll : MonoBehaviour {
     [SerializeField] private float sinkSpeed = 0.1f;        
     [SerializeField] private float ragdollDuration = 5f;
     [SerializeField] private bool isRagdoll = false;
-    [SerializeField] private float maxVelocity = 10f; // Change this value
+    [SerializeField] private float maxVelocity = 10f;
 
     // Original Implementation
     // All the code should happen here, Ragdoll() 
     public void Ragdoll() {
-
         if (isRagdoll) return; // Debounce
         isRagdoll = true;
 
@@ -75,20 +74,22 @@ public class EntityRagdoll : MonoBehaviour {
         // Applies that calcualted Torque to the RigidBody
         rb.AddTorque(torque);
 
-        Invoke(nameof(Sink), 1f);
+        
+        rbLimiter.MaxVelocity = maxVelocity;
+
         Invoke(nameof(DestroyBody), ragdollDuration);
     }
 
     public void Sink() {
         Vector3 downwardForce = Vector3.down * sinkSpeed;
         rb.AddForce(downwardForce, ForceMode.Acceleration);
-        LimitMaxVelocity();
     }
 
-    public void LimitMaxVelocity() {
-        if (rb.velocity.magnitude > maxVelocity) {
-            rb.velocity = rb.velocity.normalized * maxVelocity;
+    void FixedUpdate() {
+        if (isRagdoll) {
+            Sink();
         }
+        rbLimiter.MaxVelocity = maxVelocity;
     }
 
     private void DestroyBody() {
