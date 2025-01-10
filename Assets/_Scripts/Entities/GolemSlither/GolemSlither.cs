@@ -134,8 +134,8 @@ public partial class GolemSlither : Entity {
         }
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         DetachModules();
         enabled = false;
 
@@ -143,7 +143,8 @@ public partial class GolemSlither : Entity {
         deAggroRange.Disable();
         sweepRange.Disable();
 
-        Destroy(gameObject, 2);
+        if (immediate) Destroy(gameObject);
+        else Destroy(gameObject, 2);
     }
 }
 

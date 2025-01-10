@@ -43,7 +43,8 @@ public partial class GolemSlither {
             Vector2 distanceRange = gs.roamDistanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 
-            if (PathfindingUtils.FindRandomRoamingPoint(gs.transform.position, distance,
+            if (gs.navMeshAgent.isActiveAndEnabled && gs.navMeshAgent.isOnNavMesh
+                && PathfindingUtils.FindRandomRoamingPoint(gs.transform.position, distance,
                                                         10, out targetLocation)) {
                 gs.navMeshAgent.SetDestination(targetLocation);
             } else {

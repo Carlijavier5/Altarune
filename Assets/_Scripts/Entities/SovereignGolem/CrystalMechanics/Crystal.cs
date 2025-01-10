@@ -59,8 +59,8 @@ public class Crystal : Entity {
         TryToggleIFrame(false);
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         StartCoroutine(IShatterCrystal());
     }
 }

@@ -9,7 +9,7 @@ public partial class Player {
     [SerializeField] private float attackDuration;
     [SerializeField] private LocomotionProperties meleeLocomotionProperties;
 
-    private class State_MeleeAttacking : State<Player_Input> {
+    private class State_Melee : State<Player_Input> {
 
         private int layer;
 

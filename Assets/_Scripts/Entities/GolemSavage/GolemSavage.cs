@@ -157,13 +157,16 @@ public partial class GolemSavage : Entity {
         if (entity is Player) actorInRange = false;
     }
 
-    public override void Perish() {
-        base.Perish();
-        macroMachine.SetState(new State_Inert());
-        microMachine.SetState(new State_Perish());
-        DetachModules();
-        enabled = false;
-        Destroy(gameObject, 2);
+    public override void Perish(bool immediate = false) {
+        base.Perish(immediate);
+        if (immediate) {
+            /// Set to Death State;
+        } else {
+            macroMachine.SetState(new State_Inert());
+            microMachine.SetState(new State_Perish());
+            DetachModules();
+            enabled = false;
+        }
     }
 
     #if UNITY_EDITOR

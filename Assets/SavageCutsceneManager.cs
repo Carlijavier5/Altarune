@@ -11,6 +11,7 @@ public class SavageCutsceneManager : MonoBehaviour {
     public event System.Action OnCutsceneEnd;
 
     [SerializeField] private Animator cutsceneAnimator;
+    [SerializeField] private MusicTrigger musicTrigger;
     [SerializeField] private Material savageDecal;
     [SerializeField] private new Light light;
 
@@ -64,6 +65,7 @@ public class SavageCutsceneManager : MonoBehaviour {
         // }
 
         yield return new WaitForSeconds(0.8f);
+        musicTrigger.Play();
         StartCoroutine(UI());
         vCam.m_Priority = 100;
         bigDust.Play();

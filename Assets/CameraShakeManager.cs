@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraShakeManager : MonoBehaviour {
@@ -12,12 +10,22 @@ public class CameraShakeManager : MonoBehaviour {
     private CinemachineBrain MainCam {
         get {
             if (mainCam == null) {
-                TryGetComponent(out mainCam);
-            } return mainCam;
+                Camera.main.TryGetComponent(out mainCam);
+            }
+            return mainCam;
         }
     }
 
-    private CinemachineVirtualCamera vCam;
+    private CinemachineBasicMultiChannelPerlin perlinChannel;
+    private CinemachineBasicMultiChannelPerlin PerlinChannel {
+        get {
+            if (MainCam != null && perlinChannel == null) {
+                CinemachineVirtualCamera vCam = MainCam.ActiveVirtualCamera as CinemachineVirtualCamera;
+                perlinChannel = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            }
+            return perlinChannel;
+        }
+    }
 
     [SerializeField] private float baseIntensity = 3f;
     [SerializeField] private float baseDuration = 0.1f;
@@ -27,25 +35,23 @@ public class CameraShakeManager : MonoBehaviour {
     }
     
     public void DoCameraShake() {
-        if (MainCam == null) return;
-        vCam = MainCam.ActiveVirtualCamera as CinemachineVirtualCamera;
-        CinemachineBasicMultiChannelPerlin perlin = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        if (!perlin) return;
-        perlin.m_AmplitudeGain = baseIntensity;
-        StartCoroutine(KillTask(perlin, baseDuration));
+        if (!PerlinChannel) return;
+        PerlinChannel.m_AmplitudeGain = baseIntensity;
+        StartCoroutine(KillTask(perlinChannel, baseDuration));
     }
 
     public void DoCameraShake(float intensity, float duration) {
-        if (MainCam == null) return;
-        vCam = MainCam.ActiveVirtualCamera as CinemachineVirtualCamera;
-        CinemachineBasicMultiChannelPerlin perlin = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        if (!perlin) return;
-        DOTween.To(() => perlin.m_AmplitudeGain, x => perlin.m_AmplitudeGain = x, intensity, duration / 2);
-        StartCoroutine(KillTask(perlin, duration));
+        if (!PerlinChannel) return;
+        DOTween.To(() => perlinChannel ? perlinChannel.m_AmplitudeGain : 0,
+                    x => { if (perlinChannel) { perlinChannel.m_AmplitudeGain = x; } },
+                    intensity, duration / 2 );
+        StartCoroutine(KillTask(perlinChannel, duration));
     }
 
     private IEnumerator KillTask(CinemachineBasicMultiChannelPerlin perlin, float duration) {
         yield return new WaitForSeconds(duration);
-        DOTween.To(() => perlin.m_AmplitudeGain, x => perlin.m_AmplitudeGain = x, 0f, duration / 2);
+        DOTween.To(() => perlin ? perlin.m_AmplitudeGain : 0,
+                    x => { if (perlin) { perlin.m_AmplitudeGain = x; } },
+                    0f, duration / 2);
     }
 }

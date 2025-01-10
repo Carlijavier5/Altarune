@@ -61,6 +61,8 @@ public class Teleportable : ObjectModule {
     }
 
     private IEnumerator ITeleport(Vector3 targetPosition) {
+        baseObject.ConfirmTeleportStart(targetPosition);
+
         teleportVFX.Play();
         teleportVFX.Reinit();
         baseObject.TryStagger(TProps.settings.duration * 2);
@@ -69,7 +71,7 @@ public class Teleportable : ObjectModule {
 
         float lerpVal;
         while (timer < TProps.settings.duration) {
-            timer = Mathf.MoveTowards(timer, TProps.settings.duration, Time.deltaTime);
+            timer = Mathf.MoveTowards(timer, TProps.settings.duration, Time.unscaledDeltaTime);
             lerpVal = timer / TProps.settings.duration;
             UpdateRootScale(lerpVal, originalScale);
             baseObject.UpdatePropertyBlock((mpb) => { mpb.SetFloat(HOLO_THRESHOLD_KEY, 1 - lerpVal); });
@@ -98,12 +100,13 @@ public class Teleportable : ObjectModule {
 
 
         while (timer > 0) {
-            timer = Mathf.MoveTowards(timer, 0, Time.deltaTime);
+            timer = Mathf.MoveTowards(timer, 0, Time.unscaledDeltaTime);
             UpdateRootScale(timer / TProps.settings.duration, originalScale);
             yield return null;
         }
 
         baseObject.RemoveMaterial(TProps.settings.material);
+        baseObject.ConfirmTeleportEnd();
     }
 
     void OnDisable() {

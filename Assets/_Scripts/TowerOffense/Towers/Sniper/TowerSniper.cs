@@ -45,7 +45,7 @@ public class TowerSniper : Summon {
             }
             attackTick = 0;
         }
-        
+        if (targets == null) return;
         Entity target = GetTarget();
         Vector3 targetDir = target.transform.position - transform.position;
         Quaternion targetRot = Quaternion.LookRotation(targetDir);

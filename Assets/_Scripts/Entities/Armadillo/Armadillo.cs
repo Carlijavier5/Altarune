@@ -73,8 +73,8 @@ public partial class Armadillo : Entity {
 
     private void Armadillo_OnTimeScaleSet(float timeScale) => UpdateNavMeshSpeeds();
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate) {
+        base.Perish(immediate);
         Destroy(gameObject);
     }
     protected override void Update() {

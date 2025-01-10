@@ -79,11 +79,15 @@ public class EntitySpawner : Entity {
         if (!spawn) Destroy(gameObject, 0.2f);
     }
 
-    public override void Perish() {
-        base.Perish();
+    public override void Perish(bool immediate = false) {
+        base.Perish(immediate);
         DetachModules();
 
-        StopAllCoroutines();
-        StartCoroutine(IMaterialize(false));
+        if (immediate) {
+            Destroy(gameObject);
+        } else {
+            StopAllCoroutines();
+            StartCoroutine(IMaterialize(false));
+        }
     }
 }

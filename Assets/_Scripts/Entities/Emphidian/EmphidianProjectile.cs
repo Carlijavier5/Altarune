@@ -12,7 +12,6 @@ public class EmphidianProjectile : MonoBehaviour {
     void Awake() {
         StartCoroutine(ILifetime());
         StartCoroutine(IToggle(true));
-        Debug.Log("a bullet was born");
     }
 
     void FixedUpdate() {

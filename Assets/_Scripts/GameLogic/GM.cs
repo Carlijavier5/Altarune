@@ -5,8 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class GM : MonoBehaviour {
 
+    public event System.Action OnPlayerInit;
+
     private static GM instance;
     public static GM Instance => instance;
+
+    [SerializeField] private TransitionManager transitionManager;
+    public static TransitionManager TransitionManager => instance.transitionManager;
 
     [SerializeField] private AudioManager audioManager;
     public static AudioManager AudioManager => instance.audioManager;
@@ -26,10 +31,32 @@ public class GM : MonoBehaviour {
     [SerializeField] private InventoryManager inventoryManager;
     public static InventoryManager InventoryManager => instance.inventoryManager;
 
+    [SerializeField] private RoomManager roomManager;
+    public static RoomManager RoomManager => instance.roomManager;
+
+    [SerializeField] private RunManager runManager;
+    public static RunManager RunManager => instance.runManager;
+
+    private Player player;
+    public static Player Player {
+        get => instance.player;
+        set {
+            if (instance.player == null
+                    && value) {
+                instance.player = value;
+                instance.OnPlayerInit?.Invoke();
+                instance.OnPlayerInit = null;
+            }
+        }
+    }
+
     void Awake() {
         if (instance) {
             Destroy(gameObject);
-        } else instance = this;
+        } else {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     public void DoGameOver() {
@@ -37,7 +64,7 @@ public class GM : MonoBehaviour {
     }
 
     private IEnumerator RestartScene() {
-        RoomTransitionLoader.Instance.FadeOut();
+        transitionManager.FadeOut();
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

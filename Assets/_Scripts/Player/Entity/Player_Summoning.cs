@@ -5,7 +5,7 @@ public partial class Player {
     [Header("Summon State")]
     [SerializeField] private float summonDuration;
 
-    private class State_Summoning : State<Player_Input> {
+    private class State_Cast : State<Player_Input> {
 
         private int layer;
 

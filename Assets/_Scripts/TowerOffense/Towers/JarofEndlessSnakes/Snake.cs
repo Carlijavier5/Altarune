@@ -46,9 +46,9 @@ public partial class Snake : Entity
         return false;
     }
 
-    public override void Perish()
+    public override void Perish(bool immediate)
     {
-        base.Perish();
+        base.Perish(immediate);
         parent.deleteSnake(id);
     }
 }
