@@ -1,42 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Credit : MonoBehaviour
 {
     [SerializeField] private CreditRoll creditData;
     [SerializeField] private IndividualCredit individualCredit;
     [SerializeField] private RectTransform content;
-    public bool scroll;
-    private float updateTime = 0.01f;
-    private float time = 0f;
-    // Start is called before the first frame update
-
+    [SerializeField] private bool autoScroll;
+    [SerializeField] private float updateTime, scrollSpeed;
+    [SerializeField] private SceneRef mainMenuScene;
+    private float time;
+    private bool done;
     
-    void Start()
-    {
-        scroll = true;
-        foreach(CreditData i in creditData.Credits) {
-            IndividualCredit k = Instantiate(individualCredit);
-            k.transform.SetParent(content);
-            k.createIndividualCredit(i);
+    void Awake() {
+        foreach(CreditData data in creditData.Credits) {
+            IndividualCredit credit = Instantiate(individualCredit);
+            credit.transform.SetParent(content);
+            credit.CreateIndividualCredit(data);
         }
     }
 
-    public void setScroll(bool activateScroll) {
-        scroll = activateScroll;
-    }
+    void Update() {
+        if (done) return;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(scroll){
+        if (Input.mouseScrollDelta.magnitude > 0) {
+            autoScroll = false;
+        }
+
+        if (Input.anyKeyDown) {
+            SceneManager.LoadScene(mainMenuScene.BuildIndex);
+            done = true;
+        }
+
+        if (autoScroll) {
             time += Time.deltaTime;
             if (time > updateTime) {
-                content.localPosition += new Vector3(0, 0.1f, 0);
+                content.localPosition += new Vector3(0, scrollSpeed, 0);
             }
         }
     }

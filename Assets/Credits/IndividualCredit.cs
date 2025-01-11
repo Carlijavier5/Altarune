@@ -5,42 +5,32 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class IndividualCredit : MonoBehaviour
-{
-    [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private Image YanImage;
+public class IndividualCredit : MonoBehaviour {
 
-    private new string name;
-    private string role, quote;
-    private Sprite image;
+    [SerializeField] private TextMeshProUGUI tName,
+                                             tRole,
+                                             tQuote;
+    [SerializeField] private Transform imageAnchor;
+    [SerializeField] private Image imageFrame;
 
-    public void createIndividualCredit(CreditData creditData){
-        name = creditData.name;
-        role = creditData.role;
-        text.text = name + "\n" + role + "\n";
-        if(creditData.quote != null) {
-            quote = creditData.quote;
-            text.text += quote;
-        }
-        if(creditData.sprite != null) {
-            image = creditData.sprite;
-            YanImage.sprite = image;
-            text.alignment = TMPro.TextAlignmentOptions.Left;
-            this.GetComponent<HorizontalLayoutGroup>().childAlignment = UnityEngine.TextAnchor.UpperLeft;
-        } else {
-            Destroy(YanImage.gameObject);
-            text.alignment = TMPro.TextAlignmentOptions.Center;
-            Vector2 originalSize = GetComponent<RectTransform>().sizeDelta;
-            originalSize.y = 200;
-            GetComponent<RectTransform>().sizeDelta = originalSize;
-            this.GetComponent<HorizontalLayoutGroup>().enabled = true;
-            this.GetComponent<HorizontalLayoutGroup>().childAlignment = UnityEngine.TextAnchor.MiddleCenter;
-        }
-    }
+    public void CreateIndividualCredit(CreditData creditData){
+        string name = creditData.name;
+        tName.text = name;
+        tName.fontSize += creditData.fontSizeIncrease;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (!string.IsNullOrWhiteSpace(creditData.role)) {
+            string role = creditData.role;
+            tRole.text = role;
+        } else tRole.gameObject.SetActive(false);
+
+        if (!string.IsNullOrWhiteSpace(creditData.quote)) {
+            string quote = creditData.quote;
+            tQuote.text = quote;
+        } else tQuote.gameObject.SetActive(false);
+
+        if (creditData.sprite != null) {
+            Sprite image = creditData.sprite;
+            imageFrame.sprite = image;
+        } else imageAnchor.gameObject.SetActive(false);
     }
 }

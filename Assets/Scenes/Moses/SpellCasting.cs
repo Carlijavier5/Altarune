@@ -9,7 +9,7 @@ public class SpellCasting : MonoBehaviour
     // I think My Implmentation works better this way.
 
     // Reference to the ManaBar to check and manage mana
-    public ManaBar manaBar;
+    public StagingManaBar manaBar;
     public bool canCast = false;
 
     // Method to attempt to cast a spell
