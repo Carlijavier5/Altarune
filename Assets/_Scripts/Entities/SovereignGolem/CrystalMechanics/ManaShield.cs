@@ -8,7 +8,7 @@ public class ManaShield : BaseObject {
     
     void Awake() {
         OnDamageReceived += ManaShield_OnDamageReceived;
-        controller.onBreak += Controller_onBreak;
+        controller.onBreak += Controller_OnBreak;
     }
 
     public void Activate() {
@@ -20,7 +20,7 @@ public class ManaShield : BaseObject {
         controller.SimulateHit();
     }
 
-    private void Controller_onBreak() {
+    private void Controller_OnBreak() {
         gameObject.SetActive(false);
     }
 
