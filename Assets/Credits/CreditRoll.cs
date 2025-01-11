@@ -11,6 +11,7 @@ public class CreditRoll : ScriptableObject {
 
 [System.Serializable]
 public class CreditData {
+    public int fontSizeIncrease;
     public string name, role;
     [TextArea] public string quote;
     public Sprite sprite;
