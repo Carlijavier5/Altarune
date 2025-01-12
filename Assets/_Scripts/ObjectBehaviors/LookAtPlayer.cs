@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[ExecuteAlways]
 public class LookAtPlayer : MonoBehaviour {
 
     [SerializeField] float turnSpeed = 4;
