@@ -7,11 +7,11 @@ public class LevelStateManager : MonoBehaviour {
 
     private readonly HashSet<RoomTag> roomStateSet = new();
 
-    public bool IsComplete(RoomTag roomTag) {
+    public bool HasRoom(RoomTag roomTag) {
         return roomStateSet.Contains(roomTag);
     }
 
-    public void CompleteRoom(RoomTag roomTag) {
+    public void AddRoom(RoomTag roomTag) {
         roomStateSet.Add(roomTag);
     }
 }

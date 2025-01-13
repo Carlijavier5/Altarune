@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
 
     void Awake() {
         initialPosition = anchor.localPosition;
-        attachedEntity.OnHealingReceived += AttachedEntity_OnHealReceived;
+        attachedEntity.OnHealReceived += AttachedEntity_OnHealReceived;
         attachedEntity.OnDamageReceived += AttachedEntity_OnDamageTaken;
         attachedEntity.OnPerish += AttachedEntity_OnPerish;
     }

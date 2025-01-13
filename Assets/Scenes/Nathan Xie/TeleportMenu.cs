@@ -17,7 +17,7 @@ public class TeleportMenu : MonoBehaviour
     private NexusButton[] nexusButtons;
     // Start is called before the first frame update
     void Start() {
-        nexusConnections = LevelStateManager.Instance.getCheckpoints();
+        //nexusConnections = LevelStateManager.Instance.getCheckpoints();
         nexusButtons = new NexusButton[nexusConnections.Count];
         RectTransform rectTransform = buttonPrefab.GetRectTransform();
         float maxHeight = rectTransform.rect.height * 1.3f * (nexusConnections.Count - 1) + 1.5f;

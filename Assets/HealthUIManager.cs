@@ -1,40 +1,36 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthUIManager : MonoBehaviour {
 
     [SerializeField] private Player player;
-    [SerializeField] private GameObject healthSprite;
-    [SerializeField] private float spacing = 2f;
-    [SerializeField] private Transform healthGroup;
-
-    private GameObject[] healthSprites;
+    [SerializeField] private HealthSpriteController[] healthSprites;
 
     void Awake() {
         player.InputSource.OnPlayerInit += InputSource_OnPlayerInit;
         player.OnDamageReceived += Player_OnDamageReceived;
+        player.OnHealReceived += Player_OnHealReceived;
     }
 
     private void InputSource_OnPlayerInit() {
         int health = player.Health;
-        healthSprites = new GameObject[health];
-        for (int i = 0; i < health; i++) {
-            healthSprites[i] = Instantiate(healthSprite, new Vector3(i * spacing, 0f, 0f) + healthGroup.position,
-                Quaternion.identity, healthGroup);
+        for (int i = 0; i < healthSprites.Length; i++) {
+            healthSprites[i].gameObject.SetActive(health > i);
         }
     }
 
-    /// <summary>
-    /// Updates health visuals. Pass current health.
-    /// </summary>
     private void Player_OnDamageReceived(int _) {
         int currHealth = player.Health;
         int maxHealth = player.MaxHealth;
-        for (int i = 0; i < maxHealth; i++) {
-            if (i >= currHealth) {
-                healthSprites[i].SetActive(false);
-            }
+        for (int i = currHealth; i < maxHealth; i++) {
+            healthSprites[i].Break();
+        }
+    }
+
+    private void Player_OnHealReceived(int _) {
+        int currHealth = player.Health;
+        for (int i = 0; i < currHealth; i++) {
+            healthSprites[i].Restore();
         }
     }
 }
