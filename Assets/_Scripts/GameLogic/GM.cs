@@ -62,6 +62,13 @@ public class GM : MonoBehaviour {
         }
     }
 
+    void Update() {
+        if (Input.GetKey(KeyCode.LeftControl)
+                && Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
+    }
+
     public void DoGameOver() {
         StartCoroutine(RestartScene());
     }

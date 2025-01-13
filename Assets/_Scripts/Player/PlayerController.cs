@@ -86,6 +86,16 @@ public class PlayerController : MonoBehaviour {
         playerInput.Actions.Disable();
     }
 
+    public void ActivateSummons() {
+        playerInput.Actions.Summon.performed += Summon_Performed;
+        playerInput.Actions.SelectSummon.performed += SelectSummon_performed;
+    }
+
+    public void DeactivateSummons() {
+        playerInput.Actions.Summon.performed -= Summon_Performed;
+        playerInput.Actions.SelectSummon.performed -= SelectSummon_performed;
+    }
+
     private IEnumerator ISyncInitialization() {
         yield return new WaitForEndOfFrame();
         OnPlayerInit?.Invoke();
