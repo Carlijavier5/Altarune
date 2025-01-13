@@ -6,7 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class LabCinematicManager : MonoBehaviour {
+public class LabCinematicManager : CCondition {
+    [SerializeField] private CCondition condition;
     [SerializeField] private CinemachineVirtualCamera cinematicCamera;
     [SerializeField] private float cameraShakeIntensity = 2f;
     [SerializeField] private Vector3 initOffset;
@@ -36,9 +37,11 @@ public class LabCinematicManager : MonoBehaviour {
     [SerializeField] private float lightTime = 2f;
 
     [SerializeField] private float waitTime = 2f;
+
+    [SerializeField] private float initTime = 3f;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
+        condition.OnConditionTrigger += RunCinematicAction;
         rippleEffect.Stop();
         waterfallRipple1.Stop();
         waterfallRipple2.Stop();
@@ -63,12 +66,16 @@ public class LabCinematicManager : MonoBehaviour {
 
         stairBarrierInitPos = stairbarrier.position;
         stairbarrier.position -= initOffset;
-        
         Debug.Log("hi");
+    }
+
+    public void RunCinematicAction(CConditionData data) {
         StartCoroutine(RunCinematic());
     }
 
     private IEnumerator RunCinematic() {
+        yield return new WaitForSeconds(initTime);
+        cinematicCamera.m_Priority = 100;
         Debug.Log("running cinematic");
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
@@ -95,6 +102,7 @@ public class LabCinematicManager : MonoBehaviour {
 
         barrier.DOFloat(0.5f, "_Global_Alpha", lightTime);
         yield return new WaitForSeconds(waitTime);
+        CheckCondition();
         cinematicCamera.m_Priority = 0;
         yield return null;
     }
