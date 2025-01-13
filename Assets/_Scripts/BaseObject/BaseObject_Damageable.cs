@@ -15,7 +15,7 @@ public abstract partial class BaseObject {
     public event System.Action<EventResponse<int>> OnTryRequestMaxHealth;
 
     public event System.Action<int> OnDamageReceived;
-    public event System.Action<int> OnHealingReceived;
+    public event System.Action<int> OnHealReceived;
     public event System.Action<BaseObject> OnPerish;
 
     /// <summary>
@@ -57,7 +57,7 @@ public abstract partial class BaseObject {
 
     public void PropagateDamage(int amount) => OnDamageReceived?.Invoke(amount);
 
-    public void PropagateHeal(int amount) => OnHealingReceived?.Invoke(amount);
+    public void PropagateHeal(int amount) => OnHealReceived?.Invoke(amount);
 
     /// <summary>
     /// Damage method, attempts to damage the object;

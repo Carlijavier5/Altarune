@@ -34,6 +34,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private RoomManager roomManager;
     public static RoomManager RoomManager => instance.roomManager;
 
+    [SerializeField] private LevelStateManager levelStateManager;
+    public static LevelStateManager LeveStateManager => instance.levelStateManager;
+
     [SerializeField] private RunManager runManager;
     public static RunManager RunManager => instance.runManager;
 

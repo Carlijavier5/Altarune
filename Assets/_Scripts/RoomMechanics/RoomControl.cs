@@ -23,6 +23,11 @@ public class RoomControl : MonoBehaviour {
     private readonly float doorCollapseTimer = 3;
 
     void OnEnable() {
+        if (GM.Instance) Init();
+        else StartCoroutine(DelayInit());
+    }
+
+    private void Init() {
         GM.Instance.OnPlayerInit += GM_OnPlayerInit;
         listener.OnRoomCleared += Listener_OnRoomCleared;
         listener.OnEntityPerish += Listener_OnEntityPerish;
@@ -92,6 +97,11 @@ public class RoomControl : MonoBehaviour {
         foreach (DoorToggle door in doors) {
             door.Toggle(false);
         }
+    }
+
+    private IEnumerator DelayInit() {
+        yield return new WaitForEndOfFrame();
+        Init();
     }
 }
 
