@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using UnityEngine;
 
@@ -17,13 +18,12 @@ public class TeleportNexusInteractor : MonoBehaviour {
     [Space] [Header("Teleport")]
     [SerializeField] Transform buttonsContainer;
     [SerializeField] TeleportNexusUIButton uiButtonPrefab;
-    [SerializeField] List<string> teleportEntries = new List<string>();
+    [SerializeField] List<RoomTag> roomTagEntries = new List<RoomTag>();
 
     List<TeleportNexusUIButton> uiButtonInstances;
 
     [Space] [Header("Display Settings")]
     [SerializeField] float showDelayBetweenButtons = 0.2f;
-
     [SerializeField] float hideDelayBetweenButtons = 0.1f;
     
     void Start() {
@@ -31,12 +31,15 @@ public class TeleportNexusInteractor : MonoBehaviour {
             Debug.LogError("[Teleport Nexus Interactor] uiButtonPrefab is unset or missing!!");
             return;
         }
-        
+
         uiButtonInstances = new List<TeleportNexusUIButton>();
-        for (int i = 0; i < teleportEntries.Count; i++) {
-            TeleportNexusUIButton newButton = Instantiate(uiButtonPrefab, buttonsContainer);
-            newButton.SetButtonLabel(teleportEntries[i]);
-            uiButtonInstances.Add(newButton);
+        List<TeleportNexusUIButton> buttonInstancesFound = GetComponentsInChildren<TeleportNexusUIButton>().ToList();
+        // Filter unlocked rooms
+        for (int i = 0; i < buttonInstancesFound.Count; i++) {
+            if (!GM.LeveStateManager.HasRoom(buttonInstancesFound[i].RoomTag)) {
+                continue;
+            }
+            uiButtonInstances.Add(buttonInstancesFound[i]);
         }
 
         canvas = GetComponentInChildren<Canvas>();
@@ -47,21 +50,20 @@ public class TeleportNexusInteractor : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X)) {
-            
-        }
     }
 
+    bool CanPlayerInteract() => uiButtonInstances.Count > 0;
+
     void OnTriggerEnter(Collider other) {
+        if (!CanPlayerInteract()) {
+            return;
+        }
+        
         if (other.TryGetComponent(out Player player)) {
-            Debug.Log("Player entered Nexus Teleporter");
             interactingPlayer = player;
             
             // Switch to camera
             interactorCamera.Priority = 99;
-            
-            // Disable player input
-            //GM.Player.InputSource.DeactivateInput();
             
             // Show buttons
             StopAllCoroutines();
@@ -70,27 +72,22 @@ public class TeleportNexusInteractor : MonoBehaviour {
     }
 
     void OnTriggerExit(Collider other) {
+        if (!CanPlayerInteract()) {
+            return;
+        }
+        
         if (other.TryGetComponent(out Player player)) {
-            Debug.Log("Player exited Nexus Teleporter");
             interactingPlayer = null;
             
             // Switch out of camera
             interactorCamera.Priority = -1;
-            
-            // Enable player input
-            //GM.Player.InputSource.ActivateInput();
             
             // Hide buttons
             StopAllCoroutines();
             StartCoroutine(HideButtons());
         }
     }
-
-    void OnTriggerStay(Collider other) {
-        if (other.TryGetComponent(out Player player)) {
-            Debug.Log("Player inside Nexus Teleporter");
-        }
-    }
+    
 
     IEnumerator ShowButtons() {
         int index = 0;
