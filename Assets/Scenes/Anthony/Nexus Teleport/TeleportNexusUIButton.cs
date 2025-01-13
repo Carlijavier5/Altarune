@@ -9,7 +9,9 @@ public class TeleportNexusUIButton : MonoBehaviour
 
     [Header("Display")]
     [SerializeField] TMP_Text buttonLabel;
-
+    [SerializeField] RoomTag roomTag;
+    public RoomTag RoomTag => roomTag;
+    
     public void SetButtonLabel(string label) {
         buttonLabel.text = label;
     }
@@ -26,5 +28,8 @@ public class TeleportNexusUIButton : MonoBehaviour
             Animator.SetTrigger("hide");
         }
     }
-    
+
+    public void TeleportToRoom() {
+        GM.RoomManager.MoveToRoom(roomTag);
+    }
 }
