@@ -24,16 +24,4 @@ public class LookAtPlayer : MonoBehaviour {
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
-    void OnDrawGizmos() {
-        
-        
-        Vector3 origin = transform.position;
-        Vector3 lookDestination = GM.Player.transform.position;
-        
-        Handles.color = Color.red;
-
-        Handles.DrawAAPolyLine(origin, lookDestination);
-
-    }
-
 }
