@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public abstract class ZigGraphic : MonoBehaviour {
+public class GraphicFader : MonoBehaviour {
 
     protected const string COLOR_PARAM = "_Color";
 
