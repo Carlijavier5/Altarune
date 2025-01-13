@@ -70,12 +70,6 @@ public class GM : MonoBehaviour {
     }
 
     public void DoGameOver() {
-        StartCoroutine(RestartScene());
-    }
-
-    private IEnumerator RestartScene() {
-        transitionManager.FadeOut();
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        RoomManager.MoveToRoom(RoomTag.Lab);
     }
 }
