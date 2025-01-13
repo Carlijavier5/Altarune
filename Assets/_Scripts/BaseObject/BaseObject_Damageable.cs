@@ -20,9 +20,9 @@ public abstract partial class BaseObject {
 
     /// <summary>
     /// Object health; <br/>
-    /// • Returns the current health if damageable and alive; <br/>
-    /// • Returns 0 if damageable and not alive; <br/>
-    /// • Returns -1 if not damageable;
+    /// â€¢ Returns the current health if damageable and alive; <br/>
+    /// â€¢ Returns 0 if damageable and not alive; <br/>
+    /// â€¢ Returns -1 if not damageable;
     /// </summary>
     public int Health {
         get {
@@ -34,8 +34,8 @@ public abstract partial class BaseObject {
 
     /// <summary>
     /// Object max health; <br/>
-    /// • Returns the current max health if damageable and alive; <br/>
-    /// • Returns -1 if not damageable;
+    /// â€¢ Returns the current max health if damageable and alive; <br/>
+    /// â€¢ Returns -1 if not damageable;
     /// </summary>
     public int MaxHealth {
         get {
