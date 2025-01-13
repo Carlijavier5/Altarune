@@ -17,6 +17,8 @@ public class EntitySpawner : Entity {
     [SerializeField] private int maxEnemiesAtOnce;
     [SerializeField] private Vector2 spawnDelayRange;
     [SerializeField] private Vector2 spawnRadius;
+    [SerializeField] ParticleSystem spawnFx;
+    [SerializeField] float spawnFxHeightOffset = 1f;
 
     private readonly HashSet<Entity> linkedEnemies = new();
 
@@ -32,6 +34,12 @@ public class EntitySpawner : Entity {
 
             Entity entity = Instantiate(group.entityPrefab, spawnPos, Quaternion.identity);
             linkedEnemies.Add(entity);
+            
+            // Play particle effect upon spawn
+            if (spawnFx) {
+                ParticleSystem spawnedParticleSystem = Instantiate(spawnFx, entity.transform);
+                spawnedParticleSystem.transform.position += Vector3.up * spawnFxHeightOffset;
+            }
 
             group.spawnCount--;
             if (group.spawnCount == 0) {
