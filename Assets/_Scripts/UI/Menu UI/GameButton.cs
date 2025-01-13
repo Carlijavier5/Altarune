@@ -22,7 +22,7 @@ public class GameButton : MonoBehaviour
     {
         if (menu != null)
         {
-            if (menu.open)
+            if (menu.IsOpen)
             {
                 menu.closed.AddListener(LoadMainLevel);
             }
@@ -39,7 +39,7 @@ public class GameButton : MonoBehaviour
     {
         if (menu != null)
         {
-            if (menu.open)
+            if (menu.IsOpen)
             {
                 menu.closed.AddListener(LoadMainMenu);
             }
