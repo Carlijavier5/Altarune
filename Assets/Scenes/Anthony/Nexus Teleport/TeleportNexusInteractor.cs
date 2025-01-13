@@ -75,7 +75,7 @@ public class TeleportNexusInteractor : MonoBehaviour {
             interactingPlayer = null;
             
             // Switch out of camera
-            interactorCamera.Priority = 0;
+            interactorCamera.Priority = -1;
             
             // Enable player input
             //GM.Player.InputSource.ActivateInput();
