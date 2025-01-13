@@ -7,6 +7,8 @@ public partial class GolemSentinel {
 
     [Header("Aggro/Charge State")]
     [SerializeField] private LoopingSystemController chargeShieldController;
+    [SerializeField] private SentinelShield sentinelShield;
+    [SerializeField] private GraphicFader chargeIndicator;
     [SerializeField] private int damageAmount;
     [SerializeField] private Vector2 aggroWaitTimeRange;
     [SerializeField] private float chargeAmplitude, chargeTime,
@@ -65,6 +67,7 @@ public partial class GolemSentinel {
             base.Enter(input);
             input.golem.animator.SetTrigger(CHARGE_START_PARAM);
             input.golem.chargeShieldController.Enable();
+            input.golem.chargeIndicator.DoFade(true);
         }
 
         public override void Update(Sentinel_Input input) {
@@ -76,6 +79,7 @@ public partial class GolemSentinel {
 
         public override void Exit(Sentinel_Input input) {
             input.golem.chargeShieldController.Disable();
+            input.golem.chargeIndicator.DoFade(false);
         }
     }
 
@@ -84,7 +88,7 @@ public partial class GolemSentinel {
         private float chargeTimer;
 
         public override void Enter(Sentinel_Input input) {
-            input.golem.chargeShieldController.Enable();
+            input.golem.sentinelShield.Enable();
             input.golem.controller.enabled = true;
             input.golem.navMeshAgent.enabled = false;
             input.golem.MotionDriver.Set(input.golem.controller);
@@ -107,7 +111,7 @@ public partial class GolemSentinel {
         }
 
         public override void Exit(Sentinel_Input input) {
-            input.golem.ClearContacts();
+            input.golem.sentinelShield.Disable();
             input.golem.chargeShieldController.Disable();
             input.golem.controller.enabled = false;
             input.golem.navMeshAgent.enabled = true;

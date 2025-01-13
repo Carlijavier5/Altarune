@@ -13,7 +13,6 @@ public partial class GolemSentinel : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange, deAggroRange;
-    [SerializeField] private Collider attackCollider;
 
     private float baseAnimatorSpeed;
     public float BaseAnimatorSpeed {
@@ -71,16 +70,6 @@ public partial class GolemSentinel : Entity {
         stateMachine.FixedUpdate();
     }
 
-    private void ClearContacts() {
-        StartCoroutine(IClearContacts());
-    }
-
-    private IEnumerator IClearContacts() {
-        attackCollider.enabled = false;
-        yield return new WaitForEndOfFrame();
-        attackCollider.enabled = true;
-    }
-
     private void SentinelSweep_OnSweepEnd() {
         stateMachine.SetState(new State_Idle());
         UpdateAggro();
@@ -123,14 +112,6 @@ public partial class GolemSentinel : Entity {
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (stateMachine.State is not State_Charge) return;
-        if (other.TryGetComponent(out BaseObject baseObject)
-                && !baseObject.IsFaction(EntityFaction.Hostile)) {
-            baseObject.TryDamage(damageAmount);
-        }
-    }
-
     public override void Perish(bool immediate) {
         base.Perish(immediate);
         DetachModules();
@@ -139,6 +120,8 @@ public partial class GolemSentinel : Entity {
             Destroy(gameObject);
         } else {
             enabled = false;
+            sentinelShield.Disable();
+            chargeShieldController.Disable();
             aggroRange.Disable();
             Destroy(gameObject, 2);
         }

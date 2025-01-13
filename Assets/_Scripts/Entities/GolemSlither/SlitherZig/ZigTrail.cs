@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ZigTrail : ZigGraphic {
+public class ZigTrail : GraphicFader {
 
     [SerializeField] private Collider attackCollider;
     private readonly HashSet<BaseObject> contactSet = new();

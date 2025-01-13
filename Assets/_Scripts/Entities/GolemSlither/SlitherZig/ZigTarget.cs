@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class ZigTarget : ZigGraphic {
+public class ZigTarget : GraphicFader {
 
     [SerializeField] private Vector3 positionOffset;
     [SerializeField] private Vector3 startScale;
