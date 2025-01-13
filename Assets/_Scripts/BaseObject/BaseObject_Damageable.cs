@@ -15,14 +15,14 @@ public abstract partial class BaseObject {
     public event System.Action<EventResponse<int>> OnTryRequestMaxHealth;
 
     public event System.Action<int> OnDamageReceived;
-    public event System.Action<int> OnHealingReceived;
+    public event System.Action<int> OnHealReceived;
     public event System.Action<BaseObject> OnPerish;
 
     /// <summary>
     /// Object health; <br/>
-    /// • Returns the current health if damageable and alive; <br/>
-    /// • Returns 0 if damageable and not alive; <br/>
-    /// • Returns -1 if not damageable;
+    /// â€¢ Returns the current health if damageable and alive; <br/>
+    /// â€¢ Returns 0 if damageable and not alive; <br/>
+    /// â€¢ Returns -1 if not damageable;
     /// </summary>
     public int Health {
         get {
@@ -34,8 +34,8 @@ public abstract partial class BaseObject {
 
     /// <summary>
     /// Object max health; <br/>
-    /// • Returns the current max health if damageable and alive; <br/>
-    /// • Returns -1 if not damageable;
+    /// â€¢ Returns the current max health if damageable and alive; <br/>
+    /// â€¢ Returns -1 if not damageable;
     /// </summary>
     public int MaxHealth {
         get {
@@ -57,7 +57,7 @@ public abstract partial class BaseObject {
 
     public void PropagateDamage(int amount) => OnDamageReceived?.Invoke(amount);
 
-    public void PropagateHeal(int amount) => OnHealingReceived?.Invoke(amount);
+    public void PropagateHeal(int amount) => OnHealReceived?.Invoke(amount);
 
     /// <summary>
     /// Damage method, attempts to damage the object;

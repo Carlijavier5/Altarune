@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 
 public class LevelLoadCanvas : MonoBehaviour {
-
+    [SerializeField] private CCondition condition;
     [SerializeField] private float initOffset = -10f;
     
     [SerializeField] private Transform level;
@@ -30,8 +30,12 @@ public class LevelLoadCanvas : MonoBehaviour {
         level.DOMoveX(initOffset, 0f);
         divider.DOMoveX(initOffset, 0f);
         floor.DOMoveX(initOffset, 0f);
-        
-        StartCoroutine(Display());
+
+        GM.DialogueManager.OnDialogueEnd += DisplayAction;
+    }
+
+    private void DisplayAction() {
+        if (condition.ConditionIsMet()) StartCoroutine(Display());
     }
 
     private IEnumerator Display() {
