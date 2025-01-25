@@ -28,8 +28,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7556908497527970706}
   - {fileID: 3904796177975676606}
@@ -50,7 +50,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectBody: {fileID: 7556908497527970706}
   settings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
-  manaDepletion: 1
   tempoArea: {fileID: 3854210471545412715}
   magicCircleController: {fileID: 4510177662740729717}
   hourglassController: {fileID: 8966465548497968526}
@@ -320,27 +319,27 @@ PrefabInstance:
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.10000057
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7038933
+      value: 0.6200665
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7038933
+      value: 0.6200665
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06733724
+      value: -0.3398787
       objectReference: {fileID: 0}
     - target: {fileID: 4955919714199715656, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.06733724
+      value: 0.3398787
       objectReference: {fileID: 0}
     - target: {fileID: 5180139356232831829, guid: d5beb6a677d144947ade8a8b05835569,
         type: 3}
