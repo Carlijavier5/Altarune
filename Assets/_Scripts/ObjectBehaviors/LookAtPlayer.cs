@@ -6,15 +6,10 @@ using UnityEngine;
 
 public class LookAtPlayer : MonoBehaviour {
 
-    [SerializeField] float turnSpeed = 4;
-    
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float turnSpeed = 4;
 
     void Update() {
-        
+        if (GM.Player == null) return;
         Vector3 origin = transform.position;
         Vector3 lookDestination = GM.Player.transform.position;
         Vector3 directionToPlayer = (lookDestination - origin).normalized;

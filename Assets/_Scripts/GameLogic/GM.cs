@@ -40,6 +40,11 @@ public class GM : MonoBehaviour {
     [SerializeField] private RunManager runManager;
     public static RunManager RunManager => instance.runManager;
 
+    [SerializeField] private ConditionBank conditionBank;
+    public static ConditionBank ConditionBank => instance.conditionBank;
+
+    [SerializeField] private SceneRef endingScene;
+
     private Player player;
     public static Player Player {
         get => instance.player;
@@ -73,9 +78,19 @@ public class GM : MonoBehaviour {
         StartCoroutine(RestartScene());
     }
 
+    public void FinishGame() {
+        StartCoroutine(LoadEndScene());
+    }
+
     private IEnumerator RestartScene() {
         transitionManager.FadeOut();
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private IEnumerator LoadEndScene() {
+        transitionManager.FadeOut();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(endingScene.BuildIndex);
     }
 }

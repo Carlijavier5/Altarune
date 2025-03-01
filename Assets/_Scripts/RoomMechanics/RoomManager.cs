@@ -28,13 +28,6 @@ public class RoomManager : MonoBehaviour {
             int buildIndex = roomID.roomScene.BuildIndex;
             roomIndexMap[roomID.roomTag] = buildIndex;
         }
-        /// TEMPORARY
-        sourceRoomTag = RoomTag.F1;
-        currentRoomTag = RoomTag.F1;
-    }
-
-    void Start() {
-        //MoveToRoom(RoomTag.F1);
     }
 
     void Update() {
@@ -46,6 +39,14 @@ public class RoomManager : MonoBehaviour {
                 && Input.GetKeyDown(KeyCode.L)) {
             Transform spawnPoint = currentRoom.SpawnPoint;
             GM.Player.TryTeleport(spawnPoint.position);
+        }
+        if (Input.GetKey(KeyCode.LeftControl)
+            && Input.GetKeyDown(KeyCode.Alpha4)) {
+            MoveToRoom(RoomTag.F4);
+        }
+        if (Input.GetKey(KeyCode.LeftControl)
+                && Input.GetKeyDown(KeyCode.Alpha8)) {
+            MoveToRoom(RoomTag.F8);
         }
     }
 

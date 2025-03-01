@@ -22,6 +22,7 @@ public class PawSlam : MonoBehaviour {
 
     public void DoSlam(Vector3 source, float duration) {
         transform.position = source;
+        smoke.transform.position = source;
         gameObject.SetActive(true);
         StartCoroutine(IDoSlam(duration));
     }

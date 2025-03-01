@@ -1,10 +1,8 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LaserTowerProjectile : MonoBehaviour {
 
-    //Change
 	[SerializeField] private Rigidbody rb;
     [SerializeField] private Collider coll;
 	[SerializeField] private int damage = 1;
@@ -23,15 +21,7 @@ public class LaserTowerProjectile : MonoBehaviour {
     //Strictly required to set the length of the laser.
     public void setOGscale(float stretch) {
         ogScale.z = stretch;
-        Debug.Log(stretch);
         StartCoroutine(IGrow());
-    }
-
-	void OnCollisionEnter(Collision coll) {
-        if ((coll.collider is MeshCollider
-            || coll.collider is BoxCollider
-            || coll.collider is TerrainCollider)) {
-        }
     }
 
     private IEnumerator IGrow() {

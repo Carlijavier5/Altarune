@@ -12,10 +12,12 @@ public class SFXLoop : MonoBehaviour {
     private int sourceIndex;
 
     public void Play() {
+        StopAllCoroutines();
         StartCoroutine(IPlay());
     }
 
     public void Stop(float duration = 0.1f) {
+        StopAllCoroutines();
         StartCoroutine(IStop(duration));
     }
 

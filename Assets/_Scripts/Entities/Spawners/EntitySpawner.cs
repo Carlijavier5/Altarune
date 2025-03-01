@@ -17,8 +17,9 @@ public class EntitySpawner : Entity {
     [SerializeField] private int maxEnemiesAtOnce;
     [SerializeField] private Vector2 spawnDelayRange;
     [SerializeField] private Vector2 spawnRadius;
-    [SerializeField] ParticleSystem spawnFx;
-    [SerializeField] float spawnFxHeightOffset = 1f;
+    [SerializeField] private ParticleSystem spawnFx;
+    [SerializeField] private float spawnFxHeightOffset = 1f;
+    [SerializeField] private bool collapseSpawns;
 
     private readonly HashSet<Entity> linkedEnemies = new();
 
@@ -32,6 +33,7 @@ public class EntitySpawner : Entity {
             Vector3 spawnPos = SpatialUtils.RandomPointInXZRing(transform.position, spawnRadius,
                                                                 group.needsNavMesh);
 
+            if (group.entityPrefab == null) return;
             Entity entity = Instantiate(group.entityPrefab, spawnPos, Quaternion.identity);
             linkedEnemies.Add(entity);
             
@@ -96,6 +98,11 @@ public class EntitySpawner : Entity {
         } else {
             StopAllCoroutines();
             StartCoroutine(IMaterialize(false));
+            if (collapseSpawns) {
+                foreach (Entity entity in linkedEnemies) {
+                    entity.Perish();
+                }
+            }
         }
     }
 }

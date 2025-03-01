@@ -43,10 +43,6 @@ public partial class SovereignGolem : Entity {
                 microMachine.Update();
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.P)) {
-            BeginBossFight();
-        }
     }
 
     public void BeginBossFight() {
@@ -74,7 +70,6 @@ public partial class SovereignGolem : Entity {
 
     private void CrystalSpawner_OnSpawnPerish() {
         stagingHealth--;
-        Debug.Log(stagingHealth);
         if (stagingHealth <= 0) {
             stagingPhase = activeConfig.phase + 1;
         }
@@ -91,9 +86,16 @@ public partial class SovereignGolem : Entity {
     private void PhaseMaster_OnAttackEnd() {
         if (macroMachine.StateInput == null
             || microMachine.State is State_Idle
-            || microMachine.State is State_Roar) return;
+            || microMachine.State is State_Roar
+            || microMachine.State is State_Perish) return;
         macroMachine.StateInput.microMachine
         .SetState(new State_Idle(macroMachine.StateInput.CurrentPhase));
+    }
+
+    private void Perish() {
+        crystalSpawner.OnSpawnPerish -= CrystalSpawner_OnSpawnPerish;
+        crystalSpawner.EnterPhase(SovereignPhase.None);
+        golemSpawner.EnterPhase(SovereignPhase.None);
     }
 }
 
@@ -110,7 +112,13 @@ public partial class SovereignGolem {
         public override void Enter(Sovereign_Input input) {
             SovereignGolem sg = input.sovereign;
             if (phase != sg.stagingPhase) {
-                input.microMachine.SetState(new State_Roar());
+                if ((int) sg.stagingPhase < 5) {
+                    input.microMachine.SetState(new State_Roar());
+                } else {
+                    sg.Perish();
+                    sg.macroMachine.SetState(new MacroState_Inert());
+                    sg.macroMachine.StateInput.microMachine.SetState(new State_Perish());
+                }
             } else {
                 Vector2 timeRange = sg.activeConfig.attackTimeRange;
                 timer = Random.Range(timeRange.x, timeRange.y);
@@ -270,6 +278,29 @@ public partial class SovereignGolem {
             SovereignGolem sg = input.sovereign;
             sg.collapsionSlamMaster.DoAttack();
             sg.sfxCollapsionVoice.Play();
+        }
+
+        public override void Update(Sovereign_Input _) { }
+
+        public override void Exit(Sovereign_Input _) { }
+    }
+}
+
+public partial class SovereignGolem {
+
+    [Header("Death Paremeters")]
+    [SerializeField] private AnimationClip deathAnimationClip;
+    [SerializeField] private SovereignEndCutscene endCutscene;
+    private const string DEATH_ANIM_TRIGGER = "Perish";
+
+    public class State_Perish : State<Sovereign_Input> {
+
+        public override void Enter(Sovereign_Input input) {
+            SovereignGolem sg = input.sovereign;
+            sg.crystalSpawner.CollapseSpawns();
+            sg.golemSpawner.CollapseSpawns();
+            sg.animator.SetTrigger(DEATH_ANIM_TRIGGER);
+            sg.endCutscene.DoAnimation(sg.deathAnimationClip.length);
         }
 
         public override void Update(Sovereign_Input _) { }

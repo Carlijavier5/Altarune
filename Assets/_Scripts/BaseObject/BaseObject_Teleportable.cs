@@ -8,6 +8,10 @@ public abstract partial class BaseObject {
     /// Called to request teleportation from a Teleport Module;
     /// </summary>
     public System.Action<Vector3, EventResponse<Vector3>> OnTryTeleport;
+    /// <summary>
+    /// Called to request teleportation from a Teleport Module (without NavMesh bound checks);
+    /// </summary>
+    public System.Action<Vector3, EventResponse> OnTryRawTeleport;
 
     /// <summary>
     /// Called when a teleport action begins;
@@ -43,6 +47,12 @@ public abstract partial class BaseObject {
     public bool TryTeleport(Vector3 targetPosition) {
         return TryTeleport(targetPosition, out Vector3 _);
     }
+
+    public bool TryRawTeleport(Vector3 targetPosition) {
+        EventResponse response = new();
+        OnTryRawTeleport?.Invoke(targetPosition, response);
+        return response.received;
+    } 
 
     public void ConfirmTeleportStart(Vector3 teleportPosition) {
         OnTeleportStart?.Invoke(teleportPosition);

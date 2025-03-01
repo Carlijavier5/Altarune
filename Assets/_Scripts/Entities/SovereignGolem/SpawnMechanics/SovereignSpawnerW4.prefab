@@ -54,19 +54,26 @@ MonoBehaviour:
   spawnGroups:
   - entityPrefab: {fileID: 5593935329474835780, guid: 69d8123096bdf8a42aae69d784314c45,
       type: 3}
-    spawnCount: 2
+    spawnCount: 1
     needsNavMesh: 1
-  - entityPrefab: {fileID: 7484014756546059586, guid: 2f8b74991659f24439a97ba88b2145ad,
+  - entityPrefab: {fileID: 4951742556363160001, guid: 2f8b74991659f24439a97ba88b2145ad,
+      type: 3}
+    spawnCount: 1
+    needsNavMesh: 1
+  - entityPrefab: {fileID: 4349973505572177477, guid: 13921660c01a6724480bd7e8de4107b3,
       type: 3}
     spawnCount: 2
     needsNavMesh: 1
   - entityPrefab: {fileID: 670351108798461099, guid: fbe79cdc26e288c43a4557cede831997,
       type: 3}
-    spawnCount: 2
+    spawnCount: 3
     needsNavMesh: 0
   maxEnemiesAtOnce: 2
   spawnDelayRange: {x: 1, y: 2}
   spawnRadius: {x: 1, y: 2}
+  spawnFx: {fileID: 0}
+  spawnFxHeightOffset: 1
+  collapseSpawns: 1
 --- !u!114 &2264828141555459600
 MonoBehaviour:
   m_ObjectHideFlags: 0
