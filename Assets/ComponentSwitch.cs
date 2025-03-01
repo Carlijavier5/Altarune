@@ -25,7 +25,6 @@ public class ComponentSwitch : MonoBehaviour {
         used = true;
         if (condition.ConditionIsMet()) {
             if (component.GetComponent<SummonController>()) {
-                Debug.Log("summon controller: " + setActive);
                 if (setActive) {
                     GM.Player.InputSource.ActivateSummons();
                 }
@@ -34,7 +33,6 @@ public class ComponentSwitch : MonoBehaviour {
                 }
             }
             else {
-                Debug.Log("deleted");
                 if (condition.ConditionIsMet()) component.gameObject.SetActive(setActive);
             }
         }

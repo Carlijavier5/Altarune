@@ -9,7 +9,6 @@ public class ColliderCondition : CCondition {
 
     private void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Player _)) {
-            Debug.Log("something?");
             CheckCondition();
         }
     }

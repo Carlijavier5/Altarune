@@ -32,6 +32,7 @@ public class EntitySpawner : Entity {
             Vector3 spawnPos = SpatialUtils.RandomPointInXZRing(transform.position, spawnRadius,
                                                                 group.needsNavMesh);
 
+            if (group.entityPrefab == null) return;
             Entity entity = Instantiate(group.entityPrefab, spawnPos, Quaternion.identity);
             linkedEnemies.Add(entity);
             

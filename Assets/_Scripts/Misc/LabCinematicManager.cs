@@ -13,6 +13,8 @@ public class LabCinematicManager : CCondition {
     [SerializeField] private Vector3 initOffset;
     [SerializeField] private VisualEffect rippleEffect;
     [SerializeField] private Transform room;
+    [SerializeField] private SFXManagedLoop roomQuakeSFX, waterfallSFX;
+    [SerializeField] private SFXOneShot stairRise, pillarRise;
     private Vector3 roomPos;
 
     [SerializeField] private List<Transform> pillars;
@@ -66,7 +68,6 @@ public class LabCinematicManager : CCondition {
 
         stairBarrierInitPos = stairbarrier.position;
         stairbarrier.position -= initOffset;
-        Debug.Log("hi");
     }
 
     public void RunCinematicAction(CConditionData data) {
@@ -76,19 +77,23 @@ public class LabCinematicManager : CCondition {
     private IEnumerator RunCinematic() {
         yield return new WaitForSeconds(initTime);
         cinematicCamera.m_Priority = 100;
-        Debug.Log("running cinematic");
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
         GM.CameraShakeManager.DoCameraShake(cameraShakeIntensity, roomTime);
+        roomQuakeSFX.Play();
         yield return new WaitForSeconds(1f);
         room.DOMove(roomPos, roomTime);
         StartCoroutine(AsyncFalls());
+        waterfallSFX.Play();
         yield return new WaitForSeconds(roomTime * 0.7f);
+        roomQuakeSFX.Stop(2);
+        waterfallSFX.Stop(1.5f);
         stairbarrier.DOMove(stairBarrierInitPos, stairMoveTime);
         yield return new WaitForSeconds(stairStaggerTime);
         rippleEffect.Stop();
         StartCoroutine(AsyncPillar());
         for (int i = 0; i < stairs.Count; i++) {
+            stairRise.Play();
             stairs[i].DOMove(stairInitPos[i], stairMoveTime).SetEase(Ease.OutCubic);
             yield return new WaitForSeconds(stairStaggerTime);
             yield return null;
@@ -110,6 +115,7 @@ public class LabCinematicManager : CCondition {
     private IEnumerator AsyncPillar() {
         yield return new WaitForSeconds(1f);
         for (int i = 1; i < pillars.Count; i+=2) {
+            pillarRise.Play();
             pillars[i - 1].DOMove(pillarInitPos[i - 1], stairMoveTime * 1.4f).SetEase(Ease.OutCubic);
             pillars[i].DOMove(pillarInitPos[i], stairMoveTime * 1.4f).SetEase(Ease.OutCubic);
             yield return new WaitForSeconds(stairStaggerTime * 2);

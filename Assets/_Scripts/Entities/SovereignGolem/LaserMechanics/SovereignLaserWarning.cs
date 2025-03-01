@@ -5,16 +5,15 @@ public class SovereignLaserWarning : MonoBehaviour {
 
     public event System.Action OnWarningFinished;
 
-    [SerializeField] private GameObject warning;
+    [SerializeField] private GraphicFader warning;
 
     public void DoWarning(float warningTime) {
-        gameObject.SetActive(true);
         StopAllCoroutines();
         StartCoroutine(IAnimateWarning(warningTime));
     }
 
     private IEnumerator IAnimateWarning(float warningTime) {
-        warning.SetActive(true);
+        warning.DoFade(true);
 
         float warnTimer = 0;
         while (warnTimer < warningTime) {
@@ -24,8 +23,6 @@ public class SovereignLaserWarning : MonoBehaviour {
 
         OnWarningFinished?.Invoke();
         OnWarningFinished = null;
-        warning.SetActive(false);
-
-        gameObject.SetActive(false);
+        warning.DoFade(false);
     }
 }

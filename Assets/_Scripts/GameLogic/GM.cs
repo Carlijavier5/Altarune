@@ -40,6 +40,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private RunManager runManager;
     public static RunManager RunManager => instance.runManager;
 
+    [SerializeField] private ConditionBank conditionBank;
+    public static ConditionBank ConditionBank => instance.conditionBank;
+
     private Player player;
     public static Player Player {
         get => instance.player;

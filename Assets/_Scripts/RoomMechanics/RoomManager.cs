@@ -28,13 +28,6 @@ public class RoomManager : MonoBehaviour {
             int buildIndex = roomID.roomScene.BuildIndex;
             roomIndexMap[roomID.roomTag] = buildIndex;
         }
-        /// TEMPORARY
-        sourceRoomTag = RoomTag.F1;
-        currentRoomTag = RoomTag.F1;
-    }
-
-    void Start() {
-        //MoveToRoom(RoomTag.F1);
     }
 
     void Update() {

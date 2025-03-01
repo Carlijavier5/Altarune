@@ -5,11 +5,12 @@ public class SFXOneShot : MonoBehaviour {
     [SerializeField] private AudioSource source;
     [SerializeField] private AudioClip clip;
     [SerializeField] private Vector2 pitchVariation;
+    [SerializeField] private float volumeMult = 1;
 
     public AudioClip Clip => clip;
 
     public void Play() {
-        source.volume = GM.AudioManager.SFXVolume;
+        source.volume = GM.AudioManager.SFXVolume * volumeMult;
         source.pitch = 1 + Random.Range(pitchVariation.x, pitchVariation.y);
         source.PlayOneShot(clip);
     }
