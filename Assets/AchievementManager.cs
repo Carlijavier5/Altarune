@@ -186,6 +186,6 @@ public class AchievementManager : MonoBehaviour
 
     private bool fellInWater = false;
     public void FellInWater() {
-        fellInWater = true;
+        if (!fellInWater) fellInWater = true;
     }
 }
