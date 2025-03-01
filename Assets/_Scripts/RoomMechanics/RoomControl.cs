@@ -5,7 +5,8 @@ using Cinemachine;
 
 public enum RoomTag { Lab, F1, F2, F3, C1, F4, C2, F5, F6, F7, C3, F8 }
 
-public class RoomControl : MonoBehaviour {
+public class 
+    RoomControl : MonoBehaviour {
 
     [SerializeField] private RoomTag roomTag;
     [SerializeField] private AudioClip musicTrack;
@@ -15,6 +16,7 @@ public class RoomControl : MonoBehaviour {
     [SerializeField] private SpawnPoint[] spawnPoints;
     [SerializeField] private Transform defaultSpawnPoint;
     public Transform SpawnPoint => defaultSpawnPoint;
+    public RoomTag RoomTag => roomTag;
 
     [SerializeField] private RoomCompletionListener listener;
     [SerializeField] private DoorToggle[] doors;
