@@ -21,6 +21,7 @@ public class Teleportable : ObjectModule {
     void Awake() {
         baseObject.UpdateRendererRefs();
         baseObject.OnTryTeleport += BaseObject_OnTryTeleport;
+        baseObject.OnTryRawTeleport += BaseObject_OnTryRawTeleport;
 
         fallbackScale = TProps.rootTransform.localScale;
 
@@ -46,11 +47,22 @@ public class Teleportable : ObjectModule {
 
     private void BaseObject_OnTryTeleport(Vector3 desiredPosition, EventResponse<Vector3> response) {
         if (timer <= 0 && NavMesh.SamplePosition(desiredPosition, out NavMeshHit hitInfo, 4, NavMesh.AllAreas)) {
-            StopAllCoroutines();
-            StartCoroutine(ITeleport(hitInfo.position));
+            DoTeleport(hitInfo.position);
             response.objectReference = desiredPosition;
             response.received = true;
         }
+    }
+
+    private void BaseObject_OnTryRawTeleport(Vector3 desiredPosition, EventResponse response) {
+        if (timer <= 0) {
+            DoTeleport(desiredPosition);
+            response.received = true;
+        }
+    }
+
+    private void DoTeleport(Vector3 targetPosition) {
+        StopAllCoroutines();
+        StartCoroutine(ITeleport(targetPosition));
     }
 
     private void UpdateRootScale(float lerpValue, Vector3 originalScale) {

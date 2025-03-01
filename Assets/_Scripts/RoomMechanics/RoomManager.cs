@@ -40,6 +40,14 @@ public class RoomManager : MonoBehaviour {
             Transform spawnPoint = currentRoom.SpawnPoint;
             GM.Player.TryTeleport(spawnPoint.position);
         }
+        if (Input.GetKey(KeyCode.LeftControl)
+            && Input.GetKeyDown(KeyCode.Alpha4)) {
+            MoveToRoom(RoomTag.F4);
+        }
+        if (Input.GetKey(KeyCode.LeftControl)
+                && Input.GetKeyDown(KeyCode.Alpha8)) {
+            MoveToRoom(RoomTag.F8);
+        }
     }
 
     public void MoveToRoom(RoomTag roomTag) {
