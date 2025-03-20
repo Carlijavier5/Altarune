@@ -10,6 +10,7 @@ public class AchievementManager : MonoBehaviour
     private SummonType activeSummon;
     private int activeSummonIndex;
     private static AchievementManager instance;
+    public static AchievementManager Instance => instance;
 
     private HashSet<SiftlingType> _siftlings = new () { SiftlingType.Fire , SiftlingType.Normal, SiftlingType.Water, SiftlingType.Wind };
 
@@ -19,7 +20,7 @@ public class AchievementManager : MonoBehaviour
     [SerializeField] private float offset = -500f;
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI text;
-    
+
     private Vector3 finalLocation;
     private Vector3 exitLocation;
     
@@ -42,13 +43,14 @@ public class AchievementManager : MonoBehaviour
         RegisterEvent();
     }
     
-    
-    
-    private void RegisterEvent() {
-        GM.Instance.OnPlayerInit += RegisterEvent;
-        GM.TransitionManager.OnFadeEnd += Level1Check;
+    private void DelayRegister() {
         GM.Player.InputSource.OnSummonSelect += CheckTower;
         GM.Player.InputSource.OnSummonPerformed += WindTowerPlaceEvent;
+    }
+    
+    private void RegisterEvent() {
+        GM.Instance.OnPlayerInit += DelayRegister;
+        GM.TransitionManager.OnFadeEnd += Level1Check;
     }
     
     private void PromptUI() { 
@@ -65,21 +67,22 @@ public class AchievementManager : MonoBehaviour
         UI.transform.DOMove(exitLocation, entranceDelay);
     }
 
-    private bool _level1Reached = false;
-    private bool _windTowerPlaced = false;
-    private bool _sentintelGolemInterrupted = false;
-    private bool _scarabQueenSpawnCheck = false;
-    private bool _siftlingCheck;
-    private bool _savageGolemCheck;
-    private bool _savageGolemWithSniperCheck;
-    private bool _lightningOnlyCheck;
-    private bool _sovereignGolemDefeatCheck;
-    private bool _perfectRunCheck;
+    public bool _level1Reached = false;
+    public bool _windTowerPlaced = false;
+    public bool _sentintelGolemInterrupted = false;
+    public bool _scarabQueenSpawnCheck = false;
+    public bool _siftlingCheck;
+    public bool _savageGolemCheck;
+    public bool _savageGolemWithSniperCheck;
+    public bool _lightningOnlyCheck;
+    public bool _sovereignGolemDefeatCheck;
+    public bool _perfectRunCheck;
     
     //LMAO I'm sorry Carlos
     private void Level1Check() {
         if (!_level1Reached) {
-            if (GM.RoomManager.CurrentRoom.RoomTag == RoomTag.F2) {
+            if (!GM.RoomManager.CurrentRoom) return;
+            if ((int) GM.RoomManager.CurrentRoom.RoomTag > 1) {
                 _level1Reached = true;
                 title.SetText("Achievement: Entering the Catacombs...");
                 text.SetText("Clear Floor 1.");

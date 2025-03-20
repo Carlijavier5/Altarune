@@ -134,6 +134,9 @@ public partial class GolemSiftling : Entity {
     public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();
+        if (AchievementManager.Instance != null && activeConfig != null) {
+            AchievementManager.Instance.SiftingKillsCheck(activeConfig.type);
+        }
 
         if (immediate) {
             Destroy(gameObject);

@@ -47,6 +47,7 @@ public class EntitySpawner : Entity {
             if (group.spawnCount == 0) {
                 spawnGroups.Remove(group);
                 if (spawnGroups.Count == 0) {
+                    if (AchievementManager.Instance) AchievementManager.Instance.ScarabQueenSpawnCheck();
                     Perish();
                 }
             }

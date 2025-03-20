@@ -17,6 +17,7 @@ public class CastRangeEnforcer : MonoBehaviour {
         if (other.TryGetComponent(out Entity entity)
                 && entity == requiredContact) {
             OnContactCancel?.Invoke(requiredContact);
+            if (AchievementManager.Instance) AchievementManager.Instance.InterruptSentinelCheck();
         }
     }
 }

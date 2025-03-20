@@ -167,6 +167,9 @@ public partial class GolemSavage : Entity {
             DetachModules();
             enabled = false;
         }
+        if (AchievementManager.Instance) {
+            AchievementManager.Instance.SavageGolemCheck(GM.RoomManager.usedSniperRailgunTowerOnly);
+        }
     }
 
     #if UNITY_EDITOR

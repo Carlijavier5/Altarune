@@ -301,6 +301,9 @@ public partial class SovereignGolem {
             sg.golemSpawner.CollapseSpawns();
             sg.animator.SetTrigger(DEATH_ANIM_TRIGGER);
             sg.endCutscene.DoAnimation(sg.deathAnimationClip.length);
+            if (AchievementManager.Instance) {
+                AchievementManager.Instance.SovereignGolemCheck();
+            }
         }
 
         public override void Update(Sovereign_Input _) { }

@@ -23,6 +23,9 @@ public class RoomManager : MonoBehaviour {
     private RoomTag sourceRoomTag, currentRoomTag;
     public RoomTag SourceRoomTag => sourceRoomTag;
 
+    public bool usedOnlyLight = true;
+    public bool usedSniperRailgunTowerOnly = true;
+
     void Awake() {
         foreach (RoomIdentifier roomID in roomIdentifiers) {
             int buildIndex = roomID.roomScene.BuildIndex;
@@ -48,9 +51,19 @@ public class RoomManager : MonoBehaviour {
                 && Input.GetKeyDown(KeyCode.Alpha8)) {
             MoveToRoom(RoomTag.F8);
         }
+        if (Input.GetKeyDown(KeyCode.End)) {
+            GM.Instance.FinishGame();
+        }
     }
 
     public void MoveToRoom(RoomTag roomTag) {
+        usedSniperRailgunTowerOnly = true;
+        if ((int) roomTag > 1 && usedOnlyLight) {
+            if (AchievementManager.Instance) {
+                AchievementManager.Instance.ChainLightningOnlyCheck();
+            }
+        }
+        usedOnlyLight = true;
         currentRoomTag = roomTag;
         GM.TransitionManager.FadeOut();
         GM.TimeScaleManager.AddTimeScaleShift(0, 1);

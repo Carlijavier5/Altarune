@@ -21,6 +21,7 @@ public class ComponentSwitch : MonoBehaviour {
     }
 
     private void EnableComponent() {
+        if (GM.RoomManager.CurrentRoom) return;
         if (used && singleUse) return;
         used = true;
         if (condition.ConditionIsMet()) {

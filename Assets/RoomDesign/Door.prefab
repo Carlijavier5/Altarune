@@ -518,6 +518,7 @@ GameObject:
   - component: {fileID: 9044712561676441946}
   - component: {fileID: 2904776648718040797}
   - component: {fileID: 464494099708921934}
+  - component: {fileID: 7810239948761841738}
   m_Layer: 0
   m_Name: Barrier
   m_TagString: Untagged
@@ -590,6 +591,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7810239948761841738
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6404971005359142941}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1042801323994665371, guid: 8591e00ef14951b4bbdceadc8cb4460d, type: 3}
 --- !u!1 &6460747530029785741
 GameObject:
   m_ObjectHideFlags: 0

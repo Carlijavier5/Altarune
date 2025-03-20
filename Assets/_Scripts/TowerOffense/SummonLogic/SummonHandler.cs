@@ -12,6 +12,9 @@ public class SummonHandler : MonoBehaviour {
 
     [SerializeField] private float summonCD, overlapRadius;
 
+    [SerializeField] private SummonData sniperData, railgunData;
+    [SerializeField] private SummonData lightData;
+
     private ManaSource ManaSource => inputSource.ManaSource;
 
     private readonly Dictionary<SummonData, SummonHologram> hologramMap = new();
@@ -140,6 +143,13 @@ public class SummonHandler : MonoBehaviour {
 
                         inputSource.ClearSelection();
                         OnSummonSuccess?.Invoke(towerData);
+                        if (towerData != sniperData
+                                && towerData != railgunData) {
+                            GM.RoomManager.usedSniperRailgunTowerOnly = false;
+                        }
+                        if (towerData != lightData) {
+                            GM.RoomManager.usedOnlyLight = false;
+                        }
                     } break;
             }
         }

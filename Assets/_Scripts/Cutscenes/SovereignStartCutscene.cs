@@ -17,6 +17,12 @@ public class SovereignStartCutscene : MonoBehaviour {
         }
     }
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Tab)) {
+            DialogueManager_OnDialogueEnd();
+        }
+    }
+
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Player player)) {
             GM.DialogueManager.DoDialogue(dialogueData);

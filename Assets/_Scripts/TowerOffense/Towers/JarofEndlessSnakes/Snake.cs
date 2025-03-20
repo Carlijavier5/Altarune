@@ -10,7 +10,7 @@ public partial class Snake : Entity
     private Entity target;
     private StateMachine<Snake_Input> stateMachine = new();
     public int id = 0;
-    public JarOfEndlessSnakes parent;
+    public TowerPlague parent;
     void Awake()
     {
         Snake_Input input = new Snake_Input(stateMachine, this);
@@ -49,6 +49,6 @@ public partial class Snake : Entity
     public override void Perish(bool immediate)
     {
         base.Perish(immediate);
-        parent.deleteSnake(id);
+        parent.DeleteSnake(id);
     }
 }

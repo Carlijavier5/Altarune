@@ -42,7 +42,7 @@ public class JarOfEndlessSnakes : Summon
         Snake summoned = Instantiate(snakePrefab, transform.position, Quaternion.identity);
         float angle = Random.Range(0, 2* (float) Math.PI);
         summoned.transform.Translate(new Vector3(1.5f * (float) Math.Cos(angle), 0, 1.5f * (float) Math.Sin(angle)));
-        summoned.parent = this;
+        //summoned.parent = this;
         summoned.id = snakes.Count;
         snakes.Add(summoned);
     }
