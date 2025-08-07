@@ -5,8 +5,8 @@ using UnityEngine;
 public class ManaSource : MonoBehaviour {
 
     public event System.Action<EventResponse<float>> OnManaTax;
-    public event System.Action<float> OnManaFill;
-    public event System.Action<float> OnManaDrain;
+    public event System.Action<int> OnManaFill;
+    public event System.Action<int> OnManaDrain;
 
     public event System.Action OnManaCollapse;
 
@@ -23,6 +23,11 @@ public class ManaSource : MonoBehaviour {
         }
     }
 
+    public int FullCells => (int) (mana / cellSize);
+    public int MaxCells => (int) (MaxMana / cellSize);
+
+    private readonly float cellSize = 20;
+
     void Update() {
         if (active) {
             EventResponse<float> eRes = new();
@@ -31,26 +36,34 @@ public class ManaSource : MonoBehaviour {
         }
     }
 
-    public void Init(float maxMana) {
-        MaxMana = maxMana;
+    public void Init(float cellAmount) {
+        MaxMana = cellAmount * cellSize;
         Mana = MaxMana;
         active = true;
     }
 
+    public void DrainCells(int cellAmount) => Drain(cellAmount * cellSize);
+    public void FillCells(int cellAmount) => Fill(cellAmount * cellSize);
+
     public void Drain(float amount) {
+        int prevCells = FullCells;
+        
         float absAmount = Mathf.Abs(amount);
         Mana -= absAmount;
-        OnManaDrain?.Invoke(absAmount);
+
+        int cellsLost = Mathf.Abs(prevCells - FullCells);
+        OnManaDrain?.Invoke(cellsLost);
     }
 
     public void Fill(float amount) {
+        int prevCells = FullCells;
+
         float absAmount = Mathf.Abs(amount);
         Mana += absAmount;
-        OnManaFill?.Invoke(absAmount);
+
+        int cellsGained = Mathf.Abs(FullCells - prevCells);
+        OnManaFill?.Invoke(cellsGained);
     }
-}
 
-public class ManaCell {
-
-
+    public bool CanAfford(float amount) => mana > amount;
 }

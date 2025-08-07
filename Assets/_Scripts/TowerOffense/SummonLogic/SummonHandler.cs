@@ -107,40 +107,47 @@ public class SummonHandler : MonoBehaviour {
         if (hologramHint != null
                 && !IsPlacementInvalid) {
             cdTime = Time.time + summonCD;
-            switch (selectedType) {
-                case SummonType.Battery:
-                    BatteryData batteryData = selectedData as BatteryData;
-                    ArtificialBattery battery = Instantiate(batteryData.prefabSummon, lastHitPoint, Quaternion.identity);
+            bool canAffordSummon = ManaSource.CanAfford(selectedData.summonCost);
+            if (canAffordSummon) {
+                switch (selectedType) {
+                    case SummonType.Battery:
+                        BatteryData batteryData = selectedData as BatteryData;
+                        ArtificialBattery battery = Instantiate(batteryData.prefabSummon, lastHitPoint, Quaternion.identity);
 
-                    summonedBatteries.Add(battery);
-                    battery.OnSummonCollapse += Battery_OnSummonCollapse;
-                    battery.DoSpawn();
+                        summonedBatteries.Add(battery);
+                        battery.OnSummonCollapse += Battery_OnSummonCollapse;
+                        battery.DoSpawn();
 
-                    battery.Init(batteryData, inputSource.Summoner, ManaSource);
-                    ManaSource.Drain(batteryData.summonCost);
-
-                    inputSource.ClearSelection();
-                    OnSummonSuccess?.Invoke(batteryData);
-                    break;
-                case SummonType.Tower:
-                    if (closestBatteryCache != null
-                        && closestBatteryCache.battery != null
-                            && closestBatteryCache.battery.IsActive) {
-                        TowerData towerData = selectedData as TowerData;
-                        Summon tower = Instantiate(towerData.prefabSummon, lastHitPoint, Quaternion.identity);
-
-                        IBattery targetBattery = closestBatteryCache.battery;
-                        ManaSource batterySource = targetBattery.ManaSource;
-
-                        targetBattery.LinkTower(tower);
-                        tower.DoSpawn();
-
-                        tower.Init(towerData, inputSource.Summoner, batterySource);
-                        batterySource.Drain(towerData.summonCost);
+                        battery.Init(batteryData, inputSource.Summoner, ManaSource);
+                        ManaSource.Drain(batteryData.summonCost);
 
                         inputSource.ClearSelection();
-                        OnSummonSuccess?.Invoke(towerData);
-                    } break;
+                        OnSummonSuccess?.Invoke(batteryData);
+                        break;
+                    case SummonType.Tower:
+                        if (closestBatteryCache != null
+                            && closestBatteryCache.battery != null
+                                && closestBatteryCache.battery.IsActive) {
+                            TowerData towerData = selectedData as TowerData;
+                            Summon tower = Instantiate(towerData.prefabSummon, lastHitPoint, Quaternion.identity);
+
+                            IBattery targetBattery = closestBatteryCache.battery;
+                            ManaSource batterySource = targetBattery.ManaSource;
+
+                            targetBattery.LinkTower(tower);
+                            tower.DoSpawn();
+
+                            tower.Init(towerData, inputSource.Summoner, batterySource);
+                            batterySource.Drain(towerData.summonCost);
+
+                            inputSource.ClearSelection();
+                            OnSummonSuccess?.Invoke(towerData);
+                        }
+                        break;
+                }
+            } else {
+                // Spawn No Mana Feedback Here;
+                ManaSource.Drain(selectedData.summonCost);
             }
         }
     }
@@ -152,9 +159,11 @@ public class SummonHandler : MonoBehaviour {
     }
 
     private void Battery_OnSummonCollapse(Summon summon) {
-        ArtificialBattery battery = summon as ArtificialBattery;
-        summonedBatteries.Remove(battery);
-        summon.OnSummonCollapse -= Battery_OnSummonCollapse;
+        StartCoroutine(IDelayCallback(() => {
+            ArtificialBattery battery = summon as ArtificialBattery;
+            summonedBatteries.Remove(battery);
+            summon.OnSummonCollapse -= Battery_OnSummonCollapse;
+        }));
     }
 
     private void UpdateHint(Vector3 groundPoint) {
@@ -174,5 +183,10 @@ public class SummonHandler : MonoBehaviour {
             hologramHint.gameObject.SetActive(false);
             hologramHint = null;
         }
+    }
+
+    private IEnumerator IDelayCallback(System.Action callback) {
+        yield return null;
+        callback?.Invoke();
     }
 }
