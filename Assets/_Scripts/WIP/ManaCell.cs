@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class ManaCell : MonoBehaviour {
 
     [SerializeField] private Image image;
-    [SerializeField] private ParticleSystem particles;
+    [SerializeField] private CanvasGroup activationCG;
+    [SerializeField] private ParticleSystem fillParticles, depleteParticles;
     private RectTransform RectTransform => transform as RectTransform;
 
     public void SetAnchors(float xMin, float xMax) {
@@ -25,12 +26,12 @@ public class ManaCell : MonoBehaviour {
     }
 
     private IEnumerator IDoCharge(float target) {
-        particles.Play();
-        while (Mathf.Abs(image.fillAmount - target) > Mathf.Epsilon) {
-            image.fillAmount = Mathf.MoveTowards(image.fillAmount, target, Time.deltaTime);
+        ParticleSystem activeSystem = target == 1 ? fillParticles : depleteParticles;
+        activeSystem.Play();
+        while (Mathf.Abs(activationCG.alpha - target) > Mathf.Epsilon) {
+            activationCG.alpha = Mathf.MoveTowards(activationCG.alpha, target, Time.deltaTime * (target == 1 ? 1.5f : 3));
             yield return null;
         }
-        particles.Stop();
     }
 
     private void SetXMin(float xMin) {
