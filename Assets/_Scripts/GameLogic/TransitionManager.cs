@@ -9,7 +9,6 @@ public class TransitionManager : MonoBehaviour {
     [SerializeField] private Image image;
     [SerializeField] private AnimationCurve curve;
     [SerializeField] private float fadeTime = 1;
-    private float timer = 1;
 
     /// <summary>
     /// Uncover screen;
@@ -37,12 +36,11 @@ public class TransitionManager : MonoBehaviour {
     }
 
     private IEnumerator IDoFade(bool on) {
-        float alpha, lerpVal,
-              target = on ? fadeTime : 0;
-        while (Mathf.Abs(timer - target) > 0) {
-            timer = Mathf.MoveTowards(timer, target, Time.unscaledDeltaTime);
-            lerpVal = timer / fadeTime;
-            alpha = curve.Evaluate(lerpVal);
+        float alpha = image.color.a;
+        float target = on ? 1 : 0;
+        while (Mathf.Abs(alpha - target) > 0) {
+            alpha = Mathf.MoveTowards(alpha, target,
+                                      fadeTime == 0 ? Mathf.Infinity : Time.unscaledDeltaTime / fadeTime);
             image.color = new Color(image.color.r, image.color.g,
                                     image.color.g, alpha);
             yield return null;
