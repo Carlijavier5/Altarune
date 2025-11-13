@@ -8,6 +8,7 @@ using UnityEngine.VFX;
 
 public class LabCinematicManager : CCondition {
     [SerializeField] private CCondition condition;
+    [SerializeField] private Player player;
     [SerializeField] private CinemachineVirtualCamera cinematicCamera;
     [SerializeField] private float cameraShakeIntensity = 2f;
     [SerializeField] private Vector3 initOffset;
@@ -71,6 +72,7 @@ public class LabCinematicManager : CCondition {
     }
 
     public void RunCinematicAction(CConditionData data) {
+        player.TriggerManaCollapse(false);
         StartCoroutine(RunCinematic());
     }
 

@@ -13,7 +13,6 @@ public partial class Player : Entity {
 
     [SerializeField] private ManaSource manaSource;
     [SerializeField] private float manaGain, maxMana;
-    [SerializeField] private ManaUIManager manaUIManager;
 
     public ManaSource ManaSource => manaSource;
     public PlayerController InputSource => inputSource;
@@ -25,8 +24,11 @@ public partial class Player : Entity {
 
     private void Awake() {
         inputSource.OnPlayerInit += PlayerController_OnPlayerInit;
+        ManaSource.OnManaTax += ManaSource_OnManaTax;
         ManaSource.Init(maxMana);
     }
+
+    public void TriggerManaCollapse(bool doVFX) => ManaSource.TriggerManaCollapse(doVFX);
 
     private void PlayerController_OnPlayerInit() {
         driver = new(this);
@@ -54,10 +56,13 @@ public partial class Player : Entity {
         }
     }
 
+    private void ManaSource_OnManaTax(EventResponse<float> eRes) {
+        eRes.objectReference -= manaGain;
+    }
+
     protected override void Update() {
         base.Update();
         stateMachine.Update();
-        ManaSource.Fill(Time.deltaTime * manaGain);
     }
 
     void FixedUpdate() {

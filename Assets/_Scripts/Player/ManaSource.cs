@@ -5,12 +5,13 @@ using UnityEngine;
 public class ManaSource : MonoBehaviour {
 
     public event System.Action<EventResponse<float>> OnManaTax;
-    public event System.Action<int> OnManaFill;
-    public event System.Action<int> OnManaDrain;
+    public event System.Action OnManaStateUpdate;
+    public event System.Action OnManaFillAction;
+    public event System.Action<int> OnManaCellFill;
+    public event System.Action OnManaDrainAction;
+    public event System.Action<int> OnManaCellDrain;
 
-    public event System.Action OnManaCollapse;
-
-    private bool active;
+    public event System.Action<bool> OnManaCollapse;
 
     public float MaxMana { get; private set; }
 
@@ -19,7 +20,7 @@ public class ManaSource : MonoBehaviour {
         get => mana;
         private set {
             mana = Mathf.Clamp(value, 0, MaxMana);
-            if (mana <= 0) OnManaCollapse?.Invoke();
+            if (mana <= 0) OnManaCollapse?.Invoke(true);
         }
     }
 
@@ -28,42 +29,51 @@ public class ManaSource : MonoBehaviour {
 
     private readonly float cellSize = 20;
 
+    private bool isActive;
+
     void Update() {
-        if (active) {
+        if (isActive) {
             EventResponse<float> eRes = new();
             OnManaTax?.Invoke(eRes);
-            float manaDrain = eRes.objectReference;
+            float manaChange = eRes.objectReference;
+            if (manaChange > 0) Drain(manaChange * Time.deltaTime, false);
+            else Fill(manaChange * Time.deltaTime, false);
+            OnManaStateUpdate?.Invoke();
         }
     }
 
     public void Init(float cellAmount) {
         MaxMana = cellAmount * cellSize;
         Mana = MaxMana;
-        active = true;
+        isActive = true;
     }
 
     public void DrainCells(int cellAmount) => Drain(cellAmount * cellSize);
     public void FillCells(int cellAmount) => Fill(cellAmount * cellSize);
 
-    public void Drain(float amount) {
+    public void Drain(float amount, bool isAction = true) {
         int prevCells = FullCells;
         
         float absAmount = Mathf.Abs(amount);
         Mana -= absAmount;
 
+        if (isAction && absAmount > 0) OnManaDrainAction?.Invoke();
         int cellsLost = Mathf.Abs(prevCells - FullCells);
-        OnManaDrain?.Invoke(cellsLost);
+        OnManaCellDrain?.Invoke(cellsLost);
     }
 
-    public void Fill(float amount) {
+    public void Fill(float amount, bool isAction = true) {
         int prevCells = FullCells;
 
         float absAmount = Mathf.Abs(amount);
         Mana += absAmount;
 
+        if (isAction && absAmount > 0) OnManaFillAction?.Invoke();
         int cellsGained = Mathf.Abs(FullCells - prevCells);
-        OnManaFill?.Invoke(cellsGained);
+        OnManaCellFill?.Invoke(cellsGained);
     }
 
     public bool CanAfford(float amount) => mana > amount;
+
+    public void TriggerManaCollapse(bool doVFX) => OnManaCollapse?.Invoke(doVFX);
 }

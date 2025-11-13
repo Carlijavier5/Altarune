@@ -29,7 +29,7 @@ public class SummonInteractor : MonoBehaviour {
 
     }
 
-    private void Player_OnManaCollapse() {
+    private void Player_OnManaCollapse(bool _) {
 
     }
 }

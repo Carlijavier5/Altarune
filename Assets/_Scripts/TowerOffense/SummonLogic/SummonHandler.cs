@@ -119,7 +119,7 @@ public class SummonHandler : MonoBehaviour {
                         battery.DoSpawn();
 
                         battery.Init(batteryData, inputSource.Summoner, ManaSource);
-                        ManaSource.Drain(batteryData.summonCost);
+                        ManaSource.DrainCells(batteryData.summonCost);
 
                         inputSource.ClearSelection();
                         OnSummonSuccess?.Invoke(batteryData);
@@ -138,7 +138,7 @@ public class SummonHandler : MonoBehaviour {
                             tower.DoSpawn();
 
                             tower.Init(towerData, inputSource.Summoner, batterySource);
-                            batterySource.Drain(towerData.summonCost);
+                            batterySource.DrainCells(towerData.summonCost);
 
                             inputSource.ClearSelection();
                             OnSummonSuccess?.Invoke(towerData);
@@ -152,7 +152,7 @@ public class SummonHandler : MonoBehaviour {
         }
     }
 
-    private void ManaSource_OnManaCollapse() {
+    private void ManaSource_OnManaCollapse(bool _) {
         foreach (ArtificialBattery battery in summonedBatteries) {
             battery.Collapse();
         }

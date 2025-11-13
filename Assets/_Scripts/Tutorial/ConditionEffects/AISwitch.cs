@@ -34,7 +34,7 @@ public class AISwitch : MonoBehaviour
             switch (action) {
                 case Actions.Roam:
                     entity.enabled = true;
-                    aggroRange.gameObject.SetActive(false);
+                    if (aggroRange) aggroRange.gameObject.SetActive(false);
                     break;
                 case Actions.Freeze:
                     entity.enabled = false;
@@ -42,7 +42,7 @@ public class AISwitch : MonoBehaviour
                 case Actions.Continue:
                     if (!entity) break; 
                     entity.enabled = true;
-                    aggroRange.gameObject.SetActive(true);
+                    if (aggroRange) aggroRange.gameObject.SetActive(true);
                     break;
             }
         }

@@ -21,7 +21,6 @@ public class CutsceneManager : MonoBehaviour {
         if (data.dialogueData) GM.DialogueManager.DoDialogue(data.dialogueData);
         if (GM.Player) {
             GM.Player.InputSource.DeactivateInput();
-            Debug.Log("help");
         }
         else {
             Debug.Log("player is null");
