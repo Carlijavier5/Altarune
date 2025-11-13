@@ -110,8 +110,8 @@ public partial class GolemSlither : Entity {
         }
     }
 
-    private void SlitherZig_OnWarningComplete() {
-        stateMachine.SetState(new State_ZigCharge());
+    private void SlitherZig_OnWarningComplete(int validPositionAmount) {
+        stateMachine.SetState(new State_ZigCharge(validPositionAmount));
     }
 
     private void GolemSlither_OnTimeScaleSet(float timeScale) {
@@ -138,6 +138,18 @@ public partial class GolemSlither : Entity {
         base.Perish(immediate);
         DetachModules();
         enabled = false;
+
+        OnTimeScaleSet -= GolemSlither_OnTimeScaleSet;
+        OnRootSet -= GolemSlither_OnRootSet;
+        OnStunSet -= GolemSlither_OnStunSet;
+
+        aggroRange.OnAggroEnter -= AggroRange_OnAggroEnter;
+        deAggroRange.OnAggroExit -= DeAggroRange_OnAggroExit;
+
+        sweepRange.OnAggroEnter -= SweepRange_OnAggroEnter;
+        slitherSweep.OnCooldownEnd -= TrySweep;
+        slitherSweep.OnSweepEnd -= SlitherSweep_OnSweepEnd;
+        slitherZig.OnWarningComplete -= SlitherZig_OnWarningComplete;
 
         aggroRange.Disable();
         deAggroRange.Disable();

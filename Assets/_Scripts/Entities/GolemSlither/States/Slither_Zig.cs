@@ -15,9 +15,9 @@ public partial class GolemSlither {
         public override void Enter(Slither_Input input) {
             GolemSlither gs = input.golemSlither;
             gs.navMeshAgent.ResetPath();
-            gs.slitherZig.DoZig(gs.transform.position,
-                                input.aggroTarget.transform.position);
-            gs.animator.SetTrigger(ZIG_PARAM);
+            int validPositionAmount = gs.slitherZig.DoZig(gs.transform.position,
+                                                          input.aggroTarget.transform.position);
+            if (validPositionAmount > 0) gs.animator.SetTrigger(ZIG_PARAM);
         }
 
         public override void Update(Slither_Input input) { }
@@ -27,19 +27,29 @@ public partial class GolemSlither {
 
     private class State_ZigCharge : State<Slither_Input> {
 
+        private readonly int validPositionAmount;
+
         private GolemSlither gs;
         private float timer;
         private int segmentIndex;
+
+        public State_ZigCharge(int validPositionAmount) : base() {
+            this.validPositionAmount = validPositionAmount;
+        }
 
         public override void Enter(Slither_Input input) {
             gs = input.golemSlither;
             gs.navMeshAgent.enabled = false;
             segmentIndex = 0;
-            DoSegment(input);
+            if (validPositionAmount > 0) {
+                DoSegment(input);
+            } else {
+                input.stateMachine.SetState(new State_Follow());
+            }
         }
 
         public override void Update(Slither_Input input) {
-            if (segmentIndex < gs.slitherZig.segments.Length) {
+            if (segmentIndex < validPositionAmount) {
                 if (timer < gs.zigChargeTime) {
                     timer = Mathf.MoveTowards(timer, gs.zigChargeTime, Time.deltaTime);
                     float lerpVal = timer / gs.zigChargeTime;
@@ -50,7 +60,7 @@ public partial class GolemSlither {
                 } else {
                     timer = 0;
                     segmentIndex++;
-                    if (segmentIndex >= gs.slitherZig.segments.Length) {
+                    if (segmentIndex >= validPositionAmount) {
                         input.stateMachine.SetState(new State_Follow());
                     } else {
                         DoSegment(input);
