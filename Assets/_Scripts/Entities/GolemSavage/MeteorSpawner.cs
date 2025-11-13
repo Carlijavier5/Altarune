@@ -14,7 +14,7 @@ public class MeteorSpawner : MonoBehaviour {
                                fieldDimensionsX.y),
                   positionZ = Random.Range(fieldDimensionsZ.x,
                                            fieldDimensionsZ.y);
-            return new Vector3(positionX, 0, positionZ);
+            return new Vector3(positionX, 0.1f, positionZ);
         }
     }
 

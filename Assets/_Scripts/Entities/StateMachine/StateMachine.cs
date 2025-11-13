@@ -9,17 +9,17 @@ public class StateMachine<T> where T : StateInput {
     }
 
     public void SetState(State<T> newState) {
-        if (State != null) State.Exit(StateInput);
+        State?.Exit(StateInput);
 
         State = newState;
         State.Enter(StateInput);
     }
 
     public void Update() {
-        if (State != null) State.Update(StateInput);
+        State?.Update(StateInput);
     }
 
     public void FixedUpdate() {
-        if (State != null) State.FixedUpdate(StateInput);
+        State?.FixedUpdate(StateInput);
     }
 }

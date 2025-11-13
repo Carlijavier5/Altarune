@@ -21,7 +21,9 @@ public partial class GolemSavage {
         private Vector3 RandomDirection {
             get {
                 float randomAngle = Random.Range(0f, 360f);
-                return Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
+                Vector3 direction = (Quaternion.Euler(0, randomAngle, 0) * Vector3.forward);
+                direction.y = 0;
+                return direction.normalized;
             }
         }
 
@@ -31,7 +33,7 @@ public partial class GolemSavage {
 
         public override void Enter(Savage_Input input) {
             gs = input.savage;
-            gs.navMeshAgent.SetDestination(gs.transform.position);
+            gs.navMeshAgent.ResetPath();
             gs.navMeshAgent.velocity = Vector3.zero;
 
             moveDirection = RandomDirection;
@@ -69,10 +71,12 @@ public partial class GolemSavage {
             }
 
             if (Physics.Raycast(gs.transform.position, moveDirection,
-                                out RaycastHit hit, gs.spinRaycastDistance)) {
+                                out RaycastHit hit, gs.spinRaycastDistance, LayerUtils.EnvironmentLayerMask)) {
                 moveDirection = Vector3.Reflect(moveDirection, hit.normal);
-                float randomVariation = Random.Range(-45f, 45f);
+                float randomVariation = Random.Range(-35f, 35f);
                 moveDirection = Quaternion.Euler(0, randomVariation, 0) * moveDirection;
+                moveDirection.y = 0;
+                moveDirection.Normalize();
                 GM.CameraShakeManager.DoCameraShake();
             }
 

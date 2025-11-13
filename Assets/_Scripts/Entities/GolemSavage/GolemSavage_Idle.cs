@@ -46,6 +46,7 @@ public partial class GolemSavage {
             if (attackTimer >= attackTime) {
                 PhaseState macroState = input.macroMachine.State as PhaseState;
                 macroState.PickAttack(input);
+                return;
             }
 
             if (phase != input.savage.stagingPhase
@@ -110,6 +111,7 @@ public partial class GolemSavage {
             if (attackTimer >= attackTime) {
                 PhaseState macroState = input.macroMachine.State as PhaseState;
                 macroState.PickAttack(input);
+                return;
             }
 
             if (phase != input.savage.stagingPhase
@@ -118,6 +120,8 @@ public partial class GolemSavage {
             }
         }
 
-        public override void Exit(Savage_Input _) { }
+        public override void Exit(Savage_Input input) {
+            input.savage.navMeshAgent.ResetPath();
+        }
     }
 }

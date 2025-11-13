@@ -24,20 +24,20 @@ public class Meteor : MonoBehaviour {
         transform.localScale = Vector3.zero;
         StartCoroutine(IDoScale(size, duration * maxScalePercent));
         StartCoroutine(IDoRise(duration));
+        anticipationArea.DoArea(duration * anticipationBuffer);
     }
 
     public void DoFall(float duration) {
-        anticipationArea.DoArea(duration * anticipationBuffer);
         StartCoroutine(IDoFall(duration));
     }
 
     private IEnumerator IDoScale(Vector3 size, float duration) {
-        Vector3 startSize = transform.localScale;
-        float lerpVal, timer = 0;
-        while (timer < duration) {
-            timer = Mathf.MoveTowards(timer, duration, Time.deltaTime);
-            lerpVal = timer / duration;
-            transform.localScale = Vector3.Lerp(startSize, size, lerpVal);
+        Vector3 initialSize = transform.localScale;
+
+        float lerpVal = 0;
+        while (Vector3.Distance(transform.localScale, size) > 0) {
+            lerpVal = Mathf.MoveTowards(lerpVal, 1, duration == 0 ? Mathf.Infinity : (Time.deltaTime / duration));
+            transform.localScale = Vector3.Lerp(initialSize, size, lerpVal);
             yield return null;
         }
     }
@@ -66,6 +66,7 @@ public class Meteor : MonoBehaviour {
             yield return null;
         }
         StartCoroutine(IDoScale(Vector3.zero, vanishTime));
+        anticipationArea.EndAreaAbrupt();
         if (detonateVFX) detonateVFX.Play();
         effector.DoDamage();
     }

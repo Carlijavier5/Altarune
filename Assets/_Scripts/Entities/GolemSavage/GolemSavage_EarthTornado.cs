@@ -26,8 +26,7 @@ public partial class GolemSavage {
 
         public override void Enter(Savage_Input input) {
             gs = input.savage;
-            gs.navMeshAgent.SetDestination(gs.transform.position);
-            gs.navMeshAgent.velocity = Vector3.zero;
+            gs.navMeshAgent.ResetPath();
             gs.earthTornado.Activate();
 
             moveDirection = RandomDirection;
@@ -61,10 +60,12 @@ public partial class GolemSavage {
             }
 
             if (Physics.Raycast(gs.transform.position, moveDirection,
-                                out RaycastHit hit, gs.spinRaycastDistance)) {
+                                out RaycastHit hit, gs.spinRaycastDistance, LayerUtils.EnvironmentLayerMask)) {
                 moveDirection = Vector3.Reflect(moveDirection, hit.normal);
-                float randomVariation = Random.Range(-45f, 45f);
+                float randomVariation = Random.Range(-40f, 40f);
                 moveDirection = Quaternion.Euler(0, randomVariation, 0) * moveDirection;
+                moveDirection.y = 0;
+                moveDirection.Normalize();
                 GM.CameraShakeManager.DoCameraShake();
             }
 
@@ -72,7 +73,6 @@ public partial class GolemSavage {
         }
 
         public override void Exit(Savage_Input input) {
-
             gs.TryToggleIFrame(false);
         }
 
