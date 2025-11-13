@@ -1,7 +1,7 @@
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class DialogueManager : MonoBehaviour {
@@ -17,6 +17,7 @@ public class DialogueManager : MonoBehaviour {
     [SerializeField] private Vector2 fontBounds;
     [SerializeField] private float textGrowthMult, audioInterval,
                                    anchorSpeed;
+    [SerializeField] private float triggerCD;
 
     private DialogueData currDialogue;
     private string currStr;
@@ -27,6 +28,7 @@ public class DialogueManager : MonoBehaviour {
     private float[] sizeSet;
 
     private float audioCD;
+    private float triggerTimer;
 
     void Awake() {
         dialogueBox.localScale = new Vector3(dialogueBox.localScale.x, 0, dialogueBox.localScale.z);
@@ -35,9 +37,16 @@ public class DialogueManager : MonoBehaviour {
     }
 
     void Update() {
+        triggerTimer = Mathf.MoveTowards(triggerTimer, 0, Time.unscaledDeltaTime);
+        if (triggerTimer > 0) return;
+
         if (state == State.Writing
-            && audioCD <= 0) PlayDialogueAudio();
-        if (Input.anyKeyDown) {
+                && audioCD <= 0) {
+            PlayDialogueAudio();
+        }
+
+        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame
+                || Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
             switch (state) {
                 case State.Writing:
                     StopAllCoroutines();
@@ -62,6 +71,8 @@ public class DialogueManager : MonoBehaviour {
 
     public void DoDialogue(DialogueData data) {
         GM.Player.ToggleUI(false);
+        triggerTimer = triggerCD;
+
         dialogueBox.gameObject.SetActive(true);
         currDialogue = data;
         currLine = -1;
@@ -148,6 +159,7 @@ public class DialogueManager : MonoBehaviour {
     }
 
     private void ResetText() {
+        textMesh.text = string.Empty;
         currLetter = 1;
         currLine = -1;
         currStr = "";
