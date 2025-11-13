@@ -8,6 +8,7 @@ public partial class Player : Entity {
     private readonly StateMachine<Player_Input> stateMachine = new();
 
     [SerializeField] private PlayerController inputSource;
+    [SerializeField] private CanvasGroupFader uiFader;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
 
@@ -27,8 +28,6 @@ public partial class Player : Entity {
         ManaSource.OnManaTax += ManaSource_OnManaTax;
         ManaSource.Init(maxMana);
     }
-
-    public void TriggerManaCollapse(bool doVFX) => ManaSource.TriggerManaCollapse(doVFX);
 
     private void PlayerController_OnPlayerInit() {
         driver = new(this);
@@ -82,4 +81,9 @@ public partial class Player : Entity {
             yield return null;
         }
     }
+
+    #region Game Logic
+    public void TriggerManaCollapse(bool doVFX) => ManaSource.TriggerManaCollapse(doVFX);
+    public void ToggleUI(bool on) => uiFader.DoFade(on);
+    #endregion
 }

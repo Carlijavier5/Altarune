@@ -72,6 +72,7 @@ public class LabCinematicManager : CCondition {
     }
 
     public void RunCinematicAction(CConditionData data) {
+        player.ToggleUI(false);
         player.TriggerManaCollapse(false);
         StartCoroutine(RunCinematic());
     }
@@ -111,6 +112,7 @@ public class LabCinematicManager : CCondition {
         yield return new WaitForSeconds(waitTime);
         CheckCondition();
         cinematicCamera.m_Priority = 0;
+        player.ToggleUI(true);
         yield return null;
     }
 

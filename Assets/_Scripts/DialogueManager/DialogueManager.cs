@@ -61,6 +61,7 @@ public class DialogueManager : MonoBehaviour {
     }
 
     public void DoDialogue(DialogueData data) {
+        GM.Player.ToggleUI(false);
         dialogueBox.gameObject.SetActive(true);
         currDialogue = data;
         currLine = -1;
@@ -90,6 +91,8 @@ public class DialogueManager : MonoBehaviour {
                                                  dialogueBox.localScale.z);
             yield return null;
         } yield return new WaitForSeconds(0.5f) ;
+
+        GM.Player.ToggleUI(true);
         OnDialogueEnd?.Invoke();
     }
 
