@@ -53,6 +53,13 @@ public class Pushable : ObjectModule {
         runtimeProperties = pushableProperties.RuntimeClone(effectSource);
     }
 
+    public override void Detach() {
+        base.Detach();
+        baseObject.OnTryFramePush -= BaseObject_OnTryFramePush;
+        baseObject.OnTryLongPush -= BaseObject_OnTryLongPush;
+        baseObject.MotionDriver.OnModeChange -= MotionDriver_OnModeChange;
+    }
+
     private void MotionDriver_OnModeChange() {
         pastImpulseQueue.Clear();
         dynamicVelocityAdjustment = Vector3.zero;

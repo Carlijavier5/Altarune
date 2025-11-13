@@ -71,7 +71,6 @@ public class TutorialManager : MonoBehaviour {
         if (_inBattery) {
             if (Input.GetKeyDown(KeyCode.Space)) {
                 batteryIndex++;
-                Debug.Log(batteryIndex);
             }
             if (batteryIndex > 4) StartCoroutine(RunQCheck());
         }
@@ -80,7 +79,7 @@ public class TutorialManager : MonoBehaviour {
     private IEnumerator Timer() {
         while (pausedDialogue) {
             yield return new WaitForSecondsRealtime(1f);//bruh
-            GM.TimeScaleManager.AddTimeScaleShift(0f, 1f);
+            GM.TimeScaleManager.AddTimeScaleMultiplier(0f, 1f);
             _activeTimer = null;
         }
     }

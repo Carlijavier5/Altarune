@@ -87,6 +87,7 @@ public partial class GolemSavage {
     [SerializeField] private int maxSiftlings;
     [SerializeField] private float siftlingSpawnInterval;
     [SerializeField] private Vector2 siftlingSpawnRadius;
+    private readonly HashSet<GolemSiftling> spawnedSiftlings = new();
 
     private class PhaseState_Phase3 : PhaseState {
 
@@ -95,9 +96,14 @@ public partial class GolemSavage {
         private readonly SavageAttack[] attackPool
             = new[] { SavageAttack.Spin, SavageAttack.Slam, SavageAttack.MeteorHurl };
         private List<SavageAttack> attackList = new();
+        private Savage_Input input;
 
-        private readonly HashSet<GolemSiftling> spawnedSiftlings = new();
         private float timer;
+
+        public override void Enter(Savage_Input input) {
+            base.Enter(input);
+            this.input = input;
+        }
 
         public override void Update(Savage_Input input) {
             timer -= Time.deltaTime;
@@ -107,8 +113,8 @@ public partial class GolemSavage {
             }
         }
 
-        public override void Exit(Savage_Input _) {
-            foreach (GolemSiftling spawnedSiftling in spawnedSiftlings) {
+        public override void Exit(Savage_Input input) {
+            foreach (GolemSiftling spawnedSiftling in input.savage.spawnedSiftlings) {
                 spawnedSiftling.OnPerish -= SpawnedSiftling_OnPerish;
                 spawnedSiftling.Perish();
             }
@@ -135,12 +141,12 @@ public partial class GolemSavage {
         }
 
         private void TrySpawnSiftling(Savage_Input input) {
-            if (spawnedSiftlings.Count < input.savage.maxSiftlings) {
+            if (input.savage.spawnedSiftlings.Count < input.savage.maxSiftlings) {
                 Transform t = input.savage.farawaySpawnPoint;
                 GolemSiftling spawnedSiftling = Instantiate(input.savage.swiftlingPrefab,
                                                             t.position, t.rotation);
                 spawnedSiftling.OnPerish += SpawnedSiftling_OnPerish;
-                spawnedSiftlings.Add(spawnedSiftling);
+                input.savage.spawnedSiftlings.Add(spawnedSiftling);
                 input.savage.StartCoroutine(IDelaySiftlingTeleport(input, spawnedSiftling));
             }
         }
@@ -157,7 +163,7 @@ public partial class GolemSavage {
         private void SpawnedSiftling_OnPerish(BaseObject baseObject) {
             if (baseObject is GolemSiftling) {
                 GolemSiftling spawnedSiftling = baseObject as GolemSiftling;
-                spawnedSiftlings.Remove(spawnedSiftling);
+                input.savage.spawnedSiftlings.Remove(spawnedSiftling);
             }
             baseObject.OnPerish -= SpawnedSiftling_OnPerish;
         }

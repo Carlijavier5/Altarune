@@ -45,6 +45,12 @@ public class Teleportable : ObjectModule {
         teleportVFX = Instantiate(TProps.settings.teleportEffect, TProps.rootTransform);
     }
 
+    public override void Detach() {
+        base.Detach();
+        baseObject.OnTryTeleport -= BaseObject_OnTryTeleport;
+        baseObject.OnTryRawTeleport -= BaseObject_OnTryRawTeleport;
+    }
+
     private void BaseObject_OnTryTeleport(Vector3 desiredPosition, EventResponse<Vector3> response) {
         if (timer <= 0 && NavMesh.SamplePosition(desiredPosition, out NavMeshHit hitInfo, 4, NavMesh.AllAreas)) {
             DoTeleport(hitInfo.position);

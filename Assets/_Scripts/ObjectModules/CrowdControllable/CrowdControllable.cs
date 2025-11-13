@@ -28,6 +28,15 @@ public class CrowdControllable : ObjectModule {
         runtimeProperties = ccAttributes.RuntimeClone(effectSource);
     }
 
+    public override void Detach() {
+        base.Detach();
+        baseObject.OnTryStagger -= BaseObject_OnTryStagger;
+        if (baseObject is Entity) {
+            Entity entity = baseObject as Entity;
+            if (entity) entity.OnEffectApplied -= Entity_OnEffectApplied;
+        }
+    }
+
     void Update() {
         staggerTimer = Mathf.MoveTowards(staggerTimer, 0, Time.deltaTime);
         float staggerMult = staggerTimer > 0 ? 0 : 1;

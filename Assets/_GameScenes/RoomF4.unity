@@ -10286,7 +10286,7 @@ Transform:
   m_GameObject: {fileID: 895799392}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 14, z: -12.25}
+  m_LocalPosition: {x: 0, y: 14, z: -9.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10352,7 +10352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ShowDebugText: 0
   m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
+  m_IgnoreTimeScale: 1
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
@@ -20462,6 +20462,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 229010291}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1686023443 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3230211723559864952, guid: 49d3d0a49645ace4c96d8310f288dc82,
+    type: 3}
+  m_PrefabInstance: {fileID: 5162764675024172920}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1686364213
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41626,7 +41638,7 @@ Transform:
   m_GameObject: {fileID: 4050989260828921479}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 14, z: -20}
+  m_LocalPosition: {x: 0, y: 14, z: -9.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -76009,6 +76021,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SavageGolem
       objectReference: {fileID: 0}
+    - target: {fileID: 1745810295666430178, guid: 49d3d0a49645ace4c96d8310f288dc82,
+        type: 3}
+      propertyPath: m_BoundingVolume
+      value: 
+      objectReference: {fileID: 4578482879641234110}
     - target: {fileID: 3263729997014608417, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -76097,12 +76114,12 @@ PrefabInstance:
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.87896925
+      value: 0.9611544
       objectReference: {fileID: 0}
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.47687855
+      value: -0.27601153
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -107756,6 +107773,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7667966774347090221}
   - component: {fileID: 4374735357476224084}
+  - component: {fileID: 8764464503368736863}
   m_Layer: 0
   m_Name: CutsceneManager
   m_TagString: Untagged
@@ -107763,6 +107781,73 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8764464503368736863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8764464503368736862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6dffb21424bce45a02ab2bf81e8253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  focusCamera: {fileID: 1686023443}
+  savageGolem: {fileID: 5162764675024172921}
+  savageAnimator: {fileID: 5162764675024172928}
+  perishClip: {fileID: 7400000, guid: bf332d23bc4f4cd42b55d28f6b83a0c8, type: 2}
+  timeFreezeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  timeResumeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 2
+      outSlope: -0.004457
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.5291667
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.3530936
+      outSlope: -1.2002335
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.08713949
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  timeFreezeTimer: 0.5
+  triggerWait: 1
+  endWait: 1
 --- !u!1001 &8766159657435818463
 PrefabInstance:
   m_ObjectHideFlags: 0

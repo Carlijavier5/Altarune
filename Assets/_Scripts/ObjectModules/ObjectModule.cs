@@ -14,6 +14,8 @@ public abstract class ObjectModule : MonoBehaviour {
 
     public virtual void EDITOR_ONLY_AttachModule() { }
     #endif
+
+    public virtual void Detach() => Destroy(this);
 }
 
 public class EventResponse { public bool received = false; }

@@ -53,7 +53,7 @@ public class RoomManager : MonoBehaviour {
     public void MoveToRoom(RoomTag roomTag) {
         currentRoomTag = roomTag;
         GM.TransitionManager.FadeOut();
-        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
+        GM.TimeScaleManager.AddTimeScaleMultiplier(0, 1);
         GM.TransitionManager.OnFadeEnd += TransitionManager_OnFadeEnd;
     }
 
@@ -64,7 +64,7 @@ public class RoomManager : MonoBehaviour {
     }
 
     public void FinalizeRoomTransition() {
-        GM.TimeScaleManager.AddTimeScaleShift(0, 1);
+        GM.TimeScaleManager.AddTimeScaleMultiplier(0, 1);
         GM.TransitionManager.FadeIn();
     }
 

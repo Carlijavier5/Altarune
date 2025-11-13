@@ -78,6 +78,7 @@ public partial class GolemSavage : Entity {
         microMachine.Update();
         animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
                                       / Mathf.Max(1, baseLinearSpeed));
+        if (Input.GetKeyDown(KeyCode.Semicolon)) Perish();
     }
 
     private void CutsceneManager_OnCutsceneEnd() {
@@ -165,7 +166,17 @@ public partial class GolemSavage : Entity {
             macroMachine.SetState(new State_Inert());
             microMachine.SetState(new State_Perish());
             DetachModules();
+            ResetMaterials();
             enabled = false;
+            foreach (GolemSiftling tornadoSiftling in earthTornadoSiftlings) {
+                if (tornadoSiftling) {
+                    tornadoSiftling.OnPerish -= TornadoSiftling_OnPerish;
+                    tornadoSiftling.Perish();
+                }
+            }
+            foreach (GolemSiftling siftling in spawnedSiftlings) {
+                siftling.Perish();
+            }
         }
     }
 

@@ -14,4 +14,5 @@ public static class LayerUtils {
     public readonly static int FriendlyLayer = 8;
     public readonly static int HostileLayer = 9;
     public readonly static int OutlineLayer = 10;
+    public readonly static int EnvironmentLayer = 6;
 }

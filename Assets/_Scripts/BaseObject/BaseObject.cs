@@ -15,7 +15,7 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     public void DetachModules() {
         ObjectModule[] modules = GetComponentsInChildren<ObjectModule>(true);
-        for (int i = 0; i < modules.Length; i++) Destroy(modules[i]);
+        for (int i = 0; i < modules.Length; i++) modules[i].Detach();
     }
 
     public bool IsFaction(EntityFaction exceptionFaction) {

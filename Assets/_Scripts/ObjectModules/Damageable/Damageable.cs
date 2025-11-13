@@ -37,6 +37,16 @@ public class Damageable : ObjectModule {
         OnModuleInit?.Invoke();
     }
 
+    public override void Detach() {
+        base.Detach();
+        baseObject.OnTryDamage -= BaseObject_OnTryDamage;
+        baseObject.OnTryHeal -= BaseObject_OnTryHeal;
+        baseObject.OnTryRequestHealth -= BaseObject_OnTryRequestHealth;
+        baseObject.OnTryRequestMaxHealth -= BaseObject_OnTryRequestMaxHealth;
+        baseObject.OnTryToggleIFrame -= BaseObject_OnTryToggleIFrame;
+        baseObject.OnTryBypassIFrame -= BaseObject_OnTryBypassIFrame;
+    }
+
     protected virtual void BaseObject_OnTryDamage(int amount, ElementType element,
                                                   EventResponse response) {
         if (!IFrameOn) {
