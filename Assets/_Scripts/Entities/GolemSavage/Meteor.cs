@@ -18,13 +18,18 @@ public class Meteor : MonoBehaviour {
     [Tooltip("What percent of the total fall time does the area account for;")]
     [Range(0, 1)][SerializeField] private float anticipationBuffer;
 
+    public void Init(Transform anchor) {
+        anticipationArea.Init(anchor);
+    }
+
     public void DoRise(Vector3 position, Vector3 size, float duration) {
         gameObject.SetActive(true);
         transform.position = position;
         transform.localScale = Vector3.zero;
+        StopAllCoroutines();
         StartCoroutine(IDoScale(size, duration * maxScalePercent));
         StartCoroutine(IDoRise(duration));
-        anticipationArea.DoArea(duration * anticipationBuffer);
+        anticipationArea.DoArea(position, size, duration * anticipationBuffer);
     }
 
     public void DoFall(float duration) {

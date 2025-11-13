@@ -46,7 +46,7 @@ public partial class GolemSavage {
 
             switch (spinState) {
                 case SpinState.Start:
-                    if (timer > gs.spinStartClip.length) {
+                    if (timer > gs.spinStartClip.length * 0.25f) {
                         spinState = SpinState.Loop;
                         gs.spinEffector.ToggleDamage(true);
                         timer = 0;

@@ -27,6 +27,9 @@ public class MeteorSpawner : MonoBehaviour {
 
     void Awake() {
         transform.SetParent(null);
+        foreach (Meteor meteor in meteors) {
+            meteor.Init(transform);
+        }
     }
 
     public void DoMeteorHurl(int amount, float intervalTime,

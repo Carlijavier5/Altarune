@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class MeteorAnticipationArea : MonoBehaviour {
 
-    [SerializeField] private MeteorAnticipationGraphic edgeDecal,
-                                                       innerDecal;
+    [SerializeField] private MeteorAnticipationGraphic decal;
     [SerializeField] private float growTime = 0.5f;
+    private Vector3 baseScale;
 
-    public void DoArea(float duration) {
-        edgeDecal.transform.localScale = Vector3.one;
-        innerDecal.transform.localScale = Vector3.zero;
-        edgeDecal.DoFade(true);
-        innerDecal.DoFade(true);
-        StartCoroutine(IDoCallbackOnTimer(duration, () => StartCoroutine(IDoArea())));
+    public void Init(Transform anchor) {
+        transform.SetParent(anchor);
     }
 
-    private IEnumerator IDoArea() {
+    public void DoArea(Vector3 position, Vector3 targetScale, float duration) {
+        decal.transform.position = position;
+        decal.transform.localScale = Vector3.zero;
+        decal.DoFade(true);
+        StartCoroutine(IDoCallbackOnTimer(duration, () => StartCoroutine(IDoArea(targetScale))));
+    }
+
+    private IEnumerator IDoArea(Vector3 targetSize) {
         float lerpVal = 0;
-        while (Vector3.Distance(innerDecal.transform.localScale, Vector3.one) > 0) {
+        while (Vector3.Distance(decal.transform.localScale, targetSize) > 0) {
             lerpVal = Mathf.MoveTowards(lerpVal, 1, growTime == 0 ? Mathf.Infinity : (Time.deltaTime / growTime));
-            innerDecal.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, lerpVal);
+            decal.transform.localScale = Vector3.Lerp(Vector3.zero, targetSize, lerpVal);
             yield return null;
         }
     }
@@ -46,7 +49,6 @@ public class MeteorAnticipationArea : MonoBehaviour {
     }
 
     private void Toggle(bool on) {
-        edgeDecal.DoFade(on);
-        innerDecal.DoFade(on);
+        decal.DoFade(on);
     }
 }
