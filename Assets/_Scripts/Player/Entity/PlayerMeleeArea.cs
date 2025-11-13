@@ -21,6 +21,10 @@ public class PlayerMeleeArea : MonoBehaviour {
 
     private float timer;
 
+    void Awake() {
+        areaParticles.Stop();
+    }
+
     public void DoMelee(Player playerSource, float attackDuration) {
         this.playerSource = playerSource;
         timer = attackDuration;
