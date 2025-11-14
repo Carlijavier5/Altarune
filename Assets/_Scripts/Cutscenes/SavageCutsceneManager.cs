@@ -12,6 +12,7 @@ public class SavageCutsceneManager : MonoBehaviour {
     public event System.Action OnCutsceneEnd;
 
     [SerializeField] private Animator cutsceneAnimator;
+    [SerializeField] private Player player;
     [SerializeField] private MusicTrigger musicTrigger;
     [SerializeField] private Material savageDecal;
     [SerializeField] private new Light light;
@@ -47,6 +48,10 @@ public class SavageCutsceneManager : MonoBehaviour {
     }
 
     public void Activate() {
+        player.ToggleUI(false);
+        player.TriggerManaCollapse(false);
+        player.InputSource.DeactivateInput();
+        player.InputSource.DeactivateSummons();
         StartCoroutine(Cutscene());
     }
 
@@ -96,6 +101,10 @@ public class SavageCutsceneManager : MonoBehaviour {
             cutsceneAnimator.SetLayerWeight(1, lerpVal);
             yield return null;
         }
+
+        player.ToggleUI(true);
+        player.InputSource.ActivateInput();
+        player.InputSource.ActivateSummons();
         OnCutsceneEnd?.Invoke();
     }
     
