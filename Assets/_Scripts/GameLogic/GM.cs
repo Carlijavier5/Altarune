@@ -79,18 +79,19 @@ public class GM : MonoBehaviour {
 
     public void DoGameOver() {
         playerStatusManager.ResetHealthStatus();
-        StartCoroutine(RestartScene());
+        roomManager.MoveToRoom(RoomTag.Lab);
     }
 
     public void FinishGame() {
         StartCoroutine(LoadEndScene());
     }
 
+    /*
     private IEnumerator RestartScene() {
         transitionManager.FadeOut();
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    }*/
 
     private IEnumerator LoadEndScene() {
         transitionManager.FadeOut();

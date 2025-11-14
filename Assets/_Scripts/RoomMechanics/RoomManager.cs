@@ -50,8 +50,8 @@ public class RoomManager : MonoBehaviour {
         }
     }
 
-    public void MoveToRoom(RoomTag roomTag) {
-        if (GM.Player) GM.PlayerStatusManager.CommitHealth(GM.Player.Health);
+    public void MoveToRoom(RoomTag roomTag, bool doCommitHealth = true) {
+        if (doCommitHealth && GM.Player) GM.PlayerStatusManager.CommitHealth(GM.Player.Health);
 
         currentRoomTag = roomTag;
         GM.TransitionManager.FadeOut();
