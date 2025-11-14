@@ -79,7 +79,8 @@ public partial class GolemSlither {
             Vector3 lookDir = segment.end - segment.start;
             lookDir.y = 0;
             input.golemSlither.transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
-            segment.DoDamage(gs.zigDamage);
+            input.golemSlither.slitherZig.ToggleDamage(true);
+            segment.Deactivate();
         }
     }
 }

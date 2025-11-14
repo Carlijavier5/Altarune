@@ -12,11 +12,6 @@ public class SlitherZigHitbox : MonoBehaviour {
         zigTarget.GenerateAt(targetPosition);
     }
 
-    public void DoDamage(int damageAmount) {
-        zigTrail.DoDamage(damageAmount);
-        Deactivate();
-    }
-
     public void Deactivate() {
         zigTrail.DoFade(false);
         zigTarget.DoFade(false);

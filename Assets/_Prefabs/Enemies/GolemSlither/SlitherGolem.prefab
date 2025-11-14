@@ -1,5 +1,73 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1236483807214020961
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5450162092525059857}
+  - component: {fileID: 7804474662410993314}
+  - component: {fileID: 6560713677770293116}
+  m_Layer: 0
+  m_Name: SlitherZigEffector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5450162092525059857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236483807214020961}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8384211552889783320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7804474662410993314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236483807214020961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bca9e0584b17142929a353fc8bf851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  applicableFactions: 0000000001000000
+  damageAmount: 3
+--- !u!65 &6560713677770293116
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236483807214020961}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 2.5, y: 3, z: 2.5}
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!1 &2028910315816148962
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,6 +142,7 @@ Transform:
   - {fileID: 1170922601481108878}
   - {fileID: 7321116941130194515}
   - {fileID: 3090612823346687057}
+  - {fileID: 5450162092525059857}
   - {fileID: 4537169090543452747}
   - {fileID: 1121205360485235418}
   m_Father: {fileID: 0}
@@ -129,10 +198,6 @@ MonoBehaviour:
     curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
     health: 6
     defense: 0
-    fireRes: 0
-    iceRes: 0
-    shockRes: 0
-    poisonRes: 0
     healModifier: 0
   iFrameProperties:
     settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
@@ -2161,6 +2226,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8872037642198280382, guid: dca5dd83908436a4fb159a782a4438f5,
+        type: 3}
+      propertyPath: contactCollider
+      value: 
+      objectReference: {fileID: 6560713677770293116}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

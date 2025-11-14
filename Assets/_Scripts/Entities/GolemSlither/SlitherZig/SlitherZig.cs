@@ -6,6 +6,7 @@ public class SlitherZig : MonoBehaviour {
 
     public event System.Action<int> OnWarningComplete;
 
+    [SerializeField] private Collider contactCollider;
     [SerializeField] private SlitherZigHitbox zigHitbox1, zigHitbox2,
                                               zigHitbox3;
     [SerializeField] private float hitboxShowDelay, zigCooldown;
@@ -96,7 +97,10 @@ public class SlitherZig : MonoBehaviour {
         OnWarningComplete?.Invoke(validPositionAmount);
     }
 
+    public void ToggleDamage(bool on) => contactCollider.enabled = on;
+
     public void CancelZig() {
+        ToggleDamage(false);
         zigHitbox1.Deactivate();
         zigHitbox2.Deactivate();
         zigHitbox3.Deactivate();

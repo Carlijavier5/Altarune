@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class ZigTarget : GraphicFader {
+public class ZigTarget : TwoColoredGraphicFader {
 
     [SerializeField] private Vector3 positionOffset;
     [SerializeField] private Vector3 startScale;
+    [SerializeField] private float maxRotationSpeed;
     private Vector3 targetScale;
 
     void Awake() {
@@ -26,6 +27,7 @@ public class ZigTarget : GraphicFader {
             lerpVal = timer / fadeTime;
             transform.position = Vector3.Lerp(generationPos, position, lerpVal);
             transform.localScale = Vector3.Lerp(startScale, targetScale, lerpVal);
+            transform.RotateAround(transform.position, Vector3.up, Mathf.Lerp(maxRotationSpeed, 0, lerpVal) * Time.deltaTime);
             yield return null;
         }
     }

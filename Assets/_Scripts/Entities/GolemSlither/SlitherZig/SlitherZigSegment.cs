@@ -13,7 +13,5 @@ public class SlitherZigSegment {
         this.hitbox = hitbox;
     }
 
-    public void DoDamage(int damageAmount) {
-        hitbox.DoDamage(damageAmount);
-    }
+    public void Deactivate() => hitbox.Deactivate();
 }
