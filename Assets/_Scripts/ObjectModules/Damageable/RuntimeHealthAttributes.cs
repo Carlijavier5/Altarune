@@ -22,12 +22,7 @@ public class RuntimeHealthAttributes : HealthAttributes {
     public int ComputeDamage(int amount, ElementType element = ElementType.Physical) {
         UpdateAttributes();
         int absAmount = Mathf.Abs(amount);
-        float elementMult = element switch { ElementType.Fire => curves.fireResCurve.Evaluate(fireRes),
-                                             ElementType.Ice => curves.fireResCurve.Evaluate(iceRes),
-                                             ElementType.Shock => curves.shockResCurve.Evaluate(shockRes),
-                                             ElementType.Poison => curves.poisonResCurve.Evaluate(poisonRes),
-                                             _ => 1 };
-        return Mathf.CeilToInt(absAmount * elementMult * curves.defenseCurve.Evaluate(defense));
+        return Mathf.CeilToInt(absAmount * curves.defenseCurve.Evaluate(defense));
     }
 
     public int ComputeHeal(int amount) {
@@ -51,6 +46,10 @@ public class RuntimeHealthAttributes : HealthAttributes {
     public void UpdateMaxHealth(int maxHealth) {
         MaxHealth = maxHealth;
         health = maxHealth;
+    }
+
+    public void UpdateHealth(int health) {
+        this.health = health;
     }
 
     private void UpdateAttributes() {

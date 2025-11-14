@@ -51,6 +51,8 @@ public class RoomManager : MonoBehaviour {
     }
 
     public void MoveToRoom(RoomTag roomTag) {
+        if (GM.Player) GM.PlayerStatusManager.CommitHealth(GM.Player.Health);
+
         currentRoomTag = roomTag;
         GM.TransitionManager.FadeOut();
         GM.TimeScaleManager.AddTimeScaleMultiplier(0, 1);

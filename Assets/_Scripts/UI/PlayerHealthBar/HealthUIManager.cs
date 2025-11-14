@@ -15,7 +15,8 @@ public class HealthUIManager : MonoBehaviour {
     private void InputSource_OnPlayerInit() {
         int health = player.Health;
         for (int i = 0; i < healthSprites.Length; i++) {
-            healthSprites[i].gameObject.SetActive(health > i);
+            if (health > i) healthSprites[i].Restore();
+            else healthSprites[i].Break();
         }
     }
 

@@ -8,6 +8,15 @@ public class PlayerDamageable : Damageable {
     [SerializeField] private float timeScaleShiftDuration;
     [SerializeField] private AnimationCurve timeScaleShiftCurve;
 
+    protected override void Awake() {
+        base.Awake();
+        if (GM.Instance != null
+                && !GM.PlayerStatusManager.HealthIsAtMax) {
+            int currentHealth = GM.PlayerStatusManager.Health;
+            runtimeHP.UpdateHealth(currentHealth);
+        }
+    }
+
     protected override void BaseObject_OnTryDamage(int amount, ElementType element, EventResponse response) {
         if (!IFrameOn) {
             response.received = true;

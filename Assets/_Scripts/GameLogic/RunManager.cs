@@ -6,9 +6,6 @@ public class RunManager : MonoBehaviour {
 
     [SerializeField] private RoomManager roomManager;
 
-    private int runHealth;
-    private float runMana;
-
     private readonly Dictionary<RoomTag, RoomStatus> roomStatusMap = new();
 
     void Awake() {

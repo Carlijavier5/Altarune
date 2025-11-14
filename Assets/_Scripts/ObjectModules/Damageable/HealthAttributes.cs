@@ -8,10 +8,6 @@ public class HealthAttributes {
 
     public int health = 10;
     [Range(0, 1)] public float defense;
-    [Range(0, 1)] public float fireRes;
-    [Range(0, 1)] public float iceRes;
-    [Range(0, 1)] public float shockRes;
-    [Range(0, 1)] public float poisonRes;
     [Range(0, 1)] public float healModifier;
 
     public HealthAttributes(DefaultHealthAttributeCurves curves) {

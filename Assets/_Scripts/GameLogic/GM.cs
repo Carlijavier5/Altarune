@@ -40,6 +40,9 @@ public class GM : MonoBehaviour {
     [SerializeField] private RunManager runManager;
     public static RunManager RunManager => instance.runManager;
 
+    [SerializeField] private PlayerStatusManager playerStatusManager;
+    public static PlayerStatusManager PlayerStatusManager => instance.playerStatusManager;
+
     [SerializeField] private ConditionBank conditionBank;
     public static ConditionBank ConditionBank => instance.conditionBank;
 
@@ -75,6 +78,7 @@ public class GM : MonoBehaviour {
     }
 
     public void DoGameOver() {
+        playerStatusManager.ResetHealthStatus();
         StartCoroutine(RestartScene());
     }
 

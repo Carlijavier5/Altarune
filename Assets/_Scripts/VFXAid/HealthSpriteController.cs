@@ -8,7 +8,6 @@ public class HealthSpriteController : MonoBehaviour {
     [SerializeField] private Animator animator;
     [SerializeField] private float animationLength;
     private int dissolveParam;
-    private float timer;
 
     void Awake() {
         dissolveParam = Animator.StringToHash(DISSOLVE_ANIMATION_PROPERTY);
@@ -25,10 +24,10 @@ public class HealthSpriteController : MonoBehaviour {
     }
 
     private IEnumerator IMaterialize(bool on) {
-        float lerpVal, target = on ? 0 : animationLength;
-        while (Mathf.Abs(timer - target) > Mathf.Epsilon) {
-            timer = Mathf.MoveTowards(timer, target, Time.deltaTime);
-            lerpVal = Mathf.Clamp(timer / animationLength, 0, 0.98f);
+        float target = on ? 0 : 0.98f;
+        float lerpVal = animator.GetFloat(dissolveParam);
+        while (Mathf.Abs(lerpVal - target) > 0) {
+            lerpVal = Mathf.MoveTowards(lerpVal, target, animationLength == 0 ? Mathf.Infinity : (Time.deltaTime / animationLength));
             animator.SetFloat(dissolveParam, lerpVal);
             yield return null;
         }
