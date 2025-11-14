@@ -8,7 +8,7 @@ public partial class GolemSentinel {
     [Header("Aggro/Charge State")]
     [SerializeField] private LoopingSystemController chargeShieldController;
     [SerializeField] private SentinelShield sentinelShield;
-    [SerializeField] private GraphicFader chargeIndicator;
+    [SerializeField] private TwoColoredGraphicFader chargeIndicator;
     [SerializeField] private int damageAmount;
     [SerializeField] private Vector2 aggroWaitTimeRange;
     [SerializeField] private float chargeAmplitude, chargeTime,

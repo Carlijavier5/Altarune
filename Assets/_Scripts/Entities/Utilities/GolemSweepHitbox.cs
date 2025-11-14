@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class GolemSweepHitbox : MonoBehaviour {
 
-    private const string COLOR_PARAM = "_Color";
-
     public event System.Action OnAnticipationEnd;
 
+    [SerializeField] private TwoColoredGraphicFader graphicFader;
     [SerializeField] private Collider attackCollider;
-    [SerializeField] private Renderer decal;
-    [SerializeField] private float fadeTime;
-    private float timer;
 
     public bool Active => attackCollider.enabled;
 
@@ -23,25 +19,18 @@ public class GolemSweepHitbox : MonoBehaviour {
         xScaleTarget = transform.localScale.x;
         transform.localScale = new Vector3(0, transform.localScale.y,
                                            transform.localScale.z);
-
-        Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
-        color.a = 0;
-        MaterialPropertyBlock mpb = new();
-        decal.GetPropertyBlock(mpb);
-        mpb.SetColor(COLOR_PARAM, color);
-        decal.SetPropertyBlock(mpb);
     }
 
     public void DoAnticipation(Entity caster, float duration) {
         attackCollider.enabled = true;
         StopAllCoroutines();
         StartCoroutine(IDoAnticipation(caster, duration));
-        StartCoroutine(IDoFade(true));
+        graphicFader.DoFade(true);
     }
 
     public void CancelSweep() {
         StopAllCoroutines();
-        StartCoroutine(IDoFade(false));
+        graphicFader.DoFade(false);
         attackCollider.enabled = false;
         contactSet.Clear();
     }
@@ -50,7 +39,8 @@ public class GolemSweepHitbox : MonoBehaviour {
         attackCollider.enabled = false;
         foreach (BaseObject baseObject in contactSet) {
             baseObject.TryDamage(damageAmount);
-        } StartCoroutine(IDoFade(false));
+        }
+        graphicFader.DoFade(false);
         contactSet.Clear();
     }
 
@@ -66,24 +56,6 @@ public class GolemSweepHitbox : MonoBehaviour {
         }
 
         OnAnticipationEnd?.Invoke();
-    }
-
-    private IEnumerator IDoFade(bool on) {
-
-        float lerpVal, target = on ? fadeTime : 0;
-        Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
-
-        MaterialPropertyBlock mpb = new();
-        decal.GetPropertyBlock(mpb);
-
-        while (Mathf.Abs(target - timer) > 0) {
-            timer = Mathf.MoveTowards(timer, target, Time.deltaTime);
-            lerpVal = timer / fadeTime;
-            color.a = Mathf.Lerp(0, 1, lerpVal);
-            mpb.SetColor(COLOR_PARAM, color);
-            decal.SetPropertyBlock(mpb);
-            yield return null;
-        }
     }
 
     void OnTriggerEnter(Collider other) {

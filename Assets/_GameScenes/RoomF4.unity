@@ -16612,6 +16612,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1270869219}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1373645582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 665781236088333302, guid: a2dfbf0698e9e384c90c5b5cf439f510,
+    type: 3}
+  m_PrefabInstance: {fileID: 478347357}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fee0d278b3a37824d99011bb334afa59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1375056660
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68386,6 +68398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutsceneAnimator: {fileID: 5162764675024172928}
+  player: {fileID: 1373645582}
   musicTrigger: {fileID: 1653921928}
   savageDecal: {fileID: 2100000, guid: df9b81d5d4975e845bee13b59a5010e7, type: 2}
   light: {fileID: 5039355019565310454}
@@ -76114,12 +76127,12 @@ PrefabInstance:
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9611544
+      value: -0.6883241
       objectReference: {fileID: 0}
     - target: {fileID: 7446349794163420802, guid: 49d3d0a49645ace4c96d8310f288dc82,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.27601153
+      value: 0.72540337
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -107794,6 +107807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   focusCamera: {fileID: 1686023443}
+  player: {fileID: 1373645582}
   savageGolem: {fileID: 5162764675024172921}
   savageAnimator: {fileID: 5162764675024172928}
   perishClip: {fileID: 7400000, guid: bf332d23bc4f4cd42b55d28f6b83a0c8, type: 2}

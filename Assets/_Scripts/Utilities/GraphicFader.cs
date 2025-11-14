@@ -7,33 +7,38 @@ public class GraphicFader : MonoBehaviour {
 
     [SerializeField] private Renderer decal;
     [SerializeField] protected float fadeTime;
-    private float timer;
 
     void OnEnable() {
         Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
-        color.a = 0;
+
         MaterialPropertyBlock mpb = new();
         decal.GetPropertyBlock(mpb);
+
+        color.a = 0;
+
         mpb.SetColor(COLOR_PARAM, color);
         decal.SetPropertyBlock(mpb);
     }
 
     public void DoFade(bool on) {
         StopAllCoroutines();
-        StartCoroutine(IDoFade(on));
+        StartCoroutine(IDoFade(on ? 1 : 0));
     }
 
-    public IEnumerator IDoFade(bool on) {
-        float lerpVal, target = on ? fadeTime : 0;
-        Color color = decal.sharedMaterial.GetColor(COLOR_PARAM);
+    public void DoFade(float targetAlpha) {
+        StopAllCoroutines();
+        StartCoroutine(IDoFade(targetAlpha));
+    }
 
+    public IEnumerator IDoFade(float target) {
         MaterialPropertyBlock mpb = new();
         decal.GetPropertyBlock(mpb);
 
-        while (Mathf.Abs(target - timer) > 0) {
-            timer = Mathf.MoveTowards(timer, target, Time.deltaTime);
-            lerpVal = timer / fadeTime;
-            color.a = Mathf.Lerp(0, 1, lerpVal);
+        Color color = mpb.GetColor(COLOR_PARAM);
+        float alpha = color.a;
+        while (Mathf.Abs(alpha - target) > 0) {
+            alpha = Mathf.MoveTowards(alpha, target, fadeTime == 0 ? Mathf.Infinity : (Time.deltaTime / fadeTime));
+            color.a = alpha;
             mpb.SetColor(COLOR_PARAM, color);
             decal.SetPropertyBlock(mpb);
             yield return null;

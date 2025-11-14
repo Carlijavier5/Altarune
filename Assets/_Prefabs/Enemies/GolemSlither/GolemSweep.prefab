@@ -108,6 +108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 434822873618327551}
   - component: {fileID: 7973904612421709461}
+  - component: {fileID: 1658816928497287398}
   - component: {fileID: 8694580849462564574}
   - component: {fileID: 7306262571966191179}
   - component: {fileID: 7631613898088522101}
@@ -146,7 +147,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e7fccac9f065a42884119953c54e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphicFader: {fileID: 1658816928497287398}
   attackCollider: {fileID: 8694580849462564574}
+--- !u!114 &1658816928497287398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4541418478055116261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c38477a68daaed448cb2ebb7642631e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   decal: {fileID: 4308607830122596914}
   fadeTime: 0.2
 --- !u!65 &8694580849462564574

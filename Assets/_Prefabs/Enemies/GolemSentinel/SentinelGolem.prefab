@@ -67,7 +67,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 3}
+  m_Size: {x: 0.75, y: 1, z: 3}
   m_Center: {x: 0, y: 0, z: -1}
 --- !u!54 &3468239210103017157
 Rigidbody:
@@ -138,7 +138,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8356246302691082506}
-  - component: {fileID: 8735758853569908211}
+  - component: {fileID: 6154751471860980931}
   - component: {fileID: 4880324672369932526}
   - component: {fileID: 8751383818510736556}
   m_Layer: 2
@@ -163,7 +163,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6539724813760751204}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &8735758853569908211
+--- !u!114 &6154751471860980931
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4836819237932325661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 139d855cea9638b4dae2865a8113f8cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c38477a68daaed448cb2ebb7642631e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   decal: {fileID: 8751383818510736556}
@@ -326,7 +326,7 @@ MonoBehaviour:
   deAggroRange: {fileID: 8565624234498661170}
   chargeShieldController: {fileID: 7797725657487114494}
   sentinelShield: {fileID: 6807311386614594901}
-  chargeIndicator: {fileID: 8735758853569908211}
+  chargeIndicator: {fileID: 6154751471860980931}
   damageAmount: 3
   aggroWaitTimeRange: {x: 1, y: 1.5}
   chargeAmplitude: 0.2
@@ -357,10 +357,6 @@ MonoBehaviour:
     curves: {fileID: 11400000, guid: 1f8275217f97f7c438b972abc1fb040f, type: 2}
     health: 10
     defense: 0
-    fireRes: 0
-    iceRes: 0
-    shockRes: 0
-    poisonRes: 0
     healModifier: 0
   iFrameProperties:
     settings: {fileID: 11400000, guid: 311a0ca6a590483428912d997497e2e8, type: 2}
