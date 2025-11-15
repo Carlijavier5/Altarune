@@ -31,7 +31,7 @@ public partial class GolemSavage {
 
             moveDirection = RandomDirection;
             gs.TryToggleIFrame(true);
-            gs.animator.SetTrigger(SPIN_START_PARAM);
+            gs.animator.SetTrigger(gs.spinStartParam);
         }
 
         public override void Update(Savage_Input input) {
@@ -39,6 +39,13 @@ public partial class GolemSavage {
 
             switch (spinState) {
                 case SpinState.Start:
+                    if (timer < gs.spinStartClip.length * 0.25f
+                            && gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinStartParam
+                                && gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinLoopParam
+                                    && gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinEndParam) {
+                        gs.animator.SetTrigger(gs.spinStartParam);
+                    }
+
                     if (timer > gs.spinStartClip.length) {
                         spinState = SpinState.Loop;
                         gs.spinEffector.ToggleDamage(true);
@@ -54,7 +61,7 @@ public partial class GolemSavage {
                         spinSpeed = Mathf.Lerp(gs.activeConfig.maxSpinSpeed, 0, stopLerp);
                     } else {
                         gs.spinEffector.ToggleDamage(false);
-                        gs.animator.SetTrigger(SPIN_END_PARAM);
+                        gs.animator.SetTrigger(gs.spinEndParam);
                         spinState = SpinState.Done;
                     } break;
             }

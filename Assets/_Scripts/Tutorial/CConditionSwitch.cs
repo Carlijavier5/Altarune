@@ -13,6 +13,10 @@ public class CConditionSwitch : MonoBehaviour {
         GM.DialogueManager.OnDialogueEnd += ActivateCondition;
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd += ActivateCondition;
+    }
+
     private void ActivateCondition() {
         if (sender.ConditionIsMet() && !used) {
             receiver.SetActive(setActive);

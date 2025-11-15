@@ -28,7 +28,7 @@ public partial class GolemSavage {
             GolemSavage gs = input.savage;
             Vector2 waitRange = input.savage.roamWaitTimeRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
-            gs.animator.SetTrigger(IDLE_PARAM);
+            if (gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != Animator.StringToHash(SPIN_END_PARAM)) gs.animator.SetTrigger(IDLE_PARAM);
 
             if (phase != gs.stagingPhase) {
                 input.microMachine.SetState(new State_Ascension());

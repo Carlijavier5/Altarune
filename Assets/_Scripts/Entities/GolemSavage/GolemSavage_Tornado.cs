@@ -4,12 +4,20 @@ using UnityEngine;
 public partial class GolemSavage {
 
     private const string SPIN_START_PARAM = "SpinStart",
+                         SPIN_LOOP_PARAM = "SpinLoop",
                          SPIN_END_PARAM = "SpinEnd";
 
     [Header("Spin")]
     [SerializeField] private SavageSpinEffector spinEffector;
     [SerializeField] private AnimationClip spinStartClip;
     [SerializeField] private float spinRaycastDistance;
+    private int spinStartParam, spinLoopParam, spinEndParam;
+
+    private void DoSpinStringHashes() {
+        spinStartParam = Animator.StringToHash(SPIN_START_PARAM);
+        spinLoopParam = Animator.StringToHash(SPIN_LOOP_PARAM);
+        spinEndParam = Animator.StringToHash(SPIN_END_PARAM);
+    }
 
     private class State_Spin : State<Savage_Input> {
 
@@ -38,7 +46,7 @@ public partial class GolemSavage {
 
             moveDirection = RandomDirection;
             gs.TryToggleIFrame(true);
-            gs.animator.SetTrigger(SPIN_START_PARAM);
+            gs.animator.SetTrigger(gs.spinStartParam);
         }
 
         public override void Update(Savage_Input input) {
@@ -47,6 +55,12 @@ public partial class GolemSavage {
             switch (spinState) {
                 case SpinState.Start:
                     if (timer > gs.spinStartClip.length * 0.25f) {
+                        if (gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinStartParam
+                                && gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinLoopParam
+                                    && gs.animator.GetCurrentAnimatorStateInfo(1).shortNameHash != gs.spinEndParam) {
+                            gs.animator.SetTrigger(gs.spinStartParam);
+                        }
+
                         spinState = SpinState.Loop;
                         gs.spinEffector.ToggleDamage(true);
                         timer = 0;
@@ -65,7 +79,7 @@ public partial class GolemSavage {
                         spinSpeed = Mathf.Lerp(gs.activeConfig.maxSpinSpeed, 0, lerpVal);
                     } else {
                         gs.spinEffector.ToggleDamage(false);
-                        gs.animator.SetTrigger(SPIN_END_PARAM);
+                        gs.animator.SetTrigger(gs.spinEndParam);
                         spinState = SpinState.Done;
                     } break;
             }

@@ -27,6 +27,10 @@ public class CutsceneManager : MonoBehaviour {
         }
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= EndOfEventAction;
+    }
+
     private void EndOfEventAction() {
         GM.DialogueManager.OnDialogueEnd -= EndOfEventAction;
         GM.Player.InputSource.ActivateInput();

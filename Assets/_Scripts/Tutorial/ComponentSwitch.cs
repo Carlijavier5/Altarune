@@ -11,9 +11,14 @@ public class ComponentSwitch : MonoBehaviour {
     [SerializeField] private bool singleUse = true;
     private bool used;
 
-    private void Start() {
+    void Start() {
         if (checkOnDialogueEnd) GM.DialogueManager.OnDialogueEnd += EnableComponent;
         else condition.OnConditionTrigger += EnableAction;
+    }
+
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= EnableComponent;
+        condition.OnConditionTrigger -= EnableAction;
     }
 
     private void EnableAction(CConditionData data) {
@@ -24,7 +29,7 @@ public class ComponentSwitch : MonoBehaviour {
         if (used && singleUse) return;
         used = true;
         if (condition.ConditionIsMet()) {
-            if (component.GetComponent<SummonController>()) {
+            if (component && component.GetComponent<SummonController>()) {
                 if (setActive) {
                     GM.Player.InputSource.ActivateSummons();
                 }
@@ -33,7 +38,7 @@ public class ComponentSwitch : MonoBehaviour {
                 }
             }
             else {
-                if (condition.ConditionIsMet()) component.gameObject.SetActive(setActive);
+                if (condition.ConditionIsMet()) if (component) component.gameObject.SetActive(setActive);
             }
         }
     }
