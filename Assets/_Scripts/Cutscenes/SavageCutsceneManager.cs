@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class SavageCutsceneManager : MonoBehaviour {
 
-    private const string SPIN_START_PARAM = "SpinStart";
-    private const string IDLE_PARAM = "Idle";
+    private const string SPIN_START_PARAM = "SpinStartCutscene";
 
     public event System.Action OnCutsceneEnd;
 
@@ -91,7 +90,6 @@ public class SavageCutsceneManager : MonoBehaviour {
         foreach (Light fire in fireLights) {
             DOTween.To(() => fire.intensity, x => fire.intensity = x, 2.26f, 0.5f).SetEase(Ease.OutBack);
         }
-        cutsceneAnimator.SetTrigger(IDLE_PARAM);
         yield return new WaitForSeconds(1f);
         float lerpVal, timer = 0;
         while (timer < layerShiftTime) {

@@ -34,6 +34,10 @@ public class LevelLoadCanvas : MonoBehaviour {
         GM.DialogueManager.OnDialogueEnd += DisplayAction;
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= DisplayAction;
+    }
+
     private void DisplayAction() {
         if (condition.ConditionIsMet()) StartCoroutine(Display());
     }

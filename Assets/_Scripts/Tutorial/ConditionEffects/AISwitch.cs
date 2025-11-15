@@ -24,6 +24,11 @@ public class AISwitch : MonoBehaviour
         else condition.OnConditionTrigger += SetConditionAction;
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= SetAction;
+        condition.OnConditionTrigger -= SetConditionAction;
+    }
+
     private void SetConditionAction(CConditionData data) {
         eventBypassed = true;
         SetAction();

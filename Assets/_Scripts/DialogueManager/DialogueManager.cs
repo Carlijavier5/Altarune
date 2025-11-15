@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class DialogueManager : MonoBehaviour {
@@ -31,9 +32,14 @@ public class DialogueManager : MonoBehaviour {
     private float triggerTimer;
 
     void Awake() {
+        SceneManager.activeSceneChanged += SceneManager_ActiveSceneChanged;
         dialogueBox.localScale = new Vector3(dialogueBox.localScale.x, 0, dialogueBox.localScale.z);
         dialogueBox.gameObject.SetActive(false);
         ResetText();
+    }
+
+    private void SceneManager_ActiveSceneChanged(Scene _, Scene __) {
+        OnDialogueEnd = null;
     }
 
     void Update() {

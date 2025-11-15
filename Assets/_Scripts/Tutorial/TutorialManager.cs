@@ -29,6 +29,10 @@ public class TutorialManager : MonoBehaviour {
         checks.DOMoveY(300f, 0f);
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= RunDialogueSequence;
+    }
+
     private void RunDialogueSequence() {
         switch (dialogueIndex) {
             case 0:

@@ -34,6 +34,13 @@ public class UISwitch : MonoBehaviour {
         else exitCondition.OnConditionTrigger += ConditionedExitAction;
     }
 
+    void OnDestroy() {
+        GM.DialogueManager.OnDialogueEnd -= PromptAction;
+        if (promptCondition) promptCondition.OnConditionTrigger -= ConditionedPromptAction;
+        GM.DialogueManager.OnDialogueEnd -= ExitAction;
+        if (exitCondition) exitCondition.OnConditionTrigger -= ConditionedExitAction;
+    }
+
     private void ConditionedPromptAction(CConditionData data) {
         PromptAction();
     }

@@ -72,6 +72,8 @@ public class LabCinematicManager : CCondition {
     }
 
     public void RunCinematicAction(CConditionData data) {
+        player.InputSource.DeactivateInput();
+        player.InputSource.DeactivateSummons();
         player.ToggleUI(false);
         player.TriggerManaCollapse(false);
         StartCoroutine(RunCinematic());
@@ -113,6 +115,8 @@ public class LabCinematicManager : CCondition {
         CheckCondition();
         cinematicCamera.m_Priority = 0;
         player.ToggleUI(true);
+        player.InputSource.ActivateInput();
+        player.InputSource.ActivateSummons();
         yield return null;
     }
 

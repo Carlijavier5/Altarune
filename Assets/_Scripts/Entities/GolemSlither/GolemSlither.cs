@@ -136,6 +136,8 @@ public partial class GolemSlither : Entity {
 
     public override void Perish(bool immediate) {
         base.Perish(immediate);
+        slitherZig.CancelZig();
+
         DetachModules();
         enabled = false;
 
