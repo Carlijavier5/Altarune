@@ -13,6 +13,7 @@ public partial class GolemSentinel : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange, deAggroRange;
+    [SerializeField] private GolemPerishSequence perishSequence;
 
     private float baseAnimatorSpeed;
     public float BaseAnimatorSpeed {
@@ -64,6 +65,9 @@ public partial class GolemSentinel : Entity {
         stateMachine.Update();
         animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
                                       / Mathf.Max(1, baseLinearSpeed));
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Perish();
+        }
     }
 
     void FixedUpdate() {
@@ -112,18 +116,22 @@ public partial class GolemSentinel : Entity {
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
 
-    public override void Perish(bool immediate) {
+    public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();
 
         if (immediate) {
             Destroy(gameObject);
         } else {
+            foreach (Renderer renderer in renderers) {
+                renderer.gameObject.layer = LayerUtils.IgnoreRaycastLayer;
+            }
+
             enabled = false;
             sentinelShield.Disable();
             chargeShieldController.Disable();
             aggroRange.Disable();
-            Destroy(gameObject, 2);
+            perishSequence.DoPerish();
         }
     }
 }

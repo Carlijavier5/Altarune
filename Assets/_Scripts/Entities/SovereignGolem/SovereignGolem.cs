@@ -43,18 +43,20 @@ public partial class SovereignGolem : Entity {
 
     protected override void Update() {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.P)) {
-            BeginBossFight();
-        }
-        if (Input.GetKeyDown(KeyCode.E)) {
-            CrystalSpawner_OnSpawnPerish();
-        }
         if (macroMachine.StateInput != null) {
             macroMachine.Update();
             if (microMachine.StateInput != null) {
                 microMachine.Update();
             }
         }
+        #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.P)) {
+            BeginBossFight();
+        }
+        if (Input.GetKeyDown(KeyCode.E)) {
+            CrystalSpawner_OnSpawnPerish();
+        }
+        #endif
     }
 
     public void BeginBossFight() {

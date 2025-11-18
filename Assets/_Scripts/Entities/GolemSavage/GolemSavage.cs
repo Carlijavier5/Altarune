@@ -78,18 +78,20 @@ public partial class GolemSavage : Entity {
         macroMachine.Update();
         microMachine.Update();
         animator.SetFloat(speedParam, navMeshAgent.velocity.sqrMagnitude / Mathf.Max(1, baseLinearSpeed));
-        //if (Input.GetKeyDown(KeyCode.O)) {
-        //    TryDamage(5);
-        //}
-        //if (Input.GetKeyDown(KeyCode.I)) {
-        //    for (int i = 0; i < earthTornadoSiftlings.Length; i++) {
-        //        if (earthTornadoSiftlings[i] && !earthTornadoSiftlings[i].Perished) {
-        //            earthTornadoSiftlings[i].Perish();
-        //            break;
-        //        }
-        //    }
-        //}
-        //if (Input.GetKeyDown(KeyCode.Semicolon)) Perish();
+        #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.E)) {
+            TryDamage(5);
+        }
+        if (Input.GetKeyDown(KeyCode.R)) {
+            for (int i = 0; i < earthTornadoSiftlings.Length; i++) {
+                if (earthTornadoSiftlings[i] && !earthTornadoSiftlings[i].Perished) {
+                    earthTornadoSiftlings[i].Perish();
+                    break;
+                }
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Semicolon)) Perish();
+        #endif
     }
 
     private void CutsceneManager_OnCutsceneEnd() {

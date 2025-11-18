@@ -29,7 +29,7 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     #region || Material Swap Utilities ||
 
-    private Renderer[] renderers;
+    protected Renderer[] renderers;
     protected readonly LinkedList<Material> materialStack = new();
     private readonly Dictionary<Renderer, Material[]> baseMaterialMap = new();
 
