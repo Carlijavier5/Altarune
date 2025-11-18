@@ -25,6 +25,7 @@ public class GolemPerishSequence : MonoBehaviour
     }
 
     public void DoPerish() {
+        deathParticles.Play();
         DoOnRenderers((mr) => {
             Material[] mats = mr.sharedMaterials;
             for (int i = 0; i < mats.Length; i++) {
