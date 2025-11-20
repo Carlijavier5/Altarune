@@ -8,11 +8,15 @@ public partial class GolemSlither : Entity {
     private enum SlitherAttack { Sweep = 0, Zig = 1 }
     private const string WALK_SPEED_PARAM = "WalkSpeed";
 
-    [Header("Setup")]
+    [Header("General")]
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange sweepRange, aggroRange,
                                         deAggroRange;
+
+    [Header("Perish State")]
+    [SerializeField] private RagdollHandler ragdollHandler;
+    [SerializeField] private GolemPerishSequence perishSequence;
 
     private readonly StateMachine<Slither_Input> stateMachine = new();
 
@@ -70,6 +74,9 @@ public partial class GolemSlither : Entity {
         stateMachine.Update();
         animator.SetFloat(speedParam, navMeshAgent.velocity.magnitude
                                       / Mathf.Max(1, baseLinearSpeed));
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Perish();
+        }
     }
 
     private void UpdateAggro() {
@@ -134,8 +141,12 @@ public partial class GolemSlither : Entity {
         }
     }
 
-    public override void Perish(bool immediate) {
+    public override void Perish(bool immediate = false) {
         base.Perish(immediate);
+        foreach (Renderer renderer in renderers) {
+            renderer.gameObject.layer = LayerUtils.IgnoreRaycastLayer;
+        }
+
         slitherZig.CancelZig();
 
         DetachModules();
@@ -156,9 +167,13 @@ public partial class GolemSlither : Entity {
         aggroRange.Disable();
         deAggroRange.Disable();
         sweepRange.Disable();
+        navMeshAgent.enabled = false;
 
         if (immediate) Destroy(gameObject);
-        else Destroy(gameObject, 2);
+        else {
+            ragdollHandler.Ragdoll();
+            perishSequence.DoPerish();
+        }
     }
 }
 

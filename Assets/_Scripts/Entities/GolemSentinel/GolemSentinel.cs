@@ -13,6 +13,9 @@ public partial class GolemSentinel : Entity {
     [SerializeField] private CharacterController controller;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private AggroRange aggroRange, deAggroRange;
+
+    [Header("Perish State")]
+    [SerializeField] private RagdollHandler ragdollHandler;
     [SerializeField] private GolemPerishSequence perishSequence;
 
     private float baseAnimatorSpeed;
@@ -128,9 +131,14 @@ public partial class GolemSentinel : Entity {
             }
 
             enabled = false;
-            sentinelShield.Disable();
-            chargeShieldController.Disable();
+
+            CancelCharge();
+            sentinelSweep.CancelSweep();
+            navMeshAgent.enabled = false;
+
             aggroRange.Disable();
+
+            ragdollHandler.Ragdoll();
             perishSequence.DoPerish();
         }
     }

@@ -31,7 +31,7 @@ public abstract partial class BaseObject : MonoBehaviour {
 
     protected Renderer[] renderers;
     protected readonly LinkedList<Material> materialStack = new();
-    private readonly Dictionary<Renderer, Material[]> baseMaterialMap = new();
+    public readonly Dictionary<Renderer, Material[]> baseMaterialMap = new();
 
     public void UpdateRendererRefs(bool updateMaterials = true) {
         renderers = objectBody.GetComponentsInChildren<Renderer>(true);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Windows;
 
 public partial class GolemSentinel {
 
@@ -42,7 +43,7 @@ public partial class GolemSentinel {
         public override void Enter(Sentinel_Input input) {
             base.Enter(input);
             GolemSentinel golem = input.golem;
-            golem.navMeshAgent.ResetPath();
+            if (golem.navMeshAgent.enabled) golem.navMeshAgent.ResetPath();
             waitDuration = Random.Range(golem.aggroWaitTimeRange.x,
                                         golem.aggroWaitTimeRange.y);
             golem.animator.SetTrigger(IDLE_PARAM);
@@ -83,6 +84,13 @@ public partial class GolemSentinel {
         }
     }
 
+    private void CancelCharge() {
+        sentinelShield.Disable();
+        chargeShieldController.Disable();
+        chargeIndicator.DoFade(false);
+        controller.enabled = false;
+    }
+
     private class State_Charge : State<Sentinel_Input> {
 
         private float chargeTimer;
@@ -111,9 +119,7 @@ public partial class GolemSentinel {
         }
 
         public override void Exit(Sentinel_Input input) {
-            input.golem.sentinelShield.Disable();
-            input.golem.chargeShieldController.Disable();
-            input.golem.controller.enabled = false;
+            input.golem.CancelCharge();
             input.golem.navMeshAgent.enabled = true;
             input.golem.MotionDriver.Set(input.golem.navMeshAgent);
         }

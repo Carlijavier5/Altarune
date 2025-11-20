@@ -9,6 +9,7 @@ public partial class Bat : Entity {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private RBVelocityLimiter limiter;
     [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private GolemPerishSequence perishSequence;
     [SerializeField] private float wallAvoidanceDistance,
                                    changeDirTime;
     [SerializeField] int damageAmount = 4;
@@ -39,6 +40,9 @@ public partial class Bat : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Perish();
+        }
     }
 
     void FixedUpdate() {
@@ -89,17 +93,21 @@ public partial class Bat : Entity {
         ApplyEffects(new[] { new StunStatusEffect(stunDuration) });
     }
 
-    public override void Perish(bool immediate) {
+    public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();
 
         if (immediate) {
             Destroy(gameObject);
         } else {
+            foreach (Renderer renderer in renderers) {
+                renderer.gameObject.layer = LayerUtils.IgnoreRaycastLayer;
+            }
+
             enabled = false;
             aggroRange.Disable();
             Ragdoll();
-            Destroy(gameObject, 2);
+            perishSequence.DoPerish();
         }
     }
 
