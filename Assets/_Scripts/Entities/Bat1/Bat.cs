@@ -12,6 +12,7 @@ public partial class Bat : Entity {
     [SerializeField] private RBVelocityLimiter limiter;
     [SerializeField] private AggroRange aggroRange;
     [SerializeField] private GolemPerishSequence perishSequence;
+    [SerializeField] private Collider attackCollider;
     [SerializeField] private float wallAvoidanceDistance,
                                    changeDirCooldown, raycastCooldown, wallAtenuationForce;
     [SerializeField] int damageAmount = 4;
@@ -124,6 +125,7 @@ public partial class Bat : Entity {
                 renderer.gameObject.layer = LayerUtils.IgnoreRaycastLayer;
             }
 
+            attackCollider.enabled = false;
             enabled = false;
             aggroRange.Disable();
             Ragdoll();
