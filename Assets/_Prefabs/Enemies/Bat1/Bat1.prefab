@@ -4896,7 +4896,9 @@ MonoBehaviour:
   aggroRange: {fileID: 7053709632116090656}
   perishSequence: {fileID: 3371360937056024729}
   wallAvoidanceDistance: 5
-  changeDirTime: 2
+  changeDirCooldown: 2
+  raycastCooldown: 0.25
+  wallAtenuationForce: 1.5
   damageAmount: 4
   idleMoveSpeed: 10
   idleMaxVelocity: 5

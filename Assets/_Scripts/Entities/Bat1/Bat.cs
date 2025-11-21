@@ -4,6 +4,8 @@ using UnityEngine;
 
 public partial class Bat : Entity {
 
+    private const float COLLISION_SIZE = 0.5f;
+
     [Header("General")]
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rb;
@@ -11,7 +13,7 @@ public partial class Bat : Entity {
     [SerializeField] private AggroRange aggroRange;
     [SerializeField] private GolemPerishSequence perishSequence;
     [SerializeField] private float wallAvoidanceDistance,
-                                   changeDirTime;
+                                   changeDirCooldown, raycastCooldown, wallAtenuationForce;
     [SerializeField] int damageAmount = 4;
 
     private readonly StateMachine<Bat_Input> stateMachine = new();
@@ -59,15 +61,33 @@ public partial class Bat : Entity {
     }
 
     private Vector3 GetRandomDirection(Vector3 prevDirection) {
-        if (PathfindingUtils.FindRandomRoamingPoint(transform.position, wallAvoidanceDistance,
-                                                    10, out Vector3 clearPoint)) {
+        if (PathfindingUtils.FindRandomRoamingPointSphereCast(transform.position, COLLISION_SIZE,
+                                                              wallAvoidanceDistance, 15,
+                                                              out Vector3 clearPoint)) {
             Vector3 dir = clearPoint - transform.position;
             dir.y = 0;
             return dir.normalized;
         } return prevDirection;
     }
 
-    private void OnTriggerEnter(Collider other) {
+    void OnCollisionEnter(Collision collision) {
+        if (stateMachine.State is State_Fly) {
+            List<ContactPoint> contacts = new();
+            int contactCount = collision.GetContacts(contacts);
+
+            Vector3 averagePoint = Vector3.zero;
+            for (int i = 0; i < contactCount; i++) {
+                averagePoint += contacts[i].point;
+            }
+            averagePoint /= contactCount;
+
+            Vector3 awayDir = transform.position - averagePoint;
+            awayDir.y = 0;
+            (stateMachine.State as State_Fly).ForceFlyDirection(awayDir.normalized);
+        }
+    }
+
+    void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
                 && !baseObject.IsFaction(EntityFaction.Hostile)) {
             if (baseObject.TryDamage(damageAmount)) {
@@ -147,11 +167,12 @@ public partial class Bat {
         protected Bat bat;
         private Vector3 moveDir;
         private float changeDirTimer;
+        private float nextRaycastTime;
 
         public override void Enter(Bat_Input input) {
             bat = input.bat;
             moveDir = bat.GetRandomDirection(moveDir);
-            changeDirTimer = bat.changeDirTime;
+            changeDirTimer = bat.changeDirCooldown;
         }
 
         public override void Update(Bat_Input input) { }
@@ -159,14 +180,17 @@ public partial class Bat {
         public override void FixedUpdate(Bat_Input input) {
             if (changeDirTimer <= 0) {
                 moveDir = bat.GetRandomDirection(moveDir);
-                changeDirTimer = bat.changeDirTime;
+                changeDirTimer = bat.changeDirCooldown;
             }
 
-            if (Physics.Raycast(bat.transform.position, moveDir,
-                                bat.wallAvoidanceDistance,
-                                LayerUtils.EnvironmentLayerMask)) {
+            if (Time.time > nextRaycastTime
+                    && Physics.SphereCast(bat.transform.position, COLLISION_SIZE, moveDir,
+                                          out _, bat.wallAvoidanceDistance,
+                                          LayerUtils.EnvironmentLayerMask)) {
+                input.bat.rb.AddForce(-moveDir * input.bat.wallAtenuationForce, ForceMode.Impulse);
+                nextRaycastTime = Time.time + nextRaycastTime;
                 moveDir = bat.GetRandomDirection(moveDir);
-                changeDirTimer = bat.changeDirTime;
+                changeDirTimer = bat.changeDirCooldown;
             }
 
             changeDirTimer -= bat.DeltaTime;
@@ -177,6 +201,12 @@ public partial class Bat {
         }
 
         public override void Exit(Bat_Input input) { }
+
+        public void ForceFlyDirection(Vector3 direction) {
+            changeDirTimer = bat.changeDirCooldown;
+            nextRaycastTime = Time.time + nextRaycastTime * 2;
+            moveDir = direction;
+        }
     }
 }
 

@@ -23,7 +23,7 @@ public partial class Scaramite : Entity {
 
     private Player player;
 
-    private void Awake() {
+    private void Start() {
         driver = new(this, linearAcceleration, angularSpeed, linearDrag);
 
         if (GM.Player) player = GM.Player;
