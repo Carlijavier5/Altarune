@@ -27,7 +27,7 @@ public partial class GolemSiftling : Entity {
         set {
             baseAnimatorSpeed = value;
             animator.speed = baseAnimatorSpeed
-                           * status.timeScale;
+                           * Status.timeScale;
         }
     }
 
@@ -37,7 +37,7 @@ public partial class GolemSiftling : Entity {
         set {
             baseLinearSpeed = value;
             navMeshAgent.speed = baseLinearSpeed
-                               * status.timeScale
+                               * Status.timeScale
                                * RootMult;
         }
     }
@@ -88,7 +88,7 @@ public partial class GolemSiftling : Entity {
     }
 
     private void GolemSiftling_OnRootSet(bool canMove) {
-        navMeshAgent.speed = BaseLinearSpeed * status.timeScale * RootMult;
+        navMeshAgent.speed = BaseLinearSpeed * Status.timeScale * RootMult;
     }
 
     private void GolemSiftling_OnTimeScaleSet(float timeScale) {

@@ -42,7 +42,7 @@ public partial class Emphidian : Entity {
 
     private void Emphidian_OnRootSet(bool _) {
         navMeshAgent.speed = baseLinearSpeed
-                           * status.timeScale
+                           * Status.timeScale
                            * RootMult;
     }
     private void Emphidian_OnStunSet(bool isStunned) {

@@ -26,7 +26,7 @@ public partial class GolemSlither : Entity {
         set {
             baseAnimatorSpeed = value;
             animator.speed = baseAnimatorSpeed
-                           * status.timeScale;
+                           * Status.timeScale;
         }
     }
 
@@ -36,7 +36,7 @@ public partial class GolemSlither : Entity {
         set {
             baseLinearSpeed = value;
             navMeshAgent.speed = baseLinearSpeed
-                               * status.timeScale
+                               * Status.timeScale
                                * RootMult;
         }
     }

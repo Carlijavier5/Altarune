@@ -11,10 +11,13 @@ public partial class Bat : Entity {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private RBVelocityLimiter limiter;
     [SerializeField] private AggroRange aggroRange;
+    [SerializeField] private BatAudioController audioController;
     [SerializeField] private GolemPerishSequence perishSequence;
     [SerializeField] private Collider attackCollider;
-    [SerializeField] private float wallAvoidanceDistance,
-                                   changeDirCooldown, raycastCooldown, wallAtenuationForce;
+    [SerializeField] private float wallAvoidanceDistance, changeDirCooldown,
+                                   raycastCooldown, wallAtenuationForce,
+                                   minNormalVelocity, wallParticleSpawnCD;
+    [SerializeField] private ParticleSystemCollectionPool wallParticlePool;
     [SerializeField] int damageAmount = 4;
 
     private readonly StateMachine<Bat_Input> stateMachine = new();
@@ -25,9 +28,11 @@ public partial class Bat : Entity {
         set {
             baseAnimatorSpeed = value;
             animator.speed = baseAnimatorSpeed
-                           * status.timeScale;
+                           * Status.timeScale;
         }
     }
+
+    private float canSpawnWallParticleTime;
 
     void Awake() {
         OnTimeScaleSet += Bat_OnTimeScaleSet;
@@ -72,14 +77,31 @@ public partial class Bat : Entity {
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (stateMachine.State is State_Fly) {
+        if (stateMachine.State is State_Fly
+                && !Perished) {
             List<ContactPoint> contacts = new();
             int contactCount = collision.GetContacts(contacts);
+
+            bool canSpawnParticles = Time.time > canSpawnWallParticleTime
+                                        && collision.gameObject.layer == LayerUtils.EnvironmentLayer;
+            if (canSpawnParticles) {
+                canSpawnWallParticleTime = Time.time + wallParticleSpawnCD;
+            }
 
             Vector3 averagePoint = Vector3.zero;
             for (int i = 0; i < contactCount; i++) {
                 averagePoint += contacts[i].point;
+
+                if (canSpawnParticles) {
+                    Vector3 position = contacts[i].point + contacts[i].normal * 0.05f;
+                    Vector3 normal = transform.position - contacts[i].point;
+                    normal.y = 0;
+                    wallParticlePool.PlayAt(position, normal);
+
+                    audioController.PlayWallBonk();
+                }
             }
+
             averagePoint /= contactCount;
 
             Vector3 awayDir = transform.position - averagePoint;
@@ -96,7 +118,8 @@ public partial class Bat : Entity {
                 if (TryLongPush(pushDir, knockbackStrength, knockbackDuration,
                                 out PushActionCore actionCore)) {
                     actionCore.SetEase(EaseCurve.Logarithmic);
-                } ApplyEffects(new[] { new StunStatusEffect(stunDuration) });
+                }
+                ApplyEffects(new[] { new StunStatusEffect(stunDuration) });
             }
         }
     }
@@ -128,6 +151,8 @@ public partial class Bat : Entity {
             attackCollider.enabled = false;
             enabled = false;
             aggroRange.Disable();
+
+            audioController.PlayPerish();
             Ragdoll();
             perishSequence.DoPerish();
         }

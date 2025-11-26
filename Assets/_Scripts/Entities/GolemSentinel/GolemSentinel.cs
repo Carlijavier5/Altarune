@@ -24,7 +24,7 @@ public partial class GolemSentinel : Entity {
         set {
             baseAnimatorSpeed = value;
             animator.speed = baseAnimatorSpeed
-                           * status.timeScale;
+                           * Status.timeScale;
         }
     }
 
@@ -34,7 +34,7 @@ public partial class GolemSentinel : Entity {
         set {
             baseLinearSpeed = value;
             navMeshAgent.speed = baseLinearSpeed
-                               * status.timeScale
+                               * Status.timeScale
                                * RootMult;
         }
     }
@@ -102,7 +102,7 @@ public partial class GolemSentinel : Entity {
     }
 
     private void GolemSentinel_OnRootSet(bool canMove) {
-        navMeshAgent.speed = BaseLinearSpeed * status.timeScale * RootMult;
+        navMeshAgent.speed = BaseLinearSpeed * Status.timeScale * RootMult;
         if (stateMachine.State is State_Sweep) sentinelSweep.CancelSweep();
     }
 

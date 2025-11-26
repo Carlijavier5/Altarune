@@ -33,8 +33,8 @@ public partial class Armadillo : Entity {
     }
 
     public void UpdateNavMeshSpeeds() {
-        navMeshAgent.speed = roamSpeed * status.timeScale * Agitation * rootedMult;
-        navMeshAgent.angularSpeed = roamAngularSpeed * status.timeScale * Agitation * rootedMult;
+        navMeshAgent.speed = roamSpeed * Status.timeScale * Agitation * rootedMult;
+        navMeshAgent.angularSpeed = roamAngularSpeed * Status.timeScale * Agitation * rootedMult;
     }
 
     private void SetState(ArmadilloState newState) {
