@@ -12,6 +12,7 @@ public partial class GolemSiftling : Entity {
     public event System.Action<int> OnAscend;
 
     [SerializeField] private Animator animator;
+    [SerializeField] private AggroRange aggroRange, deAggroRange;
     [SerializeField] private SiftlingType[] availableAscensions;
     [SerializeField] private SiftlingConfiguration[] configurations;
     [SerializeField] private NavMeshAgent navMeshAgent;
@@ -43,6 +44,18 @@ public partial class GolemSiftling : Entity {
     }
 
     private float baseAngularSpeed;
+    private float BaseAngularSpeed {
+        get => baseAngularSpeed;
+        set {
+            baseAngularSpeed = value;
+            navMeshAgent.angularSpeed = baseAngularSpeed
+                                      * Status.timeScale
+                                      * RootMult;
+        }
+    }
+
+    private float idleStoppingDistance;
+    private float idleAngularSpeed;
 
     private int speedParam;
 
@@ -52,6 +65,9 @@ public partial class GolemSiftling : Entity {
         OnRootSet += GolemSiftling_OnRootSet;
         OnTimeScaleSet += GolemSiftling_OnTimeScaleSet;
 
+        aggroRange.OnAggroEnter += AggroRange_OnAggroEnter;
+        deAggroRange.OnAggroExit += DeAggroRange_OnAggroExit;
+
         foreach (SiftlingConfiguration config in configurations) {
             configMap[config.type] = config;
             if (config.tornado) {
@@ -59,12 +75,16 @@ public partial class GolemSiftling : Entity {
             }
         }
 
+        idleStoppingDistance = navMeshAgent.stoppingDistance;
+        idleAngularSpeed = navMeshAgent.angularSpeed;
+
         baseAnimatorSpeed = animator.speed;
         baseLinearSpeed = navMeshAgent.speed;
-        baseAngularSpeed = navMeshAgent.angularSpeed;
+        baseAngularSpeed = idleAngularSpeed;
         activeConfig = configMap[SiftlingType.Normal];
 
         speedParam = Animator.StringToHash(WALK_SPEED_PARAM);
+        RestartChargeCooldown();
 
         stateMachine.Init(new(stateMachine, this), new State_Idle());
     }
@@ -110,6 +130,24 @@ public partial class GolemSiftling : Entity {
                 Perish();
             }
         }
+    }
+
+    private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();
+    private void DeAggroRange_OnAggroExit(Entity entity) {
+        if (stateMachine.State is State_Aggro) {
+            State_Aggro state = stateMachine.State as State_Aggro;
+            state.PropagateAggroExit(entity);
+        }
+        UpdateAggro();
+    }
+
+    private void UpdateAggro() {
+        Entity closestTarget = aggroRange.ClosestTarget;
+        stateMachine.StateInput.SetTarget(closestTarget);
+    }
+
+    public void RestartChargeCooldown() {
+        canChargeTime = Time.time + Random.Range(chargeCDRange.x, chargeCDRange.y);
     }
 
     public void Animator_OnAscensionRisen() {

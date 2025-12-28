@@ -15,6 +15,7 @@ public partial class GolemSiftling {
 
         public override void Enter(Siftling_Input input) {
             GolemSiftling gs = input.siftling;
+            gs.canChargeTime = Mathf.Infinity;
             gs.ApplyMaterial(gs.ascendMaterial);
             gs.animator.SetTrigger(ASCEND_PARAM);
             gs.TryToggleIFrame(true);

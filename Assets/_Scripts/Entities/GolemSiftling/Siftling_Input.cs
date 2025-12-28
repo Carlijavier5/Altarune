@@ -7,11 +7,16 @@ public partial class GolemSiftling {
 
         public readonly StateMachine<Siftling_Input> stateMachine;
         public GolemSiftling siftling;
+        public Entity aggroTarget;
 
         public Siftling_Input(StateMachine<Siftling_Input> stateMachine,
                                GolemSiftling siftling) {
             this.stateMachine = stateMachine;
             this.siftling = siftling;
+        }
+
+        public void SetTarget(Entity aggroTarget) {
+            this.aggroTarget = aggroTarget;
         }
     }
 }
