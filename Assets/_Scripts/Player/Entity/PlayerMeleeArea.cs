@@ -46,8 +46,8 @@ public class PlayerMeleeArea : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out BaseObject baseObject)
-            && !baseObject.IsFaction(EntityFaction.Friendly)
-            && collSet.Add(baseObject) && playerSource) {
+                && !baseObject.IsFaction(EntityFaction.Friendly)
+                    && collSet.Add(baseObject) && playerSource) {
 
             baseObject.TryDamage(damageAmount, ElementType.Siphon);
             playerSource.ManaSource.Fill(manaPerHit);

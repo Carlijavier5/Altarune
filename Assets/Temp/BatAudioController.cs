@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BatAudioController : MonoBehaviour
 {
-    [SerializeField] private Bat attachedBat;
+    [SerializeField] private GolemBat attachedBat;
     [SerializeField] private SFXOneShotRandom idleSFXSource, stunSFXSource,
                                               wallBonkSFXSource, perishSFXSource;
     [SerializeField] private Vector2 idleBarkTimeRange;

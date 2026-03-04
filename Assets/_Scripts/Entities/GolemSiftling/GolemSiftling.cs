@@ -11,7 +11,8 @@ public partial class GolemSiftling : Entity {
 
     public event System.Action<int> OnAscend;
 
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animatorMain;
+    [SerializeField] private Animator animatorBody;
     [SerializeField] private AggroRange aggroRange, deAggroRange;
     [SerializeField] private SiftlingType[] availableAscensions;
     [SerializeField] private SiftlingConfiguration[] configurations;
@@ -22,15 +23,18 @@ public partial class GolemSiftling : Entity {
     private readonly Dictionary<SiftlingType, SiftlingConfiguration> configMap = new();
     private SiftlingConfiguration activeConfig;
 
+    private SiftlingType ascensionType;
+
     private float baseAnimatorSpeed;
     public float BaseAnimatorSpeed {
         get => baseAnimatorSpeed;
         set {
             baseAnimatorSpeed = value;
-            animator.speed = baseAnimatorSpeed
+            animatorMain.speed = baseAnimatorSpeed
                            * Status.timeScale;
         }
     }
+    private float baseBodyAnimatorSpeed;
 
     private float baseLinearSpeed;
     private float BaseLinearSpeed {
@@ -70,18 +74,18 @@ public partial class GolemSiftling : Entity {
 
         foreach (SiftlingConfiguration config in configurations) {
             configMap[config.type] = config;
-            if (config.tornado) {
-                config.tornado.OnTornadoSummoned += Tornado_OnTornadoSummoned;
-            }
         }
 
         idleStoppingDistance = navMeshAgent.stoppingDistance;
         idleAngularSpeed = navMeshAgent.angularSpeed;
 
-        baseAnimatorSpeed = animator.speed;
+        baseAnimatorSpeed = animatorMain.speed;
+        baseBodyAnimatorSpeed = animatorBody.speed;
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = idleAngularSpeed;
+
         activeConfig = configMap[SiftlingType.Normal];
+        ascensionType = ChooseAscension();
 
         speedParam = Animator.StringToHash(WALK_SPEED_PARAM);
         RestartChargeCooldown();
@@ -94,7 +98,15 @@ public partial class GolemSiftling : Entity {
         stateMachine.Update();
         float speedVal = activeConfig != null && activeConfig.type == SiftlingType.Wind
                        ? 0 : navMeshAgent.velocity.magnitude / Mathf.Max(1, baseLinearSpeed);
-        animator.SetFloat(speedParam, speedVal);
+        animatorMain.SetFloat(speedParam, speedVal);
+
+        if (Input.GetKeyDown(KeyCode.O)) {
+            TryDamage(100);
+        }
+
+        if (Input.GetKeyDown(KeyCode.P)) {
+            DoAscension(false);
+        }
     }
 
     private void GolemSiftling_OnStunSet(bool isStunned) {
@@ -112,24 +124,13 @@ public partial class GolemSiftling : Entity {
     }
 
     private void GolemSiftling_OnTimeScaleSet(float timeScale) {
-        animator.speed = baseAnimatorSpeed * timeScale;
+        animatorMain.speed = baseAnimatorSpeed * timeScale;
         navMeshAgent.speed = BaseLinearSpeed * timeScale * RootMult;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
 
     private void GolemSiftling_OnDamageReceived(int _) {
-        if (Health <= 0) {
-            int typeIndex = Random.Range(0, availableAscensions.Length);
-            SiftlingType type = availableAscensions[typeIndex];
-            if (type != SiftlingType.Normal
-                    && configMap.TryGetValue(type, out activeConfig)) {
-                availableAscensions = new[] { SiftlingType.Normal };
-                OnAscend?.Invoke(activeConfig.health);
-                stateMachine.SetState(new State_Ascend());
-            } else {
-                Perish();
-            }
-        }
+        if (Health <= 0) DoAscension(true);
     }
 
     private void AggroRange_OnAggroEnter(Entity _) => UpdateAggro();
@@ -146,27 +147,39 @@ public partial class GolemSiftling : Entity {
         stateMachine.StateInput.SetTarget(closestTarget);
     }
 
+    private SiftlingType ChooseAscension() {
+        int typeIndex = Random.Range(0, availableAscensions.Length);
+        return availableAscensions[typeIndex];
+    }
+
+    private void DoAscension(bool isFirst) {
+        if (ascensionType != SiftlingType.Normal
+                && configMap.TryGetValue(ascensionType, out activeConfig)) {
+            OnAscend?.Invoke(activeConfig.health);
+            stateMachine.SetState(new State_Ascend(isFirst));
+
+            switch (ascensionType) {
+                case SiftlingType.Wind:
+                    OnTryLongPush += GolemSiftling_OnTryLongPush;
+                    break;
+            }
+        } else if (isFirst) {
+            Perish();
+        }
+    }
+
+    private void GolemSiftling_OnTryLongPush(Vector3 strength, float duration,
+                                             EventResponse<PushActionCore> response) {
+        response.objectReference.Kill();
+        OnTryLongPush -= GolemSiftling_OnTryLongPush;
+        TryLongPush(strength, pushPhaseStrength, bounceDuration, out PushActionCore core);
+        core.SetEase(EaseCurve.InLogarithmic);
+        stateMachine.SetState(new State_WindDescent());
+        OnTryLongPush += GolemSiftling_OnTryLongPush;
+    }
+
     public void RestartChargeCooldown() {
         canChargeTime = Time.time + Random.Range(chargeCDRange.x, chargeCDRange.y);
-    }
-
-    public void Animator_OnAscensionRisen() {
-        activeConfig.tornado.Toggle(true);
-    }
-
-    public void Tornado_OnTornadoSummoned() {
-        string trigger = activeConfig.type == SiftlingType.Wind ? DESCEND_WIND_PARAM
-                                                                : DESCEND_PARAM;
-        animator.SetTrigger(trigger);
-    }
-
-    public void Animator_OnDescent() {
-        RemoveMaterial(ascendMaterial);
-        if (activeConfig.crystalMaterial) {
-            crystalRenderer.sharedMaterial = activeConfig.crystalMaterial;
-            UpdateRendererRefs(true);
-        }
-        stateMachine.SetState(new State_Idle());
     }
 
     public override void Perish(bool immediate = false) {
@@ -177,6 +190,13 @@ public partial class GolemSiftling : Entity {
             Destroy(gameObject);
         } else {
             enabled = false;
+
+            switch (activeConfig.type) {
+                case SiftlingType.Wind:
+                    OnTryLongPush -= GolemSiftling_OnTryLongPush;
+                    break;
+            }
+
             Destroy(gameObject, 2);
         }
     }

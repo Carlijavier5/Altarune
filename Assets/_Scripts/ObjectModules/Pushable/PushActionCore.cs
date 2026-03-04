@@ -10,8 +10,7 @@ public class PushActionCore {
     private readonly Pushable pushable;
     public readonly Vector3 direction;
     public readonly float duration;
-
-    public Vector3 CurrentPushVector => direction * EaseCurve.Evaluate(lifetime);
+    public Vector3 CurrentPushVector => direction * EaseCurve.Evaluate(Mathf.Clamp01(lifetime.SafeDivide(duration)));
     private float lifetime;
 
     public PushActionCore(Pushable pushable, Vector3 direction,

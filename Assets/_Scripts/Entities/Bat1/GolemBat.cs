@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class Bat : Entity {
+public partial class GolemBat : Entity {
 
     private const float COLLISION_SIZE = 0.5f;
 
@@ -16,8 +16,8 @@ public partial class Bat : Entity {
     [SerializeField] private Collider attackCollider;
     [SerializeField] private float wallAvoidanceDistance, changeDirCooldown,
                                    raycastCooldown, wallAtenuationForce,
-                                   minNormalVelocity, wallParticleSpawnCD;
-    [SerializeField] private ParticleSystemCollectionPool wallParticlePool;
+                                   minNormalVelocity;
+    [SerializeField] private ContactParticlesSpawner wallParticleSpawner;
     [SerializeField] int damageAmount = 4;
 
     private readonly StateMachine<Bat_Input> stateMachine = new();
@@ -32,17 +32,16 @@ public partial class Bat : Entity {
         }
     }
 
-    private float canSpawnWallParticleTime;
-
     void Awake() {
         OnTimeScaleSet += Bat_OnTimeScaleSet;
         OnStunSet += Bat_OnStunSet;
         OnLongPush += Bat_OnLongPush;
 
-        baseAnimatorSpeed = animator.speed;
+        BaseAnimatorSpeed = animator.speed;
 
         stateMachine.Init(new(stateMachine, this),
                           new State_FlyIdle());
+        wallParticleSpawner.OnContact += WallParticleSpawner_OnContact;
     }
 
     protected override void Update() {
@@ -82,24 +81,9 @@ public partial class Bat : Entity {
             List<ContactPoint> contacts = new();
             int contactCount = collision.GetContacts(contacts);
 
-            bool canSpawnParticles = Time.time > canSpawnWallParticleTime
-                                        && collision.gameObject.layer == LayerUtils.EnvironmentLayer;
-            if (canSpawnParticles) {
-                canSpawnWallParticleTime = Time.time + wallParticleSpawnCD;
-            }
-
             Vector3 averagePoint = Vector3.zero;
             for (int i = 0; i < contactCount; i++) {
                 averagePoint += contacts[i].point;
-
-                if (canSpawnParticles) {
-                    Vector3 position = contacts[i].point + contacts[i].normal * 0.05f;
-                    Vector3 normal = transform.position - contacts[i].point;
-                    normal.y = 0;
-                    wallParticlePool.PlayAt(position, normal);
-
-                    audioController.PlayWallBonk();
-                }
             }
 
             averagePoint /= contactCount;
@@ -137,6 +121,10 @@ public partial class Bat : Entity {
         ApplyEffects(new[] { new StunStatusEffect(stunDuration) });
     }
 
+    private void WallParticleSpawner_OnContact() {
+        audioController.PlayWallBonk();
+    }
+
     public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();
@@ -149,8 +137,12 @@ public partial class Bat : Entity {
             }
 
             attackCollider.enabled = false;
-            enabled = false;
             aggroRange.Disable();
+
+            wallParticleSpawner.OnContact -= WallParticleSpawner_OnContact;
+            wallParticleSpawner.Stop();
+
+            enabled = false;
 
             audioController.PlayPerish();
             Ragdoll();
@@ -171,27 +163,27 @@ public partial class Bat : Entity {
     }
 }
 
-public partial class Bat {
+public partial class GolemBat {
 
     public class Bat_Input : StateInput {
 
         public StateMachine<Bat_Input> stateMachine;
-        public Bat bat;
+        public GolemBat bat;
 
-        public Bat_Input(StateMachine<Bat_Input> stateMachine, Bat bat) {
+        public Bat_Input(StateMachine<Bat_Input> stateMachine, GolemBat bat) {
             this.stateMachine = stateMachine;
             this.bat = bat;
         }
     }
 }
 
-public partial class Bat {
+public partial class GolemBat {
 
     public abstract class State_Fly : State<Bat_Input> {
 
         protected abstract float MoveSpeed { get; }
 
-        protected Bat bat;
+        protected GolemBat bat;
         private Vector3 moveDir;
         private float changeDirTimer;
         private float nextRaycastTime;
@@ -200,6 +192,7 @@ public partial class Bat {
             bat = input.bat;
             moveDir = bat.GetRandomDirection(moveDir);
             changeDirTimer = bat.changeDirCooldown;
+            bat.wallParticleSpawner.Play();
         }
 
         public override void Update(Bat_Input input) { }
@@ -227,7 +220,9 @@ public partial class Bat {
             bat.transform.LookAt(bat.transform.position + bat.rb.velocity);
         }
 
-        public override void Exit(Bat_Input input) { }
+        public override void Exit(Bat_Input input) {
+            bat.wallParticleSpawner.Stop();
+        }
 
         public void ForceFlyDirection(Vector3 direction) {
             changeDirTimer = bat.changeDirCooldown;
@@ -237,7 +232,7 @@ public partial class Bat {
     }
 }
 
-public partial class Bat {
+public partial class GolemBat {
 
     [Header("Idle")]
     [SerializeField] private float idleMoveSpeed;
@@ -264,7 +259,7 @@ public partial class Bat {
     }
 }
 
-public partial class Bat {
+public partial class GolemBat {
 
     [Header("Aggro")]
     [SerializeField] private float aggroMoveSpeed;
@@ -290,10 +285,15 @@ public partial class Bat {
                 input.stateMachine.SetState(new State_FlyIdle());
             }
         }
+
+        public override void Exit(Bat_Input input) {
+            base.Exit(input);
+            bat.BaseAnimatorSpeed = bat.baseAnimatorSpeed;
+        }
     }
 }
 
-public partial class Bat {
+public partial class GolemBat {
 
     [Header("Knockback")]
     [SerializeField] private float knockbackStrength;

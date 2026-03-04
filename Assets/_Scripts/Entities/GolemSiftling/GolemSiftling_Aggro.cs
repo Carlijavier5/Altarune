@@ -58,7 +58,7 @@ public partial class GolemSiftling {
             base.Enter(input);
 
             GolemSiftling gs = input.siftling;
-            gs.animator.SetTrigger(PRE_CHARGE_PARAM);
+            gs.animatorMain.SetTrigger(PRE_CHARGE_PARAM);
 
             gs.vfxController.DoPrecharge(gs.prechargeTime);
             prechargeEndTime = Time.time + gs.prechargeTime;
@@ -107,7 +107,7 @@ public partial class GolemSiftling {
             base.Enter(input);
 
             GolemSiftling gs = input.siftling;
-            gs.animator.SetTrigger(CHARGE_PARAM);
+            gs.animatorMain.SetTrigger(CHARGE_PARAM);
             gs.BaseLinearSpeed = gs.chargeLinearSpeed;
             gs.BaseAngularSpeed = gs.chargeAngularSpeed;
 

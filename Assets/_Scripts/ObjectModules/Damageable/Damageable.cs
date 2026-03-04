@@ -108,7 +108,7 @@ public class Damageable : ObjectModule {
         localIFrameOn = true;
         baseObject.ApplyMaterial(iFrameProperties.settings.flashMaterial);
         yield return new WaitForSeconds(iFrameProperties.duration);
-        baseObject.ResetMaterials();
+        baseObject.RemoveMaterial(iFrameProperties.settings.flashMaterial);
         localIFrameOn = false;
     }
 

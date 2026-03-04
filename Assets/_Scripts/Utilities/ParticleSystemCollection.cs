@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Collection of particle systems to play/stop from a single endpoint;
+/// </summary>
 public class ParticleSystemCollection : MonoBehaviour
 {
     [SerializeField] private ParticleSystem[] particleSystems;

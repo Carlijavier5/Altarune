@@ -5,6 +5,7 @@ using UnityEngine;
 public class PushableAttributes {
     public DefaultEaseCurves easeCurves;
     [Min(0.1f)] public float objectMass = 1;
+    [Range(0, 1)] public float navMeshReflectionMultiplier = 0.95f;
     [Range(0, 1)] public float pushResistance;
 
     public PushableAttributes(DefaultEaseCurves easeCurves) {

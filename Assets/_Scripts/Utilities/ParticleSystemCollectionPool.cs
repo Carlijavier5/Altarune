@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Play one particle system from a pool,
+/// as so to not override any already playing;
+/// </summary>
 public class ParticleSystemCollectionPool : MonoBehaviour
 {
     [System.Serializable]

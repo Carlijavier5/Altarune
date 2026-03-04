@@ -28,11 +28,20 @@ public partial class GolemSiftling {
 
         public override void Enter(Siftling_Input input) {
             input.siftling.MotionDriver.Set(input.siftling.navMeshAgent);
+
             Vector2 waitRange = input.siftling.activeConfig.waitRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
+
             input.siftling.BaseAnimatorSpeed = input.siftling.activeConfig.animationSpeed;
-            input.siftling.animator.ResetTrigger(PRE_CHARGE_PARAM);
-            input.siftling.animator.SetTrigger(IDLE_PARAM);
+
+            input.siftling.animatorMain.ResetTrigger(PRE_CHARGE_PARAM);
+            input.siftling.animatorMain.SetTrigger(IDLE_PARAM);
+
+            switch(input.siftling.activeConfig.type) {
+                case SiftlingType.Wind:
+                    input.siftling.oscillator.enabled = true;
+                    break;
+            }
         }
 
         public override void Update(Siftling_Input input) {
@@ -58,7 +67,7 @@ public partial class GolemSiftling {
             Vector2 distanceRange = golem.activeConfig.distanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 
-            input.siftling.animator.SetTrigger(IDLE_PARAM);
+            input.siftling.animatorMain.SetTrigger(IDLE_PARAM);
             endTime = Time.time + golem.maxRoamDuration;
 
             if (PathfindingUtils.FindRandomRoamingPoint(golem.transform.position, distance,

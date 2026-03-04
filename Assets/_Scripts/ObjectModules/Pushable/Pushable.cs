@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Pushable : ObjectModule {
+
+    private const float NAVMESH_EDGE_BUFFER = 0.001f;
 
     [HideInInspector][SerializeField] private MotionDriver defaultDriver = new();
     [HideInInspector][SerializeField] private CrowdControllable ccModule;
@@ -66,11 +69,24 @@ public class Pushable : ObjectModule {
     }
 
     void FixedUpdate() {
+        if (baseObject.MotionDriver.MotionMode == MotionMode.Rigidbody
+                && baseObject.MotionDriver.Rigidbody
+                    && !baseObject.MotionDriver.Rigidbody.isKinematic) {
+            while (pastImpulseQueue.TryDequeue(out Vector3 impulse)) {
+                DynamicVelocityAdjustment = dynamicVelocityAdjustment - impulse;
+            }
+        }
+
+        Vector3 total = Vector3.zero;
+
         foreach (PushActionCore core in actionCores) {
             float lifetime = core.UpdateLifetime(Time.fixedDeltaTime);
             if (lifetime >= 1) terminateStack.Push(core);
+            total += core.CurrentPushVector;
             DoFramePush(core.CurrentPushVector);
         }
+
+        DoFramePush(total);
 
         while (terminateStack.TryPop(out PushActionCore core)) core.Kill();
     }
@@ -91,6 +107,7 @@ public class Pushable : ObjectModule {
     private void DoFramePush(Vector3 direction) {
         direction = runtimeProperties.ComputePush(direction);
         MotionDriver driver = baseObject.MotionDriver;
+
         switch (driver.MotionMode) {
             case MotionMode.Transform:
                 driver.Transform.Translate(direction * Time.fixedDeltaTime);
@@ -102,18 +119,38 @@ public class Pushable : ObjectModule {
                     driver.Rigidbody.MovePosition(targetPosition);
                 } else {
                     while (pastImpulseQueue.TryDequeue(out Vector3 impulse)) {
-                        DynamicVelocityAdjustment -= impulse;
-                    } DynamicVelocityAdjustment += direction;
+                        DynamicVelocityAdjustment = dynamicVelocityAdjustment - impulse;
+                    } DynamicVelocityAdjustment = dynamicVelocityAdjustment + direction;
                     pastImpulseQueue.Enqueue(direction);
-                } break;
+                }
+                break;
             case MotionMode.Controller:
                 if (driver.Controller.enabled) {
                     driver.Controller.Move(direction * Time.fixedDeltaTime);
-                } break;
+                }
+                break;
             case MotionMode.NavMesh:
                 if (driver.NavMeshAgent.isActiveAndEnabled) {
-                    driver.NavMeshAgent.Move(direction * Time.fixedDeltaTime);
-                } break;
+                    Vector3 displacement = direction * Time.fixedDeltaTime;
+                    
+                    if (NavMesh.Raycast(driver.NavMeshAgent.nextPosition,
+                                        driver.NavMeshAgent.nextPosition + displacement,
+                                        out NavMeshHit hit, driver.NavMeshAgent.areaMask)) {
+                        /// If we are actually headed toward an edge, reflect;
+                        if (Vector3.Dot(displacement, hit.normal) < 0f) {
+                            displacement = Vector3.Reflect(displacement, hit.normal) * pushableProperties.navMeshReflectionMultiplier;
+                            /// Move inwards to prevent another collision from triggering next frame;
+                            displacement += hit.normal * NAVMESH_EDGE_BUFFER;
+                        } else { /// Slide along edge if not pushing out of bounds;
+                            displacement -= Vector3.Project(displacement, hit.normal);
+                            /// Move inwards to prevent another collision from triggering next frame;
+                            displacement += hit.normal * NAVMESH_EDGE_BUFFER;
+                        }
+                    }
+
+                    driver.NavMeshAgent.Move(displacement);
+                }
+                break;
         }
     }
 
