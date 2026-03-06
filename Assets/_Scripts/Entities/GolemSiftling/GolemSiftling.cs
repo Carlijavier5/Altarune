@@ -25,13 +25,13 @@ public partial class GolemSiftling : Entity {
 
     private SiftlingType ascensionType;
 
-    private float baseAnimatorSpeed;
-    public float BaseAnimatorSpeed {
-        get => baseAnimatorSpeed;
+    private float baseMainAnimatorSpeed;
+    public float BaseMainAnimatorSpeed {
+        get => baseMainAnimatorSpeed;
         set {
-            baseAnimatorSpeed = value;
-            animatorMain.speed = baseAnimatorSpeed
-                           * Status.timeScale;
+            baseMainAnimatorSpeed = value;
+            animatorMain.speed = baseMainAnimatorSpeed
+                               * Status.timeScale;
         }
     }
     private float baseBodyAnimatorSpeed;
@@ -79,7 +79,7 @@ public partial class GolemSiftling : Entity {
         idleStoppingDistance = navMeshAgent.stoppingDistance;
         idleAngularSpeed = navMeshAgent.angularSpeed;
 
-        baseAnimatorSpeed = animatorMain.speed;
+        baseMainAnimatorSpeed = animatorMain.speed;
         baseBodyAnimatorSpeed = animatorBody.speed;
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = idleAngularSpeed;
@@ -88,7 +88,7 @@ public partial class GolemSiftling : Entity {
         ascensionType = ChooseAscension();
 
         speedParam = Animator.StringToHash(WALK_SPEED_PARAM);
-        RestartChargeCooldown();
+        RestartAttackCooldown();
 
         stateMachine.Init(new(stateMachine, this), new State_Idle());
     }
@@ -124,7 +124,10 @@ public partial class GolemSiftling : Entity {
     }
 
     private void GolemSiftling_OnTimeScaleSet(float timeScale) {
-        animatorMain.speed = baseAnimatorSpeed * timeScale;
+        if (stateMachine.State is not State_FireWindUp) {
+            animatorMain.speed = baseMainAnimatorSpeed * timeScale;
+        }
+
         navMeshAgent.speed = BaseLinearSpeed * timeScale * RootMult;
         navMeshAgent.angularSpeed = baseAngularSpeed * timeScale * RootMult;
     }
@@ -178,8 +181,16 @@ public partial class GolemSiftling : Entity {
         OnTryLongPush += GolemSiftling_OnTryLongPush;
     }
 
-    public void RestartChargeCooldown() {
-        canChargeTime = Time.time + Random.Range(chargeCDRange.x, chargeCDRange.y);
+    public void FlipTornadoDirection() {
+        TornadoDirectionMultiplier = TornadoDirectionMultiplier < 0 ? 1 : -1;
+    }
+
+    public void RestartAttackCooldown() {
+        if (activeConfig.attackCDRange.sqrMagnitude <= 0) {
+            canAttackTime = Mathf.Infinity;
+        } else {
+            canAttackTime = Time.time + Random.Range(activeConfig.attackCDRange.x, activeConfig.attackCDRange.y);
+        }
     }
 
     public override void Perish(bool immediate = false) {

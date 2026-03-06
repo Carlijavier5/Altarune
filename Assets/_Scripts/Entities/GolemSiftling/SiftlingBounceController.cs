@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class SiftlingBounceController : MonoBehaviour {
+public class SiftlingBounceController : MonoBehaviour
+{
     [SerializeField] private Rigidbody parentRB, bodyRB;
-    [SerializeField] private LockdownJoint lockdownJoint;
+    [SerializeField] private LockdownJointRigidbody lockdownJoint;
     [SerializeField] private Collider bodyCollider;
     [SerializeField] private PhysicMaterial[] bounceMaterials;
     [SerializeField] private ContactParticlesSpawner particleSpawner;

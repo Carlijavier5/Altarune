@@ -2,14 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LockdownJoint : MonoBehaviour
-{
-    private enum AxisLock { Free, Locked }
+public abstract class LockdownJoint<T> : MonoBehaviour {
+    protected enum AxisLock { Free, Locked }
 
-    [SerializeField] private Rigidbody followerRB, targetRB;
-    [SerializeField] private AxisLock xPosition, yPosition, zPosition,
-                                      xRotation, yRotation, zRotation;
-    [SerializeField] private float xROffset, yROffset, zROffset;
+    [SerializeField] protected T follower, target;
+    [SerializeField] protected AxisLock xPosition, yPosition, zPosition,
+                                        xRotation, yRotation, zRotation;
+    [SerializeField] protected float xROffset, yROffset, zROffset;
+    [SerializeField] protected bool detachOnAwake;
+
+    void Awake() {
+        if (detachOnAwake) {
+            transform.SetParent(null);
+        }
+    }
+
+    protected abstract Vector3 FollowerPosition { get; }
+    protected abstract Quaternion FollowerRotation { get; }
+
+    protected abstract Vector3 TargetPosition { get; }
+    protected abstract Quaternion TargetRotation { get; }
+
+    protected Vector3 Position => new(IsLocked(xPosition) ? TargetPosition.x : FollowerPosition.x,
+                                      IsLocked(yPosition) ? TargetPosition.y : FollowerPosition.y,
+                                      IsLocked(zPosition) ? TargetPosition.z : FollowerPosition.z);
+    protected Quaternion Rotation => Quaternion.Euler(new Vector3((IsLocked(xRotation) ? TargetRotation.eulerAngles.x : FollowerRotation.eulerAngles.x) + xROffset,
+                                                                  (IsLocked(yRotation) ? TargetRotation.eulerAngles.y : FollowerRotation.eulerAngles.y) + yROffset,
+                                                                  (IsLocked(zRotation) ? TargetRotation.eulerAngles.z : FollowerRotation.eulerAngles.z) + zROffset));
 
     public void Play() {
         enabled = true;
@@ -19,16 +38,7 @@ public class LockdownJoint : MonoBehaviour
         enabled = false;
     }
 
-    void FixedUpdate() {
-        followerRB.position = new Vector3(IsLocked(xPosition) ? targetRB.position.x : followerRB.position.x,
-                                          IsLocked(yPosition) ? targetRB.position.y : followerRB.position.y,
-                                          IsLocked(zPosition) ? targetRB.position.z : followerRB.position.z);
-        followerRB.rotation = Quaternion.Euler(new Vector3((IsLocked(xRotation) ? targetRB.rotation.eulerAngles.x : followerRB.rotation.eulerAngles.x) + xROffset,
-                                                           (IsLocked(yRotation) ? targetRB.rotation.eulerAngles.y : followerRB.rotation.eulerAngles.y) + yROffset,
-                                                           (IsLocked(zRotation) ? targetRB.rotation.eulerAngles.z : followerRB.rotation.eulerAngles.z) + zROffset));
-    }
-
-    private bool IsLocked(AxisLock axisLock) {
+    protected bool IsLocked(AxisLock axisLock) {
         return axisLock == AxisLock.Locked;
     }
 }

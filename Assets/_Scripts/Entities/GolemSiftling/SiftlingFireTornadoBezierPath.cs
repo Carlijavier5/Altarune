@@ -2,47 +2,139 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Splines;
+using Unity.Mathematics;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class SiftlingFireTornadoBezierPath : MonoBehaviour
-{
+public class SiftlingFireTornadoBezierPath : MonoBehaviour {
+
+    public event System.Action OnPathComplete;
+
+    [SerializeField] private GolemSiftling siftling;
     [SerializeField] private Transform fireTornado;
     [SerializeField] private AnimationCurve pathingCurve;
     [SerializeField] private Transform pathStart, pathT1, pathT2, pathEnd, pathEndpoint;
 
     private BezierCurve bezierPath;
+    private float totalPathLength, bezierPathPercent;
+
+    private Vector3 pathStartLocal, pathStartLocalFlipped,
+                    pathT1Local, pathT1LocalFlipped;
     private float lerpVal;
-    private bool isPathFlipped;
 
     private enum State { Idle, PathingIn, PathingOut }
     private State state;
 
     void Awake() {
-        BuildPath(isPathFlipped);
+        pathStartLocal = pathStart.localPosition;
+        pathStartLocalFlipped = Vector3.Scale(pathStartLocal, new(-1, 1, 1));
+        pathT1Local = pathT1.localPosition;
+        pathT1LocalFlipped = Vector3.Scale(pathT1Local, new(-1, 1, 1));
+
+        BuildPath(siftling.IsTornadoFlipped);
+
+        float bezierPathLength = CurveUtility.ApproximateLength(bezierPath);
+        float endpointLength = Vector3.Distance(pathEnd.position, pathEndpoint.position);
+        totalPathLength = bezierPathLength + endpointLength;
+        bezierPathPercent = bezierPathLength.SafeDivide(totalPathLength, 0);
     }
 
     private void BuildPath(bool isFlipped) {
-        Vector3 controlPointFlip = isFlipped ? new Vector3(-1, 1, 1) : Vector3.one;
-        bezierPath = new(Vector3.Dot(pathStart.position, controlPointFlip),
-                         Vector3.Dot(pathT1.position, controlPointFlip),
-                         Vector3.Dot(pathT2.position, controlPointFlip),
-                         Vector3.Dot(pathEnd.position, controlPointFlip));
+        pathStart.localPosition = isFlipped ? pathStartLocalFlipped : pathStartLocal;
+        pathT1.localPosition = isFlipped ? pathT1LocalFlipped : pathT1Local;
+        bezierPath = new(pathStart.position, pathT1.position, pathT2.position, pathEnd.position);
     }
 
     public void Play(float rotationSpeed) {
-        state = State.Idle;
+        state = State.PathingIn;
+
+        BuildPath(siftling.IsTornadoFlipped);
+        lerpVal = 0;
+
+        float orbitalSpeed = rotationSpeed * Mathf.Deg2Rad * Vector3.Distance(fireTornado.transform.position, transform.position);
+        float rawLerpRate = orbitalSpeed.SafeDivide(totalPathLength);
+        //float rawLerpRate = (orbitalSpeed * bezierPathPercent).SafeDivide(math.length(CurveUtility.EvaluateTangent(bezierPath, 0f)) * Mathf.Abs(pathingCurve.keys[0].outTangent));
+
         StopAllCoroutines();
-        StartCoroutine(IDoPathMove(rotationSpeed));
+        StartCoroutine(IDoPathMove(rotationSpeed, rawLerpRate));
     }
 
-    private IEnumerator IDoPathMove(float rotationSpeed) {
-        while (state != State.Idle) {
-            lerpVal = Mathf.MoveTowards(lerpVal, state switch { State.PathingIn => 1, _ => 0 }, Time.deltaTime);
-            fireTornado.position = CurveUtility.EvaluatePosition(bezierPath, pathingCurve.Evaluate(lerpVal));
+    private IEnumerator IDoPathMove(float rotationSpeed, float rawLerpRate) {
+
+        SetState(State.PathingIn, out float target);
+
+        ///
+        Vector3 center = new(siftling.transform.position.x,
+                             fireTornado.position.y,
+                             siftling.transform.position.z);
+        float radius = Vector3.Distance(fireTornado.position, center);
+        Vector3 startDir = (fireTornado.position - center).normalized;
+        Vector3 endDir = (pathStart.position - center).normalized;
+        float signedAngle = Vector3.SignedAngle(startDir, endDir, Vector3.up);
+        float dirMult = siftling.TornadoDirectionMultiplier;
+        if (dirMult > 0 && signedAngle < 0) signedAngle += 360f;  // CCW: keep positive
+        if (dirMult < 0 && signedAngle > 0) signedAngle -= 360f;  // CW:  keep negative
+
+        float duration = Mathf.Abs(signedAngle) / rotationSpeed;
+        float elapsed = 0f;
+        while (elapsed < duration) {
+            float t = elapsed / duration;
+            fireTornado.position = center + Quaternion.AngleAxis(signedAngle * t, Vector3.up) * startDir * radius;
+            elapsed += Time.deltaTime;
             yield return null;
         }
+        ///
+
+        while (state != State.Idle) {
+            AdvancePath(rawLerpRate, target);
+
+            if (lerpVal == target) {
+                switch (state) {
+                    case State.PathingIn:
+                        SetState(State.PathingOut, out target);
+                        break;
+                    case State.PathingOut:
+                        SetState(State.Idle, out _);
+                        break;
+                }
+            }
+
+            yield return null;
+        }
+
+        OnPathComplete?.Invoke();
+        OnPathComplete = null;
+
+        siftling.FlipTornadoDirection();
+
+        /*#if UNITY_EDITOR
+        pathStart.localPosition = siftling.IsTornadoFlipped ? pathStartLocalFlipped : pathStartLocal;
+        pathT1.localPosition = siftling.IsTornadoFlipped ? pathT1LocalFlipped : pathT1Local;
+        #endif*/
+    }
+
+    ///
+    public float GetPathStartAngle(bool isFlipped) {
+        Vector3 dir = isFlipped ? pathStartLocalFlipped : pathStartLocal;
+        dir.y = 0;
+        return Vector3.SignedAngle(Vector3.right, dir.normalized, Vector3.up);
+    }
+    /// 
+    
+    private void SetState(State state, out float target) {
+        this.state = state;
+        target = state switch { State.PathingIn => 1, _ => 0 };
+    }
+
+    private void AdvancePath(float rawLerpRate, float target) {
+        lerpVal = Mathf.MoveTowards(lerpVal, target, Time.deltaTime * rawLerpRate * pathingCurve.Evaluate(lerpVal));
+        fireTornado.position = EvaluatePath(lerpVal);
+    }
+
+    private Vector3 EvaluatePath(float lerpVal) {
+        return lerpVal < bezierPathPercent ? CurveUtility.EvaluatePosition(bezierPath, lerpVal.SafeDivide(bezierPathPercent, 0))
+                                           : Vector3.Lerp(pathEnd.position, pathEndpoint.position, (lerpVal - bezierPathPercent) / (1 - bezierPathPercent));
     }
 
     #if UNITY_EDITOR

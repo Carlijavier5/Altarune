@@ -7,7 +7,6 @@ public partial class GolemSiftling {
 
     [Header("Aggro State")]
     [SerializeField] private GolemSiftlingChargeVFXController vfxController;
-    [SerializeField] private Vector2 chargeCDRange;
 
     [Header("Precharge State")]
     [SerializeField] private float prechargeTime;
@@ -19,7 +18,7 @@ public partial class GolemSiftling {
     [SerializeField] private float chargeLinearSpeed;
     [SerializeField] private float chargeAngularSpeed;
 
-    private float canChargeTime;
+    private float canAttackTime;
 
     private class State_Aggro : State<Siftling_Input> {
 
@@ -137,7 +136,7 @@ public partial class GolemSiftling {
             input.siftling.navMeshAgent.stoppingDistance = input.siftling.idleStoppingDistance;
             input.siftling.navMeshAgent.ResetPath();
 
-            input.siftling.RestartChargeCooldown();
+            input.siftling.RestartAttackCooldown();
             input.siftling.vfxController.CancelAll();
             input.siftling.attackColliderController.Disable();
         }

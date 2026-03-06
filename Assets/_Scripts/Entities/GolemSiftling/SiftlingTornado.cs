@@ -1,28 +1,91 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SiftlingTornado : MonoBehaviour {
 
     public event System.Action OnTornadoSummoned;
+    public event System.Action OnRotationSync;
 
     [SerializeField] private DefaultSummonProperties animationSettings;
     [SerializeField] private GolemSiftling siftling;
+    [SerializeField] private Animator animator;
     [SerializeField] private SimpleFollow followScript;
     [SerializeField] private Collider[] attackColliders;
-    [SerializeField] private float growTime, baseRotationSpeed, rotationSpeed;
+    [SerializeField] private float growTime, baseRotationSpeed;
+    [SerializeField] private float preSyncAngleDeg = 15f;
+
+    public float RotationSpeed { get; private set; }
+    public float DirectionMult => siftling.TornadoDirectionMultiplier;
+    private float cumulativeRotation;
 
     private float angularGrowthDuration, targetRotationSpeed;
     private float growthLerp;
 
+    public float RotationSyncTarget { get; private set; }
+
+    private float animationRevolutionRatio;
+    private bool doAnimatorSync;
+
+    private float priorSiftlingEulerY;
+
     void Awake() {
-        rotationSpeed = baseRotationSpeed;
+        targetRotationSpeed = baseRotationSpeed;
         transform.SetParent(null);
+
+        Vector3 tornadoOffset = transform.position - siftling.transform.position;
+        tornadoOffset.y = 0;
+        cumulativeRotation = Vector3.SignedAngle(siftling.transform.right, tornadoOffset.normalized, Vector3.up);
+
+        priorSiftlingEulerY = siftling.transform.eulerAngles.y;
         siftling.OnPerish += Siftling_OnPerish;
     }
 
     void Update() {
-        rotationSpeed = Mathf.MoveTowards(rotationSpeed, targetRotationSpeed, Time.deltaTime.SafeDivide(angularGrowthDuration));
-        transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
+        RotationSpeed = Mathf.MoveTowards(RotationSpeed, targetRotationSpeed, Time.deltaTime.SafeDivide(angularGrowthDuration));
+
+        float angularDelta = RotationSpeed * DirectionMult * Time.deltaTime;
+        transform.Rotate(0, angularDelta, 0);
+
+        float siftlingDelta = Mathf.DeltaAngle(priorSiftlingEulerY, siftling.transform.eulerAngles.y);
+        priorSiftlingEulerY = siftling.transform.eulerAngles.y;
+
+        angularDelta -= siftlingDelta;
+
+        //int priorLaps = Mathf.FloorToInt(cumulativeRotation / 360f);
+        cumulativeRotation += angularDelta;
+        /*int posteriorLaps = Mathf.FloorToInt(cumulativeRotation / 360f);
+
+        if (posteriorLaps != priorLaps) {
+            OnRotationSync?.Invoke();
+            OnRotationSync = null;
+            cumulativeRotation %= 360;
+        }*/
+
+        /*
+        float mod = cumulativeRotation % 360f;
+        if (mod < 0) mod += 360f;
+        float distToSync = DirectionMult > 0 ? 360f - mod : mod;
+        if (distToSync <= preSyncAngleDeg) {
+            OnRotationSync?.Invoke();
+            OnRotationSync = null;
+        }*/
+
+        ///
+        float cumulMod = ((cumulativeRotation % 360f) + 360f) % 360f;
+        float targetMod = ((RotationSyncTarget % 360f) + 360f) % 360f;
+        float distToSync = DirectionMult > 0
+            ? ((targetMod - cumulMod) + 360f) % 360f
+            : ((cumulMod - targetMod) + 360f) % 360f;
+        if (distToSync <= preSyncAngleDeg) {
+            OnRotationSync?.Invoke();
+            OnRotationSync = null;
+        }
+        ///
+
+        if (doAnimatorSync) {
+            animator.speed = RotationSpeed * animationRevolutionRatio;
+        }
     }
 
     public void Play() {
@@ -33,9 +96,20 @@ public class SiftlingTornado : MonoBehaviour {
         enabled = false;
     }
 
+    public void ToggleAnimationSync(bool on, float clipLength = -1) {
+        doAnimatorSync = on;
+        if (clipLength > 0) {
+            animationRevolutionRatio = clipLength / 360f;
+        }
+    }
+
+    public void AdjustRotationSyncTarget(float target) {
+        RotationSyncTarget = target;
+    }
+
     public void AdjustRotationSpeed(float target, float duration) {
         /// Delta time will effectively be multiplied by the speed difference (to reach it over the given duration);
-        angularGrowthDuration = 1f.SafeDivide(Mathf.Abs(rotationSpeed - target)) * duration;
+        angularGrowthDuration = 1f.SafeDivide(Mathf.Abs(RotationSpeed - target)) * duration;
         targetRotationSpeed = target;
     }
 

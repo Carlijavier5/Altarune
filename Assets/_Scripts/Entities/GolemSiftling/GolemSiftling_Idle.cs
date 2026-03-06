@@ -13,9 +13,16 @@ public partial class GolemSiftling {
         public override void Enter(Siftling_Input input) { }
 
         public override void Update(Siftling_Input input) {
-            if (Time.time > input.siftling.canChargeTime
+            if (Time.time > input.siftling.canAttackTime
                     && input.aggroTarget != null) {
-                input.stateMachine.SetState(new State_Precharge(input.aggroTarget));
+                switch (input.siftling.activeConfig.type) {
+                    case SiftlingType.Normal:
+                        input.stateMachine.SetState(new State_Precharge(input.aggroTarget));
+                        break;
+                    case SiftlingType.Fire:
+                        input.stateMachine.SetState(new State_FireWindUp());
+                        break;
+                }
             }
         }
 
@@ -32,7 +39,7 @@ public partial class GolemSiftling {
             Vector2 waitRange = input.siftling.activeConfig.waitRange;
             waitDuration = Random.Range(waitRange.x, waitRange.y);
 
-            input.siftling.BaseAnimatorSpeed = input.siftling.activeConfig.animationSpeed;
+            input.siftling.BaseMainAnimatorSpeed = input.siftling.activeConfig.animationSpeed;
 
             input.siftling.animatorMain.ResetTrigger(PRE_CHARGE_PARAM);
             input.siftling.animatorMain.SetTrigger(IDLE_PARAM);

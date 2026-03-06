@@ -13,4 +13,5 @@ public class SiftlingConfiguration {
     public float roamSpeed;
     public Vector2 distanceRange;
     public Vector2 waitRange;
+    public Vector2 attackCDRange;
 }

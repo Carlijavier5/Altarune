@@ -5112,6 +5112,7 @@ MonoBehaviour:
     roamSpeed: 1
     distanceRange: {x: 3, y: 5}
     waitRange: {x: 2, y: 3}
+    attackCDRange: {x: 5, y: 8}
   - type: 1
     health: 8
     tornado: {fileID: 8443481580891199604}
@@ -5120,6 +5121,7 @@ MonoBehaviour:
     roamSpeed: 1.5
     distanceRange: {x: 2, y: 4}
     waitRange: {x: 3, y: 5}
+    attackCDRange: {x: 2, y: 3}
   - type: 2
     health: 6
     tornado: {fileID: 7507778274205572769}
@@ -5128,6 +5130,7 @@ MonoBehaviour:
     roamSpeed: 10
     distanceRange: {x: 6, y: 8}
     waitRange: {x: 0.5, y: 1}
+    attackCDRange: {x: 0, y: 0}
   - type: 3
     health: 8
     tornado: {fileID: 974194110561703870}
@@ -5136,9 +5139,9 @@ MonoBehaviour:
     roamSpeed: 2.5
     distanceRange: {x: 4, y: 6}
     waitRange: {x: 3, y: 5}
+    attackCDRange: {x: 0, y: 0}
   navMeshAgent: {fileID: 8338844980996685279}
   vfxController: {fileID: 1568635329809316415}
-  chargeCDRange: {x: 5, y: 8}
   prechargeTime: 3
   prechargeAngularSpeed: 720
   attackColliderController: {fileID: 8730051889189231008}
@@ -5154,6 +5157,19 @@ MonoBehaviour:
   vfxAscensionExplosion: {fileID: 8445053870007443023}
   oscillator: {fileID: 977043857624990425}
   secondaryAscensionSpeed: 3
+  fireBezierPath: {fileID: 4632487140015065715}
+  fireBezierJoint: {fileID: 6958463513327299926}
+  fireWindUpPhases:
+  - spinDuration: 2.5
+    waitDuration: 0
+    targetSpeed: 540
+    associatedVFXs: []
+  - spinDuration: 0.5
+    waitDuration: 1.5
+    targetSpeed: 720
+    associatedVFXs: []
+  fireCastClip: {fileID: -8119963812698740023, guid: c5fbe27ef08183f47a6ed296cad31037,
+    type: 3}
   maxRoamDuration: 5
   roamWallBuffer: 2
   bounceController: {fileID: 3918354129653857261}
@@ -5359,7 +5375,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8128081070081327606
 Transform:
   m_ObjectHideFlags: 0
@@ -5368,7 +5384,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391102402622143799}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.24668686, y: -0.6626806, z: -0.6626806, w: 0.24668686}
+  m_LocalRotation: {x: 0.3694149, y: 0.6029367, z: 0.6029367, w: -0.3694149}
   m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 2.55, y: 2.55, z: 2.55}
   m_ConstrainProportionsScale: 1
@@ -10389,13 +10405,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationSettings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
   siftling: {fileID: 4349973505572177477}
+  animator: {fileID: 0}
   followScript: {fileID: 8864570901545135678}
   attackColliders:
   - {fileID: 180130945593267474}
   - {fileID: 8970384922922228770}
   growTime: 0.5
-  baseRotationSpeed: 0
-  rotationSpeed: 90
+  baseRotationSpeed: 90
+  preSyncAngleDeg: 15
 --- !u!114 &8864570901545135678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10758,6 +10775,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6611185948198621118}
+  - component: {fileID: 6958463513327299926}
   m_Layer: 0
   m_Name: BezierPath
   m_TagString: Untagged
@@ -10785,6 +10803,30 @@ Transform:
   - {fileID: 4737979832309771640}
   m_Father: {fileID: 905514240874322028}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6958463513327299926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4547460242985177835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b32006249faac4b8260c084f48358b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  follower: {fileID: 6611185948198621118}
+  target: {fileID: 1167467467848184874}
+  xPosition: 1
+  yPosition: 1
+  zPosition: 1
+  xRotation: 1
+  yRotation: 1
+  zRotation: 1
+  xROffset: 0
+  yROffset: 0
+  zROffset: 0
+  detachOnAwake: 1
 --- !u!1 &5627721589171587386
 GameObject:
   m_ObjectHideFlags: 0
@@ -10874,7 +10916,7 @@ Transform:
   m_GameObject: {fileID: 6630651728039289002}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 0}
+  m_LocalPosition: {x: -1.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20576,7 +20618,7 @@ Transform:
   m_GameObject: {fileID: 7080212318933537245}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 1.35}
+  m_LocalPosition: {x: -1.5, y: 0, z: 1.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30776,12 +30818,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationSettings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
   siftling: {fileID: 4349973505572177477}
+  animator: {fileID: 0}
   followScript: {fileID: 6986266334414563065}
   attackColliders:
   - {fileID: 6031337756848481803}
   growTime: 0.5
   baseRotationSpeed: 0
-  rotationSpeed: 0
+  preSyncAngleDeg: 15
 --- !u!114 &6986266334414563065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30811,7 +30854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3484636822570037652
 Transform:
   m_ObjectHideFlags: 0
@@ -35699,7 +35742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &905514240874322028
 Transform:
   m_ObjectHideFlags: 0
@@ -35733,12 +35776,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationSettings: {fileID: 11400000, guid: 0c0b6eca5d8c39d418355c19867551fd, type: 2}
   siftling: {fileID: 4349973505572177477}
+  animator: {fileID: 7056867172188670764}
   followScript: {fileID: 6610511954200957390}
   attackColliders:
   - {fileID: 8244331361859426535}
   growTime: 0.5
-  baseRotationSpeed: 0
-  rotationSpeed: 360
+  baseRotationSpeed: 360
+  preSyncAngleDeg: 15
 --- !u!114 &6610511954200957390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35764,7 +35808,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7d3a6aa20f42f341a94ede6af87f2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  siftling: {fileID: 4349973505572177477}
   fireTornado: {fileID: 6227485386555717003}
+  pathingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: -2.05035
+      outSlope: -2.05035
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.037499666
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   pathStart: {fileID: 8212558247615830129}
   pathT1: {fileID: 748948181283642077}
   pathT2: {fileID: 3318231236205576398}
@@ -36106,12 +36175,12 @@ PrefabInstance:
     - target: {fileID: 5475523403726179488, guid: 7bc6cdd6b5b56724589617cdce19a8d2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.13780141
+      value: -0.47159517
       objectReference: {fileID: 0}
     - target: {fileID: 5475523403726179488, guid: 7bc6cdd6b5b56724589617cdce19a8d2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.9904599
+      value: 0.88181525
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37367,8 +37436,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b971d50d6618248941c59cf1ad2b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followerRB: {fileID: 3357594651291636103}
-  targetRB: {fileID: 6094763008984717346}
+  follower: {fileID: 3357594651291636103}
+  target: {fileID: 6094763008984717346}
   xPosition: 1
   yPosition: 0
   zPosition: 1
@@ -37378,6 +37447,7 @@ MonoBehaviour:
   xROffset: 0
   yROffset: 180
   zROffset: 0
+  detachOnAwake: 0
 --- !u!54 &3357594651291636103
 Rigidbody:
   m_ObjectHideFlags: 0

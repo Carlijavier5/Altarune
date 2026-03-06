@@ -38,7 +38,7 @@ public partial class GolemSiftling
 
             if (isFirst) {
                 gs.TryToggleIFrame(true);
-                gs.canChargeTime = Mathf.Infinity;
+                gs.RestartAttackCooldown();
 
                 gs.ApplyMaterial(gs.ascendMaterial);
                 gs.vfxAscensionLoop.Play();
@@ -114,7 +114,7 @@ public partial class GolemSiftling
                                                                      : gs.descendClip.length;
             /// The animation speed is set to base upon entering the Descend state;
             /// The descend time is either accounted from now or from the moment we are done Ascending;
-            descendTime = Mathf.Max(ascendTime, Time.time) + length.SafeDivide(gs.baseAnimatorSpeed);
+            descendTime = Mathf.Max(ascendTime, Time.time) + length.SafeDivide(gs.baseMainAnimatorSpeed);
             canDescend = true;
         }
     }
