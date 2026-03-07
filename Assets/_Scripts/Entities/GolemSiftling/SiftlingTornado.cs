@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SiftlingTornado : MonoBehaviour {
@@ -13,7 +12,7 @@ public class SiftlingTornado : MonoBehaviour {
     [SerializeField] private SimpleFollow followScript;
     [SerializeField] private Collider[] attackColliders;
     [SerializeField] private float growTime, baseRotationSpeed;
-    [SerializeField] private float preSyncAngleDeg = 15f;
+    [SerializeField] private float preSyncAngularOffset = 15f;
 
     public float RotationSpeed { get; private set; }
     public float DirectionMult => siftling.TornadoDirectionMultiplier;
@@ -51,37 +50,16 @@ public class SiftlingTornado : MonoBehaviour {
         priorSiftlingEulerY = siftling.transform.eulerAngles.y;
 
         angularDelta -= siftlingDelta;
-
-        //int priorLaps = Mathf.FloorToInt(cumulativeRotation / 360f);
         cumulativeRotation += angularDelta;
-        /*int posteriorLaps = Mathf.FloorToInt(cumulativeRotation / 360f);
 
-        if (posteriorLaps != priorLaps) {
-            OnRotationSync?.Invoke();
-            OnRotationSync = null;
-            cumulativeRotation %= 360;
-        }*/
+        float cumulativeRemainder = ((cumulativeRotation % 360f) + 360f) % 360f;
+        float targetRemainder = ((RotationSyncTarget % 360f) + 360f) % 360f;
+        float syncOffset = DirectionMult > 0 ? (targetRemainder - cumulativeRemainder + 360f) % 360f
+                                             : (cumulativeRemainder - targetRemainder + 360f) % 360f;
 
-        /*
-        float mod = cumulativeRotation % 360f;
-        if (mod < 0) mod += 360f;
-        float distToSync = DirectionMult > 0 ? 360f - mod : mod;
-        if (distToSync <= preSyncAngleDeg) {
+        if (syncOffset <= preSyncAngularOffset) {
             OnRotationSync?.Invoke();
-            OnRotationSync = null;
-        }*/
-
-        ///
-        float cumulMod = ((cumulativeRotation % 360f) + 360f) % 360f;
-        float targetMod = ((RotationSyncTarget % 360f) + 360f) % 360f;
-        float distToSync = DirectionMult > 0
-            ? ((targetMod - cumulMod) + 360f) % 360f
-            : ((cumulMod - targetMod) + 360f) % 360f;
-        if (distToSync <= preSyncAngleDeg) {
-            OnRotationSync?.Invoke();
-            OnRotationSync = null;
         }
-        ///
 
         if (doAnimatorSync) {
             animator.speed = RotationSpeed * animationRevolutionRatio;

@@ -54,7 +54,6 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour {
 
         float orbitalSpeed = rotationSpeed * Mathf.Deg2Rad * Vector3.Distance(fireTornado.transform.position, transform.position);
         float rawLerpRate = orbitalSpeed.SafeDivide(totalPathLength);
-        //float rawLerpRate = (orbitalSpeed * bezierPathPercent).SafeDivide(math.length(CurveUtility.EvaluateTangent(bezierPath, 0f)) * Mathf.Abs(pathingCurve.keys[0].outTangent));
 
         StopAllCoroutines();
         StartCoroutine(IDoPathMove(rotationSpeed, rawLerpRate));
@@ -64,27 +63,26 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour {
 
         SetState(State.PathingIn, out float target);
 
-        ///
-        Vector3 center = new(siftling.transform.position.x,
-                             fireTornado.position.y,
-                             siftling.transform.position.z);
-        float radius = Vector3.Distance(fireTornado.position, center);
-        Vector3 startDir = (fireTornado.position - center).normalized;
-        Vector3 endDir = (pathStart.position - center).normalized;
-        float signedAngle = Vector3.SignedAngle(startDir, endDir, Vector3.up);
-        float dirMult = siftling.TornadoDirectionMultiplier;
-        if (dirMult > 0 && signedAngle < 0) signedAngle += 360f;  // CCW: keep positive
-        if (dirMult < 0 && signedAngle > 0) signedAngle -= 360f;  // CW:  keep negative
+        Vector3 siftlingCenter = new(siftling.transform.position.x,
+                                     fireTornado.position.y,
+                                     siftling.transform.position.z);
+        float radius = Vector3.Distance(fireTornado.position, siftlingCenter);
+        Vector3 startDirection = (fireTornado.position - siftlingCenter).normalized;
+        Vector3 endDirection = (pathStart.position - siftlingCenter).normalized;
+
+        float signedAngle = Vector3.SignedAngle(startDirection, endDirection, Vector3.up);
+        float directionMult = siftling.TornadoDirectionMultiplier;
+
+        if (directionMult > 0 && signedAngle < 0) signedAngle += 360f; /// Keep angle positive if counter-clockwise;
+        if (directionMult < 0 && signedAngle > 0) signedAngle -= 360f; /// Keep angle negative if clock-wise;
 
         float duration = Mathf.Abs(signedAngle) / rotationSpeed;
-        float elapsed = 0f;
-        while (elapsed < duration) {
-            float t = elapsed / duration;
-            fireTornado.position = center + Quaternion.AngleAxis(signedAngle * t, Vector3.up) * startDir * radius;
-            elapsed += Time.deltaTime;
+        float timer = 0f;
+        while (timer < duration) {
+            fireTornado.position = siftlingCenter + Quaternion.AngleAxis(signedAngle * timer / duration, Vector3.up) * startDirection * radius;
+            timer = Mathf.MoveTowards(timer, duration, Time.deltaTime);
             yield return null;
         }
-        ///
 
         while (state != State.Idle) {
             AdvancePath(rawLerpRate, target);
@@ -107,20 +105,13 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour {
         OnPathComplete = null;
 
         siftling.FlipTornadoDirection();
-
-        /*#if UNITY_EDITOR
-        pathStart.localPosition = siftling.IsTornadoFlipped ? pathStartLocalFlipped : pathStartLocal;
-        pathT1.localPosition = siftling.IsTornadoFlipped ? pathT1LocalFlipped : pathT1Local;
-        #endif*/
     }
 
-    ///
     public float GetPathStartAngle(bool isFlipped) {
-        Vector3 dir = isFlipped ? pathStartLocalFlipped : pathStartLocal;
-        dir.y = 0;
-        return Vector3.SignedAngle(Vector3.right, dir.normalized, Vector3.up);
+        Vector3 direction = isFlipped ? pathStartLocalFlipped : pathStartLocal;
+        direction.y = 0;
+        return Vector3.SignedAngle(Vector3.right, direction.normalized, Vector3.up);
     }
-    /// 
     
     private void SetState(State state, out float target) {
         this.state = state;

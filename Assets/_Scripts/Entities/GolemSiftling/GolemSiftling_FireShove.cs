@@ -77,11 +77,14 @@ public partial class GolemSiftling
         }
 
         public override void Exit(Siftling_Input input) {
+            siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync;
             siftling.activeConfig.tornado.ToggleAnimationSync(false);
             siftling.animatorMain.speed = siftling.baseMainAnimatorSpeed;
         }
 
         private void Tornado_OnRotationSync() {
+            siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync;
+
             siftling.animatorMain.SetFloat(PLAYBACK_MULT_PARAM, -siftling.TornadoDirectionMultiplier);
             siftling.animatorMain.SetTrigger(FIRE_CAST_PARAM);
 
@@ -91,7 +94,7 @@ public partial class GolemSiftling
 
         private void DoNextWindUpPhase() {
             subState = SubState.ChargeUp;
-            
+
             FireWindUpPhase currentPhase = siftling.fireWindUpPhases[windUpPhaseIndex];
             siftling.activeConfig.tornado.AdjustRotationSpeed(currentPhase.targetSpeed, currentPhase.spinDuration);
             nextEventTime = Time.time + currentPhase.spinDuration;
@@ -105,17 +108,21 @@ public partial class GolemSiftling
         public override void Enter(Siftling_Input input) {
             this.input = input;
 
-            input.siftling.animatorMain.SetTrigger(FIRE_SHOVE_PARAM);
+            input.siftling.activeConfig.tornado.ToggleAnimationSync(true);
             input.siftling.fireBezierJoint.Play();
 
-            float rotationSyncTarget = input.siftling.fireBezierPath.GetPathStartAngle(input.siftling.IsTornadoFlipped);
+            float rotationSyncTarget = input.siftling.fireBezierPath.GetPathStartAngle(!input.siftling.IsTornadoFlipped);
+
             input.siftling.activeConfig.tornado.AdjustRotationSyncTarget(rotationSyncTarget);
-            input.siftling.activeConfig.tornado.OnRotationSync += Tornado_OnRotationSync;
+            input.siftling.activeConfig.tornado.OnRotationSync += Tornado_OnRotationSync_Animation;
         }
 
         public override void Update(Siftling_Input input) { }
 
         public override void Exit(Siftling_Input input) {
+            input.siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync_Animation;
+            input.siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync_PlayPath;
+
             input.siftling.fireBezierJoint.Stop();
             input.siftling.activeConfig.tornado.Play();
 
@@ -123,9 +130,27 @@ public partial class GolemSiftling
             input.siftling.activeConfig.tornado.ResetRotationSpeed(duration);
 
             input.siftling.RestartAttackCooldown();
+
+            input.siftling.activeConfig.tornado.ToggleAnimationSync(false);
+            input.siftling.animatorMain.speed = input.siftling.baseMainAnimatorSpeed;
         }
 
-        private void Tornado_OnRotationSync() {
+        private void Tornado_OnRotationSync_Animation() {
+            input.siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync_Animation;
+
+            input.siftling.activeConfig.tornado.ToggleAnimationSync(false);
+            input.siftling.animatorMain.speed = input.siftling.baseMainAnimatorSpeed;
+            input.siftling.animatorMain.SetTrigger(FIRE_SHOVE_PARAM);
+
+            float rotationSyncTarget = input.siftling.fireBezierPath.GetPathStartAngle(input.siftling.IsTornadoFlipped);
+            input.siftling.activeConfig.tornado.AdjustRotationSyncTarget(rotationSyncTarget);
+
+            input.siftling.activeConfig.tornado.OnRotationSync += Tornado_OnRotationSync_PlayPath;
+        }
+
+        private void Tornado_OnRotationSync_PlayPath() {
+            input.siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync_PlayPath;
+
             input.siftling.activeConfig.tornado.Stop();
             input.siftling.fireBezierPath.Play(input.siftling.activeConfig.tornado.RotationSpeed);
             input.siftling.fireBezierPath.OnPathComplete += FireBezierPath_OnPathComplete;
