@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MeteorAnticipationArea : MonoBehaviour {
 
-    [SerializeField] private MeteorAnticipationGraphic decal;
+    [SerializeField] private AnticipationGraphic decal;
     [SerializeField] private float growTime = 0.5f;
     private Vector3 baseScale;
 

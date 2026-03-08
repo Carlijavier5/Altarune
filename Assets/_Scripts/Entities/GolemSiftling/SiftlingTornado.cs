@@ -15,10 +15,13 @@ public class SiftlingTornado : MonoBehaviour {
     [SerializeField] private float preSyncAngularOffset = 15f;
 
     public float RotationSpeed { get; private set; }
+    public float TargetRotationSpeed { get; private set; }
+    public float BaseRotationSpeed { get; private set; }
+
     public float DirectionMult => siftling.TornadoDirectionMultiplier;
     private float cumulativeRotation;
 
-    private float angularGrowthDuration, targetRotationSpeed;
+    private float angularGrowthDuration;
     private float growthLerp;
 
     public float RotationSyncTarget { get; private set; }
@@ -29,7 +32,7 @@ public class SiftlingTornado : MonoBehaviour {
     private float priorSiftlingEulerY;
 
     void Awake() {
-        targetRotationSpeed = baseRotationSpeed;
+        TargetRotationSpeed = baseRotationSpeed;
         transform.SetParent(null);
 
         Vector3 tornadoOffset = transform.position - siftling.transform.position;
@@ -41,7 +44,7 @@ public class SiftlingTornado : MonoBehaviour {
     }
 
     void Update() {
-        RotationSpeed = Mathf.MoveTowards(RotationSpeed, targetRotationSpeed, Time.deltaTime.SafeDivide(angularGrowthDuration));
+        RotationSpeed = Mathf.MoveTowards(RotationSpeed, TargetRotationSpeed, Time.deltaTime.SafeDivide(angularGrowthDuration));
 
         float angularDelta = RotationSpeed * DirectionMult * Time.deltaTime;
         transform.Rotate(0, angularDelta, 0);
@@ -88,7 +91,7 @@ public class SiftlingTornado : MonoBehaviour {
     public void AdjustRotationSpeed(float target, float duration) {
         /// Delta time will effectively be multiplied by the speed difference (to reach it over the given duration);
         angularGrowthDuration = 1f.SafeDivide(Mathf.Abs(RotationSpeed - target)) * duration;
-        targetRotationSpeed = target;
+        TargetRotationSpeed = target;
     }
 
     public void ResetRotationSpeed(float duration) {

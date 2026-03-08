@@ -9,16 +9,16 @@ public class ParticleSystemCollection : MonoBehaviour
 {
     [SerializeField] private ParticleSystem[] particleSystems;
 
-    public void Play() {
+    public void Play(bool withChildren = true) {
         foreach (ParticleSystem ps in particleSystems) {
             ps.gameObject.SetActive(true);
-            ps.Play();
+            ps.Play(withChildren);
         }
     }
 
-    public void Stop() {
+    public void Stop(bool withChildren = true) {
         foreach (ParticleSystem ps in particleSystems) {
-            ps.Stop();
+            ps.Stop(withChildren);
         }
     }
 }

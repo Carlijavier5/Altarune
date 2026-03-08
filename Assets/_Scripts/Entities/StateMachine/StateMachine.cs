@@ -1,6 +1,8 @@
 public class StateMachine<T> where T : StateInput {
 
     public State<T> State { get; private set; }
+    public State<T> NextState { get; private set; }
+
     public T StateInput { get; private set; }
 
     public void Init(T input, State<T> defaultState) {
@@ -9,6 +11,7 @@ public class StateMachine<T> where T : StateInput {
     }
 
     public void SetState(State<T> newState) {
+        NextState = newState;
         State?.Exit(StateInput);
 
         State = newState;
