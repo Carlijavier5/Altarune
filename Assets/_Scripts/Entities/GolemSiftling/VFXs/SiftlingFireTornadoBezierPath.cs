@@ -8,7 +8,15 @@ using UnityEditor;
 public class SiftlingFireTornadoBezierPath : MonoBehaviour
 {
     /// <summary>
-    /// Fire when the tornado finished its forward path;
+    /// Fired when the tornado enters the path;
+    /// </summary>
+    public event System.Action OnPathStart;
+    /// <summary>
+    /// Fired when the tornado advances in its path;
+    /// </summary>
+    public event System.Action<float> OnPathAdvance;
+    /// <summary>
+    /// Fired when the tornado finished its forward path;
     /// </summary>
     public event System.Action OnPathEndpoint;
     /// <summary>
@@ -20,6 +28,10 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     [SerializeField] private Transform fireTornado;
     [SerializeField] private AnimationCurve pathingCurve;
     [SerializeField] private Transform pathStart, pathT1, pathT2, pathEnd, pathEndpoint;
+    [SerializeField] private AnimationCurve scaleCurve;
+    [SerializeField] private float pathScalingStartLerp;
+    [SerializeField] private TrailRenderer[] fireTrails;
+    [SerializeField] private AnimationCurve trailWidthCurve;
 
     private BezierCurve bezierPath;
     private float totalPathLength, bezierPathPercent;
@@ -27,6 +39,9 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     private Vector3 pathStartLocal, pathStartLocalFlipped,
                     pathT1Local, pathT1LocalFlipped;
     private float lerpVal;
+
+    private Vector3 baseTornadoScale;
+    private float[] baseTrailWidths;
 
     private enum State { Idle, PathingIn, PathingOut }
     private State state;
@@ -43,6 +58,13 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
         float endpointLength = Vector3.Distance(pathEnd.position, pathEndpoint.position);
         totalPathLength = bezierPathLength + endpointLength;
         bezierPathPercent = bezierPathLength.SafeDivide(totalPathLength, 0);
+
+        baseTornadoScale = fireTornado.localScale;
+
+        baseTrailWidths = new float[fireTrails.Length];
+        for (int i = 0; i < fireTrails.Length; i++) {
+            baseTrailWidths[i] = fireTrails[i].widthMultiplier;
+        }
     }
 
     private void BuildPath(bool isFlipped) {
@@ -89,6 +111,8 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
             yield return null;
         }
 
+        OnPathStart?.Invoke();
+
         while (state != State.Idle) {
             AdvancePath(rawLerpRate, target);
 
@@ -126,6 +150,15 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     private void AdvancePath(float rawLerpRate, float target) {
         lerpVal = Mathf.MoveTowards(lerpVal, target, Time.deltaTime * rawLerpRate * pathingCurve.Evaluate(lerpVal));
         fireTornado.position = EvaluatePath(lerpVal);
+
+        float scaleLerp = (lerpVal - pathScalingStartLerp) / (1 - pathScalingStartLerp);
+        fireTornado.localScale = baseTornadoScale * scaleCurve.Evaluate(scaleLerp);
+
+        for (int i = 0; i < fireTrails.Length; i++) {
+            fireTrails[i].widthMultiplier = baseTrailWidths[i] * trailWidthCurve.Evaluate(scaleLerp);
+        }
+
+        OnPathAdvance?.Invoke(lerpVal);
     }
 
     private Vector3 EvaluatePath(float lerpVal) {
@@ -134,6 +167,25 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     }
 
     #if UNITY_EDITOR
+    /// <summary>
+    /// Editor only. Path transforms may not match correct path position at runtime
+    /// depending on the context. The bezier percent is also not computed naturally in editor;
+    /// </summary>
+    public Vector3[] Editor_EvaluatePath(float[] lerpVals) {
+        BezierCurve bezierPath = new(pathStart.position, pathT1.position, pathT2.position, pathEnd.position);
+        float bezierPathLength = CurveUtility.ApproximateLength(bezierPath);
+        float endpointLength = Vector3.Distance(pathEnd.position, pathEndpoint.position);
+        float totalPathLength = bezierPathLength + endpointLength;
+        float bezierPathPercent = bezierPathLength.SafeDivide(totalPathLength, 0);
+
+        Vector3[] positions = new Vector3[lerpVals.Length];
+        for (int i = 0; i < lerpVals.Length; i++) {
+            positions[i] = lerpVals[i] < bezierPathPercent ? CurveUtility.EvaluatePosition(bezierPath, lerpVals[i].SafeDivide(bezierPathPercent, 0))
+                                                           : Vector3.Lerp(pathEnd.position, pathEndpoint.position, (lerpVals[i] - bezierPathPercent) / (1 - bezierPathPercent));
+        }
+        return positions;
+    }
+
     void OnDrawGizmos() {
         if (fireTornado) {
             using (new Handles.DrawingScope(Color.red)) {

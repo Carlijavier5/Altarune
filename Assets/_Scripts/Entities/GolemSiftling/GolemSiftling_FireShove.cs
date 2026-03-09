@@ -38,7 +38,7 @@ public partial class GolemSiftling
     [SerializeField] private FireWindUpPhase[] fireWindUpPhases;
     [SerializeField] private AnimationClip fireCastClip;
     [SerializeField] private SiftlingFireCircleController fireCircleController;
-    [SerializeField] private ParticleSystem fireDispersionVFXRoot, groundFireDecal;
+    [SerializeField] private ParticleSystem fireDispersionVFXRoot;
     [SerializeField] private ParticleSystemCollection fireStreamVFXCollection;
 
     public bool IsTornadoFlipped => TornadoDirectionMultiplier < 0;
@@ -185,7 +185,6 @@ public partial class GolemSiftling
         private void Tornado_OnRotationSync_PlayPath() {
             input.siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync_PlayPath;
 
-            input.siftling.groundFireDecal.Play();
             input.siftling.activeConfig.tornado.Stop();
             input.siftling.fireBezierPath.Play(input.siftling.activeConfig.tornado.RotationSpeed);
 
