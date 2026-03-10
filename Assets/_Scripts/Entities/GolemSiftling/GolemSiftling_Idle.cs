@@ -20,7 +20,7 @@ public partial class GolemSiftling {
                         input.stateMachine.SetState(new State_Precharge(input.aggroTarget));
                         break;
                     case SiftlingType.Fire:
-                        input.stateMachine.SetState(new State_FireWindUp());
+                        input.stateMachine.SetState(new State_FireCastAnticipation(input.aggroTarget));
                         break;
                 }
             }
@@ -52,11 +52,11 @@ public partial class GolemSiftling {
         }
 
         public override void Update(Siftling_Input input) {
-            base.Update(input);
-
             waitTimer += input.siftling.DeltaTime;
             if (waitTimer >= waitDuration) {
                 input.stateMachine.SetState(new State_Roam());
+            } else {
+                base.Update(input);
             }
         }
 
@@ -86,14 +86,14 @@ public partial class GolemSiftling {
         }
 
         public override void Update(Siftling_Input input) {
-            base.Update(input);
-
             GolemSiftling golem = input.siftling;
             if (golem.navMeshAgent.isOnNavMesh
                     && golem.navMeshAgent.remainingDistance <= golem.navMeshAgent.stoppingDistance
                         || Time.time > endTime) {
                 input.stateMachine.SetState(new State_Idle());
                 input.siftling.navMeshAgent.ResetPath();
+            } else {
+                base.Update(input);
             }
         }
 

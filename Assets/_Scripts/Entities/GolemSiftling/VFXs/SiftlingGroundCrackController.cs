@@ -134,7 +134,7 @@ public class SiftlingGroundCrackController : MonoBehaviour
 
         if (fadeSmokes) {
             foreach (ParticleSystem smokeVFX in smokePool) {
-                smokeVFX.Stop();
+                //smokeVFX.Stop();
             }
         }
 

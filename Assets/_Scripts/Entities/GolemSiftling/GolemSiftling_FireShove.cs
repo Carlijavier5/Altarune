@@ -4,15 +4,18 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public partial class GolemSiftling
-{
+public partial class GolemSiftling {
     private const string FIRE_CAST_PARAM = "FireCast",
                          FIRE_SHOVE_PARAM = "FireShove",
-                         PLAYBACK_MULT_PARAM = "Playback";
+                         PLAYBACK_MULT_PARAM = "Playback",
+                         GLANCE_PARAM = "Glance";
 
     [Header("Fire Shove")]
     [SerializeField] private SiftlingFireTornadoBezierPath fireBezierPath;
     [SerializeField] private LockdownJointTransform fireBezierJoint;
+
+    [SerializeField] private ParticleSystem exclamationVFX;
+    [SerializeField] private TwoColoredGraphicFader[] fireAnticipationGraphics;
 
     [System.Serializable]
     private class FireWindUpPhase {
@@ -49,6 +52,62 @@ public partial class GolemSiftling
 
         foreach (FireWindUpPhase phase in fireWindUpPhases) {
             phase.StopVFXs();
+        }
+    }
+
+    private class State_FireCastAnticipation : State_Aggro {
+        private float preAttackEndTime;
+
+        public State_FireCastAnticipation(Entity aggroTarget) : base(aggroTarget) { }
+
+        public override void Enter(Siftling_Input input) {
+            base.Enter(input);
+
+            GolemSiftling gs = input.siftling;
+            gs.animatorMain.SetTrigger(GLANCE_PARAM);
+
+            ToggleAnticipationGraphics(true);
+            preAttackEndTime = Time.time + gs.activeConfig.attackAnticipationDuration;
+
+            gs.navMeshAgent.updateRotation = false;
+            gs.navMeshAgent.ResetPath();
+
+            gs.exclamationVFX.Play();
+        }
+
+        public override void Update(Siftling_Input input) {
+            if (aggroTarget) {
+                Vector3 lookDirection = aggroTarget.transform.position - input.siftling.transform.position;
+                lookDirection.y = 0;
+                Quaternion lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.activeConfig.lookAngularSpeed);
+            }
+
+            if (Time.time > preAttackEndTime) {
+                input.stateMachine.SetState(new State_FireWindUp());
+            }
+        }
+
+        public override void Exit(Siftling_Input input) {
+            base.Exit(input);
+
+            GolemSiftling gs = input.siftling;
+            gs.navMeshAgent.ResetPath();
+            gs.navMeshAgent.updateRotation = true;
+
+            ToggleAnticipationGraphics(false);
+        }
+
+        public override void PropagateAggroExit(Entity entity) {
+            if (entity == aggroTarget) {
+                input.stateMachine.SetState(new State_Idle());
+            }
+        }
+
+        private void ToggleAnticipationGraphics(bool on) {
+            foreach (TwoColoredGraphicFader graphic in input.siftling.fireAnticipationGraphics) {
+                graphic.DoFade(on);
+            }
         }
     }
 
@@ -98,7 +157,10 @@ public partial class GolemSiftling
                 siftling.animatorMain.speed = siftling.baseMainAnimatorSpeed;
 
                 siftling.StopFireWindUpVFXs();
-                siftling.fireDispersionVFXRoot.Play();
+
+                if (windUpPhaseIndex > 0) {
+                    siftling.fireDispersionVFXRoot.Play();
+                }
             }
         }
 

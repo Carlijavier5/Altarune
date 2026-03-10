@@ -14,4 +14,6 @@ public class SiftlingConfiguration {
     public Vector2 distanceRange;
     public Vector2 waitRange;
     public Vector2 attackCDRange;
+    public float attackAnticipationDuration;
+    public float lookAngularSpeed;
 }

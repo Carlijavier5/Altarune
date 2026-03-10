@@ -32,6 +32,7 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     [SerializeField] private float pathScalingStartLerp;
     [SerializeField] private TrailRenderer[] fireTrails;
     [SerializeField] private AnimationCurve trailWidthCurve;
+    [SerializeField] private ParticleSystem tornadoDebrisForward, tornadoDebrisBackward;
 
     private BezierCurve bezierPath;
     private float totalPathLength, bezierPathPercent;
@@ -65,6 +66,8 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
         for (int i = 0; i < fireTrails.Length; i++) {
             baseTrailWidths[i] = fireTrails[i].widthMultiplier;
         }
+
+        ToggleTornadoDebris(siftling.IsTornadoFlipped);
     }
 
     private void BuildPath(bool isFlipped) {
@@ -134,6 +137,7 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
         OnPathComplete?.Invoke();
 
         siftling.FlipTornadoDirection();
+        ToggleTornadoDebris(siftling.IsTornadoFlipped);
     }
 
     public float GetPathStartAngle(bool isFlipped) {
@@ -164,6 +168,11 @@ public class SiftlingFireTornadoBezierPath : MonoBehaviour
     private Vector3 EvaluatePath(float lerpVal) {
         return lerpVal < bezierPathPercent ? CurveUtility.EvaluatePosition(bezierPath, lerpVal.SafeDivide(bezierPathPercent, 0))
                                            : Vector3.Lerp(pathEnd.position, pathEndpoint.position, (lerpVal - bezierPathPercent) / (1 - bezierPathPercent));
+    }
+
+    private void ToggleTornadoDebris(bool isFlipped) {
+        tornadoDebrisForward.gameObject.SetActive(!isFlipped);
+        tornadoDebrisBackward.gameObject.SetActive(isFlipped);
     }
 
     #if UNITY_EDITOR

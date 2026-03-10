@@ -9,11 +9,16 @@ public class TwoColoredGraphicFader : MonoBehaviour {
     [SerializeField] private Renderer decal;
     [SerializeField] protected float fadeTime;
 
+    private MaterialPropertyBlock mpb;
+
+    void Awake() {
+        mpb = new();    
+    }
+
     void OnEnable() {
         Color color1 = decal.sharedMaterial.GetColor(COLOR_PARAM);
         Color color2 = decal.sharedMaterial.GetColor(COLOR_2_PARAM);
 
-        MaterialPropertyBlock mpb = new();
         decal.GetPropertyBlock(mpb);
 
         color1.a = 0;
@@ -35,7 +40,6 @@ public class TwoColoredGraphicFader : MonoBehaviour {
     }
 
     public IEnumerator IDoFade(float target) {
-        MaterialPropertyBlock mpb = new();
         decal.GetPropertyBlock(mpb);
 
         Color color1 = mpb.GetColor(COLOR_PARAM);

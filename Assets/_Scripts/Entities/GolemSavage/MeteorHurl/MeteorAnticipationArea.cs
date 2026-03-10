@@ -1,12 +1,10 @@
 ﻿using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class MeteorAnticipationArea : MonoBehaviour {
 
-    [SerializeField] private AnticipationGraphic decal;
+    [SerializeField] private TwoColoredGraphicFader decal;
     [SerializeField] private float growTime = 0.5f;
-    private Vector3 baseScale;
 
     public void Init(Transform anchor) {
         transform.SetParent(anchor);

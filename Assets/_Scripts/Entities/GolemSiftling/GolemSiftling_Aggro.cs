@@ -59,8 +59,8 @@ public partial class GolemSiftling {
             GolemSiftling gs = input.siftling;
             gs.animatorMain.SetTrigger(PRE_CHARGE_PARAM);
 
-            gs.vfxController.DoPrecharge(gs.prechargeTime);
-            prechargeEndTime = Time.time + gs.prechargeTime;
+            gs.vfxController.DoPrecharge(gs.activeConfig.attackAnticipationDuration);
+            prechargeEndTime = Time.time + gs.activeConfig.attackAnticipationDuration;
 
             gs.navMeshAgent.updateRotation = false;
             gs.navMeshAgent.ResetPath();
@@ -71,7 +71,7 @@ public partial class GolemSiftling {
                 Vector3 lookDirection = aggroTarget.transform.position - input.siftling.transform.position;
                 lookDirection.y = 0;
                 Quaternion lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.prechargeAngularSpeed);
+                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.activeConfig.lookAngularSpeed);
             }
 
             if (Time.time > prechargeEndTime) {
