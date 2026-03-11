@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public partial class GolemSiftling {
     private const string FIRE_CAST_PARAM = "FireCast",
                          FIRE_SHOVE_PARAM = "FireShove",
-                         PLAYBACK_MULT_PARAM = "Playback",
+                         PLAYBACK_MULT_PARAM = "Direction",
                          GLANCE_PARAM = "Glance";
 
     [Header("Fire Shove")]
