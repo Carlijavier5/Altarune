@@ -53,7 +53,7 @@ public partial class GolemSiftling {
             phase.StopVFXs();
         }
     }
-
+    /*
     private class State_FireCastAnticipation : State_Aggro {
         private float preAttackEndTime;
 
@@ -108,7 +108,7 @@ public partial class GolemSiftling {
                 graphic.DoFade(on);
             }
         }
-    }
+    }*/
 
     private class State_FireWindUp : State<Siftling_Input> {
 

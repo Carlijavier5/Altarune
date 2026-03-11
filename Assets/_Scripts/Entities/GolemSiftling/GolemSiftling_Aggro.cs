@@ -9,18 +9,18 @@ public partial class GolemSiftling {
     [SerializeField] private GolemSiftlingChargeVFXController vfxController;
 
     [Header("Precharge State")]
-    [SerializeField] private float prechargeTime;
+    [SerializeField] private float prechargeDuration;
     [SerializeField] private float prechargeAngularSpeed;
 
     [Header("Charge State")]
     [SerializeField] private ParticleDependentColliderController attackColliderController;
-    [SerializeField] private float chargeTime;
+    [SerializeField] private float chargeDuration;
     [SerializeField] private float chargeLinearSpeed;
     [SerializeField] private float chargeAngularSpeed;
 
     private float canAttackTime;
 
-    private class State_Aggro : State<Siftling_Input> {
+    private abstract class State_Aggro : State<Siftling_Input> {
 
         protected Siftling_Input input;
         protected Entity aggroTarget;
@@ -33,8 +33,6 @@ public partial class GolemSiftling {
             this.input = input;
             input.siftling.OnLongPush += Siftling_OnLongPush;
         }
-
-        public override void Update(Siftling_Input input) { }
 
         public override void Exit(Siftling_Input input) {
             input.siftling.OnLongPush -= Siftling_OnLongPush;
@@ -59,8 +57,8 @@ public partial class GolemSiftling {
             GolemSiftling gs = input.siftling;
             gs.animatorMain.SetTrigger(PRE_CHARGE_PARAM);
 
-            gs.vfxController.DoPrecharge(gs.activeConfig.attackAnticipationDuration);
-            prechargeEndTime = Time.time + gs.activeConfig.attackAnticipationDuration;
+            gs.vfxController.DoPrecharge(gs.prechargeDuration);
+            prechargeEndTime = Time.time + gs.prechargeDuration;
 
             gs.navMeshAgent.updateRotation = false;
             gs.navMeshAgent.ResetPath();
@@ -71,7 +69,7 @@ public partial class GolemSiftling {
                 Vector3 lookDirection = aggroTarget.transform.position - input.siftling.transform.position;
                 lookDirection.y = 0;
                 Quaternion lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.activeConfig.lookAngularSpeed);
+                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.prechargeAngularSpeed);
             }
 
             if (Time.time > prechargeEndTime) {
@@ -112,7 +110,7 @@ public partial class GolemSiftling {
 
             gs.vfxController.DoCharge();
             gs.attackColliderController.Enable();
-            chargeEndTime = Time.time + gs.chargeTime;
+            chargeEndTime = Time.time + gs.chargeDuration;
 
             gs.navMeshAgent.autoBraking = false;
             gs.navMeshAgent.stoppingDistance = 0;

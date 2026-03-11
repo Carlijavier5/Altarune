@@ -24,7 +24,7 @@ public partial class GolemSiftling {
                         input.stateMachine.SetState(new State_FireCastAnticipation(input.aggroTarget));
                         break;
                 }*/
-                input.stateMachine.SetState(new State_LockTarget(input.aggroTarget));
+                input.stateMachine.SetState(new State_LookTarget(input.aggroTarget));
             }
         }
 
