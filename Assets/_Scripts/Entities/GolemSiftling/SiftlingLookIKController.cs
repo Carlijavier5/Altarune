@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class SiftlingLookIKController : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class SiftlingLookIKController : MonoBehaviour
 
     private Transform target;
     private float signedLerp;
+    private Quaternion effectiveRotation;
 
     void Awake() {
         enabled = false;
@@ -21,6 +21,7 @@ public class SiftlingLookIKController : MonoBehaviour
 
     public void Play(Transform target) {
         this.target = target;
+        effectiveRotation = ikBone.localRotation;
         enabled = true;
     }
 
@@ -38,8 +39,8 @@ public class SiftlingLookIKController : MonoBehaviour
             Quaternion rotationTarget = Quaternion.Euler(Mathf.Lerp(xRotationRange.x, xRotationRange.y, Mathf.Abs(signedLerp)),
                                                          Mathf.Lerp(-maxYRotation, maxYRotation, signedLerp * 0.5f + 0.5f),
                                                          baseZRotation);
-            ikBone.localRotation = rotationTarget;//Quaternion.RotateTowards(ikBone.localRotation, rotationTarget, Time.deltaTime * lookSpeed);
-            Debug.LogError($"X: {rotationTarget.eulerAngles.x}, Y:{rotationTarget.eulerAngles.y}, Z: {rotationTarget.z}");
+            effectiveRotation = Quaternion.RotateTowards(effectiveRotation, rotationTarget, Time.deltaTime * lookSpeed);
+            ikBone.localRotation = effectiveRotation;
         }
     }
 }
