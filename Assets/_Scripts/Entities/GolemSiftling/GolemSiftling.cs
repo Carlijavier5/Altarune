@@ -193,6 +193,10 @@ public partial class GolemSiftling : Entity {
         }
     }
 
+    public void ResetMainAnimatorSpeed() {
+        animatorMain.speed = baseMainAnimatorSpeed * TimeScale;
+    }
+
     public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();

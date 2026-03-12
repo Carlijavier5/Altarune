@@ -10,11 +10,13 @@ public abstract class LockdownJoint<T> : MonoBehaviour {
                                         xRotation, yRotation, zRotation;
     [SerializeField] protected float xROffset, yROffset, zROffset;
     [SerializeField] protected bool detachOnAwake;
+    [SerializeField] protected bool playOnAwake = true;
 
     void Awake() {
         if (detachOnAwake) {
             transform.SetParent(null);
         }
+        enabled = playOnAwake;
     }
 
     protected abstract Vector3 FollowerPosition { get; }

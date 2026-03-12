@@ -4,13 +4,11 @@ using UnityEngine;
 
 public partial class GolemSiftling
 {
-    private const string IK_LOOK_PARAM = "IKLook",
-                         RAISE_LEG_PARAM = "RaiseLeg",
-                         JUMP_PARAM = "Jump";
+    private const string IK_LOOK_PARAM = "IKLook";
 
     [Header("Alert States")]
     [SerializeField] private SiftlingLookIKController lookIKController;
-    [SerializeField] private float maxDoFaceDuration;
+    [SerializeField] private SiftlingFaceTargetController lockFacingController;
 
     private class State_LookTarget : State_Aggro {
 
@@ -39,6 +37,9 @@ public partial class GolemSiftling
 
         public override void Exit(Siftling_Input input) {
             base.Exit(input);
+
+            input.siftling.lookIKController.Stop();
+
             input.siftling.navMeshAgent.ResetPath();
             input.siftling.navMeshAgent.updateRotation = true;
         }
@@ -57,22 +58,25 @@ public partial class GolemSiftling
         public override void Enter(Siftling_Input input) {
             base.Enter(input);
 
-            string param = GetFacingAnimationParam();
-            input.siftling.animatorMain.SetTrigger(param);
+            if (input.aggroTarget) {
+                input.siftling.navMeshAgent.updateRotation = false;
+                input.siftling.navMeshAgent.ResetPath();
 
-            input.siftling.navMeshAgent.updateRotation = false;
-            input.siftling.navMeshAgent.ResetPath();
+                input.siftling.lockFacingController.OnFacingEnd += LockFacingController_OnFacingEnd;
+                input.siftling.lockFacingController.Play(input.aggroTarget.transform);
+            }
         }
 
-        public override void Update(Siftling_Input input) {
-            /// Await animation trigger to rotate on a min/max scale;
-            /// Snap at max duration as a fallback;
-            /// Move siftling up/down if jump based on an animation curve and a max/min height;
-            /// Look at canattack time in aggro state to see why it's not used;
-        }
+        public override void Update(Siftling_Input input) { }
 
         public override void Exit(Siftling_Input input) {
             base.Exit(input);
+
+            input.siftling.lockFacingController.OnFacingEnd -= LockFacingController_OnFacingEnd;
+
+            input.siftling.lockFacingController.Stop();
+            input.siftling.animatorMain.SetFloat(DIRECTION_PARAM, input.siftling.TornadoDirectionMultiplier);
+
             input.siftling.navMeshAgent.ResetPath();
             input.siftling.navMeshAgent.updateRotation = true;
         }
@@ -83,8 +87,8 @@ public partial class GolemSiftling
             }
         }
 
-        private string GetFacingAnimationParam() {
-            return ""; /// Check angle and decide whether to step or jump;
+        private void LockFacingController_OnFacingEnd() {
+            input.stateMachine.SetState(new State_FireWindUp());
         }
     }
 }

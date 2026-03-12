@@ -6,8 +6,7 @@ using UnityEngine;
 public partial class GolemSiftling {
     private const string FIRE_CAST_PARAM = "FireCast",
                          FIRE_SHOVE_PARAM = "FireShove",
-                         PLAYBACK_MULT_PARAM = "Direction",
-                         GLANCE_PARAM = "Glance";
+                         DIRECTION_PARAM = "Direction";
 
     [Header("Fire Shove")]
     [SerializeField] private SiftlingFireTornadoBezierPath fireBezierPath;
@@ -153,7 +152,7 @@ public partial class GolemSiftling {
 
             if (input.stateMachine.NextState is not State_FireShove) {
                 siftling.activeConfig.tornado.ToggleAnimationSync(false);
-                siftling.animatorMain.speed = siftling.baseMainAnimatorSpeed;
+                siftling.ResetMainAnimatorSpeed();
 
                 siftling.StopFireWindUpVFXs();
 
@@ -166,7 +165,7 @@ public partial class GolemSiftling {
         private void Tornado_OnRotationSync() {
             siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync;
 
-            siftling.animatorMain.SetFloat(PLAYBACK_MULT_PARAM, -siftling.TornadoDirectionMultiplier);
+            siftling.animatorMain.SetFloat(DIRECTION_PARAM, -siftling.TornadoDirectionMultiplier);
             siftling.animatorMain.SetTrigger(FIRE_CAST_PARAM);
 
             siftling.activeConfig.tornado.ToggleAnimationSync(true, siftling.fireCastClip.length);
@@ -219,7 +218,7 @@ public partial class GolemSiftling {
             input.siftling.RestartAttackCooldown();
 
             input.siftling.activeConfig.tornado.ToggleAnimationSync(false);
-            input.siftling.animatorMain.speed = input.siftling.baseMainAnimatorSpeed;
+            input.siftling.ResetMainAnimatorSpeed();
 
             input.siftling.StopFireWindUpVFXs();
             input.siftling.fireStreamVFXCollection.Stop();
@@ -232,7 +231,7 @@ public partial class GolemSiftling {
             input.siftling.fireDispersionVFXRoot.Play();
 
             input.siftling.activeConfig.tornado.ToggleAnimationSync(false);
-            input.siftling.animatorMain.speed = input.siftling.baseMainAnimatorSpeed;
+            input.siftling.ResetMainAnimatorSpeed();
             input.siftling.animatorMain.SetTrigger(FIRE_SHOVE_PARAM);
 
             input.siftling.fireStreamVFXCollection.Play();

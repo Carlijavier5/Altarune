@@ -12,7 +12,6 @@ public class SiftlingLookIKController : MonoBehaviour
     [SerializeField] private float lookSpeed;
 
     private Transform target;
-    private float signedLerp;
     private Quaternion effectiveRotation;
 
     void Awake() {
@@ -34,7 +33,7 @@ public class SiftlingLookIKController : MonoBehaviour
             Vector3 direction = new(ikBone.position.x - target.position.x, 0,
                                     ikBone.position.z - target.position.z);
             float angle = Vector3.SignedAngle(ikBone.forward, direction, Vector3.up);
-            signedLerp = Mathf.Clamp(angle / maxYRotation, -1f, 1f);
+            float signedLerp = Mathf.Clamp(angle / maxYRotation, -1f, 1f);
 
             Quaternion rotationTarget = Quaternion.Euler(Mathf.Lerp(xRotationRange.x, xRotationRange.y, Mathf.Abs(signedLerp)),
                                                          Mathf.Lerp(-maxYRotation, maxYRotation, signedLerp * 0.5f + 0.5f),
