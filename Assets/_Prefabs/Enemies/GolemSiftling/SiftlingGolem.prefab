@@ -5151,6 +5151,7 @@ MonoBehaviour:
     waitRange: {x: 2, y: 3}
     attackCDRange: {x: 5, y: 8}
     attackLookDuration: 2
+    indicatorController: {fileID: 0}
   - type: 1
     health: 8
     tornado: {fileID: 8443481580891199604}
@@ -5161,6 +5162,7 @@ MonoBehaviour:
     waitRange: {x: 3, y: 5}
     attackCDRange: {x: 3.5, y: 5.5}
     attackLookDuration: 1.5
+    indicatorController: {fileID: 2324571439366579742}
   - type: 2
     health: 6
     tornado: {fileID: 7507778274205572769}
@@ -5171,6 +5173,7 @@ MonoBehaviour:
     waitRange: {x: 0.5, y: 1}
     attackCDRange: {x: 0, y: 0}
     attackLookDuration: 0
+    indicatorController: {fileID: 0}
   - type: 3
     health: 8
     tornado: {fileID: 974194110561703870}
@@ -5181,6 +5184,7 @@ MonoBehaviour:
     waitRange: {x: 3, y: 5}
     attackCDRange: {x: 0, y: 0}
     attackLookDuration: 0
+    indicatorController: {fileID: 0}
   navMeshAgent: {fileID: 8338844980996685279}
   vfxController: {fileID: 1568635329809316415}
   prechargeDuration: 3
@@ -5209,11 +5213,13 @@ MonoBehaviour:
     waitDuration: 0
     targetSpeed: 540
     associatedVFXs: []
+    preserveIndicators: 0
   - spinDuration: 0.5
     waitDuration: 1.5
     targetSpeed: 720
     associatedVFXs:
     - {fileID: 3268413525744868878}
+    preserveIndicators: 0
   fireCastClip: {fileID: -8119963812698740023, guid: c5fbe27ef08183f47a6ed296cad31037,
     type: 3}
   fireCircleController: {fileID: 1374211664048712232}
@@ -15598,7 +15604,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5291558561238201566}
   - {fileID: 4325990968501921236}
   - {fileID: 8212558247615830129}
   - {fileID: 748948181283642077}
@@ -25539,6 +25544,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5291558561238201566}
+  - component: {fileID: 2324571439366579742}
+  - component: {fileID: 3456820160787784777}
   m_Layer: 0
   m_Name: HitIndicators
   m_TagString: Untagged
@@ -25561,8 +25568,49 @@ Transform:
   m_Children:
   - {fileID: 6969477738646931938}
   - {fileID: 6967859259606187220}
-  m_Father: {fileID: 6611185948198621118}
+  m_Father: {fileID: 905514240874322028}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2324571439366579742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030454017159805925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10813699b9c43304db8e9b94c731e3f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockdownJoint: {fileID: 3456820160787784777}
+  anticipationGraphics:
+  - {fileID: 6441692070400361058}
+  - {fileID: 5057409838229414173}
+--- !u!114 &3456820160787784777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030454017159805925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b32006249faac4b8260c084f48358b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  follower: {fileID: 5291558561238201566}
+  target: {fileID: 1167467467848184874}
+  xPosition: 1
+  yPosition: 0
+  zPosition: 1
+  xRotation: 0
+  yRotation: 1
+  zRotation: 0
+  xROffset: 0
+  yROffset: 0
+  zROffset: 0
+  detachOnAwake: 1
+  playOnAwake: 0
 --- !u!1 &6412904901013581457
 GameObject:
   m_ObjectHideFlags: 0
@@ -45607,7 +45655,7 @@ MonoBehaviour:
   animationRouter: {fileID: 8852277664768270453}
   stepDegreeRange: {x: 10, y: 60}
   stepDurationRange: {x: 0.3, y: 0.4}
-  airborneDurationRange: {x: 0.5, y: 0.7}
+  airborneDurationRange: {x: 0.4, y: 0.6}
   jumpAltitudeRange: {x: 1, y: 2}
   jumpAltitudeCurve:
     serializedVersion: 2
@@ -45642,6 +45690,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  landingPercent: 0.785714
+  landingDust: {fileID: 589304095292445005}
   fallbackTimerDuration: 0.15
 --- !u!1 &7966684315642765946
 GameObject:
@@ -55422,6 +55472,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6227485386555717003}
+  - {fileID: 5291558561238201566}
   - {fileID: 6611185948198621118}
   - {fileID: 4868018596326412064}
   m_Father: {fileID: 8281648423642095650}
@@ -56205,12 +56256,12 @@ PrefabInstance:
     - target: {fileID: 5475523403726179488, guid: 7bc6cdd6b5b56724589617cdce19a8d2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.9780559
+      value: 0.71660733
       objectReference: {fileID: 0}
     - target: {fileID: 5475523403726179488, guid: 7bc6cdd6b5b56724589617cdce19a8d2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.20834263
+      value: 0.6974769
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -56463,22 +56514,22 @@ PrefabInstance:
     - target: {fileID: 4826666792714439663, guid: 79f0d416f2db68f428e76e6c923dd755,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.65611947
+      value: 0.51412076
       objectReference: {fileID: 0}
     - target: {fileID: 4826666792714439663, guid: 79f0d416f2db68f428e76e6c923dd755,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.65611947
+      value: 0.51412076
       objectReference: {fileID: 0}
     - target: {fileID: 4826666792714439663, guid: 79f0d416f2db68f428e76e6c923dd755,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.26364234
+      value: -0.48546872
       objectReference: {fileID: 0}
     - target: {fileID: 4826666792714439663, guid: 79f0d416f2db68f428e76e6c923dd755,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.26364234
+      value: 0.48546872
       objectReference: {fileID: 0}
     - target: {fileID: 4826666792714439663, guid: 79f0d416f2db68f428e76e6c923dd755,
         type: 3}
@@ -58776,7 +58827,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04d33888b3382da499abc7dc5db08cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  landingDust: {fileID: 0}
 --- !u!114 &3918354129653857261
 MonoBehaviour:
   m_ObjectHideFlags: 0

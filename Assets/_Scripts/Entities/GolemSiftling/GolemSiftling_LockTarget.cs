@@ -12,7 +12,11 @@ public partial class GolemSiftling
 
     private class State_LookTarget : State_Aggro {
 
-        public State_LookTarget(Entity aggroTarget) : base(aggroTarget) { }
+        private readonly State<Siftling_Input> followUpState;
+
+        public State_LookTarget(Entity aggroTarget, State<Siftling_Input> followUpState) : base(aggroTarget) {
+            this.followUpState = followUpState;
+        }
 
         private float endLookTime;
 
@@ -31,7 +35,7 @@ public partial class GolemSiftling
 
         public override void Update(Siftling_Input input) {
             if (Time.time > endLookTime && aggroTarget) {
-                input.stateMachine.SetState(new State_FaceTarget(aggroTarget));
+                input.stateMachine.SetState(new State_FaceTarget(aggroTarget, followUpState));
             }
         }
 
@@ -53,7 +57,11 @@ public partial class GolemSiftling
 
     private class State_FaceTarget : State_Aggro {
 
-        public State_FaceTarget(Entity aggroTarget) : base(aggroTarget) { }
+        private readonly State<Siftling_Input> followUpState;
+
+        public State_FaceTarget(Entity aggroTarget, State<Siftling_Input> followUpState) : base(aggroTarget) {
+            this.followUpState = followUpState;
+        }
 
         public override void Enter(Siftling_Input input) {
             base.Enter(input);
@@ -79,6 +87,10 @@ public partial class GolemSiftling
 
             input.siftling.navMeshAgent.ResetPath();
             input.siftling.navMeshAgent.updateRotation = true;
+
+            if (input.stateMachine.NextState != followUpState) {
+                input.siftling.TogglePhaseAttackIndicators(false);
+            }
         }
 
         public override void PropagateAggroExit(Entity entity) {
@@ -88,7 +100,7 @@ public partial class GolemSiftling
         }
 
         private void LockFacingController_OnFacingEnd() {
-            input.stateMachine.SetState(new State_FireWindUp());
+            input.stateMachine.SetState(followUpState);
         }
     }
 }

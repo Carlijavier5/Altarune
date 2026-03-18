@@ -22,6 +22,7 @@ public partial class GolemSiftling {
         public float targetSpeed;
 
         public ParticleSystem[] associatedVFXs;
+        public bool preserveIndicators;
 
         public void PlayVFXs() {
             foreach (ParticleSystem vfx in associatedVFXs) {
@@ -52,62 +53,6 @@ public partial class GolemSiftling {
             phase.StopVFXs();
         }
     }
-    /*
-    private class State_FireCastAnticipation : State_Aggro {
-        private float preAttackEndTime;
-
-        public State_FireCastAnticipation(Entity aggroTarget) : base(aggroTarget) { }
-
-        public override void Enter(Siftling_Input input) {
-            base.Enter(input);
-
-            GolemSiftling gs = input.siftling;
-            gs.animatorMain.SetTrigger(GLANCE_PARAM);
-
-            ToggleAnticipationGraphics(true);
-            preAttackEndTime = Time.time + gs.activeConfig.attackAnticipationDuration;
-
-            gs.navMeshAgent.updateRotation = false;
-            gs.navMeshAgent.ResetPath();
-
-            gs.exclamationVFX.Play();
-        }
-
-        public override void Update(Siftling_Input input) {
-            if (aggroTarget) {
-                Vector3 lookDirection = aggroTarget.transform.position - input.siftling.transform.position;
-                lookDirection.y = 0;
-                Quaternion lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-                input.siftling.transform.rotation = Quaternion.RotateTowards(input.siftling.transform.rotation, lookRotation, Time.deltaTime * input.siftling.activeConfig.lookAngularSpeed);
-            }
-
-            if (Time.time > preAttackEndTime) {
-                input.stateMachine.SetState(new State_FireWindUp());
-            }
-        }
-
-        public override void Exit(Siftling_Input input) {
-            base.Exit(input);
-
-            GolemSiftling gs = input.siftling;
-            gs.navMeshAgent.ResetPath();
-            gs.navMeshAgent.updateRotation = true;
-
-            ToggleAnticipationGraphics(false);
-        }
-
-        public override void PropagateAggroExit(Entity entity) {
-            if (entity == aggroTarget) {
-                input.stateMachine.SetState(new State_Idle());
-            }
-        }
-
-        private void ToggleAnticipationGraphics(bool on) {
-            foreach (TwoColoredGraphicFader graphic in input.siftling.fireAnticipationGraphics) {
-                graphic.DoFade(on);
-            }
-        }
-    }*/
 
     private class State_FireWindUp : State<Siftling_Input> {
 
@@ -150,6 +95,8 @@ public partial class GolemSiftling {
         public override void Exit(Siftling_Input input) {
             siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync;
 
+            siftling.TogglePhaseAttackIndicators(false);
+
             if (input.stateMachine.NextState is not State_FireShove) {
                 siftling.activeConfig.tornado.ToggleAnimationSync(false);
                 siftling.ResetMainAnimatorSpeed();
@@ -179,6 +126,8 @@ public partial class GolemSiftling {
 
             FireWindUpPhase currentPhase = siftling.fireWindUpPhases[windUpPhaseIndex];
             siftling.activeConfig.tornado.AdjustRotationSpeed(currentPhase.targetSpeed, currentPhase.spinDuration);
+
+            if (!currentPhase.preserveIndicators) siftling.TogglePhaseAttackIndicators(false);
 
             nextEventTime = Time.time + currentPhase.spinDuration;
 

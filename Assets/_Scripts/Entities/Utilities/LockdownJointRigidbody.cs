@@ -11,6 +11,10 @@ public class LockdownJointRigidbody : LockdownJoint<Rigidbody>
     protected override Quaternion TargetRotation => target.rotation;
 
     void FixedUpdate() {
+        Apply();
+    }
+
+    public override void Apply() {
         follower.position = Position;
         follower.rotation = Rotation;
     }

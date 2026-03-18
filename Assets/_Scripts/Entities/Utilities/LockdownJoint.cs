@@ -36,6 +36,8 @@ public abstract class LockdownJoint<T> : MonoBehaviour {
         enabled = true;
     }
 
+    public abstract void Apply();
+
     public void Stop() {
         enabled = false;
     }

@@ -197,6 +197,12 @@ public partial class GolemSiftling : Entity {
         animatorMain.speed = baseMainAnimatorSpeed * TimeScale;
     }
 
+    public void TogglePhaseAttackIndicators(bool on) {
+        if (activeConfig.indicatorController) {
+            activeConfig.indicatorController.Toggle(on);
+        }
+    }
+
     public override void Perish(bool immediate = false) {
         base.Perish(immediate);
         DetachModules();

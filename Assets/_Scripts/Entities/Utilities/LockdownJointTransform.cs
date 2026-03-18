@@ -9,6 +9,10 @@ public class LockdownJointTransform : LockdownJoint<Transform> {
     protected override Quaternion TargetRotation => target.rotation;
 
     void Update() {
+        Apply();
+    }
+
+    public override void Apply() {
         follower.SetPositionAndRotation(Position, Rotation);
     }
 }

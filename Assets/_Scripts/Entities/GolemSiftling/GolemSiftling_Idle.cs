@@ -13,18 +13,19 @@ public partial class GolemSiftling {
         public override void Enter(Siftling_Input input) { }
 
         public override void Update(Siftling_Input input) {
-            if (//Time.time > input.siftling.canAttackTime
-                    /*&&*/ input.aggroTarget != null) {
-                /*
+            if (Time.time > input.siftling.canAttackTime
+                    && input.aggroTarget != null) {
+                State<Siftling_Input> attackState;
                 switch (input.siftling.activeConfig.type) {
                     case SiftlingType.Normal:
-                        input.stateMachine.SetState(new State_Precharge(input.aggroTarget));
+                        attackState = new State_Precharge(input.aggroTarget);
+                        input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
                         break;
                     case SiftlingType.Fire:
-                        input.stateMachine.SetState(new State_FireCastAnticipation(input.aggroTarget));
+                        attackState = new State_FireWindUp();
+                        input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
                         break;
-                }*/
-                input.stateMachine.SetState(new State_LookTarget(input.aggroTarget));
+                }
             }
         }
 

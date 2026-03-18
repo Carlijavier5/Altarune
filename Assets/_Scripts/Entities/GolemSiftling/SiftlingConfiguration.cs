@@ -13,6 +13,8 @@ public class SiftlingConfiguration {
     public float roamSpeed;
     public Vector2 distanceRange;
     public Vector2 waitRange;
+    [Header("Attack Properties")]
     public Vector2 attackCDRange;
     public float attackLookDuration;
+    public SiftlingIndicatorController indicatorController;
 }
