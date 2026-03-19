@@ -2,7 +2,15 @@ using UnityEngine;
 
 public partial class GolemSiftling {
 
-    private const string IDLE_PARAM = "Idle";
+    private readonly int idleParam = Animator.StringToHash("Idle");
+    private int ActiveIdleParam {
+        get {
+            return activeConfig.type switch {
+                SiftlingType.Wind => fallParam,
+                _ => idleParam,
+            };
+        }
+    }
 
     [Header("Idle/Roam State")]
 
@@ -43,15 +51,12 @@ public partial class GolemSiftling {
             waitDuration = Random.Range(waitRange.x, waitRange.y);
 
             input.siftling.BaseMainAnimatorSpeed = input.siftling.activeConfig.animationSpeed;
+            input.siftling.animatorBody.enabled = false;
 
-            input.siftling.animatorMain.ResetTrigger(PRE_CHARGE_PARAM);
-            input.siftling.animatorMain.SetTrigger(IDLE_PARAM);
+            input.siftling.animatorMain.ResetTrigger(input.siftling.preChargeParam);
+            input.siftling.animatorMain.SetTrigger(input.siftling.ActiveIdleParam);
 
-            switch(input.siftling.activeConfig.type) {
-                case SiftlingType.Wind:
-                    input.siftling.oscillator.enabled = true;
-                    break;
-            }
+            input.siftling.oscillator.enabled = input.siftling.activeConfig.type == SiftlingType.Wind;
         }
 
         public override void Update(Siftling_Input input) {
@@ -77,7 +82,7 @@ public partial class GolemSiftling {
             Vector2 distanceRange = golem.activeConfig.distanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 
-            input.siftling.animatorMain.SetTrigger(IDLE_PARAM);
+            input.siftling.animatorMain.SetTrigger(input.siftling.ActiveIdleParam);
             endTime = Time.time + golem.maxRoamDuration;
 
             if (PathfindingUtils.FindRandomRoamingPoint(golem.transform.position, distance,

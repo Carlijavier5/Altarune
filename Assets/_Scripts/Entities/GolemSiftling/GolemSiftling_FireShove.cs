@@ -4,9 +4,10 @@ using System.Linq;
 using UnityEngine;
 
 public partial class GolemSiftling {
-    private const string FIRE_CAST_PARAM = "FireCast",
-                         FIRE_SHOVE_PARAM = "FireShove",
-                         DIRECTION_PARAM = "Direction";
+
+    private readonly int fireCastParam = Animator.StringToHash("FireCast"),
+                         fireShoveParam = Animator.StringToHash("FireShove"),
+                         directionParam = Animator.StringToHash("Direction");
 
     [Header("Fire Shove")]
     [SerializeField] private SiftlingFireTornadoBezierPath fireBezierPath;
@@ -112,8 +113,8 @@ public partial class GolemSiftling {
         private void Tornado_OnRotationSync() {
             siftling.activeConfig.tornado.OnRotationSync -= Tornado_OnRotationSync;
 
-            siftling.animatorMain.SetFloat(DIRECTION_PARAM, -siftling.TornadoDirectionMultiplier);
-            siftling.animatorMain.SetTrigger(FIRE_CAST_PARAM);
+            siftling.animatorMain.SetFloat(siftling.directionParam, -siftling.TornadoDirectionMultiplier);
+            siftling.animatorMain.SetTrigger(siftling.fireCastParam);
 
             siftling.activeConfig.tornado.ToggleAnimationSync(true, siftling.fireCastClip.length);
 
@@ -181,7 +182,7 @@ public partial class GolemSiftling {
 
             input.siftling.activeConfig.tornado.ToggleAnimationSync(false);
             input.siftling.ResetMainAnimatorSpeed();
-            input.siftling.animatorMain.SetTrigger(FIRE_SHOVE_PARAM);
+            input.siftling.animatorMain.SetTrigger(input.siftling.fireShoveParam);
 
             input.siftling.fireStreamVFXCollection.Play();
 

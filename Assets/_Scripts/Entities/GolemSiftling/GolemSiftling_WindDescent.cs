@@ -16,7 +16,7 @@ public partial class GolemSiftling
         public override void Enter(Siftling_Input input) {
             input.siftling.activeConfig.tornado.Toggle(false);
 
-            input.siftling.animatorMain.SetTrigger(FALL_PARAM);
+            input.siftling.animatorMain.SetTrigger(input.siftling.fallParam);
             input.siftling.animatorBody.enabled = false;
             input.siftling.oscillator.enabled = false;
 

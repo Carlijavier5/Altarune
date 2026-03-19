@@ -5,10 +5,10 @@ using UnityEngine;
 
 public partial class GolemSiftling
 {
-    private const string ASCEND_PARAM = "Ascend",
-                         DESCEND_PARAM = "Descend",
-                         DESCEND_WIND_PARAM = "DescendWind",
-                         FALL_PARAM = "Fall";
+    private readonly int ascendParam = Animator.StringToHash("Ascend"),
+                         descendParam = Animator.StringToHash("Descend"),
+                         descendWindParam = Animator.StringToHash("DescendWind"),
+                         fallParam = Animator.StringToHash("Fall");
 
     [Header("Ascension State")]
     [SerializeField] private Material ascendMaterial;
@@ -47,32 +47,42 @@ public partial class GolemSiftling
             gs.animatorBody.enabled = true;
             gs.animatorBody.speed = isFirst ? gs.baseBodyAnimatorSpeed : gs.secondaryAscensionSpeed;
 
-            gs.animatorMain.SetTrigger(ASCEND_PARAM);
-            gs.animatorBody.SetTrigger(ASCEND_PARAM);
+            gs.oscillator.enabled = false;
+
+            gs.animatorMain.SetTrigger(gs.ascendParam);
+            gs.animatorBody.SetTrigger(gs.ascendParam);
             /// Play loop SFX and voice;
 
             ascendTime = Time.time + gs.ascendClip.length.SafeDivide(gs.animatorBody.speed);
+
+            if (!isFirst) {
+                gs.activeConfig.tornado.Toggle(true);
+            }
         }
 
         public override void Update(Siftling_Input _) {
             switch (subState) {
                 case SubState.Ascending:
-                    if (!isFirst || Time.time >= ascendTime) {
-                        gs.activeConfig.tornado.Toggle(true);
-                        gs.activeConfig.tornado.OnTornadoSummoned += Tornado_OnTornadoSummoned;
+                    if (Time.time >= ascendTime) {
+                        if (isFirst) {
+                            gs.activeConfig.tornado.Toggle(true);
+                            gs.activeConfig.tornado.OnTornadoSummoned += Tornado_OnTornadoSummoned;
 
-                        subState = SubState.Awaiting;
+                            subState = SubState.Awaiting;
+                        } else {
+                            DoDescent();
+                            subState = SubState.Descending;
+                        }
                     }
                     break;
                 case SubState.Awaiting:
                     if (canDescend && Time.time >= ascendTime) {
                         gs.animatorBody.enabled = true;
-                        gs.oscillator.enabled = false;
 
-                        string trigger = gs.activeConfig.type == SiftlingType.Wind ? DESCEND_WIND_PARAM
-                                                                                   : DESCEND_PARAM;
+                        int trigger = gs.activeConfig.type == SiftlingType.Wind ? gs.descendWindParam
+                                                                                : gs.descendParam;
                         gs.animatorBody.SetTrigger(trigger);
-                        gs.animatorMain.SetTrigger(FALL_PARAM);
+                        gs.animatorMain.SetTrigger(gs.fallParam);
 
                         if (isFirst) {
                             gs.vfxAscensionLoop.Stop();
@@ -88,13 +98,15 @@ public partial class GolemSiftling
                         }
 
                         subState = SubState.Descending;
-                    } else if (Time.time >= ascendTime) {
-                        gs.animatorBody.enabled = false;
-                        gs.oscillator.enabled = true;
                     }
                     break;
                 case SubState.Descending:
                     if (Time.time >= descendTime) {
+
+                        if (gs.activeConfig.type == SiftlingType.Wind) {
+                            gs.oscillator.UpdateAnchor();
+                        }
+
                         gs.stateMachine.SetState(new State_Idle());
                     }
                     break;
@@ -109,7 +121,7 @@ public partial class GolemSiftling
             gs.oscillator.enabled = false;
         }
 
-        private void Tornado_OnTornadoSummoned() {
+        private void DoDescent() {
             float length = gs.activeConfig.type == SiftlingType.Wind ? gs.descendWindClip.length
                                                                      : gs.descendClip.length;
             /// The animation speed is set to base upon entering the Descend state;
@@ -117,5 +129,7 @@ public partial class GolemSiftling
             descendTime = Mathf.Max(ascendTime, Time.time) + length.SafeDivide(gs.baseMainAnimatorSpeed);
             canDescend = true;
         }
+
+        private void Tornado_OnTornadoSummoned() => DoDescent();
     }
 }

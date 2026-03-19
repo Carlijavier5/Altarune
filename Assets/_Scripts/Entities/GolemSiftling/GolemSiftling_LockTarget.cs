@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class GolemSiftling
 {
-    private const string IK_LOOK_PARAM = "IKLook";
+    private readonly int ikLookParam = Animator.StringToHash("IKLook");
 
     [Header("Alert States")]
     [SerializeField] private SiftlingLookIKController lookIKController;
@@ -24,7 +24,7 @@ public partial class GolemSiftling
             base.Enter(input);
 
             input.siftling.exclamationVFX.Play();
-            input.siftling.animatorMain.SetTrigger(IK_LOOK_PARAM);
+            input.siftling.animatorMain.SetTrigger(input.siftling.ikLookParam);
             input.siftling.lookIKController.Play(input.aggroTarget.transform);
 
             input.siftling.navMeshAgent.updateRotation = false;
@@ -83,7 +83,7 @@ public partial class GolemSiftling
             input.siftling.lockFacingController.OnFacingEnd -= LockFacingController_OnFacingEnd;
 
             input.siftling.lockFacingController.Stop();
-            input.siftling.animatorMain.SetFloat(DIRECTION_PARAM, input.siftling.TornadoDirectionMultiplier);
+            input.siftling.animatorMain.SetFloat(input.siftling.directionParam, input.siftling.TornadoDirectionMultiplier);
 
             input.siftling.navMeshAgent.ResetPath();
             input.siftling.navMeshAgent.updateRotation = true;

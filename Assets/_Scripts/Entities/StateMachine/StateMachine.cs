@@ -25,4 +25,8 @@ public class StateMachine<T> where T : StateInput {
     public void FixedUpdate() {
         State?.FixedUpdate(StateInput);
     }
+
+    public void LateUpdate() {
+        State?.LateUpdate(StateInput);
+    }
 }

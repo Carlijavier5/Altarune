@@ -96,6 +96,7 @@ public partial class GolemSiftling : Entity {
     protected override void Update() {
         base.Update();
         stateMachine.Update();
+
         float speedVal = activeConfig != null && activeConfig.type == SiftlingType.Wind
                        ? 0 : navMeshAgent.velocity.magnitude / Mathf.Max(1, baseLinearSpeed);
         animatorMain.SetFloat(speedParam, speedVal);

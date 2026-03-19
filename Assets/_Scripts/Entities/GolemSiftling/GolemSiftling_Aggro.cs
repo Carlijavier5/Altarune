@@ -2,8 +2,8 @@ using UnityEngine;
 
 public partial class GolemSiftling {
 
-    private const string PRE_CHARGE_PARAM = "Precharge";
-    private const string CHARGE_PARAM = "Charge";
+    private readonly int preChargeParam = Animator.StringToHash("Precharge"),
+                         chargeParam = Animator.StringToHash("Charge");
 
     [Header("Aggro State")]
     [SerializeField] private GolemSiftlingChargeVFXController vfxController;
@@ -55,7 +55,7 @@ public partial class GolemSiftling {
             base.Enter(input);
 
             GolemSiftling gs = input.siftling;
-            gs.animatorMain.SetTrigger(PRE_CHARGE_PARAM);
+            gs.animatorMain.SetTrigger(gs.preChargeParam);
 
             gs.vfxController.DoPrecharge(gs.prechargeDuration);
             prechargeEndTime = Time.time + gs.prechargeDuration;
@@ -104,7 +104,7 @@ public partial class GolemSiftling {
             base.Enter(input);
 
             GolemSiftling gs = input.siftling;
-            gs.animatorMain.SetTrigger(CHARGE_PARAM);
+            gs.animatorMain.SetTrigger(gs.chargeParam);
             gs.BaseLinearSpeed = gs.chargeLinearSpeed;
             gs.BaseAngularSpeed = gs.chargeAngularSpeed;
 
