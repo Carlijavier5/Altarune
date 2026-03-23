@@ -57,6 +57,7 @@ public partial class GolemSiftling
 
             if (!isFirst) {
                 gs.activeConfig.tornado.Toggle(true);
+                gs.activeConfig.tornado.OnTornadoSummoned += Tornado_OnTornadoSummoned;
             }
         }
 
@@ -69,16 +70,14 @@ public partial class GolemSiftling
                             gs.activeConfig.tornado.OnTornadoSummoned += Tornado_OnTornadoSummoned;
 
                             subState = SubState.Awaiting;
-                        } else {
+                        } else { /// Triggered either by tornado summoning or as a fallback if the tornado event does not fire;
                             DoDescent();
-                            subState = SubState.Descending;
+                            subState = SubState.Awaiting;
                         }
                     }
                     break;
                 case SubState.Awaiting:
                     if (canDescend && Time.time >= ascendTime) {
-                        gs.animatorBody.enabled = true;
-
                         int trigger = gs.activeConfig.type == SiftlingType.Wind ? gs.descendWindParam
                                                                                 : gs.descendParam;
                         gs.animatorBody.SetTrigger(trigger);
@@ -87,16 +86,16 @@ public partial class GolemSiftling
                         if (isFirst) {
                             gs.vfxAscensionLoop.Stop();
                             gs.vfxAscensionExplosion.Play();
+
+                            /// Play ascension end SFX;
+                            gs.RemoveMaterial(gs.ascendMaterial);
+                            if (gs.activeConfig.crystalMaterial) {
+                                gs.crystalRenderer.sharedMaterial = gs.activeConfig.crystalMaterial;
+                                gs.UpdateRendererRefs(true);
+                            }
                         }
-                        /// Play ascension end SFX;
 
                         gs.animatorBody.speed = gs.baseBodyAnimatorSpeed;
-                        gs.RemoveMaterial(gs.ascendMaterial);
-                        if (gs.activeConfig.crystalMaterial) {
-                            gs.crystalRenderer.sharedMaterial = gs.activeConfig.crystalMaterial;
-                            gs.UpdateRendererRefs(true);
-                        }
-
                         subState = SubState.Descending;
                     }
                     break;

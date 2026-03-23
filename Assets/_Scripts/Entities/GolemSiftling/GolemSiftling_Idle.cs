@@ -77,26 +77,32 @@ public partial class GolemSiftling {
         private float endTime;
 
         public override void Enter(Siftling_Input input) {
-            GolemSiftling golem = input.siftling;
-            golem.BaseLinearSpeed = golem.activeConfig.roamSpeed;
-            Vector2 distanceRange = golem.activeConfig.distanceRange;
+            GolemSiftling gs = input.siftling;
+            gs.BaseLinearSpeed = gs.activeConfig.roamSpeed;
+            gs.BaseAngularSpeed = gs.activeConfig.roamAngularSpeed;
+            gs.navMeshAgent.acceleration = gs.activeConfig.roamAcceleration;
+
+            Vector2 distanceRange = gs.activeConfig.distanceRange;
             float distance = Random.Range(distanceRange.x, distanceRange.y);
 
             input.siftling.animatorMain.SetTrigger(input.siftling.ActiveIdleParam);
-            endTime = Time.time + golem.maxRoamDuration;
+            endTime = Time.time + gs.maxRoamDuration;
 
-            if (PathfindingUtils.FindRandomRoamingPoint(golem.transform.position, distance,
-                                                        10, out targetLocation)) {
-                golem.navMeshAgent.SetDestination(targetLocation);
+            bool hasRoamingPoint = gs.activeConfig.type == SiftlingType.Wind
+                                 ? PathfindingUtils.FindRandomRoamingPointNavMesh(gs.transform.position, distance,
+                                                                                  gs.roamWallBuffer, 10, out targetLocation)
+                                 : PathfindingUtils.FindRandomRoamingPoint(gs.transform.position, distance, 10, out targetLocation);
+            if (hasRoamingPoint) {
+                gs.navMeshAgent.SetDestination(targetLocation);
             } else {
                 input.stateMachine.SetState(new State_Idle());
             }
         }
 
         public override void Update(Siftling_Input input) {
-            GolemSiftling golem = input.siftling;
-            if (golem.navMeshAgent.isOnNavMesh
-                    && golem.navMeshAgent.remainingDistance <= golem.navMeshAgent.stoppingDistance
+            GolemSiftling gs = input.siftling;
+            if (gs.navMeshAgent.isOnNavMesh
+                    && gs.navMeshAgent.remainingDistance <= gs.navMeshAgent.stoppingDistance
                         || Time.time > endTime) {
                 input.stateMachine.SetState(new State_Idle());
                 input.siftling.navMeshAgent.ResetPath();
@@ -106,6 +112,7 @@ public partial class GolemSiftling {
         }
 
         public override void Exit(Siftling_Input input) {
+            input.siftling.navMeshAgent.acceleration = input.siftling.baseAcceleration;
             input.siftling.navMeshAgent.ResetPath();
         }
     }

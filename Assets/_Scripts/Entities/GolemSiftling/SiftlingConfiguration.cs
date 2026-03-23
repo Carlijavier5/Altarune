@@ -11,6 +11,8 @@ public class SiftlingConfiguration {
     [Header("Roam Properties")]
     public float animationSpeed;
     public float roamSpeed;
+    public float roamAngularSpeed;
+    public float roamAcceleration;
     public Vector2 distanceRange;
     public Vector2 waitRange;
     [Header("Attack Properties")]

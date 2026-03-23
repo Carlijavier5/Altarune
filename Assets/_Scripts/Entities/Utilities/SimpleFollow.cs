@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleFollow : MonoBehaviour
+public class SimpleFollow : FollowBehavior
 {
     [SerializeField] private Transform target;
 
-    public void Play() {
+    public override void Play() {
         enabled = true;
     }
 
-    public void Stop() {
+    public override void Stop() {
         enabled = false;
     }
 

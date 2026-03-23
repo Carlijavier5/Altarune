@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public static class PathfindingUtils {
 
@@ -66,14 +67,14 @@ public static class PathfindingUtils {
                         : AngleCastSphere(source, radius, distance, dirAngle - 45) ? AngleToXZDirection(dirAngle - 45)    /// Front Left
                         : AngleCastSphere(source, radius, distance, dirAngle + 135) ? AngleToXZDirection(dirAngle + 135)  /// Back Right
                         : AngleCastSphere(source, radius, distance, dirAngle - 135) ? AngleToXZDirection(dirAngle - 135)  /// Back Left
-                        : Vector3.zero;                                                                     /// Unsuccessful
+                        : Vector3.zero;                                                                                   /// Unsuccessful
 
         clearPoint = roamDir * distance + source;
         return roamDir.magnitude > 0;
     }
 
     public static bool FindBiasedRoamingPointSphereCast(Vector3 source, float radius, float distance, Vector2 angleRange,
-                                              int attempts, out Vector3 clearPoint) {
+                                                        int attempts, out Vector3 clearPoint) {
         int i = 0;
         while (i < attempts) {
             if (FindBiasedRoamingPointSphereCast(source, radius, distance, angleRange, out clearPoint)) {
@@ -86,11 +87,57 @@ public static class PathfindingUtils {
     }
 
     public static bool FindRandomRoamingPointSphereCast(Vector3 source, float radius, float distance, int attempts, out Vector3 clearPoint) {
-        return FindBiasedRoamingPoint(source, distance, new Vector2(0, 360), attempts, out clearPoint);
+        return FindBiasedRoamingPointSphereCast(source, radius, distance, new Vector2(0, 360), attempts, out clearPoint);
     }
 
     public static bool FindRandomRoamingPointSphereCast(Vector3 source, float radius, float distance, out Vector3 clearPoint) {
-        return FindBiasedRoamingPoint(source, distance, new Vector2(0, 360), out clearPoint);
+        return FindBiasedRoamingPointSphereCast(source, radius, distance, new Vector2(0, 360), out clearPoint);
+    }
+
+    private static bool AngleCastNavMesh(Vector3 source, float distance, float wallBuffer, float angle) {
+        if (!AngleCast(source, distance, angle)) return false;
+
+        Vector3 roamDir = source + AngleToXZDirection(angle) * distance;
+        if (!NavMesh.SamplePosition(roamDir, out NavMeshHit sampleHit, 2f, NavMesh.AllAreas)) {
+            return false;
+        }
+
+        if (NavMesh.FindClosestEdge(sampleHit.position, out NavMeshHit edgeHit, NavMesh.AllAreas)
+                && edgeHit.distance < wallBuffer) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static bool FindBiasedRoamingPointNavMesh(Vector3 source, float distance, Vector2 angleRange, float wallBuffer, out Vector3 clearPoint) {
+        float dirAngle = Random.Range(angleRange.x, angleRange.y);
+        dirAngle = SpatialUtils.WrapAngle360(dirAngle);
+        Vector3 roamDir = AngleCastNavMesh(source, distance, wallBuffer, dirAngle) ? AngleToXZDirection(dirAngle)              /// Front
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle + 180) ? AngleToXZDirection(dirAngle + 180)  /// Back
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle + 90) ? AngleToXZDirection(dirAngle + 90)    /// Right
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle - 90) ? AngleToXZDirection(dirAngle - 90)    /// Left
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle + 45) ? AngleToXZDirection(dirAngle + 45)    /// Front Right
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle - 45) ? AngleToXZDirection(dirAngle - 45)    /// Front Left
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle + 135) ? AngleToXZDirection(dirAngle + 135)  /// Back Right
+                        : AngleCastNavMesh(source, distance, wallBuffer, dirAngle - 135) ? AngleToXZDirection(dirAngle - 135)  /// Back Left
+                        : Vector3.zero;                                                                                        /// Unsuccessful
+
+        clearPoint = roamDir * distance + source;
+        return roamDir.magnitude > 0;
+    }
+
+    public static bool FindBiasedRoamingPointNavMesh(Vector3 source, float distance, Vector2 angleRange,
+                                                     float wallBuffer, int attempts, out Vector3 clearPoint) {
+        for (int i = 0; i < attempts; i++) {
+            if (FindBiasedRoamingPointNavMesh(source, distance, angleRange, wallBuffer, out clearPoint)) return true;
+        }
+        clearPoint = Vector3.zero;
+        return false;
+    }
+
+    public static bool FindRandomRoamingPointNavMesh(Vector3 source, float distance, float wallBuffer, int attempts, out Vector3 clearPoint) {
+        return FindBiasedRoamingPointNavMesh(source, distance, new Vector2(0, 360), wallBuffer, attempts, out clearPoint);
     }
 
     private static bool AngleCastSphere(Vector3 source, float radius, float distance, float angle) {

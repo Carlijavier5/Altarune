@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class LockdownJoint<T> : MonoBehaviour {
+public abstract class LockdownJoint<T> : FollowBehavior {
     protected enum AxisLock { Free, Locked }
 
     [SerializeField] protected T follower, target;
@@ -32,13 +32,13 @@ public abstract class LockdownJoint<T> : MonoBehaviour {
                                                                   (IsLocked(yRotation) ? TargetRotation.eulerAngles.y : FollowerRotation.eulerAngles.y) + yROffset,
                                                                   (IsLocked(zRotation) ? TargetRotation.eulerAngles.z : FollowerRotation.eulerAngles.z) + zROffset));
 
-    public void Play() {
+    public override void Play() {
         enabled = true;
     }
 
     public abstract void Apply();
 
-    public void Stop() {
+    public override void Stop() {
         enabled = false;
     }
 

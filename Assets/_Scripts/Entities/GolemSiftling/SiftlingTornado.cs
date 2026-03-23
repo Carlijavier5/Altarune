@@ -8,8 +8,8 @@ public class SiftlingTornado : MonoBehaviour {
 
     [SerializeField] private DefaultSummonProperties animationSettings;
     [SerializeField] private GolemSiftling siftling;
-    [SerializeField] private Animator animator;
-    [SerializeField] private SimpleFollow followScript;
+    [SerializeField] private Animator animatorMain;
+    [SerializeField] private FollowBehavior followJoint;
     [SerializeField] private Collider[] attackColliders;
     [SerializeField] private float growTime, baseRotationSpeed;
     [SerializeField] private float preSyncAngularOffset = 15f;
@@ -65,7 +65,7 @@ public class SiftlingTornado : MonoBehaviour {
         }
 
         if (doAnimatorSync) {
-            animator.speed = RotationSpeed * animationRevolutionRatio;
+            animatorMain.speed = RotationSpeed * animationRevolutionRatio;
         }
     }
 
@@ -106,7 +106,7 @@ public class SiftlingTornado : MonoBehaviour {
 
     private IEnumerator IToggle(bool on) {
         if (on) {
-            followScript.Play();
+            followJoint.Play();
         } else {
             foreach (Collider collider in attackColliders) {
                 collider.enabled = false;
@@ -131,7 +131,7 @@ public class SiftlingTornado : MonoBehaviour {
                 collider.enabled = true;
             }
         } else {
-            followScript.Stop();
+            followJoint.Stop();
         }
     }
 

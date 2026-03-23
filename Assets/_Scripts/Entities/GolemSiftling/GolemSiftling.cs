@@ -58,6 +58,8 @@ public partial class GolemSiftling : Entity {
         }
     }
 
+    private float baseAcceleration;
+
     private float idleStoppingDistance;
     private float idleAngularSpeed;
 
@@ -83,6 +85,7 @@ public partial class GolemSiftling : Entity {
         baseBodyAnimatorSpeed = animatorBody.speed;
         baseLinearSpeed = navMeshAgent.speed;
         baseAngularSpeed = idleAngularSpeed;
+        baseAcceleration = navMeshAgent.acceleration;
 
         activeConfig = configMap[SiftlingType.Normal];
         ascensionType = ChooseAscension();
