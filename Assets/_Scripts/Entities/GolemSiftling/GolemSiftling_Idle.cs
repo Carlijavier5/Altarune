@@ -3,10 +3,11 @@ using UnityEngine;
 public partial class GolemSiftling {
 
     private readonly int idleParam = Animator.StringToHash("Idle");
+    private readonly int windIdleParam = Animator.StringToHash("WindIdle");
     private int ActiveIdleParam {
         get {
             return activeConfig.type switch {
-                SiftlingType.Wind => fallParam,
+                SiftlingType.Wind => windIdleParam,
                 _ => idleParam,
             };
         }
@@ -31,6 +32,10 @@ public partial class GolemSiftling {
                         break;
                     case SiftlingType.Fire:
                         attackState = new State_FireWindUp();
+                        input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
+                        break;
+                    case SiftlingType.Wind:
+                        attackState = new State_Idle();
                         input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
                         break;
                 }
@@ -105,7 +110,6 @@ public partial class GolemSiftling {
                     && gs.navMeshAgent.remainingDistance <= gs.navMeshAgent.stoppingDistance
                         || Time.time > endTime) {
                 input.stateMachine.SetState(new State_Idle());
-                input.siftling.navMeshAgent.ResetPath();
             } else {
                 base.Update(input);
             }
