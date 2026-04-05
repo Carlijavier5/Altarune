@@ -13,9 +13,11 @@ public class SiftlingLookIKController : MonoBehaviour
     [SerializeField] private float maxYRotation;
     [SerializeField] private float baseZRotation;
     [SerializeField] private float lookSpeed;
+    [SerializeField] private float lookEnterDuration;
 
     private Transform target;
     private Quaternion effectiveRotation;
+    private float lookStrengthTarget, lookStrengthMultiplier;
 
     void Awake() {
         enabled = false;
@@ -25,10 +27,13 @@ public class SiftlingLookIKController : MonoBehaviour
         this.target = target;
         effectiveRotation = ikBone.localRotation;
         enabled = true;
+
+        lookStrengthTarget = 1f;
         state = State.Looking;
     }
 
     public void Stop() {
+        lookStrengthTarget = 0f;
         state = State.Resting;
     }
 
@@ -44,7 +49,7 @@ public class SiftlingLookIKController : MonoBehaviour
                     Quaternion rotationTarget = Quaternion.Euler(Mathf.Lerp(xRotationRange.x, xRotationRange.y, Mathf.Abs(signedLerp)),
                                                                  Mathf.Lerp(-maxYRotation, maxYRotation, signedLerp * 0.5f + 0.5f),
                                                                  baseZRotation);
-                    effectiveRotation = Quaternion.RotateTowards(effectiveRotation, rotationTarget, Time.deltaTime * lookSpeed);
+                    effectiveRotation = Quaternion.RotateTowards(effectiveRotation, rotationTarget, Time.deltaTime * lookSpeed * lookStrengthMultiplier);
                 }
                 break;
             case State.Resting:
@@ -55,6 +60,7 @@ public class SiftlingLookIKController : MonoBehaviour
                 }
                 break;
         }
+        lookStrengthMultiplier = Mathf.MoveTowards(lookStrengthMultiplier, lookStrengthTarget, Time.deltaTime.SafeDivide(lookEnterDuration));
         ikBone.localRotation = effectiveRotation;
     }
 }

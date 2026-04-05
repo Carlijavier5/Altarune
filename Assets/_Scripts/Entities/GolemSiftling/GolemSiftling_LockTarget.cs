@@ -13,51 +13,31 @@ public partial class GolemSiftling
     private class State_LookTarget : State_Aggro {
 
         private readonly State<Siftling_Input> followUpState;
-        private readonly float startTime;
-
-        private Vector3 startPosition;
-        private float startSpeed;
 
         public State_LookTarget(Entity aggroTarget, State<Siftling_Input> followUpState) : base(aggroTarget) {
             this.followUpState = followUpState;
-            startTime = Time.time;
         }
 
-        private float endLookTime;
+        protected float endLookTime;
 
         public override void Enter(Siftling_Input input) {
             base.Enter(input);
-
-            startPosition = input.siftling.transform.position;
-            startSpeed = input.siftling.navMeshAgent.speed;
 
             input.siftling.exclamationVFX.Play();
             input.siftling.animatorMain.SetTrigger(input.siftling.ikLookParam);
             input.siftling.lookIKController.Play(input.aggroTarget.transform);
 
-            if (input.siftling.activeConfig.type == SiftlingType.Wind) {
-                input.siftling.navMeshAgent.SetDestination(startPosition);
-            } else {
-                input.siftling.navMeshAgent.updateRotation = false;
-                input.siftling.navMeshAgent.ResetPath();
-            }
+            input.siftling.navMeshAgent.updateRotation = false;
+            input.siftling.navMeshAgent.ResetPath();
 
             endLookTime = Time.time + input.siftling.activeConfig.attackLookDuration;
-            Debug.LogError("Tried to look");
         }
 
         public override void Update(Siftling_Input input) {
-            switch (input.siftling.activeConfig.type) {
-                case SiftlingType.Wind:
-                    float lerpVal = (Time.time - startTime) / (endLookTime - startTime);
-                    input.siftling.navMeshAgent.speed = Mathf.Lerp(startSpeed, 0, lerpVal);
-                    break;
-            }
-
             if (Time.time > endLookTime && aggroTarget) {
                 switch (input.siftling.activeConfig.type) {
                     case SiftlingType.Wind:
-                        input.stateMachine.SetState(new State_Idle());
+                        input.stateMachine.SetState(new State_WindFaceTarget(aggroTarget));
                         break;
                     default:
                         input.stateMachine.SetState(new State_FaceTarget(aggroTarget, followUpState));
@@ -84,7 +64,7 @@ public partial class GolemSiftling
 
     private class State_FaceTarget : State_Aggro {
 
-        private readonly State<Siftling_Input> followUpState;
+        private State<Siftling_Input> followUpState;
 
         public State_FaceTarget(Entity aggroTarget, State<Siftling_Input> followUpState) : base(aggroTarget) {
             this.followUpState = followUpState;
@@ -122,7 +102,7 @@ public partial class GolemSiftling
 
         public override void PropagateAggroExit(Entity entity) {
             if (entity == aggroTarget) {
-                input.stateMachine.SetState(new State_Idle());
+                followUpState = new State_Idle();
             }
         }
 

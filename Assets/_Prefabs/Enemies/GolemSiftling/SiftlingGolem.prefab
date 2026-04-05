@@ -5177,8 +5177,8 @@ MonoBehaviour:
     roamAcceleration: 12
     distanceRange: {x: 6, y: 8}
     waitRange: {x: 0.05, y: 0.1}
-    attackCDRange: {x: 0, y: 0}
-    attackLookDuration: 2
+    attackCDRange: {x: 0.5, y: 1}
+    attackLookDuration: 1.25
     indicatorController: {fileID: 0}
   - type: 3
     health: 8
@@ -5240,6 +5240,9 @@ MonoBehaviour:
   bounceController: {fileID: 3918354129653857261}
   pushPhaseStrength: 2
   bounceDuration: 2
+  windDriftIKController: {fileID: 1902336018943236001}
+  windLookOrbitRadius: 1
+  windLookOrbitPeriod: 2
 --- !u!114 &2317311903481447917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45611,6 +45614,7 @@ MonoBehaviour:
   maxYRotation: 75
   baseZRotation: 0
   lookSpeed: 360
+  lookEnterDuration: 0.5
 --- !u!1 &7959911670453333182
 GameObject:
   m_ObjectHideFlags: 0
@@ -50571,6 +50575,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3291174072168326058}
   - {fileID: 1124914103715646878}
   m_Father: {fileID: 8281648423642095650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50620,6 +50625,60 @@ MonoBehaviour:
   zROffset: 0
   detachOnAwake: 0
   playOnAwake: 0
+--- !u!1 &8726209576876929162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3291174072168326058}
+  - component: {fileID: 1902336018943236001}
+  m_Layer: 9
+  m_Name: WindDriftController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3291174072168326058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726209576876929162}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6557056059870426661}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1902336018943236001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726209576876929162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a33f8adf0c855e448f710604dd214c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rootIKBone: {fileID: 677011654902941578}
+  crystalIKBone: {fileID: 7601660440594478920}
+  navMeshAgent: {fileID: 8338844980996685279}
+  linearSpeedRange: {x: 0, y: 6}
+  forwardCrystalDriftRange: {x: -40, y: 80}
+  angularSpeedRange: {x: -400, y: 400}
+  rightCrystalDriftRange: {x: -25, y: 25}
+  rootDriftRange: {x: -60, y: 60}
+  boneAdjustmentTime: 0.5
+  restorationAdjustmentMultiplier: 0.25
 --- !u!1 &8803351501910181776
 GameObject:
   m_ObjectHideFlags: 0
@@ -58815,6 +58874,12 @@ PrefabInstance:
       insertIndex: 7
       addedObject: {fileID: 5860083463594543021}
   m_SourcePrefab: {fileID: 100100000, guid: bf71cb6e708e2dd4fa50135f19721d8d, type: 3}
+--- !u!4 &677011654902941578 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9066539033039590495, guid: bf71cb6e708e2dd4fa50135f19721d8d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8410449994339046357}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &736981382508718418 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9119124162210822791, guid: bf71cb6e708e2dd4fa50135f19721d8d,

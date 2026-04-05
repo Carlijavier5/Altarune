@@ -14,7 +14,6 @@ public partial class GolemSiftling {
     }
 
     [Header("Idle/Roam State")]
-
     [SerializeField] private float maxRoamDuration;
     [SerializeField] private float roamWallBuffer;
 
@@ -35,8 +34,8 @@ public partial class GolemSiftling {
                         input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
                         break;
                     case SiftlingType.Wind:
-                        attackState = new State_Idle();
-                        input.stateMachine.SetState(new State_LookTarget(input.aggroTarget, attackState));
+                        /// The wind state has its own facing mechanism and does not need a known attack state;
+                        input.stateMachine.SetState(new State_WindLookTarget(input.aggroTarget, null));
                         break;
                 }
             }
@@ -102,12 +101,16 @@ public partial class GolemSiftling {
             } else {
                 input.stateMachine.SetState(new State_Idle());
             }
+
+            if (gs.activeConfig.type == SiftlingType.Wind) {
+                gs.windDriftIKController.TryPlay();
+            }
         }
 
         public override void Update(Siftling_Input input) {
             GolemSiftling gs = input.siftling;
-            if (gs.navMeshAgent.isOnNavMesh
-                    && gs.navMeshAgent.remainingDistance <= gs.navMeshAgent.stoppingDistance
+            if ((gs.navMeshAgent.isOnNavMesh
+                    && gs.navMeshAgent.remainingDistance <= gs.navMeshAgent.stoppingDistance)
                         || Time.time > endTime) {
                 input.stateMachine.SetState(new State_Idle());
             } else {
@@ -117,7 +120,16 @@ public partial class GolemSiftling {
 
         public override void Exit(Siftling_Input input) {
             input.siftling.navMeshAgent.acceleration = input.siftling.baseAcceleration;
-            input.siftling.navMeshAgent.ResetPath();
+            if (!(input.siftling.activeConfig.type == SiftlingType.Wind
+                    && input.stateMachine.NextState is State_LookTarget)) {
+                input.siftling.navMeshAgent.ResetPath();
+            }
+
+            if (input.siftling.activeConfig.type == SiftlingType.Wind
+                    && input.stateMachine.NextState is not State_Idle) {
+                input.siftling.windDriftIKController.Stop();
+            }
+            
         }
     }
 }
