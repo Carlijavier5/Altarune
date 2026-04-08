@@ -6,6 +6,7 @@ public partial class GolemSiftling
 {
     [Header("Wind Rift")]
     [SerializeField] private SiftlingWindDriftIKController windDriftIKController;
+    [SerializeField] private SiftlingWindFaceTargetController windFaceTargetController;
 
     private class State_WindLookTarget : State_LookTarget {
 
@@ -42,11 +43,7 @@ public partial class GolemSiftling
 
     private class State_WindFaceTarget : State_Aggro {
 
-        private readonly float turnDirectionMultiplier;
-
-        public State_WindFaceTarget(Entity aggroTarget) : base(aggroTarget) {
-            turnDirectionMultiplier = Random.value > 0.5f ? 1 : -1;
-        }
+        public State_WindFaceTarget(Entity aggroTarget) : base(aggroTarget) { }
 
         public override void Enter(Siftling_Input input) {
             base.Enter(input);
