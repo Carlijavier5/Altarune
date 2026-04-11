@@ -47,7 +47,9 @@ public partial class GolemSiftling
 
         public override void Enter(Siftling_Input input) {
             base.Enter(input);
-            /// Set trigger to raise foot;
+            input.siftling.animatorBody.enabled = false;
+            input.siftling.oscillator.enabled = false;
+            input.siftling.windFaceTargetController.Play(input.aggroTarget);
         }
 
         public override void Update(Siftling_Input input) {
