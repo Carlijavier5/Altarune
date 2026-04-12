@@ -1,30 +1,28 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class TeleportNexusInteractor : MonoBehaviour {
     
     [Header("Interaction")]
-    [SerializeField] BoxCollider collider;
-    [SerializeField] CinemachineVirtualCamera interactorCamera;
+    [SerializeField] private BoxCollider collider;
+    [SerializeField] private CinemachineCamera interactorCamera;
 
-    Canvas canvas;
-    
-    Player interactingPlayer = null;
+    private Canvas canvas;
+    private Player interactingPlayer;
 
     [Space] [Header("Teleport")]
-    [SerializeField] Transform buttonsContainer;
-    [SerializeField] TeleportNexusUIButton uiButtonPrefab;
-    [SerializeField] List<RoomTag> roomTagEntries = new List<RoomTag>();
+    [SerializeField] private Transform buttonsContainer;
+    [SerializeField] private TeleportNexusUIButton uiButtonPrefab;
+    [SerializeField] private List<RoomTag> roomTagEntries = new();
 
     List<TeleportNexusUIButton> uiButtonInstances;
 
     [Space] [Header("Display Settings")]
-    [SerializeField] float showDelayBetweenButtons = 0.2f;
-    [SerializeField] float hideDelayBetweenButtons = 0.1f;
+    [SerializeField] private float showDelayBetweenButtons = 0.2f;
+    [SerializeField] private float hideDelayBetweenButtons = 0.1f;
     
     void Start() {
         if (!uiButtonPrefab) {

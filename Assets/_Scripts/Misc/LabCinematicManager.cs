@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
+using Unity.Cinemachine;
 
 public class LabCinematicManager : CCondition {
     [SerializeField] private CCondition condition;
     [SerializeField] private Player player;
-    [SerializeField] private CinemachineVirtualCamera cinematicCamera;
+    [SerializeField] private CinemachineCamera cinematicCamera;
     [SerializeField] private float cameraShakeIntensity = 2f;
     [SerializeField] private Vector3 initOffset;
     [SerializeField] private VisualEffect rippleEffect;
@@ -81,7 +80,7 @@ public class LabCinematicManager : CCondition {
 
     private IEnumerator RunCinematic() {
         yield return new WaitForSeconds(initTime);
-        cinematicCamera.m_Priority = 100;
+        cinematicCamera.Priority = 100;
         yield return new WaitForSeconds(1f);
         rippleEffect.Play();
         GM.CameraShakeManager.DoCameraShake(cameraShakeIntensity, roomTime);
@@ -113,7 +112,7 @@ public class LabCinematicManager : CCondition {
         barrier.DOFloat(0.5f, "_Global_Alpha", lightTime);
         yield return new WaitForSeconds(waitTime);
         CheckCondition();
-        cinematicCamera.m_Priority = 0;
+        cinematicCamera.Priority = 0;
         player.ToggleUI(true);
         player.InputSource.ActivateInput();
         player.InputSource.ActivateSummons();

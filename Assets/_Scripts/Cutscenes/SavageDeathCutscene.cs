@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class SavageDeathCutscene : MonoBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera focusCamera;
+    [SerializeField] private CinemachineCamera focusCamera;
     [SerializeField] private Player player;
     [SerializeField] private GolemSavage savageGolem;
     [SerializeField] private Animator savageAnimator;
