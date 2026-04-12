@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18345961, g: 0.22903846, b: 0.3058719, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -174,6 +170,11 @@ VFXRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_StaticBatchInfo:
@@ -193,9 +194,11 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!2083052967 &31914433
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -367,14 +370,14 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!114 &46615050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,28 +390,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
-  m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
-    m_CustomCurve:
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 2
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
-  m_CameraCutEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_CameraActivatedEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  CustomBlends: {fileID: 0}
 --- !u!114 &46615051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -541,18 +542,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49a9d715fff4bf5419eb4b73579a8971, type: 3}
---- !u!114 &105165089 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4337424197893849953, guid: 49a9d715fff4bf5419eb4b73579a8971,
-    type: 3}
-  m_PrefabInstance: {fileID: 105165088}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6c44e68c9c00c940867f2fffacf1f4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &168803008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -657,6 +646,11 @@ VFXRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_StaticBatchInfo:
@@ -676,9 +670,11 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!2083052967 &299444664
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -867,6 +863,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -974,7 +971,7 @@ Mesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  serializedVersion: 11
+  serializedVersion: 12
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
@@ -1124,26 +1121,27 @@ Mesh:
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
   m_MeshOptimizationFlags: 1
   m_StreamData:
     serializedVersion: 2
     offset: 0
     size: 0
     path: 
---- !u!114 &972885174 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 665781236088333302, guid: a2dfbf0698e9e384c90c5b5cf439f510,
-    type: 3}
-  m_PrefabInstance: {fileID: 1942190075272092864}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fee0d278b3a37824d99011bb334afa59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!1 &1043942661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1858,6 +1856,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1879,9 +1882,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1043942664
 MeshFilter:
@@ -2019,18 +2024,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1376e8d20ec5f7948b3fc6641995ddef, type: 3}
---- !u!114 &1111457753 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6539255769742454086, guid: 1376e8d20ec5f7948b3fc6641995ddef,
-    type: 3}
-  m_PrefabInstance: {fileID: 1111457752}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6c44e68c9c00c940867f2fffacf1f4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1117316121 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1171469969383915685, guid: 49a9d715fff4bf5419eb4b73579a8971,
@@ -2066,15 +2059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba018e616480314ea86e927ab4e1f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 972885174}
-  rooms:
-  - {fileID: 105165089}
-  - {fileID: 1111457753}
-  - {fileID: 1718172495}
-  - {fileID: 412177707820088275}
-  musicSource: {fileID: 576503181}
-  track1: {fileID: 8300000, guid: f42debd26ce3d2046b44e01de249b8da, type: 3}
-  track2: {fileID: 8300000, guid: 1c13929e5b2fae84dbab161ab1e5aec3, type: 3}
+  roomIdentifiers: []
 --- !u!4 &1392278355
 Transform:
   m_ObjectHideFlags: 0
@@ -2310,6 +2295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
   m_AgentTypeID: 0
   m_CollectObjects: 0
   m_Size: {x: 10, y: 10, z: 10}
@@ -2325,7 +2311,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
+  m_VoxelSize: 0.2
   m_MinRegionArea: 5
   m_NavMeshData: {fileID: 23800000, guid: 712910bf52536b44ab1a1432a84316e1, type: 2}
   m_BuildHeightMesh: 0
@@ -2509,18 +2495,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c96208c24909e2f409efd1dc553c48f8, type: 3}
---- !u!114 &1718172495 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1600093809722230020, guid: c96208c24909e2f409efd1dc553c48f8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1718172494}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6c44e68c9c00c940867f2fffacf1f4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1760284935 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3928557959417458140, guid: c5e09b4c8f103f243a21d2f84ba0252d,
@@ -2539,11 +2513,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
-  m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 0
-  m_FrequencyGain: 0.3
-  mNoiseOffsets: {x: 0, y: 0, z: 0}
+  NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 0
+  FrequencyGain: 0.3
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &1879977711
 GameObject:
   m_ObjectHideFlags: 0
@@ -2690,17 +2664,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6093592463355912122, guid: 580889e9c28a99940b645436cdb57595,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 63eb7aa23e429ad47bacdd3219f4f08e, type: 2}
     - target: {fileID: -1806680513116206669, guid: 580889e9c28a99940b645436cdb57595,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: adfb8cd1873f1ab4ca069375de895912, type: 2}
     - target: {fileID: -804731622281664130, guid: 580889e9c28a99940b645436cdb57595,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 5a2f62e59ce6e4f45a08325603730187, type: 2}
     - target: {fileID: 919132149155446097, guid: 580889e9c28a99940b645436cdb57595,
@@ -2754,6 +2728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Space: 0
   m_Property:
     m_Name: MeshTransform
   Target: {fileID: 1942190075272092867}
@@ -2791,6 +2766,11 @@ VFXRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_StaticBatchInfo:
@@ -2810,9 +2790,11 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!2083052967 &2109016942
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -2955,18 +2937,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1760284938}
   m_SourcePrefab: {fileID: 100100000, guid: c5e09b4c8f103f243a21d2f84ba0252d, type: 3}
---- !u!114 &412177707820088275 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3628448567194231239, guid: c5e09b4c8f103f243a21d2f84ba0252d,
-    type: 3}
-  m_PrefabInstance: {fileID: 412177707820088274}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6c44e68c9c00c940867f2fffacf1f4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1942190075272092864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2977,7 +2947,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 32363873440944699, guid: a2dfbf0698e9e384c90c5b5cf439f510,
         type: 3}
-      propertyPath: towerBlueprints.Array.data[0]
+      propertyPath: 'towerBlueprints.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: c04e930eeff5c894090dbdab87dcc17d,
         type: 2}

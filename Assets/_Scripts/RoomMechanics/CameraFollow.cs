@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CameraFollow : MonoBehaviour {
 
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineCamera virtualCamera;
 
     public void AssignPlayer(PlayerController player) {
         virtualCamera.Follow = player.CameraTarget;

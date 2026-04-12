@@ -217,7 +217,7 @@ public partial class GolemBat {
 
             bat.rb.AddForce(bat.TimeScale * bat.RootMult * MoveSpeed
                             * moveDir, ForceMode.Force);
-            bat.transform.LookAt(bat.transform.position + bat.rb.velocity);
+            bat.transform.LookAt(bat.transform.position + bat.rb.linearVelocity);
         }
 
         public override void Exit(Bat_Input input) {
@@ -307,7 +307,7 @@ public partial class GolemBat {
         public override void Update(Bat_Input _) { }
 
         public override void FixedUpdate(Bat_Input input) {
-            input.bat.rb.AddForce(-input.bat.rb.velocity, ForceMode.Force);
+            input.bat.rb.AddForce(-input.bat.rb.linearVelocity, ForceMode.Force);
         }
 
         public override void Exit(Bat_Input _) { }

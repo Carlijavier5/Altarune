@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class TowerInteractionModule : MonoBehaviour {
 

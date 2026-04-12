@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public enum RoomTag { Lab, F1, F2, F3, C1, F4, C2, F5, F6, F7, C3, F8 }
 
@@ -10,7 +10,7 @@ public class RoomControl : MonoBehaviour {
     [SerializeField] private RoomTag roomTag;
     [SerializeField] private AudioClip musicTrack;
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineCamera virtualCamera;
 
     [SerializeField] private SpawnPoint[] spawnPoints;
     [SerializeField] private Transform defaultSpawnPoint;

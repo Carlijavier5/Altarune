@@ -14,10 +14,10 @@ public class ProjectileMovement : MonoBehaviour, ISkillMovement {
         //direction = direction.normalized;
         //rb.velocity = direction * 10f;
         if (direction.magnitude < 0.1f) {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
         } else {
             direction = direction.normalized;
-            rb.velocity = direction * speed;
+            rb.linearVelocity = direction * speed;
         }
     }
 }

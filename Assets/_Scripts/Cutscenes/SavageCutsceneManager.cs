@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 
@@ -24,7 +24,7 @@ public class SavageCutsceneManager : MonoBehaviour {
     [SerializeField] private ParticleSystem dust;
     [SerializeField] private ParticleSystem bigDust;
 
-    [SerializeField] private CinemachineVirtualCamera vCam;
+    [SerializeField] private CinemachineCamera vCam;
     [SerializeField] private Transform uiTop;
     [SerializeField] private Transform uiBottom;
     [SerializeField] private Light mainLight;
@@ -72,12 +72,12 @@ public class SavageCutsceneManager : MonoBehaviour {
         yield return new WaitForSeconds(0.8f);
         musicTrigger.Play();
         StartCoroutine(UI());
-        vCam.m_Priority = 100;
+        vCam.Priority = 100;
         bigDust.Play();
         Time.timeScale = 0.5f;
         yield return new WaitForSeconds(2.5f);
         Time.timeScale = 1f;
-        vCam.m_Priority = 0;
+        vCam.Priority = 0;
         // foreach (Rigidbody rigidbody in wireConnectors) {
         //     rigidbody.useGravity = false;
         // }

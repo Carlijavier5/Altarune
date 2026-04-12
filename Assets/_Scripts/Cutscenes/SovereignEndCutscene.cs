@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class SovereignEndCutscene : MonoBehaviour {
 
-    [SerializeField] private CinemachineVirtualCamera bossCamera;
-    [SerializeField] private CinemachineVirtualCamera portalCamera;
+    [SerializeField] private CinemachineCamera bossCamera;
+    [SerializeField] private CinemachineCamera portalCamera;
     [SerializeField] private SovereignEndPortal endPortal;
     [SerializeField] private float initialWait, animEndWait;
 

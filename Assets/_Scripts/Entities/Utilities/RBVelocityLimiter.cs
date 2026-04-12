@@ -19,9 +19,9 @@ public class RBVelocityLimiter : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        Vector3 velocity = rb.velocity;
+        Vector3 velocity = rb.linearVelocity;
         if (velocity.sqrMagnitude > sqrVelocity) {
-            rb.velocity = velocity.normalized * maxVelocity;
+            rb.linearVelocity = velocity.normalized * maxVelocity;
         }
     }
 }

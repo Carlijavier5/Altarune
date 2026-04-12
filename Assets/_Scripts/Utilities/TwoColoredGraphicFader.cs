@@ -11,11 +11,9 @@ public class TwoColoredGraphicFader : MonoBehaviour {
 
     private MaterialPropertyBlock mpb;
 
-    void Awake() {
-        mpb = new();    
-    }
-
     void OnEnable() {
+        mpb ??= new();
+
         Color color1 = decal.sharedMaterial.GetColor(COLOR_PARAM);
         Color color2 = decal.sharedMaterial.GetColor(COLOR_2_PARAM);
 

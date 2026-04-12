@@ -20,7 +20,7 @@ public class Pushable : ObjectModule {
         set {
             MotionDriver driver = baseObject.MotionDriver;
             if (driver.Rigidbody && !driver.Rigidbody.isKinematic) {
-                baseObject.MotionDriver.Rigidbody.velocity += value - dynamicVelocityAdjustment;
+                baseObject.MotionDriver.Rigidbody.linearVelocity += value - dynamicVelocityAdjustment;
                 dynamicVelocityAdjustment = value;
             }
         }
