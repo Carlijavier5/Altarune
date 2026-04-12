@@ -5,7 +5,7 @@ public class SiftlingBounceController : MonoBehaviour
     [SerializeField] private Rigidbody parentRB, bodyRB;
     [SerializeField] private LockdownJointRigidbody lockdownJoint;
     [SerializeField] private Collider bodyCollider;
-    [SerializeField] private PhysicMaterial[] bounceMaterials;
+    [SerializeField] private PhysicsMaterial[] bounceMaterials;
     [SerializeField] private ContactParticlesSpawner particleSpawner;
     [SerializeField] private float changeBounceInterval;
     private int materialIndex;
@@ -35,7 +35,7 @@ public class SiftlingBounceController : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         if (Time.time >= canChangeBounceTime) {
             int targetIndex = Mathf.Max(materialIndex + 1, bounceMaterials.Length - 1);
-            PhysicMaterial targetMaterial = bounceMaterials[targetIndex];
+            PhysicsMaterial targetMaterial = bounceMaterials[targetIndex];
             if (targetMaterial != bodyCollider.sharedMaterial) {
                 bodyCollider.sharedMaterial = targetMaterial;
             }

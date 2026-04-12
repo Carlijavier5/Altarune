@@ -29,7 +29,7 @@ public class RagdollHandler : MonoBehaviour
         Vector3 velocity = (currentPosition - previousPosition).SafeDivide(Time.fixedDeltaTime, 1) * velocityMultiplier;
         ragdollCollider.enabled = true;
         ragdollRigidbody.isKinematic = false;
-        ragdollRigidbody.velocity = velocity;
+        ragdollRigidbody.linearVelocity = velocity;
     }
 
     public void Restitute() {

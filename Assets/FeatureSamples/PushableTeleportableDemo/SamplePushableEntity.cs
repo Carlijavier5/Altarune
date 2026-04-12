@@ -22,7 +22,7 @@ namespace FeatureSamples {
 
         public void SetRigidbodyDriver(bool isKinematic) {
             driverVariables.rigidbody.isKinematic = isKinematic;
-            if (!isKinematic) driverVariables.rigidbody.velocity = Vector3.zero;
+            if (!isKinematic) driverVariables.rigidbody.linearVelocity = Vector3.zero;
             driverVariables.controller.enabled = false;
             driverVariables.navMeshAgent.enabled = false;
             MotionDriver.Set(driverVariables.rigidbody);

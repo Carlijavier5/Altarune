@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 7
+  version: 10
 --- !u!114 &-3165447695378519181
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -49,6 +49,7 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -107,3 +108,4 @@ Material:
     - Color_: {r: 78.79325, g: 78.79325, b: 78.79325, a: 1}
     - _Color: {r: 78.79325, g: 78.79325, b: 78.79325, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
